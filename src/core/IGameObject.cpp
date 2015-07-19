@@ -8,7 +8,6 @@
 #include "IGameObject.h"
 #include "IMaterial.h"
 #include "IShader.h"
-#include "IAnimator.h"
 #include "IMesh.h"
 #include "ICamera.h"
 
@@ -283,7 +282,7 @@ void IGameObject::Update(unsigned long dt, bool isDeepUpdate)
 {
     if (Visible() && Animator())
     {
-        Animator()->Update(dt);
+        //Animator()->Update(dt);
     }
     
     IMaterialPtr material = nullptr;

@@ -11,8 +11,7 @@
 
 namespace jam
 {
-CLASS_PTR(CGame);    
-CLASS_PTR(IGameObject);
+CLASS_PTR(CGame);
 CLASS_PTR(IScene);
 CLASS_PTR(IRenderView);
 CLASS_PTR(ICamera);
@@ -54,7 +53,6 @@ private:
     CGame& operator=(const CGame& other);
     
     void ThreadUpdate();
-    void DrawObject(ICameraPtr camera, IGameObjectPtr gameObject);
    
 private:
     bool m_IsRunning;

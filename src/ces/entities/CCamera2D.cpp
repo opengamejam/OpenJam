@@ -7,6 +7,7 @@
 //
 
 #include "CCamera2D.h"
+#include "CTransformationComponent.h"
 
 using namespace jam;
 
@@ -18,6 +19,21 @@ using namespace jam;
 // *****************************************************************************
 // Public Methods
 // *****************************************************************************
+
+CCamera2DPtr CCamera2D::Create(float width, float height, float near, float far)
+{
+    CCamera2DPtr camera(new CCamera2D(width, height, near, far));
+    
+    CTransformationComponentPtr transformComponent(new CTransformationComponent());
+    
+    CTransform3Df transform = transformComponent->Transform(CTransformationComponent::Local);
+    transform.Position(CVector3Df(-0.5f * width, -0.5f * height));
+    transformComponent->AddTransform(CTransformationComponent::Local, transform);
+    
+    camera->Initialize("camera", {transformComponent});
+    
+    return camera;
+}
 
 CCamera2D::CCamera2D(float width, float height, float near, float far)
 : ICamera()
@@ -32,7 +48,6 @@ CCamera2D::CCamera2D(float width, float height, float near, float far)
     m_ProjectionMatrix = CMatrix4x4f::Orthographic(0, m_Width,
                                                    0, m_Height,
                                                    m_Near, m_Far);
-    Offset(CVector3Df(-0.5f * m_Width, -0.5f * m_Height));
 }
 
 CCamera2D::~CCamera2D()
@@ -41,23 +56,14 @@ CCamera2D::~CCamera2D()
 }
 
 CMatrix4x4f CCamera2D::ProjectionMatrix()
-{    
-    CTransform3Df transform = WorldTransform();
-    
-    IGameObjectPtr parent = Parent().lock();
-    if (parent)
+{
+    CTransform3Df resultTransform;
+    Get<CTransformationComponent>([&](CTransformationComponentPtr transformComponent)
     {
-        CTransform3Df externalTransform = parent->Transform();
-
-        transform.Offset(CVector3Df(-externalTransform.Position().X(),
-                                    -externalTransform.Position().Y(),
-                                    -externalTransform.Position().Z()));
-        transform.Position(CVector3Df(-Offset().X(),
-                                      -Offset().Y(),
-                                      -Offset().Z()));
-    }
+        resultTransform = transformComponent->ResultTransform();
+    });
     
-    return m_ProjectionMatrix * transform();
+    return m_ProjectionMatrix * resultTransform();
 }
 
 IRenderTargetPtr CCamera2D::RenderTarget() const

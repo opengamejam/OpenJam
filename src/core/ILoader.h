@@ -1,5 +1,5 @@
 //
-//  IGameObject.h
+//  ILoader.h
 //  OpenJam
 //
 //  Created by Yevgeniy Logachev

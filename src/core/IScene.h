@@ -15,7 +15,6 @@ namespace jam
 {
     
 CLASS_PTR(IEventDispatcher);
-CLASS_PTR(IGameObject);
 CLASS_PTR(ICamera);
 CLASS_PTR(IEntity);
 CLASS_WEAK(CGame);

@@ -1,5 +1,5 @@
 //
-//  CRenderViewIos.h
+//  CRenderViewIOS.h
 //  OpenJam
 //
 //  Created by Yevgeniy Logachev

@@ -1,5 +1,5 @@
 //
-//  CRenderViewIos.h
+//  CRenderViewIOS.mm
 //  OpenJam
 //
 //  Created by Yevgeniy Logachev
@@ -7,7 +7,7 @@
 //
 #if defined(OS_IPHONE)
 
-#include "CRenderViewIos.h"
+#include "CRenderViewIOS.h"
 #import <OpenGLES/EAGL.h>
 #import "GLKit/GLKit.h"
 #include "IEventable.h"

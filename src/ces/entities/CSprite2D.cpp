@@ -1,12 +1,12 @@
 //
-//  CSprite2DEntity.cpp
+//  CSprite2D.cpp
 //  Arkanoid
 //
 //  Created by yev on 5/15/15.
 //
 //
 
-#include "CSprite2DEntity.h"
+#include "CSprite2D.h"
 
 #include "RenderGlobal.h"
 #include "CRenderComponent.h"
@@ -21,7 +21,7 @@
 
 using namespace jam;
 
-CSprite2DEntityPtr CSprite2DEntity::Create(const std::string& filename)
+CSprite2DPtr CSprite2D::Create(const std::string& filename)
 {
     IMeshPtr mesh = nullptr;
     IMaterialPtr material = nullptr;
@@ -138,7 +138,7 @@ CSprite2DEntityPtr CSprite2DEntity::Create(const std::string& filename)
     // Transform component
     CTransformationComponentPtr transformComponent(new CTransformationComponent());
      
-    CSprite2DEntityPtr entity = IEntity::Create<CSprite2DEntity>(filename, {
+    CSprite2DPtr entity = IEntity::Create<CSprite2D>(filename, {
                                                                              renderComponent,
                                                                              animationComponent,
                                                                              transformComponent
@@ -151,32 +151,32 @@ CSprite2DEntityPtr CSprite2DEntity::Create(const std::string& filename)
     return entity;
 }
 
-CSprite2DEntity::CSprite2DEntity()
+CSprite2D::CSprite2D()
 {
     
 }
 
-CSprite2DEntity::~CSprite2DEntity()
+CSprite2D::~CSprite2D()
 {
 
 }
 
-CRenderComponentPtr CSprite2DEntity::RenderComponent() const
+CRenderComponentPtr CSprite2D::RenderComponent() const
 {
     return m_RenderComponent;
 }
 
-CAnimation2DComponentPtr CSprite2DEntity::AnimationComponent() const
+CAnimation2DComponentPtr CSprite2D::AnimationComponent() const
 {
     return m_AnimationComponent;
 }
 
-CTransformationComponentPtr CSprite2DEntity::TransformComponent() const
+CTransformationComponentPtr CSprite2D::TransformComponent() const
 {
     return m_TransformationComponent;
 }
 
-void CSprite2DEntity::Position(const CVector3Df& position)
+void CSprite2D::Position(const CVector3Df& position)
 {
     CTransformationComponentPtr component = TransformComponent();
     CTransform3Df transform = component->Transform(CTransformationComponent::Local);
@@ -185,14 +185,14 @@ void CSprite2DEntity::Position(const CVector3Df& position)
     component->Dirty();
 }
 
-const CVector3Df& CSprite2DEntity::Position()
+const CVector3Df& CSprite2D::Position()
 {
     CTransformationComponentPtr component = TransformComponent();
     const CTransform3Df& transform = component->Transform(CTransformationComponent::Local);
     return transform.Position();
 }
 
-void CSprite2DEntity::Rotation(const CVector3Df& rotation)
+void CSprite2D::Rotation(const CVector3Df& rotation)
 {
     CTransformationComponentPtr component = TransformComponent();
     CTransform3Df transform = component->Transform(CTransformationComponent::Local);
@@ -201,14 +201,14 @@ void CSprite2DEntity::Rotation(const CVector3Df& rotation)
     component->Dirty();
 }
 
-const CVector3Df& CSprite2DEntity::Rotation()
+const CVector3Df& CSprite2D::Rotation()
 {
     CTransformationComponentPtr component = TransformComponent();
     const CTransform3Df& transform = component->Transform(CTransformationComponent::Local);
     return transform.Rotation();
 }
 
-void CSprite2DEntity::Scale(const CVector3Df& scale)
+void CSprite2D::Scale(const CVector3Df& scale)
 {
     CTransformationComponentPtr component = TransformComponent();
     CTransform3Df transform = component->Transform(CTransformationComponent::Local);
@@ -217,14 +217,14 @@ void CSprite2DEntity::Scale(const CVector3Df& scale)
     component->Dirty();
 }
 
-const CVector3Df& CSprite2DEntity::Scale()
+const CVector3Df& CSprite2D::Scale()
 {
     CTransformationComponentPtr component = TransformComponent();
     const CTransform3Df& transform = component->Transform(CTransformationComponent::Local);
     return transform.Scale();
 }
 
-void CSprite2DEntity::AnchorPoint(const CVector3Df& anchorPoint)
+void CSprite2D::AnchorPoint(const CVector3Df& anchorPoint)
 {
     CTransformationComponentPtr component = TransformComponent();
     CTransform3Df transform = component->Transform(CTransformationComponent::Local);
@@ -233,7 +233,7 @@ void CSprite2DEntity::AnchorPoint(const CVector3Df& anchorPoint)
     component->Dirty();
 }
 
-const CVector3Df& CSprite2DEntity::AnchorPoint()
+const CVector3Df& CSprite2D::AnchorPoint()
 {
     CTransformationComponentPtr component = TransformComponent();
     const CTransform3Df& transform = component->Transform(CTransformationComponent::Local);

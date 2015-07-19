@@ -13,10 +13,13 @@
 
 namespace jam
 {
+CLASS_PTR(CCamera2D);
 
 class CCamera2D : public ICamera
 {
 public:
+    static CCamera2DPtr Create(float width, float height, float near = -10000.0f, float far = 10000.0f);
+    
     CCamera2D(float width, float height, float near = -10000.0f, float far = 10000.0f);
     virtual ~CCamera2D();
     

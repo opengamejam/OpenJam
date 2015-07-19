@@ -8,19 +8,17 @@
 #ifndef ICAMERA_H
 #define ICAMERA_H
 
-#include "IGameObject.h"
+#include "IEntity.h"
+#include "CMatrix4x4.h"
 
 namespace jam
 {
 CLASS_PTR(IRenderTarget);
     
-class ICamera : public IGameObject
+class ICamera : public IEntity
 {
 public:
-    ICamera()
-    : IGameObject("camera")
-    {}
-    
+    ICamera() = default;
     virtual ~ICamera() = default;
     
     virtual CMatrix4x4f ProjectionMatrix() = 0;

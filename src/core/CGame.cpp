@@ -214,19 +214,3 @@ void CGame::ThreadUpdate()
         std::this_thread::sleep_for(std::chrono::milliseconds(300));
     }
 }
-
-void CGame::DrawObject(ICameraPtr camera, IGameObjectPtr gameObject)
-{
-    gameObject->Bind();
-    gameObject->Draw(camera);
-    gameObject->Unbind();
-    
-    if (gameObject->Batchable())
-    {
-        const IGameObject::TGameObjectsList& childs = gameObject->Childs();
-        std::for_each(childs.begin(), childs.end(), [&](IGameObjectPtr childObject)
-        {
-            DrawObject(camera, childObject);
-        });
-    }
-}

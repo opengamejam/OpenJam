@@ -1,5 +1,5 @@
 //
-//  IGameObject.h
+//  IIndexBuffer.h
 //  OpenJam
 //
 //  Created by Yevgeniy Logachev

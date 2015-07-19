@@ -1,13 +1,13 @@
 //
-//  CSprite2DEntity.h
+//  CSprite2D.h
 //  Arkanoid
 //
 //  Created by yev on 5/15/15.
 //
 //
 
-#ifndef CSPRITE2DENTITY_H
-#define CSPRITE2DENTITY_H
+#ifndef CSPRITE2D_H
+#define CSPRITE2D_H
 
 #include "IEntity.h"
 #include "CVector3D.h"
@@ -15,16 +15,16 @@
 namespace jam
 {
     
-CLASS_PTR(CSprite2DEntity);
+CLASS_PTR(CSprite2D);
 CLASS_PTR(CRenderComponent);
 CLASS_PTR(CAnimation2DComponent);
 CLASS_PTR(CTransformationComponent);
 
-class CSprite2DEntity final : public IEntity
+class CSprite2D final : public IEntity
 {
 public:
-    static CSprite2DEntityPtr Create(const std::string& name);
-    ~CSprite2DEntity();
+    static CSprite2DPtr Create(const std::string& name);
+    ~CSprite2D();
     
     CRenderComponentPtr RenderComponent() const;
     CAnimation2DComponentPtr AnimationComponent() const;
@@ -44,7 +44,7 @@ public:
     
 private:
     friend class IEntity;
-    CSprite2DEntity();
+    CSprite2D();
     
 private:
     CRenderComponentPtr m_RenderComponent;
@@ -54,4 +54,4 @@ private:
     
 }; // namespace jam
 
-#endif /* defined(CSPRITE2DENTITY_H) */
+#endif /* defined(CSPRITE2D_H) */

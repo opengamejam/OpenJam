@@ -1,5 +1,5 @@
 //
-//  Shaders_OGLES20.h
+//  Shaders_OGLES2.h
 //  Arkanoid
 //
 //  Created by yev on 6/25/15.

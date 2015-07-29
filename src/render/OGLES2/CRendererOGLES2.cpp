@@ -1,5 +1,5 @@
 //
-//  CRendererOGLES20.h
+//  CRendererOGLES2.h
 //  OpenJam
 //
 //  Created by Yevgeniy Logachev
@@ -7,15 +7,15 @@
 //
 #if defined(RENDER_OGLES2)
 
-#include "CRendererOGLES20.h"
+#include "CRendererOGLES2.h"
 
-#include "CVertexBufferOGLES20.h"
-#include "CIndexBufferOGLES20.h"
-#include "CMaterialOGLES20.h"
-#include "CTextureOGLES20.h"
-#include "CMeshOGLES20.h"
-#include "CShaderOGLES20.h"
-#include "CShaderProgramOGLES20.h"
+#include "CVertexBufferOGLES2.h"
+#include "CIndexBufferOGLES2.h"
+#include "CMaterialOGLES2.h"
+#include "CTextureOGLES2.h"
+#include "CMeshOGLES2.h"
+#include "CShaderOGLES2.h"
+#include "CShaderProgramOGLES2.h"
 #include "CFrameBufferTargetOGLES2.h"
 
 using namespace jam;
@@ -30,71 +30,71 @@ using namespace jam;
 
 INL int CovertPrimitiveType(IMaterial::PrimitiveTypes type);
 
-CRendererOGLES20::CRendererOGLES20(IRenderViewPtr renderView)
+CRendererOGLES2::CRendererOGLES2(IRenderViewPtr renderView)
 : m_RenderView(renderView)
 {
 
 }
 
-CRendererOGLES20::~CRendererOGLES20()
+CRendererOGLES2::~CRendererOGLES2()
 {
 
 }
 
-IRenderViewPtr CRendererOGLES20::RenderView() const
+IRenderViewPtr CRendererOGLES2::RenderView() const
 {
     return m_RenderView;
 }
 
-IVertexBufferPtr CRendererOGLES20::CreatVertexBuffer()
+IVertexBufferPtr CRendererOGLES2::CreatVertexBuffer()
 {
-    IVertexBufferPtr vertexBuffer(new CVertexBufferOGLES20());
+    IVertexBufferPtr vertexBuffer(new CVertexBufferOGLES2());
     return vertexBuffer;
 }
 
-IIndexBufferPtr CRendererOGLES20::CreateIndexBuffer()
+IIndexBufferPtr CRendererOGLES2::CreateIndexBuffer()
 {
-    IIndexBufferPtr indexBuffer(new CIndexBufferOGLES20());
+    IIndexBufferPtr indexBuffer(new CIndexBufferOGLES2());
     return indexBuffer;
 }
 
-ITexturePtr CRendererOGLES20::CreateTexture()
+ITexturePtr CRendererOGLES2::CreateTexture()
 {
-    ITexturePtr texture(new CTextureOGLES20());
+    ITexturePtr texture(new CTextureOGLES2());
     return texture;
 }
 
-IMaterialPtr CRendererOGLES20::CreateMaterial()
+IMaterialPtr CRendererOGLES2::CreateMaterial()
 {
-    IMaterialPtr material(new CMaterialOGLES20());
+    IMaterialPtr material(new CMaterialOGLES2());
     return material;
 }
 
-IMeshPtr CRendererOGLES20::CreateMesh()
+IMeshPtr CRendererOGLES2::CreateMesh()
 {
-    IMeshPtr mesh(new CMeshOGLES20());
+    IMeshPtr mesh(new CMeshOGLES2());
     return mesh;
 }
 
-IShaderPtr CRendererOGLES20::CreateShader()
+IShaderPtr CRendererOGLES2::CreateShader()
 {
-    IShaderPtr shader(new CShaderOGLES20());
+    IShaderPtr shader(new CShaderOGLES2());
     return shader;
 }
 
-IShaderProgramPtr CRendererOGLES20::CreateShaderProgram()
+IShaderProgramPtr CRendererOGLES2::CreateShaderProgram()
 {
-    IShaderProgramPtr shaderProgram(new CShaderProgramOGLES20());
+    IShaderProgramPtr shaderProgram(new CShaderProgramOGLES2());
     return shaderProgram;
 }
 
-IRenderTargetPtr CRendererOGLES20::CreateRenderTarget(unsigned int width, unsigned int height)
+IRenderTargetPtr CRendererOGLES2::CreateRenderTarget(unsigned int width, unsigned int height)
 {
     IRenderTargetPtr renderTarget(new CFrameBufferTargetOGLES2(width, height));
     return renderTarget;
 }
 
-void CRendererOGLES20::Draw(IMeshPtr mesh, IMaterialPtr material, IShaderProgramPtr shader)
+void CRendererOGLES2::Draw(IMeshPtr mesh, IMaterialPtr material, IShaderProgramPtr shader)
 {
     if (!mesh ||
         !material)
@@ -112,7 +112,7 @@ void CRendererOGLES20::Draw(IMeshPtr mesh, IMaterialPtr material, IShaderProgram
     }
 }
 
-void CRendererOGLES20::Draw(IVertexBufferPtr vertexBuffer, IMaterialPtr material)
+void CRendererOGLES2::Draw(IVertexBufferPtr vertexBuffer, IMaterialPtr material)
 {
     if (!vertexBuffer ||
         !material)
@@ -124,7 +124,7 @@ void CRendererOGLES20::Draw(IVertexBufferPtr vertexBuffer, IMaterialPtr material
     glDrawArrays(primitiveType, 0, (GLsizei)vertexBuffer->Size());
 }
 
-void CRendererOGLES20::Draw(IVertexBufferPtr vertexBuffer, IIndexBufferPtr indexBuffer, IMaterialPtr material)
+void CRendererOGLES2::Draw(IVertexBufferPtr vertexBuffer, IIndexBufferPtr indexBuffer, IMaterialPtr material)
 {
     if (!vertexBuffer ||
         !indexBuffer ||

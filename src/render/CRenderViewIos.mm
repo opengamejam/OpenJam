@@ -14,7 +14,7 @@
 #include "IEventDispatcher.hpp"
 #include "RenderGlobal.h"
 
-#include "CRendererOGLES20.h"
+#include "CRendererOGLES2.h"
 #include "CRendererOGLES1.h"
 
 #include "IRenderTarget.h"
@@ -75,7 +75,7 @@ void CRenderViewIos::CreateView()
             m_GLContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
             [EAGLContext setCurrentContext:m_GLContext];
             
-            GRenderer.reset(new CRendererOGLES20(shared_from_this()));
+            GRenderer.reset(new CRendererOGLES2(shared_from_this()));
             
             glGenRenderbuffers(1, &m_ColorBuffer);
             glBindRenderbuffer(GL_RENDERBUFFER, m_ColorBuffer);

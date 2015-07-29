@@ -1,5 +1,5 @@
 //
-//  CMaterialOGLES20.h
+//  CMaterialOGLES2.h
 //  OpenJam
 //
 //  Created by Yevgeniy Logachev
@@ -7,7 +7,7 @@
 //
 #if defined(RENDER_OGLES2)
 
-#include "CMaterialOGLES20.h"
+#include "CMaterialOGLES2.h"
 #include "IStencil.h"
 
 using namespace jam;
@@ -22,7 +22,7 @@ INL unsigned int CovertStencilFunc(IStencil::StencilFunc func);
 // Public Methods
 // *****************************************************************************
 
-CMaterialOGLES20::CMaterialOGLES20()
+CMaterialOGLES2::CMaterialOGLES2()
 : m_IsDefault(true)
 , m_LineWidth(0)
 , m_Flags(IMaterial::NoneFlag)
@@ -32,11 +32,11 @@ CMaterialOGLES20::CMaterialOGLES20()
     
 }
 
-CMaterialOGLES20::~CMaterialOGLES20()
+CMaterialOGLES2::~CMaterialOGLES2()
 {
 }
 
-void CMaterialOGLES20::Bind()
+void CMaterialOGLES2::Bind()
 {
     if (LineWidth() > 0.0f)
     {
@@ -69,7 +69,7 @@ void CMaterialOGLES20::Bind()
     }
 }
 
-void CMaterialOGLES20::Unbind()
+void CMaterialOGLES2::Unbind()
 {
     IStencilPtr stencil = Stencil();
     if (stencil)
@@ -78,75 +78,75 @@ void CMaterialOGLES20::Unbind()
     }
 }
 
-bool CMaterialOGLES20::IsDefault()
+bool CMaterialOGLES2::IsDefault()
 {
     return m_IsDefault;
 }
 
-const CColor& CMaterialOGLES20::Color() const
+const CColor& CMaterialOGLES2::Color() const
 {
     return m_Color;
 }
 
-float CMaterialOGLES20::LineWidth() const
+float CMaterialOGLES2::LineWidth() const
 {
     return m_LineWidth;
 }
 
-IMaterial::PrimitiveTypes CMaterialOGLES20::PrimitiveType() const
+IMaterial::PrimitiveTypes CMaterialOGLES2::PrimitiveType() const
 {
     return PT_TrianglesStrip;
 }
 
-void CMaterialOGLES20::PrimitiveType(IMaterial::PrimitiveTypes primitiveType)
+void CMaterialOGLES2::PrimitiveType(IMaterial::PrimitiveTypes primitiveType)
 {
     
 }
 
-void CMaterialOGLES20::Color(const CColor& color)
+void CMaterialOGLES2::Color(const CColor& color)
 {
     m_Color = color;
 }
 
-void CMaterialOGLES20::LineWidth(float lineWidth)
+void CMaterialOGLES2::LineWidth(float lineWidth)
 {
     m_LineWidth = lineWidth;
     m_IsDirty = true;
 }
 
-IStencilPtr CMaterialOGLES20::Stencil() const
+IStencilPtr CMaterialOGLES2::Stencil() const
 {
     return m_Stencil;
 }
 
-void CMaterialOGLES20::Stencil(IStencilPtr stencil)
+void CMaterialOGLES2::Stencil(IStencilPtr stencil)
 {
     m_Stencil = stencil;
     m_IsDirty = true;
 }
 
-bool CMaterialOGLES20::DepthEnable() const
+bool CMaterialOGLES2::DepthEnable() const
 {
     return m_DepthEnabled;
 }
 
-void CMaterialOGLES20::DepthEnable(bool value)
+void CMaterialOGLES2::DepthEnable(bool value)
 {
     m_DepthEnabled = value;
     m_IsDirty = true;
 }
 
-int CMaterialOGLES20::UseFromParent() const
+int CMaterialOGLES2::UseFromParent() const
 {
     return m_Flags;
 }
 
-void CMaterialOGLES20::UseFromParent(int flags)
+void CMaterialOGLES2::UseFromParent(int flags)
 {
     m_Flags = flags;
 }
 
-const std::string& CMaterialOGLES20::Hash()
+const std::string& CMaterialOGLES2::Hash()
 {
     if (m_IsDirty)
     {
@@ -157,7 +157,7 @@ const std::string& CMaterialOGLES20::Hash()
     return m_Hash;
 }
 
-bool CMaterialOGLES20::BindUniform1i(int uniform, int value)
+bool CMaterialOGLES2::BindUniform1i(int uniform, int value)
 {
     if (uniform >= 0)
     {
@@ -169,7 +169,7 @@ bool CMaterialOGLES20::BindUniform1i(int uniform, int value)
     return false;
 }
 
-bool CMaterialOGLES20::BindUniform1f(int uniform, float value)
+bool CMaterialOGLES2::BindUniform1f(int uniform, float value)
 {
     if (uniform >= 0)
     {
@@ -181,7 +181,7 @@ bool CMaterialOGLES20::BindUniform1f(int uniform, float value)
     return false;
 }
 
-bool CMaterialOGLES20::BindUniform2i(int uniform, int value1, int value2)
+bool CMaterialOGLES2::BindUniform2i(int uniform, int value1, int value2)
 {
     if (uniform >= 0)
     {
@@ -193,7 +193,7 @@ bool CMaterialOGLES20::BindUniform2i(int uniform, int value1, int value2)
     return false;
 }
 
-bool CMaterialOGLES20::BindUniform2f(int uniform, float value1, float value2)
+bool CMaterialOGLES2::BindUniform2f(int uniform, float value1, float value2)
 {
     if (uniform >= 0)
     {
@@ -205,7 +205,7 @@ bool CMaterialOGLES20::BindUniform2f(int uniform, float value1, float value2)
     return false;
 }
 
-bool CMaterialOGLES20::BindUniformfv(int uniform, const std::vector<float>& value)
+bool CMaterialOGLES2::BindUniformfv(int uniform, const std::vector<float>& value)
 {
     if (uniform >= 0)
     {
@@ -217,7 +217,7 @@ bool CMaterialOGLES20::BindUniformfv(int uniform, const std::vector<float>& valu
     return false;
 }
 
-bool CMaterialOGLES20::BindUniformMatrix4x4f(int uniform, const CMatrix4x4f& value)
+bool CMaterialOGLES2::BindUniformMatrix4x4f(int uniform, const CMatrix4x4f& value)
 {
     if (uniform >= 0)
     {
@@ -229,22 +229,22 @@ bool CMaterialOGLES20::BindUniformMatrix4x4f(int uniform, const CMatrix4x4f& val
     return false;
 }
 
-const IMaterial::TUniInt& CMaterialOGLES20::Uniformsi() const
+const IMaterial::TUniInt& CMaterialOGLES2::Uniformsi() const
 {
     return m_UniInt;
 }
 
-const IMaterial::TUniFloat& CMaterialOGLES20::Uniformsf() const
+const IMaterial::TUniFloat& CMaterialOGLES2::Uniformsf() const
 {
     return m_UniFloat;
 }
 
-const IMaterial::TUniFloat& CMaterialOGLES20::Uniformsfv() const
+const IMaterial::TUniFloat& CMaterialOGLES2::Uniformsfv() const
 {
     return m_UniFloatVec;
 }
 
-const IMaterial::TUniMatrix4Float& CMaterialOGLES20::UniformsMatrix4x4f() const
+const IMaterial::TUniMatrix4Float& CMaterialOGLES2::UniformsMatrix4x4f() const
 {
     return m_UniMatrixFloat;
 }
@@ -369,7 +369,7 @@ INL void AddUniformi(const IMaterial::TUniInt& uniInt, bool isVector)
     });
 }
 
-void CMaterialOGLES20::UpdateUniforms() const
+void CMaterialOGLES2::UpdateUniforms() const
 {
     const IMaterial::TUniFloat& uniFloat = Uniformsf();
     const IMaterial::TUniInt& uniInt = Uniformsi();
@@ -390,7 +390,7 @@ void CMaterialOGLES20::UpdateUniforms() const
 // Private Methods
 // *****************************************************************************
 
-void CMaterialOGLES20::HashMe()
+void CMaterialOGLES2::HashMe()
 {
     std::stringstream ss;    
     ss << PrimitiveType();

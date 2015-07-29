@@ -1,5 +1,5 @@
 //
-//  CMeshOGLES20.h
+//  CMeshOGLES2.h
 //  OpenJam
 //
 //  Created by Yevgeniy Logachev
@@ -7,7 +7,7 @@
 //
 #if defined(RENDER_OGLES2)
 
-#include "CMeshOGLES20.h"
+#include "CMeshOGLES2.h"
 #include "IVertexBuffer.h"
 #include "IIndexBuffer.h"
 
@@ -21,7 +21,7 @@ using namespace jam;
 // Public Methods
 // *****************************************************************************
 
-CMeshOGLES20::CMeshOGLES20()
+CMeshOGLES2::CMeshOGLES2()
 : m_VAO(0)
 , m_VertexBuffer(nullptr)
 , m_IndexBuffer(nullptr)
@@ -29,32 +29,32 @@ CMeshOGLES20::CMeshOGLES20()
     glGenVertexArraysOES(1, &m_VAO);
 }
 
-CMeshOGLES20::~CMeshOGLES20()
+CMeshOGLES2::~CMeshOGLES2()
 {
     glDeleteVertexArraysOES(1, &m_VAO);
 }
 
-void CMeshOGLES20::Bind()
+void CMeshOGLES2::Bind()
 {
     glBindVertexArrayOES(m_VAO);
 }
 
-void CMeshOGLES20::Unbind()
+void CMeshOGLES2::Unbind()
 {
     glBindVertexArrayOES(0);
 }
 
-bool CMeshOGLES20::IsValid() const
+bool CMeshOGLES2::IsValid() const
 {
     return (m_VAO != 0);
 }
 
-IVertexBufferPtr CMeshOGLES20::VertexBuffer() const
+IVertexBufferPtr CMeshOGLES2::VertexBuffer() const
 {
     return m_VertexBuffer;
 }
 
-void CMeshOGLES20::VertexBuffer(IVertexBufferPtr vertexBuffer)
+void CMeshOGLES2::VertexBuffer(IVertexBufferPtr vertexBuffer)
 {
     if (m_VertexBuffer != vertexBuffer)
     {
@@ -75,12 +75,12 @@ void CMeshOGLES20::VertexBuffer(IVertexBufferPtr vertexBuffer)
     m_VertexBuffer = vertexBuffer;
 }
 
-IIndexBufferPtr CMeshOGLES20::IndexBuffer() const
+IIndexBufferPtr CMeshOGLES2::IndexBuffer() const
 {
     return m_IndexBuffer;
 }
 
-void CMeshOGLES20::IndexBuffer(IIndexBufferPtr indexBuffer)
+void CMeshOGLES2::IndexBuffer(IIndexBufferPtr indexBuffer)
 {
     if (m_IndexBuffer != indexBuffer)
     {

@@ -1,5 +1,5 @@
 //
-//  CMaterialOGLES20.h
+//  CMaterialOGLES2.h
 //  OpenJam
 //
 //  Created by Yevgeniy Logachev
@@ -7,19 +7,19 @@
 //
 #if defined(RENDER_OGLES2)
 
-#ifndef CMATERIALOGLES20_H
-#define CMATERIALOGLES20_H
+#ifndef CMATERIALOGLES2_H
+#define CMATERIALOGLES2_H
 
 #include "IMaterial.h"
 
 namespace jam
 {
 
-class CMaterialOGLES20 : public IMaterial
+class CMaterialOGLES2 : public IMaterial
 {
 public:
-    CMaterialOGLES20();
-    virtual ~CMaterialOGLES20();
+    CMaterialOGLES2();
+    virtual ~CMaterialOGLES2();
     
     virtual void                    Bind();
     virtual void                    Unbind();
@@ -82,6 +82,6 @@ private:
 
 }; // namespace jam
 
-#endif /* defined(CMATERIALOGLES20_H) */
+#endif /* defined(CMATERIALOGLES2_H) */
 
 #endif // RENDER_OGLES2

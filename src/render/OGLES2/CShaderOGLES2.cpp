@@ -1,5 +1,5 @@
 //
-//  CShaderOGLES20.h
+//  CShaderOGLES2.h
 //  OpenJam
 //
 //  Created by Yevgeniy Logachev
@@ -7,7 +7,7 @@
 //
 #if defined(RENDER_OGLES2)
 
-#include "CShaderOGLES20.h"
+#include "CShaderOGLES2.h"
 
 using namespace jam;
 
@@ -21,7 +21,7 @@ INL unsigned int ShaderTypeToGlType(IShader::ShaderType type);
 // Public Methods
 // *****************************************************************************
 
-CShaderOGLES20::CShaderOGLES20()
+CShaderOGLES2::CShaderOGLES2()
 : IShader()
 , m_Id(0)
 , m_IsCompiled(false)
@@ -29,16 +29,16 @@ CShaderOGLES20::CShaderOGLES20()
 {
 }
 
-CShaderOGLES20::~CShaderOGLES20()
+CShaderOGLES2::~CShaderOGLES2()
 {
 }
 
-unsigned int CShaderOGLES20::Id()
+unsigned int CShaderOGLES2::Id()
 {
     return m_Id;
 }
 
-bool CShaderOGLES20::Compile(const std::string& source, ShaderType shaderType)
+bool CShaderOGLES2::Compile(const std::string& source, ShaderType shaderType)
 {
     m_IsCompiled = false;
     
@@ -75,12 +75,12 @@ bool CShaderOGLES20::Compile(const std::string& source, ShaderType shaderType)
     return m_IsCompiled;
 }
 
-bool CShaderOGLES20::IsCompiled() const
+bool CShaderOGLES2::IsCompiled() const
 {
     return m_IsCompiled;
 }
 
-IShader::ShaderType CShaderOGLES20::Type() const
+IShader::ShaderType CShaderOGLES2::Type() const
 {
     return m_Type;
 }

@@ -1,5 +1,5 @@
 //
-//  CShaderProgramOGLES20.h
+//  CShaderProgramOGLES2.h
 //  OpenJam
 //
 //  Created by Yevgeniy Logachev
@@ -7,19 +7,19 @@
 //
 #if defined(RENDER_OGLES2)
 
-#ifndef CSHADERPROGRAMOGLES20_H
-#define	CSHADERPROGRAMOGLES20_H
+#ifndef CSHADERPROGRAMOGLES2_H
+#define	CSHADERPROGRAMOGLES2_H
 
 #include "IShaderProgram.h"
 
 namespace jam
 {
 
-class CShaderProgramOGLES20 : public IShaderProgram
+class CShaderProgramOGLES2 : public IShaderProgram
 {
 public:
-    CShaderProgramOGLES20();
-    virtual ~CShaderProgramOGLES20();
+    CShaderProgramOGLES2();
+    virtual ~CShaderProgramOGLES2();
     
     virtual void Bind();
     virtual void Unbind();
@@ -67,6 +67,6 @@ private:
 
 }; // namespace jam
 
-#endif	/* CSHADERPROGRAMOGLES20_H */
+#endif	/* CSHADERPROGRAMOGLES2_H */
 
 #endif /* RENDER_OGLES2 */

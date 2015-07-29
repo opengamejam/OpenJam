@@ -1,28 +1,25 @@
 //
-//  CVertexBufferOGLES20.h
+//  CIndexBufferOGLES2.h
 //  OpenJam
 //
 //  Created by Yevgeniy Logachev
-//  Copyright (c) 2014 Yevgeniy Logachev. All rights reserved.
+//  Copyright (c) 2014 yev. All rights reserved.
 //
 #if defined(RENDER_OGLES2)
 
-#ifndef CVERTEXBUFFEROGLES20_H
-#define CVERTEXBUFFEROGLES20_H
+#ifndef CINDEXBUFFEROGLES2_H
+#define CINDEXBUFFEROGLES2_H
 
-#include "IVertexBuffer.h"
+#include "IIndexBuffer.h"
 
 namespace jam
 {
     
-class CVertexBufferOGLES20 : public IVertexBuffer
+class CIndexBufferOGLES2 : public IIndexBuffer
 {
 public:
-    CVertexBufferOGLES20();
-    virtual ~CVertexBufferOGLES20();
-    
-    virtual const TVertexStreamMap& VertexStreams() const;
-    virtual SVertexStream& Lock(VertexTypes vertexType);
+    CIndexBufferOGLES2();
+    virtual ~CIndexBufferOGLES2();
     
     virtual void Initialize(size_t elementSize);
     virtual void Destroy();
@@ -34,9 +31,7 @@ public:
     virtual size_t ElementSize() const;
     
     virtual void* LockRaw();
-    virtual bool IsLocked() const;
     virtual void Unlock();
-    virtual bool HasStream(VertexTypes vertexType);
     
     virtual void Bind();
     virtual void Unbind();
@@ -48,12 +43,10 @@ private:
     unsigned int m_Id;
     std::vector<char> m_Buffer;
     size_t m_ElementSize;
-    bool m_IsLocked;
-    TVertexStreamMap m_VertexStreamers;
 };
     
 }; // namespace jam
 
-#endif /* defined(CVERTEXBUFFEROGLES20_H) */
+#endif /* defined(CINDEXBUFFEROGLES2_H) */
 
 #endif /* RENDER_OGLES2 */

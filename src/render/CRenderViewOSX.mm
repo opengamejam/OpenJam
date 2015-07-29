@@ -73,7 +73,7 @@ void CRenderViewOSX::CreateView()
         case OGL3:
         {
             /*m_GLContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
-            GRenderer.reset(new CRendererOGLES20(shared_from_this()));*/
+            GRenderer.reset(new CRendererOGLES2(shared_from_this()));*/
             CGLEnable([m_GLContext CGLContextObj], kCGLCECrashOnRemovedFunctions);
         }
         break;

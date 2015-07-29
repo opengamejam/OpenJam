@@ -1,5 +1,5 @@
 //
-//  CTextureOGLES20.h
+//  CTextureOGLES2.h
 //  OpenJam
 //
 //  Created by Yevgeniy Logachev
@@ -7,19 +7,19 @@
 //
 #if defined(RENDER_OGLES2)
 
-#ifndef CTEXTUREOGLES20_H
-#define	CTEXTUREOGLES20_H
+#ifndef CTEXTUREOGLES2_H
+#define	CTEXTUREOGLES2_H
 
 #include "ITexture.h"
 
 namespace jam
 {
 
-class CTextureOGLES20 : public ITexture
+class CTextureOGLES2 : public ITexture
 {
 public:
-    CTextureOGLES20();
-    virtual ~CTextureOGLES20();
+    CTextureOGLES2();
+    virtual ~CTextureOGLES2();
     
     virtual void Bind();
     virtual void Unbind();
@@ -43,6 +43,6 @@ private:
 
 }; // namespace jam
 
-#endif /* CTEXTUREOGLES20_H */
+#endif /* CTEXTUREOGLES2_H */
 
 #endif /* RENDER_OGLES2 */

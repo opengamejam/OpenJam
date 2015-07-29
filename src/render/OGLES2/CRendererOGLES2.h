@@ -1,5 +1,5 @@
 //
-//  CRendererOGLES20.h
+//  CRendererOGLES2.h
 //  OpenJam
 //
 //  Created by Yevgeniy Logachev
@@ -7,18 +7,18 @@
 //
 #if defined(RENDER_OGLES2)
 
-#ifndef CRENDEREROGLES20_H
-#define CRENDEREROGLES20_H
+#ifndef CRENDEREROGLES2_H
+#define CRENDEREROGLES2_H
 
 #include "IRenderer.h"
 
 namespace jam
 {
-class CRendererOGLES20 : public IRenderer
+class CRendererOGLES2 : public IRenderer
 {
 public:
-    CRendererOGLES20(IRenderViewPtr renderView);
-    virtual ~CRendererOGLES20();
+    CRendererOGLES2(IRenderViewPtr renderView);
+    virtual ~CRendererOGLES2();
     
     virtual IRenderViewPtr RenderView() const;
     
@@ -41,6 +41,6 @@ private:
     
 }; // namespace jam
 
-#endif /* defined(CRENDEREROGLES20_H) */
+#endif /* defined(CRENDEREROGLES2_H) */
 
 #endif // RENDER_OGLES2

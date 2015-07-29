@@ -1,5 +1,5 @@
 //
-//  CVertexBufferOGLES20.h
+//  CVertexBufferOGLES2.h
 //  OpenJam
 //
 //  Created by Yevgeniy Logachev
@@ -7,7 +7,7 @@
 //
 #if defined(RENDER_OGLES2)
 
-#include "CVertexBufferOGLES20.h"
+#include "CVertexBufferOGLES2.h"
 
 using namespace jam;
 
@@ -19,7 +19,7 @@ using namespace jam;
 // Public Methods
 // *****************************************************************************
 
-CVertexBufferOGLES20::CVertexBufferOGLES20()
+CVertexBufferOGLES2::CVertexBufferOGLES2()
 : m_Id(0)
 , m_ElementSize(0)
 , m_IsLocked(false)
@@ -27,12 +27,12 @@ CVertexBufferOGLES20::CVertexBufferOGLES20()
     
 }
 
-CVertexBufferOGLES20::~CVertexBufferOGLES20()
+CVertexBufferOGLES2::~CVertexBufferOGLES2()
 {
     Destroy();
 }
 
-void CVertexBufferOGLES20::Initialize(size_t elementSize)
+void CVertexBufferOGLES2::Initialize(size_t elementSize)
 {
     if (!IsValid())
     {
@@ -41,12 +41,12 @@ void CVertexBufferOGLES20::Initialize(size_t elementSize)
     ElementSize(elementSize);
 }
 
-const IVertexBuffer::TVertexStreamMap& CVertexBufferOGLES20::VertexStreams() const
+const IVertexBuffer::TVertexStreamMap& CVertexBufferOGLES2::VertexStreams() const
 {
     return m_VertexStreamers;
 }
 
-IVertexBuffer::SVertexStream& CVertexBufferOGLES20::Lock(IVertexBuffer::VertexTypes vertexType)
+IVertexBuffer::SVertexStream& CVertexBufferOGLES2::Lock(IVertexBuffer::VertexTypes vertexType)
 {
     LockRaw();
     
@@ -58,7 +58,7 @@ IVertexBuffer::SVertexStream& CVertexBufferOGLES20::Lock(IVertexBuffer::VertexTy
     return m_VertexStreamers[vertexType];
 }
 
-void CVertexBufferOGLES20::Destroy()
+void CVertexBufferOGLES2::Destroy()
 {
     if (IsValid())
     {
@@ -67,38 +67,38 @@ void CVertexBufferOGLES20::Destroy()
     }
 }
 
-bool CVertexBufferOGLES20::IsValid() const
+bool CVertexBufferOGLES2::IsValid() const
 {
     return (m_Id != 0);
 }
 
-size_t CVertexBufferOGLES20::SizeRaw() const
+size_t CVertexBufferOGLES2::SizeRaw() const
 {
     return m_Buffer.size();
 }
 
-void CVertexBufferOGLES20::ResizeRaw(size_t newSize)
+void CVertexBufferOGLES2::ResizeRaw(size_t newSize)
 {
     m_Buffer.resize(newSize);
 }
 
-size_t CVertexBufferOGLES20::ElementSize() const
+size_t CVertexBufferOGLES2::ElementSize() const
 {
     return m_ElementSize;
 }
 
-void* CVertexBufferOGLES20::LockRaw()
+void* CVertexBufferOGLES2::LockRaw()
 {
     m_IsLocked = true;
     return m_Buffer.data();
 }
 
-bool CVertexBufferOGLES20::IsLocked() const
+bool CVertexBufferOGLES2::IsLocked() const
 {
     return m_IsLocked;
 }
 
-void CVertexBufferOGLES20::Unlock()
+void CVertexBufferOGLES2::Unlock()
 {
     if (!m_IsLocked)
     {
@@ -111,7 +111,7 @@ void CVertexBufferOGLES20::Unlock()
     m_IsLocked = false;
 }
 
-void CVertexBufferOGLES20::Bind()
+void CVertexBufferOGLES2::Bind()
 {
     glBindBuffer(GL_ARRAY_BUFFER, m_Id);
     
@@ -133,12 +133,12 @@ void CVertexBufferOGLES20::Bind()
     });
 }
 
-bool CVertexBufferOGLES20::HasStream(IVertexBuffer::VertexTypes vertexType)
+bool CVertexBufferOGLES2::HasStream(IVertexBuffer::VertexTypes vertexType)
 {
     return (m_VertexStreamers.find(vertexType) != m_VertexStreamers.end());
 }
 
-void CVertexBufferOGLES20::Unbind()
+void CVertexBufferOGLES2::Unbind()
 {
     glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
@@ -147,7 +147,7 @@ void CVertexBufferOGLES20::Unbind()
 // Protected Methods
 // *****************************************************************************
 
-void CVertexBufferOGLES20::ElementSize(size_t elementSize)
+void CVertexBufferOGLES2::ElementSize(size_t elementSize)
 {
     m_ElementSize = std::max<size_t>(elementSize, 1);
 }

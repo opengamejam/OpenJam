@@ -1,5 +1,5 @@
 //
-//  CMeshOGLES20.h
+//  CMeshOGLES2.h
 //  OpenJam
 //
 //  Created by Yevgeniy Logachev
@@ -7,19 +7,19 @@
 //
 #if defined(RENDER_OGLES2)
 
-#ifndef CMESHOGLES20_H
-#define CMESHOGLES20_H
+#ifndef CMESHOGLES2_H
+#define CMESHOGLES2_H
 
 #include "IMesh.h"
 
 namespace jam
 {
 
-class CMeshOGLES20 : public IMesh
+class CMeshOGLES2 : public IMesh
 {
 public:
-    CMeshOGLES20();
-    virtual ~CMeshOGLES20();
+    CMeshOGLES2();
+    virtual ~CMeshOGLES2();
     
     virtual void Bind();
     virtual void Unbind();
@@ -39,6 +39,6 @@ private:
 
 }; // namespace jam
 
-#endif /* defined(CMESHOGLES20_H) */
+#endif /* defined(CMESHOGLES2_H) */
 
 #endif // RENDER_OGLES2

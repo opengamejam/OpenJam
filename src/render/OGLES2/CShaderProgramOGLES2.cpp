@@ -1,5 +1,5 @@
 //
-//  CShaderProgramOGLES20.h
+//  CShaderProgramOGLES2.h
 //  OpenJam
 //
 //  Created by Yevgeniy Logachev
@@ -7,7 +7,7 @@
 //
 #if defined(RENDER_OGLES2)
 
-#include "CShaderProgramOGLES20.h"
+#include "CShaderProgramOGLES2.h"
 #include "IMaterial.h" // TODO: to remove
 
 using namespace jam;
@@ -20,7 +20,7 @@ using namespace jam;
 // Public Methods
 // *****************************************************************************
 
-CShaderProgramOGLES20::CShaderProgramOGLES20()
+CShaderProgramOGLES2::CShaderProgramOGLES2()
 : IShaderProgram()
 , m_ProgramObject(0)
 , m_ProectionMatrixHadle(-1)
@@ -39,21 +39,21 @@ CShaderProgramOGLES20::CShaderProgramOGLES20()
     }
 }
 
-CShaderProgramOGLES20::~CShaderProgramOGLES20()
+CShaderProgramOGLES2::~CShaderProgramOGLES2()
 {
 }
 
-void CShaderProgramOGLES20::Bind()
+void CShaderProgramOGLES2::Bind()
 {
     glUseProgram(m_ProgramObject);
 }
 
-void CShaderProgramOGLES20::Unbind()
+void CShaderProgramOGLES2::Unbind()
 {
     glUseProgram(0);
 }
 
-void CShaderProgramOGLES20::AttachShader(IShaderPtr shader)
+void CShaderProgramOGLES2::AttachShader(IShaderPtr shader)
 {
     std::map<IShader::ShaderType, IShaderPtr>::const_iterator it = m_AttachedShaders.find(shader->Type());
     if (it != m_AttachedShaders.end())
@@ -68,7 +68,7 @@ void CShaderProgramOGLES20::AttachShader(IShaderPtr shader)
     m_IsLinked = false;
 }
 
-void CShaderProgramOGLES20::DetachShader(IShader::ShaderType shaderType)
+void CShaderProgramOGLES2::DetachShader(IShader::ShaderType shaderType)
 {
     std::map<IShader::ShaderType, IShaderPtr>::const_iterator it = m_AttachedShaders.find(shaderType);
     if (it != m_AttachedShaders.end())
@@ -80,19 +80,19 @@ void CShaderProgramOGLES20::DetachShader(IShader::ShaderType shaderType)
     m_IsLinked = false;
 }
 
-bool CShaderProgramOGLES20::IsShaderAttached(IShader::ShaderType shaderType)
+bool CShaderProgramOGLES2::IsShaderAttached(IShader::ShaderType shaderType)
 {
     std::map<IShader::ShaderType, IShaderPtr>::const_iterator it = m_AttachedShaders.find(shaderType);
     return (it != m_AttachedShaders.end());
 }
 
-bool CShaderProgramOGLES20::IsValid()
+bool CShaderProgramOGLES2::IsValid()
 {
     return (IsShaderAttached(IShader::Vertex) &&
             IsShaderAttached(IShader::Fragment));
 }
 
-bool CShaderProgramOGLES20::Link()
+bool CShaderProgramOGLES2::Link()
 {
     glLinkProgram(m_ProgramObject);
     
@@ -122,57 +122,57 @@ bool CShaderProgramOGLES20::Link()
     return m_IsLinked;
 }
 
-bool CShaderProgramOGLES20::IsLinked() const
+bool CShaderProgramOGLES2::IsLinked() const
 {
     return m_IsLinked;
 }
 
-unsigned int CShaderProgramOGLES20::Attribute(const std::string& name)
+unsigned int CShaderProgramOGLES2::Attribute(const std::string& name)
 {
     return glGetAttribLocation(m_ProgramObject, name.c_str());
 }
 
-unsigned int CShaderProgramOGLES20::Uniform(const std::string& name)
+unsigned int CShaderProgramOGLES2::Uniform(const std::string& name)
 {
     return glGetUniformLocation(m_ProgramObject, name.c_str());
 }
 
-unsigned int CShaderProgramOGLES20::VertexPosition()
+unsigned int CShaderProgramOGLES2::VertexPosition()
 {
     return m_VertexCoordHandle;
 }
 
-unsigned int CShaderProgramOGLES20::TextureCoord()
+unsigned int CShaderProgramOGLES2::TextureCoord()
 {
     return m_TextureCoordHandle;
 }
 
-unsigned int CShaderProgramOGLES20::VertexColor()
+unsigned int CShaderProgramOGLES2::VertexColor()
 {
     return m_VertexColorHandle;
 }
 
-unsigned int CShaderProgramOGLES20::MainTexture()
+unsigned int CShaderProgramOGLES2::MainTexture()
 {
     return m_TextureDataHadle[0];
 }
 
-unsigned int CShaderProgramOGLES20::MainColor()
+unsigned int CShaderProgramOGLES2::MainColor()
 {
     return m_ColorHandle;
 }
 
-unsigned int CShaderProgramOGLES20::ProjectionMatrix()
+unsigned int CShaderProgramOGLES2::ProjectionMatrix()
 {
     return m_ProectionMatrixHadle;
 }
 
-unsigned int CShaderProgramOGLES20::ModelMatrix()
+unsigned int CShaderProgramOGLES2::ModelMatrix()
 {
     return m_ModelMatrixHadle;
 }
 
-unsigned int CShaderProgramOGLES20::Texture(unsigned int index)
+unsigned int CShaderProgramOGLES2::Texture(unsigned int index)
 {
     if (index < IMaterial::MaxSamplingTextures)
     {
@@ -181,22 +181,22 @@ unsigned int CShaderProgramOGLES20::Texture(unsigned int index)
     return -1;
 }
 
-unsigned int CShaderProgramOGLES20::DiffuseTexture()
+unsigned int CShaderProgramOGLES2::DiffuseTexture()
 {
     return m_TextureDataHadle[0];
 }
 
-unsigned int CShaderProgramOGLES20::NormalTexture()
+unsigned int CShaderProgramOGLES2::NormalTexture()
 {
     return m_TextureDataHadle[1];
 }
 
-unsigned int CShaderProgramOGLES20::SpecularTexture()
+unsigned int CShaderProgramOGLES2::SpecularTexture()
 {
     return m_TextureDataHadle[2];
 }
 
-unsigned int CShaderProgramOGLES20::EnvironmentTexture()
+unsigned int CShaderProgramOGLES2::EnvironmentTexture()
 {
     return m_TextureDataHadle[3];
 }

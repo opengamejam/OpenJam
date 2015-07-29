@@ -1,5 +1,5 @@
 //
-//  CIndexBufferOGLES20.h
+//  CIndexBufferOGLES2.h
 //  OpenJam
 //
 //  Created by Yevgeniy Logachev
@@ -7,7 +7,7 @@
 //
 #if defined(RENDER_OGLES2)
 
-#include "CIndexBufferOGLES20.h"
+#include "CIndexBufferOGLES2.h"
 
 using namespace jam;
 
@@ -19,19 +19,19 @@ using namespace jam;
 // Public Methods
 // *****************************************************************************
 
-CIndexBufferOGLES20::CIndexBufferOGLES20()
+CIndexBufferOGLES2::CIndexBufferOGLES2()
 : m_Id(0)
 , m_ElementSize(1)
 {
     
 }
 
-CIndexBufferOGLES20::~CIndexBufferOGLES20()
+CIndexBufferOGLES2::~CIndexBufferOGLES2()
 {
     Destroy();
 }
 
-void CIndexBufferOGLES20::Initialize(size_t elementSize)
+void CIndexBufferOGLES2::Initialize(size_t elementSize)
 {
     if (!IsValid())
     {
@@ -40,7 +40,7 @@ void CIndexBufferOGLES20::Initialize(size_t elementSize)
     ElementSize(elementSize);
 }
 
-void CIndexBufferOGLES20::Destroy()
+void CIndexBufferOGLES2::Destroy()
 {
     if (IsValid())
     {
@@ -49,44 +49,44 @@ void CIndexBufferOGLES20::Destroy()
     }
 }
 
-bool CIndexBufferOGLES20::IsValid() const
+bool CIndexBufferOGLES2::IsValid() const
 {
     return (m_Id != 0);
 }
 
-size_t CIndexBufferOGLES20::SizeRaw() const
+size_t CIndexBufferOGLES2::SizeRaw() const
 {
     return m_Buffer.size();
 }
 
-void CIndexBufferOGLES20::ResizeRaw(size_t newSize)
+void CIndexBufferOGLES2::ResizeRaw(size_t newSize)
 {
     m_Buffer.resize(newSize);
 }
 
-size_t CIndexBufferOGLES20::ElementSize() const
+size_t CIndexBufferOGLES2::ElementSize() const
 {
     return m_ElementSize;
 }
 
-void* CIndexBufferOGLES20::LockRaw()
+void* CIndexBufferOGLES2::LockRaw()
 {
     return m_Buffer.data();
 }
 
-void CIndexBufferOGLES20::Unlock()
+void CIndexBufferOGLES2::Unlock()
 {    
     Bind();
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_Buffer.size(), m_Buffer.data(), GL_DYNAMIC_DRAW);
     Unbind();
 }
 
-void CIndexBufferOGLES20::Bind()
+void CIndexBufferOGLES2::Bind()
 {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_Id);
 }
 
-void CIndexBufferOGLES20::Unbind()
+void CIndexBufferOGLES2::Unbind()
 {
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
 }
@@ -95,7 +95,7 @@ void CIndexBufferOGLES20::Unbind()
 // Protected Methods
 // *****************************************************************************
 
-void CIndexBufferOGLES20::ElementSize(size_t elementSize)
+void CIndexBufferOGLES2::ElementSize(size_t elementSize)
 {
     m_ElementSize = std::max<size_t>(elementSize, 1);
 }

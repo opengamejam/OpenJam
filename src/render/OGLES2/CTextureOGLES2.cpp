@@ -1,5 +1,5 @@
 //
-//  CTextureOGLES20.h
+//  CTextureOGLES2.h
 //  OpenJam
 //
 //  Created by Yevgeniy Logachev
@@ -7,7 +7,7 @@
 //
 #if defined(RENDER_OGLES2)
 
-#include "CTextureOGLES20.h"
+#include "CTextureOGLES2.h"
 #include "IImage.h"
 
 using namespace jam;
@@ -85,7 +85,7 @@ INL int TexelTypeToGlType(TexelTypes texelType, TexelFormats texelFormat);
 // Public Methods
 // *****************************************************************************
 
-CTextureOGLES20::CTextureOGLES20()
+CTextureOGLES2::CTextureOGLES2()
 : m_Id(0)
 , m_Filter(ITexture::Linear)
 , m_IsDirty(true)
@@ -93,12 +93,12 @@ CTextureOGLES20::CTextureOGLES20()
     
 }
 
-CTextureOGLES20::~CTextureOGLES20()
+CTextureOGLES2::~CTextureOGLES2()
 {
     glDeleteTextures(1, &m_Id);
 }
 
-void CTextureOGLES20::Bind()
+void CTextureOGLES2::Bind()
 {
     if (!IsValid())
     {
@@ -109,7 +109,7 @@ void CTextureOGLES20::Bind()
     glBindTexture(GL_TEXTURE_2D, m_Id);    // TODO: texture type
 }
 
-void CTextureOGLES20::Unbind()
+void CTextureOGLES2::Unbind()
 {
     if (!IsValid())
     {
@@ -120,12 +120,12 @@ void CTextureOGLES20::Unbind()
     glBindTexture(GL_TEXTURE_2D, 0);    // TODO: texture type
 }
 
-bool CTextureOGLES20::IsValid() const
+bool CTextureOGLES2::IsValid() const
 {
     return (m_Id != 0);
 }
 
-void CTextureOGLES20::Filter(ITexture::TextureFilters filter)
+void CTextureOGLES2::Filter(ITexture::TextureFilters filter)
 {
     if (!IsValid())
     {
@@ -149,12 +149,12 @@ void CTextureOGLES20::Filter(ITexture::TextureFilters filter)
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 }
 
-ITexture::TextureFilters CTextureOGLES20::Filter() const
+ITexture::TextureFilters CTextureOGLES2::Filter() const
 {
     return m_Filter;
 }
 
-bool CTextureOGLES20::AssignImage(IImagePtr image)
+bool CTextureOGLES2::AssignImage(IImagePtr image)
 {
     if (!IsValid())
     {
@@ -210,7 +210,7 @@ bool CTextureOGLES20::AssignImage(IImagePtr image)
     return false;
 }
 
-const std::string& CTextureOGLES20::Hash()
+const std::string& CTextureOGLES2::Hash()
 {
     if (m_IsDirty)
     {
@@ -229,7 +229,7 @@ const std::string& CTextureOGLES20::Hash()
 // Private Methods
 // *****************************************************************************
 
-void CTextureOGLES20::HashMe()
+void CTextureOGLES2::HashMe()
 {
     std::stringstream ss;
     ss << Filter();

@@ -1,5 +1,5 @@
 //
-//  CShaderOGLES20.h
+//  CShaderOGLES2.h
 //  OpenJam
 //
 //  Created by Yevgeniy Logachev
@@ -7,19 +7,19 @@
 //
 #if defined(RENDER_OGLES2)
 
-#ifndef CSHADEROGLES20_H
-#define	CSHADEROGLES20_H
+#ifndef CSHADEROGLES2_H
+#define	CSHADEROGLES2_H
 
 #include "IShader.h"
 
 namespace jam
 {
 
-class CShaderOGLES20 : public IShader
+class CShaderOGLES2 : public IShader
 {
 public:
-    CShaderOGLES20();
-    virtual ~CShaderOGLES20();
+    CShaderOGLES2();
+    virtual ~CShaderOGLES2();
     
     virtual unsigned int Id();
     virtual bool Compile(const std::string& source, ShaderType shaderType);
@@ -34,6 +34,6 @@ private:
 
 }; // namespace jam
 
-#endif	/* CSHADEROGLES20_H */
+#endif	/* CSHADEROGLES2_H */
 
 #endif /* RENDER_OGLES2 */

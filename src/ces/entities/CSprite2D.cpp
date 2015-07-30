@@ -18,6 +18,7 @@
 #include "CSpriteXML.h"
 #include "CAnimation2DComponent.h"
 #include "CTransformationComponent.h"
+#include "CResourceCache.hpp"
 
 using namespace jam;
 
@@ -129,8 +130,21 @@ CSprite2DPtr CSprite2D::Create(const std::string& filename)
     
     // Sprite component
     CAnimation2DComponentPtr animationComponent(new CAnimation2DComponent());
-    ISpritePtr sprite(new CSpriteXML(filename));
-    if (sprite->Load())
+    
+    CResourceCache<ISprite> resourceCache;
+    ISpritePtr sprite = resourceCache.AcquireResource(filename, false,
+                                                      [](const std::string& filename) -> ISpritePtr
+    {
+        ISpritePtr resultSprite(new CSpriteXML(filename));
+        if (!resultSprite->Load())
+        {
+            resultSprite = nullptr;
+        }
+        
+        return resultSprite;
+    });
+    
+    if (sprite)
     {
         animationComponent->Sprite(sprite);
     }
@@ -139,10 +153,10 @@ CSprite2DPtr CSprite2D::Create(const std::string& filename)
     CTransformationComponentPtr transformComponent(new CTransformationComponent());
      
     CSprite2DPtr entity = IEntity::Create<CSprite2D>(filename, {
-                                                                             renderComponent,
-                                                                             animationComponent,
-                                                                             transformComponent
-                                                                            });
+                                                                renderComponent,
+                                                                animationComponent,
+                                                                transformComponent
+                                                               });
     // Store links to components
     entity->m_RenderComponent = renderComponent;
     entity->m_AnimationComponent = animationComponent;

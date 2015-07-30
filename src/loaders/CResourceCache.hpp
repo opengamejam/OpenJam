@@ -16,67 +16,32 @@ namespace jam
 {
 CLASS_PTR(IResource);
     
-    
+template <class T>
 class CResourceCache
 {
 public:
-    CResourceCache();
-    virtual ~CResourceCache();
+    CResourceCache() = default;
+    virtual ~CResourceCache() = default;
     
-    template <class T>
     std::shared_ptr<T> AcquireResource(const std::string& filename,
                                        bool isUnique,
-                                       std::function<IResourcePtr(const std::string&)> instantiationFunc)
+                                       std::function<std::shared_ptr<T>(const std::string&)> instantiationFunc)
     {
         std::shared_ptr<T> resource = nullptr;
         if (!isUnique)
         {
-            resource = FindResource<T>(filename);
+            resource = FindResource(filename);
         }
         
         if (!resource)
         {
-            resource = std::dynamic_pointer_cast<T>(instantiationFunc(filename));
-            if (resource && resource->Load())
-            {
-                CacheResource<T>(filename, isUnique, resource);
-            }
-            else
-            {
-                resource = nullptr;
-            }
+            resource = instantiationFunc(filename);
+            CacheResource(filename, isUnique, resource);
         }
         
         return resource;
     }
     
-    /*template <class T>
-    std::shared_ptr<T> RequestResource(const std::string& filename, bool isUnique = false)
-    {
-        std::shared_ptr<T> resource = nullptr;
-        if (!isUnique)
-        {
-            resource = FindResource<T>(filename);
-        }
-        
-        if (!resource)
-        {
-            resource = std::make_shared<T>(T(filename));
-            assert(resource);
-            if (resource && resource->Load())
-            {
-                CacheResource<T>(filename, isUnique, resource);
-            }
-            else
-            {
-                return nullptr;
-            }
-        }
-        
-        return resource;
-    }*/
-    
-    template <class T>
     std::shared_ptr<T> FindResource(const std::string& filename)
     {
         std::shared_ptr<T> resource = nullptr;
@@ -89,9 +54,13 @@ public:
         return resource;
     }
     
-    template <class T>
     void CacheResource(const std::string& filename, bool isUnique, std::shared_ptr<T> resource)
     {
+        if (!resource)
+        {
+            return;
+        }
+        
         std::stringstream key(filename + typeid(T).name());
         if (isUnique)
         {
@@ -104,10 +73,16 @@ public:
     }
     
 private:
-    typedef std::map<std::string, IResourcePtr> TResourcesMap;
+    typedef std::map<std::string, std::shared_ptr<T> > TResourcesMap;
     static TResourcesMap s_CachedResources;
     static unsigned int s_UniqIndex;
 };
+    
+template <class T>
+typename CResourceCache<T>::TResourcesMap CResourceCache<T>::s_CachedResources;
+
+template <class T>
+unsigned int CResourceCache<T>::s_UniqIndex = 0;
 
 }; // namespace jam
     

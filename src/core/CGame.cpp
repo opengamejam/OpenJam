@@ -9,7 +9,6 @@
 #include "IScene.h"
 #include "CLoaderFile.h"
 #include "IEventDispatcher.hpp"
-#include "CResourceCache.hpp"
 
 #include "CImagePVR.h"
 #include "CSpriteXML.h"

@@ -11,6 +11,7 @@
 #include "ISprite.h"
 #include "CImagePVR.h"
 #include "RenderGlobal.h"
+#include "CResourceCache.hpp"
 
 using namespace jam;
 
@@ -71,12 +72,33 @@ void CAnimation2DComponent::Sprite(ISpritePtr sprite)
                 
                 // Load texture atlases
                 frame.textureName = textures[frameDef.textureFrame->textureIdx];
-                ITexturePtr texture = GRenderer->CreateTexture();
-                IImagePtr image(new CImagePVR(frame.textureName));
-                if (image->Load())
+                
+                CResourceCache<ITexture> textureCache;
+                ITexturePtr texture = textureCache.AcquireResource(frame.textureName, false,
+                                                                   [](const std::string& filename) -> ITexturePtr
                 {
-                    texture->AssignImage(image);
-                }
+                    CResourceCache<IImage> imageCache;
+                    IImagePtr image = imageCache.AcquireResource(filename, false,
+                                                                 [](const std::string& filename) -> IImagePtr
+                    {
+                        IImagePtr resultImage(new CImagePVR(filename));
+                        if (!resultImage->Load())
+                        {
+                            resultImage = nullptr;
+                        }
+                        
+                        return resultImage;
+                    });
+                 
+                    ITexturePtr resultTexture = GRenderer->CreateTexture();
+                    if (image)
+                    {
+                        resultTexture->AssignImage(image);
+                    }
+                    
+                    return resultTexture;
+                });
+                
                 m_Textures[frame.textureName] = texture;
                 
                 sequence.push_back(frame);

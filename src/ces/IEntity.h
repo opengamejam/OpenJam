@@ -27,15 +27,6 @@ public:
     IEntity();
     virtual ~IEntity();
     
-    template<class T>
-    static std::shared_ptr<T> Create(const std::string& name, const TComponentsList& components)
-    {
-        std::shared_ptr<T> entity(new T());
-        entity->Initialize(name, components);
-        
-        return entity;
-    }
-    
     void Initialize(const std::string& name, const TComponentsList& components);
     
     const std::string& Name() const;

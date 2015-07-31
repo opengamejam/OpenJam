@@ -15,6 +15,15 @@
 
 using namespace jam;
 
+// *****************************************************************************
+// Constants
+// *****************************************************************************
+
+
+// *****************************************************************************
+// Public Methods
+// *****************************************************************************
+
 CAnimation2DComponent::CAnimation2DComponent()
 : IComponent(ComponentId<CAnimation2DComponent>())
 , m_Sprite(nullptr)
@@ -52,7 +61,10 @@ void CAnimation2DComponent::Sprite(ISpritePtr sprite)
         std::for_each(sequences.begin(), sequences.end(), [&](const CAnimationDef& sequenceDef)
         {
             m_SequencesNames.push_back(sequenceDef.name);
-            TSequenceList& sequence = m_Sequences[sequenceDef.name];
+            TSequence& sequence = m_Sequences[sequenceDef.name];
+            
+            m_SequenceDurations[sequenceDef.name] = 0;
+            unsigned long& duration = m_SequenceDurations[sequenceDef.name];
             
             const ISprite::TFramesList& frames = sequenceDef.frames;
             std::for_each(frames.begin(), frames.end(), [&](const CFrameDef& frameDef)
@@ -63,52 +75,28 @@ void CAnimation2DComponent::Sprite(ISpritePtr sprite)
                 frame.transform.Scale(CVector3Df(frameDef.originalWidth, frameDef.originalHeight, 1.0f));
                 
                 // Texture frame
-                frame.textureFrame.push_back(frameDef.textureFrame->u); // (0, 0)
-                frame.textureFrame.push_back(CVector2Df(frameDef.textureFrame->v.X(),
-                                                        frameDef.textureFrame->u.Y())); // (1, 0)
-                frame.textureFrame.push_back(CVector2Df(frameDef.textureFrame->u.X(),
-                                                        frameDef.textureFrame->v.Y())); // (0, 1)
-                frame.textureFrame.push_back(frameDef.textureFrame->v); // (1, 1)
-                
-                // Load texture atlases
-                frame.textureName = textures[frameDef.textureFrame->textureIdx];
-                
-                CResourceCache<ITexture> textureCache;
-                ITexturePtr texture = textureCache.AcquireResource(frame.textureName, false,
-                                                                   [](const std::string& filename) -> ITexturePtr
-                {
-                    CResourceCache<IImage> imageCache;
-                    IImagePtr image = imageCache.AcquireResource(filename, false,
-                                                                 [](const std::string& filename) -> IImagePtr
-                    {
-                        IImagePtr resultImage(new CImagePVR(filename));
-                        if (!resultImage->Load())
-                        {
-                            resultImage = nullptr;
-                        }
-                        
-                        return resultImage;
-                    });
-                 
-                    ITexturePtr resultTexture = GRenderer->CreateTexture();
-                    if (image)
-                    {
-                        resultTexture->AssignImage(image);
-                    }
-                    
-                    return resultTexture;
-                });
-                
-                m_Textures[frame.textureName] = texture;
+                frame.textureFrame.push_back(frameDef.textureFrame.u); // (0, 0)
+                frame.textureFrame.push_back(CVector2Df(frameDef.textureFrame.v.X(),
+                                                        frameDef.textureFrame.u.Y())); // (1, 0)
+                frame.textureFrame.push_back(CVector2Df(frameDef.textureFrame.u.X(),
+                                                        frameDef.textureFrame.v.Y())); // (0, 1)
+                frame.textureFrame.push_back(frameDef.textureFrame.v); // (1, 1)
+
+                frame.textureName = textures[frameDef.textureFrame.textureIdx];
+                frame.duration = frameDef.animDuration;
+                duration += frameDef.animDuration;
                 
                 sequence.push_back(frame);
             });
         });
+        
+        // Load texture atlases
+        LoadTextures(textures);
     }
     else
     {
         m_SequencesNames.push_back("null");
-        TSequenceList& sequence = m_Sequences["null"];
+        TSequence& sequence = m_Sequences["null"];
         sequence.push_back(SFrame());
     }
     
@@ -161,7 +149,7 @@ void CAnimation2DComponent::AnimationName(const std::string& name)
         m_AnimationName = name;
         
         m_Time = 0;
-        m_FullTime = 2000; // TODO:
+        m_FullTime = m_SequenceDurations[m_AnimationName];
     }
 }
 
@@ -225,7 +213,7 @@ void CAnimation2DComponent::Percentage(float percent)
 
 unsigned int CAnimation2DComponent::FrameId()
 {
-    const TSequenceList& sequence = Sequence();
+    const TSequence& sequence = Sequence();
     return (Percentage() * sequence.size());
 }
 
@@ -253,22 +241,6 @@ void CAnimation2DComponent::FullTime(unsigned long ms)
     m_FullTime = ms;
 }
 
-const CAnimation2DComponent::TSequenceList& CAnimation2DComponent::Sequence()
-{
-    return m_Sequences[m_AnimationName];
-}
-
-void CAnimation2DComponent::Cache()
-{
-    const TSequenceList& sequence = Sequence();
-    unsigned int frameId    = FrameId();
-    m_CachedFrameTransform  = sequence[frameId].transform;
-    m_CachedTextureFrame    = sequence[frameId].textureFrame;
-    m_CachedTextureName     = sequence[frameId].textureName;
-    m_CachedTexture         = m_Textures[m_CachedTextureName];
-    m_CachedIsStatic        = (sequence.size() <= 1);
-}
-
 bool CAnimation2DComponent::IsPlay() const
 {
     return m_IsPlay;
@@ -277,4 +249,63 @@ bool CAnimation2DComponent::IsPlay() const
 void CAnimation2DComponent::Play(bool value)
 {
     m_IsPlay = value;
+}
+
+// *****************************************************************************
+// Protected Methods
+// *****************************************************************************
+
+// *****************************************************************************
+// Private Methods
+// *****************************************************************************
+
+const CAnimation2DComponent::TSequence& CAnimation2DComponent::Sequence()
+{
+    return m_Sequences[m_AnimationName];
+}
+
+void CAnimation2DComponent::Cache()
+{
+    const TSequence& sequence = Sequence();
+    unsigned int frameId    = FrameId();
+    m_CachedFrameTransform  = sequence[frameId].transform;
+    m_CachedTextureFrame    = sequence[frameId].textureFrame;
+    m_CachedTextureName     = sequence[frameId].textureName;
+    m_CachedTexture         = m_Textures[m_CachedTextureName];
+    m_CachedIsStatic        = (sequence.size() <= 1);
+}
+
+void CAnimation2DComponent::LoadTextures(const std::vector<std::string>& textureNames)
+{
+    CResourceCache<ITexture> textureCache;
+    
+    std::for_each(textureNames.begin(), textureNames.end(), [&](const std::string& textureName)
+    {
+        ITexturePtr texture = textureCache.AcquireResource(textureName, false,
+                                                       [](const std::string& filename) -> ITexturePtr
+        {
+            CResourceCache<IImage> imageCache;
+            IImagePtr image = imageCache.AcquireResource(filename, false,
+                                                        [](const std::string& filename) -> IImagePtr
+            {
+                IImagePtr resultImage(new CImagePVR(filename));
+                if (!resultImage->Load())
+                {
+                    resultImage = nullptr;
+                }
+                
+                return resultImage;
+            });
+
+            ITexturePtr resultTexture = GRenderer->CreateTexture();
+            if (image)
+            {
+               resultTexture->AssignImage(image);
+            }
+
+            return resultTexture;
+        });
+        
+        m_Textures[textureName] = texture;
+    });
 }

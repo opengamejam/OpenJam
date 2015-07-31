@@ -7,7 +7,7 @@
 
 unsigned long CSystem::GetTickCount()
 {
-#if defined(OS_IPHONE) || defined(OS_LINUX) || defined(OS_ANDROID)
+#if defined(OS_IPHONE) || defined(OS_LINUX) || defined(OS_ANDROID) || defined(OS_MAC)
     struct timeval t;
     gettimeofday( &t, 0 );
     return ((t.tv_sec * 1000) + (t.tv_usec / 1000));

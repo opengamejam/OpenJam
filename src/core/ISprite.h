@@ -32,8 +32,8 @@ public:
     
     std::string name;
     unsigned int textureIdx;
-    CVector2Df  u;
-    CVector2Df  v;
+    CVector2Df u;
+    CVector2Df v;
 };
 
 struct CFrameDef
@@ -65,7 +65,7 @@ struct CFrameDef
 	float        originalHeight;// For future use
 	unsigned int animDuration;	// Delay, which sprite will show, in ms
     
-    CTextureFramePtr textureFrame;
+    CTextureFrame textureFrame;
 };
     
 class CAnimationDef
@@ -84,10 +84,10 @@ public:
 class ISprite : public IResource
 {
 public:
-	typedef std::vector<std::string>                TTexturesList;
-	typedef std::vector<CFrameDef>                  TFramesList;
-    typedef std::vector<CTextureFramePtr>           TTextureFramesList;
-	typedef std::vector<CAnimationDef>              TAnimationsList;
+	typedef std::vector<std::string> TTexturesList;
+	typedef std::vector<CFrameDef> TFramesList;
+    typedef std::vector<CTextureFrame> TTextureFramesList;
+	typedef std::vector<CAnimationDef> TAnimationsList;
 
 public:
     virtual const TTexturesList& Textures() const = 0;

@@ -22,6 +22,15 @@
 
 using namespace jam;
 
+// *****************************************************************************
+// Constants
+// *****************************************************************************
+
+
+// *****************************************************************************
+// Public Methods
+// *****************************************************************************
+
 CSprite2DPtr CSprite2D::Create(const std::string& filename)
 {
     IMeshPtr mesh = nullptr;
@@ -152,11 +161,12 @@ CSprite2DPtr CSprite2D::Create(const std::string& filename)
     // Transform component
     CTransformationComponentPtr transformComponent(new CTransformationComponent());
      
-    CSprite2DPtr entity = IEntity::Create<CSprite2D>(filename, {
-                                                                renderComponent,
-                                                                animationComponent,
-                                                                transformComponent
-                                                               });
+    CSprite2DPtr entity(new CSprite2D());
+    entity->Initialize(filename, {
+                                  renderComponent,
+                                  animationComponent,
+                                  transformComponent
+                                 });
     // Store links to components
     entity->m_RenderComponent = renderComponent;
     entity->m_AnimationComponent = animationComponent;
@@ -253,3 +263,11 @@ const CVector3Df& CSprite2D::AnchorPoint()
     const CTransform3Df& transform = component->Transform(CTransformationComponent::Local);
     return transform.Offset();
 }
+
+// *****************************************************************************
+// Protected Methods
+// *****************************************************************************
+
+// *****************************************************************************
+// Private Methods
+// *****************************************************************************

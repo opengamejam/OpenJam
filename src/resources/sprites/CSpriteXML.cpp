@@ -172,7 +172,7 @@ bool CSpriteXML::ParseFrames(const TiXmlElement* xmlFrames)
         
         if (!corrupted)
         {
-            m_Frames.push_back(std::make_shared<CTextureFrame>(textureFrame));
+            m_Frames.push_back(textureFrame);
         }
         
         xmlFrame = xmlFrame->NextSiblingElement("Frame");
@@ -231,10 +231,6 @@ bool CSpriteXML::ParseAnimations(const TiXmlElement* xmlAnimations)
                 if (frameIndx < m_Frames.size())
                 {
                     frame.textureFrame = m_Frames[frameIndx];
-                }
-                else
-                {
-                    frame.textureFrame.reset(new CTextureFrame());
                 }
                 
                 animation.frames.push_back(frame);

@@ -55,8 +55,7 @@ public:
     const CTransform3Df& ResultTransform();
     
 private:
-    TTransformsList m_Transforms;
-    
+    TTransformsList m_Transforms;    
     CTransform3Df m_ResultTransform;
 };
     

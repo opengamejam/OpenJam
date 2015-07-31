@@ -20,11 +20,13 @@ CLASS_PTR(CRenderComponent);
 CLASS_PTR(CAnimation2DComponent);
 CLASS_PTR(CTransformationComponent);
 
-class CSprite2D final : public IEntity
+class CSprite2D : public IEntity
 {
 public:
     static CSprite2DPtr Create(const std::string& name);
-    ~CSprite2D();
+    
+    CSprite2D();
+    virtual ~CSprite2D();
     
     CRenderComponentPtr RenderComponent() const;
     CAnimation2DComponentPtr AnimationComponent() const;
@@ -41,10 +43,6 @@ public:
     
     void AnchorPoint(const CVector3Df& anchorPoint);
     const CVector3Df& AnchorPoint();
-    
-private:
-    friend class IEntity;
-    CSprite2D();
     
 private:
     CRenderComponentPtr m_RenderComponent;

@@ -28,8 +28,9 @@ public:
         CMatrix4x4f textureMatrix;
         std::vector<CVector2Df> textureFrame;
         CTransform3Df transform;
+        unsigned long duration;
     };
-    typedef std::vector<SFrame> TSequenceList;
+    typedef std::vector<SFrame> TSequence;
     
     enum AnimationFlags
     {
@@ -38,7 +39,7 @@ public:
     
 public:
     CAnimation2DComponent();
-    virtual ~CAnimation2DComponent();
+    ~CAnimation2DComponent();
     
     void Sprite(ISpritePtr sprite);
     ISpritePtr Sprite() const;
@@ -71,14 +72,16 @@ public:
     void Play(bool value);
     
 private:
-    const TSequenceList& Sequence();
+    const TSequence& Sequence();
     void Cache();
+    void LoadTextures(const std::vector<std::string>& textureNames);
     
 private:
     ISpritePtr m_Sprite;
     
-    std::map<std::string, TSequenceList> m_Sequences;
+    std::map<std::string, TSequence> m_Sequences;
     std::vector<std::string> m_SequencesNames;
+    std::map<std::string, unsigned long> m_SequenceDurations;
     std::map<std::string, ITexturePtr> m_Textures;
     
     CTransform3Df m_CachedFrameTransform;

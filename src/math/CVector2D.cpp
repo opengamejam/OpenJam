@@ -35,14 +35,14 @@ CVector2D<T>::CVector2D(const std::string& str, char delimeter, const CVector2D<
 : CVector2D(defaultValue)
 {
     std::vector<std::string> components;
-    SplitString(components, ReplaceString(str, " ", ""), delimeter);
+    SplitString(components, str, delimeter);
     if (components.size() > 0)
     {
-        X(FromString<T>(components[0]));
+        X(FromString<T>(ReplaceString(components[0], " ", "")));
     }
     if (components.size() > 1)
     {
-        Y(FromString<T>(components[1]));
+        Y(FromString<T>(ReplaceString(components[1], " ", "")));
     }
 }
 

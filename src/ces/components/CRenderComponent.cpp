@@ -33,44 +33,53 @@ CRenderComponent::~CRenderComponent()
 
 }
 
-IMeshPtr CRenderComponent::Mesh() const
+IMeshPtr CRenderComponent::Mesh(const std::string& group)
 {
-    return m_Mesh;
+    return m_Mesh[group];
 }
 
-void CRenderComponent::Mesh(IMeshPtr mesh)
+void CRenderComponent::Mesh(IMeshPtr mesh, const std::string& group)
 {
-    m_Mesh = mesh;
+    m_Mesh[group] = mesh;
+    m_Groups.insert(group);
 }
 
-IMaterialPtr CRenderComponent::Material() const
+IMaterialPtr CRenderComponent::Material(const std::string& group)
 {
-    return m_Material;
+    return m_Material[group];
 }
 
-void CRenderComponent::Material(IMaterialPtr material)
+void CRenderComponent::Material(IMaterialPtr material, const std::string& group)
 {
-    m_Material = material;
+    m_Material[group] = material;
+    m_Groups.insert(group);
 }
 
-ITexturePtr CRenderComponent::Texture() const
+ITexturePtr CRenderComponent::Texture(const std::string& group)
 {
-    return m_Texture;
+    return m_Texture[group];
 }
 
-void CRenderComponent::Texture(ITexturePtr texture)
+void CRenderComponent::Texture(ITexturePtr texture, const std::string& group)
 {
-    m_Texture = texture;
+    m_Texture[group] = texture;
+    m_Groups.insert(group);
 }
 
-IShaderProgramPtr CRenderComponent::Shader() const
+IShaderProgramPtr CRenderComponent::Shader(const std::string& group)
 {
-    return m_Shader;
+    return m_Shader[group];
 }
 
-void CRenderComponent::Shader(IShaderProgramPtr shader)
+void CRenderComponent::Shader(IShaderProgramPtr shader, const std::string& group)
 {
-    m_Shader = shader;
+    m_Shader[group] = shader;
+    m_Groups.insert(group);
+}
+
+const std::set<std::string>& CRenderComponent::Groups() const
+{
+    return m_Groups;
 }
 
 bool CRenderComponent::Visible() const
@@ -119,7 +128,7 @@ bool CRenderComponent::IsBatchIndexValid() const
 
 bool CRenderComponent::IsValid() const
 {
-    return (m_Mesh && m_Material && m_Shader);
+    return (m_Groups.size() > 0);
 }
 
 // *****************************************************************************

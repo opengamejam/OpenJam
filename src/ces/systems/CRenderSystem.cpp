@@ -81,36 +81,45 @@ void CRenderSystem::Draw(ICameraPtr camera)
             
             if (!renderComponent->Batchable())
             {
-                IMeshPtr mesh = renderComponent->Mesh();
-                IMaterialPtr material = renderComponent->Material();
-                ITexturePtr texture = renderComponent->Texture();
-                IShaderProgramPtr shader = renderComponent->Shader();
-                
-                shader->Bind();
-                material->Bind();
-                if (texture)
+                const std::set<std::string>& groups = renderComponent->Groups();
+                std::for_each(groups.begin(), groups.end(), [&](const std::string& groupName)
                 {
-                    texture->Bind();
-                }
-                mesh->Bind();
-                
-                entity->Get<CTransformationComponent>([&](CTransformationComponentPtr transformComponent)
-                {
-                    CTransform3Df resultTransform = transformComponent->ResultTransform();
-                    material->BindUniformMatrix4x4f(shader->ModelMatrix(), resultTransform());
+                    IMeshPtr mesh = renderComponent->Mesh(groupName);
+                    IMaterialPtr material = renderComponent->Material(groupName);
+                    ITexturePtr texture = renderComponent->Texture(groupName);
+                    IShaderProgramPtr shader = renderComponent->Shader(groupName);
+                    
+                    if (!shader || !material || !mesh)
+                    {
+                        return;
+                    }
+                    
+                    shader->Bind();
+                    material->Bind();
+                    if (texture)
+                    {
+                        texture->Bind();
+                    }
+                    mesh->Bind();
+                    
+                    entity->Get<CTransformationComponent>([&](CTransformationComponentPtr transformComponent)
+                    {
+                        CTransform3Df resultTransform = transformComponent->ResultTransform();
+                        material->BindUniformMatrix4x4f(shader->ModelMatrix(), resultTransform());
+                    });
+                    material->BindUniformMatrix4x4f(shader->ProjectionMatrix(), camera->ProjectionMatrix());
+                    material->UpdateUniforms();
+                    
+                    GRenderer->Draw(mesh, material, shader);
+                    
+                    mesh->Unbind();
+                    if (texture)
+                    {
+                        texture->Unbind();
+                    }
+                    material->Unbind();
+                    shader->Unbind();
                 });
-                material->BindUniformMatrix4x4f(shader->ProjectionMatrix(), camera->ProjectionMatrix());
-                material->UpdateUniforms();
-                
-                GRenderer->Draw(mesh, material, shader);
-                
-                mesh->Unbind();
-                if (texture)
-                {
-                    texture->Unbind();
-                }
-                material->Unbind();
-                shader->Unbind();
             }
         });
     });

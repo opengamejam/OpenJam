@@ -26,17 +26,19 @@ public:
     CRenderComponent();
     virtual ~CRenderComponent();
     
-    IMeshPtr Mesh() const;
-    void Mesh(IMeshPtr mesh);
+    IMeshPtr Mesh(const std::string& group = "default");
+    void Mesh(IMeshPtr mesh, const std::string& group = "default");
     
-    IMaterialPtr Material() const;
-    void Material(IMaterialPtr material);
+    IMaterialPtr Material(const std::string& group = "default");
+    void Material(IMaterialPtr material, const std::string& group = "default");
     
-    ITexturePtr Texture() const;
-    void Texture(ITexturePtr texture);
+    ITexturePtr Texture(const std::string& group = "default");
+    void Texture(ITexturePtr texture, const std::string& group = "default");
     
-    IShaderProgramPtr Shader() const;
-    void Shader(IShaderProgramPtr shader);
+    IShaderProgramPtr Shader(const std::string& group = "default");
+    void Shader(IShaderProgramPtr shader, const std::string& group = "default");
+    
+    const std::set<std::string>& Groups() const;
     
     bool Visible() const;
     void Visible(bool isVisible);
@@ -51,10 +53,11 @@ public:
     bool IsValid() const;
     
 private:
-    IMeshPtr m_Mesh;
-    IMaterialPtr m_Material;
-    ITexturePtr m_Texture;
-    IShaderProgramPtr m_Shader;
+    std::map<std::string, IMeshPtr> m_Mesh;
+    std::map<std::string, IMaterialPtr> m_Material;
+    std::map<std::string, ITexturePtr> m_Texture;
+    std::map<std::string, IShaderProgramPtr> m_Shader;
+    std::set<std::string> m_Groups;
     bool m_IsVisible;
     bool m_IsBatchable;
     unsigned int m_BatchIndex;

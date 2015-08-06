@@ -1,13 +1,13 @@
 //
-//  CSprite2D.h
+//  CObject3D.h
 //  Arkanoid
 //
 //  Created by yev on 5/15/15.
 //
 //
 
-#ifndef CSPRITE2D_H
-#define CSPRITE2D_H
+#ifndef CObject3D_H
+#define CObject3D_H
 
 #include "IEntity.h"
 #include "CVector3D.h"
@@ -15,21 +15,20 @@
 namespace jam
 {
     
-CLASS_PTR(CSprite2D);
+CLASS_PTR(CObject3D);
 CLASS_PTR(CRenderComponent);
-CLASS_PTR(CAnimation2DComponent);
 CLASS_PTR(CTransformationComponent);
 
-class CSprite2D : public IEntity
+class CObject3D : public IEntity
 {
 public:
-    static CSprite2DPtr Create(const std::string& filename);
+    // Load mesh from .obj 3D file
+    static CObject3DPtr CreateObj(const std::string& filename);
     
-    CSprite2D();
-    virtual ~CSprite2D();
+    CObject3D();
+    virtual ~CObject3D();
     
     CRenderComponentPtr RenderComponent() const;
-    CAnimation2DComponentPtr AnimationComponent() const;
     CTransformationComponentPtr TransformComponent() const;
     
     void Position(const CVector3Df& position);
@@ -46,10 +45,9 @@ public:
     
 private:
     CRenderComponentPtr m_RenderComponent;
-    CAnimation2DComponentPtr m_AnimationComponent;
     CTransformationComponentPtr m_TransformationComponent;
 };
     
 }; // namespace jam
 
-#endif /* defined(CSPRITE2D_H) */
+#endif /* defined(CObject3D_H) */

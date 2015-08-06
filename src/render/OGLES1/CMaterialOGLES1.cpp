@@ -25,7 +25,9 @@ INL unsigned int CovertStencilFunc(IStencil::StencilFunc func);
 CMaterialOGLES1::CMaterialOGLES1()
 : m_IsDefault(true)
 , m_LineWidth(0)
+, m_CullFace(true)
 , m_Flags(IMaterial::NoneFlag)
+, m_PrimitiveType(IMaterial::PT_Triangles)
 , m_DepthEnabled(false)
 , m_IsDirty(true)
 {
@@ -63,12 +65,24 @@ void CMaterialOGLES1::Bind()
         
         glEnable(GL_DEPTH_TEST);
         glDepthMask(GL_TRUE);
+        glDepthFunc(GL_LESS); 
         
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         
         glEnable(GL_TEXTURE_2D);
         glShadeModel(GL_SMOOTH);
+        
+        //glFrontFace(GL_CCW);
+    }
+    
+    if (CullFace())
+    {
+        glEnable(GL_CULL_FACE);
+    }
+    else
+    {
+        glDisable(GL_CULL_FACE);
     }
 }
 
@@ -98,12 +112,12 @@ float CMaterialOGLES1::LineWidth() const
 
 IMaterial::PrimitiveTypes CMaterialOGLES1::PrimitiveType() const
 {
-    return PT_TrianglesStrip;
+    return m_PrimitiveType;
 }
 
 void CMaterialOGLES1::PrimitiveType(IMaterial::PrimitiveTypes primitiveType)
 {
-    
+    m_PrimitiveType = primitiveType;
 }
 
 void CMaterialOGLES1::Color(const CColor& color)
@@ -115,6 +129,16 @@ void CMaterialOGLES1::LineWidth(float lineWidth)
 {
     m_LineWidth = lineWidth;
     m_IsDirty = true;
+}
+
+bool CMaterialOGLES1::CullFace() const
+{
+    return m_CullFace;
+}
+
+void CMaterialOGLES1::CullFace(bool isEnabled)
+{
+    m_CullFace = isEnabled;
 }
 
 IStencilPtr CMaterialOGLES1::Stencil() const

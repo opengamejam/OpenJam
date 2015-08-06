@@ -46,6 +46,11 @@ bool IResource::Load()
 
 bool IResource::Load(const std::string& filename)
 {
+    if (filename.empty())
+    {
+        return false;
+    }
+    
     if (!m_IsExternalData)
     {
         ILoader* loader = ILoader::GetLoader(LoaderName());

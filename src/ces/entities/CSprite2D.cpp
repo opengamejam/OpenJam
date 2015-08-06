@@ -59,6 +59,7 @@ CSprite2DPtr CSprite2D::Create(const std::string& filename)
     
     // Material
     material = GRenderer->CreateMaterial();
+    material->PrimitiveType(IMaterial::PT_TrianglesStrip);
     
     // Vertex buffer
     vertexBuffer = GRenderer->CreatVertexBuffer();
@@ -109,11 +110,11 @@ CSprite2DPtr CSprite2D::Create(const std::string& filename)
     
     // Index buffer
     indexBuffer = GRenderer->CreateIndexBuffer();
-    indexBuffer->Initialize(sizeof(short));
+    indexBuffer->Initialize(sizeof(unsigned int));
     assert(indexBuffer && indexBuffer->IsValid());
     
     indexBuffer->Resize(6);
-    short* lockedIndex = indexBuffer->Lock<short>();
+    unsigned int* lockedIndex = indexBuffer->Lock<unsigned int>();
     if (lockedIndex)
     {
         lockedIndex[0] = 0;

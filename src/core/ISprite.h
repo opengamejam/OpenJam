@@ -14,8 +14,6 @@
 
 namespace jam
 {
-
-CLASS_PTR(CTextureFrame);
     
 class CTextureFrame
 {

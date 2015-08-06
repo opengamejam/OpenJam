@@ -89,6 +89,9 @@ public:
     virtual float LineWidth() const = 0;
     virtual void LineWidth(float lineWidth) = 0;
     
+    virtual bool CullFace() const = 0;
+    virtual void CullFace(bool isEnabled) = 0;
+    
     virtual IStencilPtr Stencil() const = 0;
     virtual void Stencil(IStencilPtr stencil) = 0;
     

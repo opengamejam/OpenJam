@@ -25,7 +25,9 @@ INL unsigned int CovertStencilFunc(IStencil::StencilFunc func);
 CMaterialOGLES2::CMaterialOGLES2()
 : m_IsDefault(true)
 , m_LineWidth(0)
+, m_CullFace(true)
 , m_Flags(IMaterial::NoneFlag)
+, m_PrimitiveType(IMaterial::PT_Triangles)
 , m_DepthEnabled(false)
 , m_IsDirty(true)
 {
@@ -67,6 +69,15 @@ void CMaterialOGLES2::Bind()
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
+    
+    if (CullFace())
+    {
+        glEnable(GL_CULL_FACE);
+    }
+    else
+    {
+        glDisable(GL_CULL_FACE);
+    }
 }
 
 void CMaterialOGLES2::Unbind()
@@ -95,12 +106,12 @@ float CMaterialOGLES2::LineWidth() const
 
 IMaterial::PrimitiveTypes CMaterialOGLES2::PrimitiveType() const
 {
-    return PT_TrianglesStrip;
+    return m_PrimitiveType;
 }
 
 void CMaterialOGLES2::PrimitiveType(IMaterial::PrimitiveTypes primitiveType)
 {
-    
+    m_PrimitiveType = primitiveType;
 }
 
 void CMaterialOGLES2::Color(const CColor& color)
@@ -112,6 +123,16 @@ void CMaterialOGLES2::LineWidth(float lineWidth)
 {
     m_LineWidth = lineWidth;
     m_IsDirty = true;
+}
+
+bool CMaterialOGLES2::CullFace() const
+{
+    return m_CullFace;
+}
+
+void CMaterialOGLES2::CullFace(bool isEnabled)
+{
+    m_CullFace = isEnabled;
 }
 
 IStencilPtr CMaterialOGLES2::Stencil() const

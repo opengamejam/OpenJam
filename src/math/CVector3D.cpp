@@ -35,18 +35,18 @@ CVector3D<T>::CVector3D(const std::string& str, char delimeter, const CVector3D<
 : CVector3D(defaultValue)
 {
     std::vector<std::string> components;
-    SplitString(components, ReplaceString(str, " ", ""), delimeter);
+    SplitString(components, str, delimeter);
     if (components.size() > 0)
     {
-        X(FromString<T>(components[0]));
+        X(FromString<T>(ReplaceString(components[0], " ", "")));
     }
     if (components.size() > 1)
     {
-        Y(FromString<T>(components[1]));
+        Y(FromString<T>(ReplaceString(components[1], " ", "")));
     }
     if (components.size() > 2)
     {
-        Z(FromString<T>(components[2]));
+        Z(FromString<T>(ReplaceString(components[2], " ", "")));
     }
 }
 

@@ -82,6 +82,26 @@ const std::set<std::string>& CRenderComponent::Groups() const
     return m_Groups;
 }
 
+void CRenderComponent::AddCameraId(unsigned int cameraId)
+{
+    m_CameraIds.insert(cameraId);
+}
+
+void CRenderComponent::RemoveCameraId(unsigned int cameraId)
+{
+    m_CameraIds.erase(cameraId);
+}
+
+bool CRenderComponent::HasCameraId(unsigned int cameraId)
+{
+    if (m_CameraIds.empty())
+    {
+        return true;
+    }
+    
+    return (m_CameraIds.find(cameraId) != m_CameraIds.end());
+}
+
 bool CRenderComponent::Visible() const
 {
     return m_IsVisible;

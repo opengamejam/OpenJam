@@ -123,17 +123,7 @@ void CGame::Draw()
         const IScene::TCamerasList& cameras = scene->Cameras();
         std::for_each(cameras.begin(), cameras.end(), [&](ICameraPtr camera)
         {
-            if (!camera->RenderTarget())
-            {
-                return;
-            }
-            
-            camera->RenderTarget()->Bind();
-            camera->RenderTarget()->Clear();
-
             renderSystem->Draw(camera);
-
-            camera->RenderTarget()->Unbind();
         });
         m_RenderView->End();
     }

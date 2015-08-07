@@ -23,6 +23,8 @@ public:
     CCamera2D(float width, float height, float near = -10000.0f, float far = 10000.0f);
     virtual ~CCamera2D();
     
+    virtual unsigned int Id() const;
+    
     virtual CMatrix4x4f ProjectionMatrix();
     virtual IRenderTargetPtr RenderTarget() const;
     virtual void RenderTarget(IRenderTargetPtr renderTarget);
@@ -40,6 +42,9 @@ private:
     
     bool m_IsFlippedX;
     bool m_IsFlippedY;
+    
+    unsigned int m_Id;
+    static unsigned int s_NextCamId;
 };
 
 }; // namespace jam

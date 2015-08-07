@@ -44,6 +44,7 @@ CCamera2D::CCamera2D(float width, float height, float near, float far)
 , m_RenderTarget(nullptr)
 , m_IsFlippedX(false)
 , m_IsFlippedY(false)
+, m_Id(ICamera::NextCameraId())
 {
     m_ProjectionMatrix = CMatrix4x4f::Orthographic(0, m_Width,
                                                    0, m_Height,
@@ -53,6 +54,11 @@ CCamera2D::CCamera2D(float width, float height, float near, float far)
 CCamera2D::~CCamera2D()
 {
 
+}
+
+unsigned int CCamera2D::Id() const
+{
+    return m_Id;
 }
 
 CMatrix4x4f CCamera2D::ProjectionMatrix()

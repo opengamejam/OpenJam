@@ -23,7 +23,7 @@ CLASS_PTR(CTransformationComponent);
 class CSprite2D : public IEntity
 {
 public:
-    static CSprite2DPtr Create(const std::string& filename);
+    static CSprite2DPtr Create(const std::string& filename, unsigned int cameraId = -1u);
     
     CSprite2D();
     virtual ~CSprite2D();

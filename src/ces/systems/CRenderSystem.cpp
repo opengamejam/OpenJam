@@ -65,16 +65,37 @@ void CRenderSystem::Update(unsigned long dt)
     });
     
     ClearDirtyEntities();
+    m_ProccededRenderTargets.clear();
 }
 
 void CRenderSystem::Draw(ICameraPtr camera)
 {
+    if (!camera)
+    {
+        return;
+    }
+    
+    IRenderTargetPtr currentRenderTarget = camera->RenderTarget();
+    if (!currentRenderTarget)
+    {
+        return;
+    }
+    
+    currentRenderTarget->Bind();
+    if (m_ProccededRenderTargets.find(currentRenderTarget) == m_ProccededRenderTargets.end())
+    {
+        currentRenderTarget->Clear();
+        m_ProccededRenderTargets.insert(currentRenderTarget);
+    }
+    
     const ISystem::TEntitiesList& entities = Entities();
     std::for_each(entities.begin(), entities.end(), [&](IEntityPtr entity)
     {
         entity->Get<CRenderComponent>([&](CRenderComponentPtr renderComponent)
         {
-            if (!renderComponent->IsValid())
+            unsigned int cameraId = camera->Id();
+            if (!renderComponent->IsValid() ||
+                !renderComponent->HasCameraId(cameraId))
             {
                 return;
             }
@@ -123,6 +144,8 @@ void CRenderSystem::Draw(ICameraPtr camera)
             }
         });
     });
+    
+    currentRenderTarget->Unbind();
 }
 
 // *****************************************************************************

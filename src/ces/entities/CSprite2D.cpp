@@ -31,7 +31,7 @@ using namespace jam;
 // Public Methods
 // *****************************************************************************
 
-CSprite2DPtr CSprite2D::Create(const std::string& filename)
+CSprite2DPtr CSprite2D::Create(const std::string& filename, unsigned int cameraId)
 {
     IMeshPtr mesh = nullptr;
     IMaterialPtr material = nullptr;
@@ -137,6 +137,10 @@ CSprite2DPtr CSprite2D::Create(const std::string& filename)
     renderComponent->Shader(shaderProgram);
     renderComponent->Material(material);
     renderComponent->Mesh(mesh);
+    if (cameraId != -1u)
+    {
+        renderComponent->AddCameraId(cameraId);
+    }
     
     // Sprite component
     CAnimation2DComponentPtr animationComponent(new CAnimation2DComponent());

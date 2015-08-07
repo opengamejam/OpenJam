@@ -40,6 +40,10 @@ public:
     
     const std::set<std::string>& Groups() const;
     
+    void AddCameraId(unsigned int cameraId);
+    void RemoveCameraId(unsigned int cameraId);
+    bool HasCameraId(unsigned int cameraId);
+    
     bool Visible() const;
     void Visible(bool isVisible);
     
@@ -61,6 +65,7 @@ private:
     bool m_IsVisible;
     bool m_IsBatchable;
     unsigned int m_BatchIndex;
+    std::set<unsigned int> m_CameraIds;
 };
     
 }; // namespace jam

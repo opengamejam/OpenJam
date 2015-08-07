@@ -17,6 +17,7 @@ CLASS_PTR(CRenderSystem);
 CLASS_PTR(IEntity);
 CLASS_PTR(ICamera);
 CLASS_PTR(CRenderComponent);
+CLASS_PTR(IRenderTarget);
 
 class CRenderSystem : public ISystem
 {
@@ -26,6 +27,9 @@ public:
     
     void Update(unsigned long dt);
     void Draw(ICameraPtr camera);
+    
+private:
+    std::set<IRenderTargetPtr> m_ProccededRenderTargets;
 };
     
 } // namespace jam

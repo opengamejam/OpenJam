@@ -31,7 +31,7 @@ CLASS_PTR(IModel3D);
 // Public Methods
 // *****************************************************************************
 
-CObject3DPtr CObject3D::CreateObj(const std::string& filename)
+CObject3DPtr CObject3D::CreateObj(const std::string& filename, unsigned int cameraId)
 {
     CResourceCache<IModel3D> resourceCache;
     IModel3DPtr model3D = resourceCache.AcquireResource(filename, false,
@@ -200,6 +200,10 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename)
         renderComponent->Material(material, group);
         renderComponent->Mesh(mesh, group);
         renderComponent->Texture(texture, group);
+        if (cameraId != -1u)
+        {
+            renderComponent->AddCameraId(cameraId);
+        }
     });
     
     // Transform component

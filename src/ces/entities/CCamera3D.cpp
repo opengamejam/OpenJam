@@ -44,6 +44,7 @@ CCamera3D::CCamera3D(float fov, float width, float height, float near, float far
 , m_Near(near)
 , m_Far(far)
 , m_RenderTarget(nullptr)
+, m_Id(ICamera::NextCameraId())
 {
     m_Near = std::max(0.01f, m_Near);
     m_ProjectionMatrix = CMatrix4x4f::Perspective(fov, m_Width / m_Height, m_Near, m_Far);
@@ -52,6 +53,11 @@ CCamera3D::CCamera3D(float fov, float width, float height, float near, float far
 CCamera3D::~CCamera3D()
 {
 
+}
+
+unsigned int CCamera3D::Id() const
+{
+    return m_Id;
 }
 
 CMatrix4x4f CCamera3D::ProjectionMatrix()

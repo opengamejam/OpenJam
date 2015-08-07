@@ -27,7 +27,6 @@ CCamera2DPtr CCamera2D::Create(float width, float height, float near, float far)
     CTransformationComponentPtr transformComponent(new CTransformationComponent());
     
     CTransform3Df transform = transformComponent->Transform(CTransformationComponent::Local);
-    //transform.Position(CVector3Df(-0.5f * width, -0.5f * height));
     transformComponent->AddTransform(CTransformationComponent::Local, transform);
     
     camera->Initialize("camera2d", {transformComponent});

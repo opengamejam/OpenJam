@@ -18,6 +18,7 @@
 #include "CModelObj.h"
 #include "CTransformationComponent.h"
 #include "CResourceCache.hpp"
+#include "CTransformAffector.h"
 
 using namespace jam;
 
@@ -243,11 +244,7 @@ CTransformationComponentPtr CObject3D::TransformComponent() const
 
 void CObject3D::Position(const CVector3Df& position)
 {
-    CTransformationComponentPtr component = TransformComponent();
-    CTransform3Df transform = component->Transform(CTransformationComponent::Local);
-    transform.Position(position);
-    component->AddTransform(CTransformationComponent::Local, transform);
-    component->Dirty();
+    CTransformAffector::Position(TransformComponent(), position);
 }
 
 const CVector3Df& CObject3D::Position()
@@ -259,11 +256,7 @@ const CVector3Df& CObject3D::Position()
 
 void CObject3D::Rotation(const CVector3Df& rotation)
 {
-    CTransformationComponentPtr component = TransformComponent();
-    CTransform3Df transform = component->Transform(CTransformationComponent::Local);
-    transform.Rotation(rotation);
-    component->AddTransform(CTransformationComponent::Local, transform);
-    component->Dirty();
+    CTransformAffector::Rotation(TransformComponent(), rotation);
 }
 
 const CVector3Df& CObject3D::Rotation()
@@ -275,11 +268,7 @@ const CVector3Df& CObject3D::Rotation()
 
 void CObject3D::Scale(const CVector3Df& scale)
 {
-    CTransformationComponentPtr component = TransformComponent();
-    CTransform3Df transform = component->Transform(CTransformationComponent::Local);
-    transform.Scale(scale);
-    component->AddTransform(CTransformationComponent::Local, transform);
-    component->Dirty();
+    CTransformAffector::Scale(TransformComponent(), scale);
 }
 
 const CVector3Df& CObject3D::Scale()

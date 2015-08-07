@@ -324,24 +324,24 @@ const CMatrix4x4<T> CMatrix4x4<T>::Zero()
 template <class T>
 const CMatrix4x4<T> CMatrix4x4<T>::Perspective(T fov, T aspect, T zNear, T zFar)
 {
-    T r = fov * 0.017453f / 2;
+    CMatrix4x4<T> out = CMatrix4x4<T>::Identity();
+    
+    T r = fov * static_cast<T>(0.5 * (3.1415 / 180.0));
 	T deltaZ = zFar - zNear;
 	T s = sin(r);
-	if (deltaZ == 0 || s == 0 || aspect == 0)
+	if (deltaZ == 0.0 || s == 0.0 || aspect == 0.0)
     {
-		return s_Identity;
+		return out;
 	}
     
 	T cotangent = cos(r) / s;
     
-    CMatrix4x4<T> out = CMatrix4x4<T>::Identity();
-    
     out.Element(0, 0, cotangent / aspect);
     out.Element(1, 1, cotangent);
     out.Element(2, 2, -(zFar + zNear) / deltaZ);
-    out.Element(3, 2, -1);
-    out.Element(2, 3, -2 * zNear * zFar / deltaZ);
-    out.Element(3, 3, 0);
+    out.Element(2, 3, static_cast<T>(-1.0));
+    out.Element(3, 2, static_cast<T>(-2.0) * zNear * zFar / deltaZ);
+    out.Element(3, 3, static_cast<T>(0.0));
     
 	return out;
 }
@@ -355,13 +355,13 @@ const CMatrix4x4<T> CMatrix4x4<T>::Orthographic(T left, T right, T top, T bottom
     
 	CMatrix4x4<T> out = CMatrix4x4<T>::Zero();
     
-    out.Element(0, 0, 2 / (right - left));
+    out.Element(0, 0, static_cast<T>(2.0) / (right - left));
     out.Element(3, 0, tx);
-    out.Element(1, 1, 2 / (top - bottom));
+    out.Element(1, 1, static_cast<T>(2.0) / (top - bottom));
     out.Element(3, 1, ty);
-    out.Element(2, 2, -2 / (far - near));
+    out.Element(2, 2, static_cast<T>(-2.0) / (far - near));
     out.Element(3, 2, tz);
-    out.Element(3, 3, 1);
+    out.Element(3, 3, static_cast<T>(1.0));
     
 	return out;
 }

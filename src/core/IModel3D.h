@@ -15,9 +15,6 @@
 
 namespace jam
 {
-    
-CLASS_PTR(IVertexBuffer);
-CLASS_PTR(IIndexBuffer);
 
 class IModel3D : public IResource
 {

@@ -27,7 +27,7 @@ public:
     static ILoader* DefaultLoader();
 
 private:
-	static std::map<std::string, ILoader*> m_Loaders;
+	static std::unordered_map<std::string, ILoader*> m_Loaders;
 	static ILoader* m_DefaultLoader;
 };
 

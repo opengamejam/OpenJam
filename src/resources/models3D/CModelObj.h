@@ -43,11 +43,11 @@ private:
                    std::string& group);
     
 private:
-    std::map<std::string, std::vector<CVector3Df> > m_Vertices;
-    std::map<std::string, std::vector<CVector3Df> > m_Normals;
-    std::map<std::string, std::vector<CVector2Df> > m_UVs;
-    std::map<std::string, std::vector<unsigned int> > m_Indices;
-    std::map<std::string, std::string> m_TextureNames;
+    std::unordered_map<std::string, std::vector<CVector3Df> > m_Vertices;
+    std::unordered_map<std::string, std::vector<CVector3Df> > m_Normals;
+    std::unordered_map<std::string, std::vector<CVector2Df> > m_UVs;
+    std::unordered_map<std::string, std::vector<unsigned int> > m_Indices;
+    std::unordered_map<std::string, std::string> m_TextureNames;
     std::set<std::string> m_Groups;
 };
 

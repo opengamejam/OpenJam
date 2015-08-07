@@ -21,7 +21,7 @@ class IEventDispatcher
 public:
     typedef std::function<bool(IEventPtr event)> TEventHandler;
     typedef std::vector<TEventHandler> TEventHandlersList;
-    typedef std::map<std::type_index, TEventHandlersList> TEvenetHandlersMap;
+    typedef std::unordered_map<std::type_index, TEventHandlersList> TEvenetHandlersMap;
     
 public:
     IEventDispatcher() = default;

@@ -39,7 +39,7 @@ public:
         }
     };
     
-    typedef std::map<int, STransformProps> TTransformsList;
+    typedef std::unordered_map<int, STransformProps> TTransformsList;
     
 public:
     CTransformationComponent();

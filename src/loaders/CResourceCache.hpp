@@ -73,7 +73,7 @@ public:
     }
     
 private:
-    typedef std::map<std::string, std::shared_ptr<T> > TResourcesMap;
+    typedef std::unordered_map<std::string, std::shared_ptr<T> > TResourcesMap;
     static TResourcesMap s_CachedResources;
     static unsigned int s_UniqIndex;
 };

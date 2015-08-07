@@ -37,7 +37,7 @@ public:
 };
 
 
-std::map<std::string, ILoader*> ILoader::m_Loaders;
+std::unordered_map<std::string, ILoader*> ILoader::m_Loaders;
 ILoader* ILoader::m_DefaultLoader = &CDummyLoader::Instance();
 
 

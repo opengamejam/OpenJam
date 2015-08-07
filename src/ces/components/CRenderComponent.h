@@ -57,10 +57,10 @@ public:
     bool IsValid() const;
     
 private:
-    std::map<std::string, IMeshPtr> m_Mesh;
-    std::map<std::string, IMaterialPtr> m_Material;
-    std::map<std::string, ITexturePtr> m_Texture;
-    std::map<std::string, IShaderProgramPtr> m_Shader;
+    std::unordered_map<std::string, IMeshPtr> m_Mesh;
+    std::unordered_map<std::string, IMaterialPtr> m_Material;
+    std::unordered_map<std::string, ITexturePtr> m_Texture;
+    std::unordered_map<std::string, IShaderProgramPtr> m_Shader;
     std::set<std::string> m_Groups;
     bool m_IsVisible;
     bool m_IsBatchable;

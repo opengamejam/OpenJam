@@ -108,7 +108,7 @@ bool CShaderProgramOGLES1::IsLinked() const
 
 unsigned int CShaderProgramOGLES1::Attribute(const std::string& name)
 {
-    static std::map<std::string, int> attributes = {
+    static std::unordered_map<std::string, int> attributes = {
         {"MainPositionVertex", 0},
         {"MainTextureCoord", 1},
         {"MainVertexColor", 2}
@@ -124,7 +124,7 @@ unsigned int CShaderProgramOGLES1::Attribute(const std::string& name)
 
 unsigned int CShaderProgramOGLES1::Uniform(const std::string& name)
 {
-    static std::map<std::string, int> uniforms = {
+    static std::unordered_map<std::string, int> uniforms = {
         {"MainTexture0", 0},
         {"MainTexture1", 1},
         {"MainTexture2", 2},

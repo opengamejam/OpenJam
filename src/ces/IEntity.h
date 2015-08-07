@@ -20,7 +20,7 @@ class IEntity : public IEventable, public std::enable_shared_from_this<IEntity>
 {
 public:
     typedef std::vector<IComponentPtr> TComponentsList;
-    typedef std::map<std::type_index, TComponentsList> TComponentsMap;
+    typedef std::unordered_map<std::type_index, TComponentsList> TComponentsMap;
     typedef std::vector<IEntityPtr> TEntitiesList;
     
 public:

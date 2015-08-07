@@ -79,10 +79,10 @@ private:
 private:
     ISpritePtr m_Sprite;
     
-    std::map<std::string, TSequence> m_Sequences;
+    std::unordered_map<std::string, TSequence> m_Sequences;
     std::vector<std::string> m_SequencesNames;
-    std::map<std::string, unsigned long> m_SequenceDurations;
-    std::map<std::string, ITexturePtr> m_Textures;
+    std::unordered_map<std::string, unsigned long> m_SequenceDurations;
+    std::unordered_map<std::string, ITexturePtr> m_Textures;
     
     CTransform3Df m_CachedFrameTransform;
     std::vector<CVector2Df> m_CachedTextureFrame;

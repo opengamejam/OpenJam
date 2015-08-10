@@ -21,7 +21,6 @@ class CGame : public IEventable
 {
 public:
     typedef std::unordered_map<std::type_index, ISystemPtr> TSystemMap;
-    typedef std::priority_queue<ISystemPtr> TSystemPQueue;
     
 public:
     

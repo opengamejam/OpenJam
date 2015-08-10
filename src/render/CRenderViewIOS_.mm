@@ -32,7 +32,7 @@ using namespace jam;
 // Public Methods
 // *****************************************************************************
 
-CRenderViewIos::CRenderViewIos(unsigned int width, unsigned int height, void* glkView, RenderApi renderApi)
+CRenderViewIOS::CRenderViewIOS(unsigned int width, unsigned int height, void* glkView, RenderApi renderApi)
 	: IRenderView(width, height)
 	, m_GLKView((__bridge UIView*)glkView)
     , m_GLContext(nil)
@@ -42,12 +42,12 @@ CRenderViewIos::CRenderViewIos(unsigned int width, unsigned int height, void* gl
     IEventable::RegisterDispatcher(std::make_shared<IEventDispatcher>(IEventDispatcher()));
 }
 
-CRenderViewIos::~CRenderViewIos()
+CRenderViewIOS::~CRenderViewIOS()
 {
 
 }
 
-void CRenderViewIos::CreateView()
+void CRenderViewIOS::CreateView()
 {
     switch (m_RenderApi)
     {
@@ -119,24 +119,24 @@ void CRenderViewIos::CreateView()
     assert(GRenderer);
 }
 
-void CRenderViewIos::Begin() const
+void CRenderViewIOS::Begin() const
 {
     [EAGLContext setCurrentContext:m_GLContext];
     glBindRenderbuffer(GL_RENDERBUFFER, m_ColorBuffer);
 }
 
-void CRenderViewIos::End() const
+void CRenderViewIOS::End() const
 {
     [m_GLContext presentRenderbuffer:GL_RENDERBUFFER];
     glBindRenderbuffer(GL_RENDERBUFFER, 0);
 }
 
-void CRenderViewIos::UpdateEvents() const
+void CRenderViewIOS::UpdateEvents() const
 {
 
 }
 
-IRenderTargetPtr CRenderViewIos::DefaultRenderTarget() const
+IRenderTargetPtr CRenderViewIOS::DefaultRenderTarget() const
 {
     return m_DefaultRenderTarget;
 }

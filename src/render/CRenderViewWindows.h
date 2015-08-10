@@ -7,8 +7,8 @@
 //
 #if defined(OS_WINDOWS)
 
-#ifndef CRENDERVIEWIOS_H
-#define	CRENDERVIEWIOS_H
+#ifndef CRENDERVIEWWINDOWS_H
+#define	CRENDERVIEWWINDOWS_H
 
 #include "IRenderView.h"
 
@@ -40,7 +40,7 @@ private:
 
 }; // namespace jam
 
-#endif	/* CRENDERVIEWIOS_H */
+#endif	/* CRENDERVIEWWINDOWS_H */
 
 #endif /* OS_WINDOWS */
 

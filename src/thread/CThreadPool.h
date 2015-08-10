@@ -31,6 +31,7 @@ public:
     ~CThreadPool();
      
     static CThreadPoolPtr Get();
+    static bool IsMainThread();
     
     void Initialize(size_t threadsNum = 1);
     void Destroy();
@@ -43,11 +44,10 @@ private:
     
 private:
     static CThreadPoolPtr s_Instance;
-    
-    std::vector<CThreadExecutorPtr> m_ThreadExecutors;
-    std::thread::id m_MainThreadId;
+    static std::thread::id s_MainThreadId;
     
     std::mutex m_Mutex;
+    std::vector<CThreadExecutorPtr> m_ThreadExecutors;
     std::queue<CThreadExecutor::TExecuteBlock> m_MainThreadTasks;
 };
     

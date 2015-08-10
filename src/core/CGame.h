@@ -29,10 +29,9 @@ public:
     virtual ~CGame();
 
     
-    void Start();
-    void Stop();
-    void Pause(bool value);
-    bool IsRunning() const;
+    void Initialize();
+    void Destroy();
+    bool IsInitialized() const;
     
     IRenderViewPtr RenderView() const;
     
@@ -50,14 +49,11 @@ public:
 private:
     CGame(const CGame& orig) {}
     CGame& operator=(const CGame& other);
-    
-    void ThreadUpdate();
    
 private:
-    bool m_IsRunning;
+    bool m_IsInitialized;
 	
     IRenderViewPtr m_RenderView;
-    std::thread m_WorkerThread;
     
     std::stack<IScenePtr> m_Scenes;
     TSystemMap m_System;

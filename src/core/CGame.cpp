@@ -35,7 +35,7 @@ using namespace jam;
 // *****************************************************************************
 
 CGame::CGame(IRenderViewPtr render)
-    : m_IsRunning(false)
+    : m_IsInitialized(false)
     , m_RenderView(render)
 {
     CThreadPool::Get()->Initialize(5);
@@ -50,17 +50,11 @@ CGame::CGame(IRenderViewPtr render)
 CGame::~CGame() 
 {
     CThreadPool::Get()->Destroy();
-    
-    if (m_WorkerThread.joinable())
-    {
-        m_WorkerThread.join();
-    }
 }
 
-void CGame::Start()
+void CGame::Initialize()
 {
     m_RenderView->CreateView();
-    m_WorkerThread = std::thread(std::bind(&CGame::ThreadUpdate, this));
     
     CRenderSystemPtr renderSystem(new CRenderSystem());
     CAnimation2DSystemPtr animationSystem(new CAnimation2DSystem());
@@ -71,22 +65,17 @@ void CGame::Start()
     AddSystem(transformationSystem);
     AddSystem(renderSystem);
     
-    m_IsRunning = true;
+    m_IsInitialized = true;
 }
 
-void CGame::Stop()
+void CGame::Destroy()
 {
-    m_IsRunning = false;
+    m_IsInitialized = false;
 }
 
-void CGame::Pause(bool value)
+bool CGame::IsInitialized() const
 {
-    m_IsRunning = value;
-}
-
-bool CGame::IsRunning() const
-{
-    return m_IsRunning;
+    return m_IsInitialized;
 }
 
 IRenderViewPtr CGame::RenderView() const
@@ -96,6 +85,11 @@ IRenderViewPtr CGame::RenderView() const
 
 void CGame::Update(unsigned long dt)
 {
+    if (!IsInitialized())
+    {
+        return;
+    }
+    
     CThreadPool::Get()->Update(dt);
     Dispatcher()->Update(dt);
     
@@ -135,15 +129,15 @@ void CGame::Draw()
     }
 }
 
-void CGame::PushScene(IScenePtr state)
+void CGame::PushScene(IScenePtr scene)
 {
-    assert(state);
+    assert(scene);
     if (!m_Scenes.empty())
     {
         m_Scenes.top()->Pause();
     }
     
-    m_Scenes.push(state);
+    m_Scenes.push(scene);
     m_Scenes.top()->Start();
 }
 
@@ -202,10 +196,3 @@ ISystemPtr CGame::GetSystem(const std::type_index& systemKey)
 // Private Methods
 // *****************************************************************************
 
-void CGame::ThreadUpdate()
-{
-    while (m_IsRunning)
-    {
-        std::this_thread::sleep_for(std::chrono::milliseconds(300));
-    }
-}

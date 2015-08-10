@@ -11,10 +11,11 @@
 using namespace jam;
 
 CThreadPoolPtr CThreadPool::s_Instance = nullptr;
+std::thread::id CThreadPool::s_MainThreadId;
 
 CThreadPool::CThreadPool()
-: m_MainThreadId(std::this_thread::get_id())
 {
+    s_MainThreadId = std::this_thread::get_id();
 }
 
 CThreadPool::~CThreadPool()
@@ -30,6 +31,11 @@ CThreadPoolPtr CThreadPool::Get()
     }
     
     return s_Instance;
+}
+
+bool CThreadPool::IsMainThread()
+{
+    return (s_MainThreadId == std::this_thread::get_id());
 }
 
 void CThreadPool::Initialize(size_t threadsNum)
@@ -61,7 +67,7 @@ void CThreadPool::RunAsync(ThreadType threadType, const CThreadExecutor::TExecut
     
     if (threadType == CThreadPool::Main)
     {
-        if (m_MainThreadId != std::this_thread::get_id())
+        if (!IsMainThread())
         {
             std::unique_lock<std::mutex> locker(m_Mutex);
             m_MainThreadTasks.push(block);

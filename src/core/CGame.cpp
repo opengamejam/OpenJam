@@ -21,6 +21,7 @@
 #include "CTransformationSystem.h"
 #include "CUpdateSystem.h"
 #include "IRenderTarget.h"
+#include "CThreadPool.h"
 
 using namespace jam;
 
@@ -37,6 +38,8 @@ CGame::CGame(IRenderViewPtr render)
     : m_IsRunning(false)
     , m_RenderView(render)
 {
+    CThreadPool::Get()->Initialize(5);
+    
     CLoaderFile* loaderFile = new CLoaderFile();
     loaderFile->RegisterFileSystem(CSystem::GetBundlePath() + "media/");
     loaderFile->RegisterFileSystem(CSystem::GetBundlePath());
@@ -46,6 +49,8 @@ CGame::CGame(IRenderViewPtr render)
 
 CGame::~CGame() 
 {
+    CThreadPool::Get()->Destroy();
+    
     if (m_WorkerThread.joinable())
     {
         m_WorkerThread.join();
@@ -91,6 +96,7 @@ IRenderViewPtr CGame::RenderView() const
 
 void CGame::Update(unsigned long dt)
 {
+    CThreadPool::Get()->Update(dt);
     Dispatcher()->Update(dt);
     
     if (!m_Scenes.empty())

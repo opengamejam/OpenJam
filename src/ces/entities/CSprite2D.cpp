@@ -18,6 +18,7 @@
 #include "CSpriteXML.h"
 #include "CAnimation2DComponent.h"
 #include "CTransformationComponent.h"
+#include "CTransformAffector.h"
 #include "CResourceCache.hpp"
 
 using namespace jam;
@@ -207,11 +208,7 @@ CTransformationComponentPtr CSprite2D::TransformComponent() const
 
 void CSprite2D::Position(const CVector3Df& position)
 {
-    CTransformationComponentPtr component = TransformComponent();
-    CTransform3Df transform = component->Transform(CTransformationComponent::Local);
-    transform.Position(position);
-    component->AddTransform(CTransformationComponent::Local, transform);
-    component->Dirty();
+    CTransformAffector::Position(TransformComponent(), position);
 }
 
 const CVector3Df& CSprite2D::Position()
@@ -223,11 +220,7 @@ const CVector3Df& CSprite2D::Position()
 
 void CSprite2D::Rotation(const CVector3Df& rotation)
 {
-    CTransformationComponentPtr component = TransformComponent();
-    CTransform3Df transform = component->Transform(CTransformationComponent::Local);
-    transform.Rotation(rotation);
-    component->AddTransform(CTransformationComponent::Local, transform);
-    component->Dirty();
+    CTransformAffector::Rotation(TransformComponent(), rotation);
 }
 
 const CVector3Df& CSprite2D::Rotation()
@@ -239,11 +232,7 @@ const CVector3Df& CSprite2D::Rotation()
 
 void CSprite2D::Scale(const CVector3Df& scale)
 {
-    CTransformationComponentPtr component = TransformComponent();
-    CTransform3Df transform = component->Transform(CTransformationComponent::Local);
-    transform.Scale(scale);
-    component->AddTransform(CTransformationComponent::Local, transform);
-    component->Dirty();
+    CTransformAffector::Scale(TransformComponent(), scale);
 }
 
 const CVector3Df& CSprite2D::Scale()

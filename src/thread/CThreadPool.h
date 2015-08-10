@@ -1,0 +1,56 @@
+//
+//  CThreadPool.h
+//  TestApp
+//
+//  Created by yev on 8/10/15.
+//
+//
+
+#ifndef CTHREADPOOL_H
+#define CTHREADPOOL_H
+
+#include "Global.h"
+#include "CThreadExecutor.h"
+
+namespace jam
+{
+CLASS_PTR(CThreadPool);
+CLASS_PTR(CThreadExecutor);
+    
+class CThreadPool final
+{
+public:
+    enum ThreadType
+    {
+        Main,
+        Background
+    };
+    
+public:
+    CThreadPool();
+    ~CThreadPool();
+     
+    static CThreadPoolPtr Get();
+    
+    void Initialize(size_t threadsNum = 1);
+    void Destroy();
+    
+    void RunAsync(ThreadType threadType, const CThreadExecutor::TExecuteBlock& block);
+    void Update(unsigned long dt);
+    
+private:
+    CThreadExecutorPtr FindLeisureExecutor();
+    
+private:
+    static CThreadPoolPtr s_Instance;
+    
+    std::vector<CThreadExecutorPtr> m_ThreadExecutors;
+    std::thread::id m_MainThreadId;
+    
+    std::mutex m_Mutex;
+    std::queue<CThreadExecutor::TExecuteBlock> m_MainThreadTasks;
+};
+    
+}; // namespace jam
+
+#endif /* defined(CTHREADPOOL_H) */

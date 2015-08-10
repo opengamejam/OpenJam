@@ -22,7 +22,6 @@ class CGame : public IEventable
 public:
     typedef std::unordered_map<std::type_index, ISystemPtr> TSystemMap;
     typedef std::priority_queue<ISystemPtr> TSystemPQueue;
-
     
 public:
     
@@ -31,9 +30,9 @@ public:
 
     
     void Start();
-    INL void Stop();
-    INL void Pause(bool value);
-    INL bool IsRunning() const;
+    void Stop();
+    void Pause(bool value);
+    bool IsRunning() const;
     
     IRenderViewPtr RenderView() const;
     
@@ -41,7 +40,7 @@ public:
     void Draw();
     
     void PushScene(IScenePtr state);
-    INL void PopScene();
+    void PopScene();
     IScenePtr GetScene() const;
     
     void AddSystem(ISystemPtr system);

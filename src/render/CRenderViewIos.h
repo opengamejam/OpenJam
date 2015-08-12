@@ -14,19 +14,19 @@
 
 namespace jam
 {
-class CRenderViewIos : public IRenderView
+class CRenderViewIOS : public IRenderView
 {
 public:
     enum RenderApi
     {
-        OGLES1,
-        OGLES2,
-        OGLES3
+        OGLES1_1,
+        OGLES2_0,
+        OGLES3_0
     };
     
 public:
-	CRenderViewIos(unsigned int width, unsigned int height, void* glkView, RenderApi renderApi);
-	virtual ~CRenderViewIos();
+	CRenderViewIOS(unsigned int width, unsigned int height, void* glkView, RenderApi renderApi);
+	virtual ~CRenderViewIOS();
 
 	virtual void        CreateView();
     virtual void        Begin() const;

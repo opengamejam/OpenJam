@@ -19,9 +19,9 @@ class CRenderViewOSX : public IRenderView
 public:
     enum RenderApi
     {
-        OGL1,
-        OGL3,
-        OGL4
+        OGLLegacy,
+        OGL3_2,
+        OGL4_1
     };
     
 public:

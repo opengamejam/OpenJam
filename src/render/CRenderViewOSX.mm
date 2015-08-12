@@ -13,9 +13,8 @@
 #include "IEventDispatcher.hpp"
 #include "RenderGlobal.h"
 
-#include "CRendererOGLES1.h"
-
-#include "CFrameBufferTargetOGLES1.h"
+#include "CRendererOGL1_5.h"
+#include "CFrameBufferTargetOGL1_5.h"
 
 using namespace jam;
 
@@ -46,7 +45,7 @@ void CRenderViewOSX::CreateView()
     NSOpenGLPixelFormat *pixelformat = nil;
     switch (m_RenderApi)
     {
-        case OGL1:
+        case OGLLegacy:
         {
             NSOpenGLPixelFormatAttribute attributes[] =
             {
@@ -62,15 +61,15 @@ void CRenderViewOSX::CreateView()
                                                      shareContext:nil];
             [m_GLContext makeCurrentContext];
             
-            GRenderer.reset(new CRendererOGLES1(shared_from_this()));
+            GRenderer.reset(new CRendererOGL1_5(shared_from_this()));
             
-            std::shared_ptr<CFrameBufferTargetOGLES1> renderTarget(new CFrameBufferTargetOGLES1(Width(), Height()));
+            std::shared_ptr<CFrameBufferTargetOGL1_5> renderTarget(new CFrameBufferTargetOGL1_5(Width(), Height()));
             renderTarget->Initialize(0, 0);
             m_DefaultRenderTarget = renderTarget;
         }
         break;
             
-        case OGL3:
+        case OGL3_2:
         {
             /*m_GLContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
             GRenderer.reset(new CRendererOGLES2(shared_from_this()));*/
@@ -78,7 +77,7 @@ void CRenderViewOSX::CreateView()
         }
         break;
             
-        case OGL4:
+        case OGL4_1:
         {
             /*m_GLContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3];
             GRenderer.reset(new CRendererOGLES1(shared_from_this()));*/
@@ -94,27 +93,6 @@ void CRenderViewOSX::CreateView()
     
     GLint swap = 1;
     [m_GLContext setValues:&swap forParameter:NSOpenGLCPSwapInterval];
-    
-    m_DefaultRenderTarget->ClearColor(CColor(0.0f, 0.0f, 1.0f, 1.0f));
-    
-    //glGenRenderbuffers(1, &m_RenderBuffer);
-    //glBindRenderbuffer(GL_RENDERBUFFER, m_RenderBuffer);
-    //glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, Width(), Height());
-    
-    /*IRenderTargetPtr defaultRenderTarget = GRenderer->CreateRenderTarget(Width(), Height());
-    defaultRenderTarget->AttachRenderBuffer(RenderBuffer(), false);
-    defaultRenderTarget->AttachDepthBuffer();
-    defaultRenderTarget->ClearColor(CColor(1.0f, 0.0f, 1.0f, 1.0f));
-    
-    defaultRenderTarget->Bind();
-    defaultRenderTarget->Clear();*/
-    
-    //defaultRenderTarget->Unbind();
-    
-    glClearColor(1, 0, 1, 1);
-    glClear(GL_COLOR_BUFFER_BIT);
-    
-    assert(GRenderer);
 }
 
 void CRenderViewOSX::Begin() const

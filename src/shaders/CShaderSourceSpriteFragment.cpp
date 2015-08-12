@@ -14,7 +14,7 @@ using namespace jam;
 // *****************************************************************************
 
 const std::string CShaderSourceSprite::s_FragmentShader = MULTI_LINE_STRING(
-\n#ifdef OGLES2\n
+\n#ifdef OGL2_0\n
 precision mediump float;
 
 uniform sampler2D        MainTexture0;
@@ -28,7 +28,7 @@ varying mediump vec4     VaryingMainColor;
 
 void main()
 {
-    vec4 color = texture2D(MainTexture0, VaryingTextureCoord) * VaryingMainColor;
+    vec4 color = texture2D(MainTexture0, VaryingTextureCoord);
     gl_FragColor = color;
 }
 \n#endif\n

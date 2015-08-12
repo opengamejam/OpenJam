@@ -13,14 +13,12 @@
 #include "IEventable.h"
 #include "IEventDispatcher.hpp"
 #include "RenderGlobal.h"
-
-#include "CRendererOGLES2.h"
-#include "CRendererOGLES1.h"
-
 #include "IRenderTarget.h"
 
-#include "CFrameBufferTargetOGLES1.h"
-#include "CFrameBufferTargetOGLES2.h"
+#include "CRendererOGLES1_1.h"
+#include "CRendererOGLES2_0.h"
+#include "CFrameBufferTargetOGLES1_1.h"
+#include "CFrameBufferTargetOGLES2_0.h"
 
 using namespace jam;
 
@@ -32,7 +30,7 @@ using namespace jam;
 // Public Methods
 // *****************************************************************************
 
-CRenderViewIos::CRenderViewIos(unsigned int width, unsigned int height, void* glkView, RenderApi renderApi)
+CRenderViewIOS::CRenderViewIOS(unsigned int width, unsigned int height, void* glkView, RenderApi renderApi)
 	: IRenderView(width, height)
 	, m_GLKView((__bridge UIView*)glkView)
     , m_GLContext(nil)
@@ -42,27 +40,27 @@ CRenderViewIos::CRenderViewIos(unsigned int width, unsigned int height, void* gl
     IEventable::RegisterDispatcher(std::make_shared<IEventDispatcher>(IEventDispatcher()));
 }
 
-CRenderViewIos::~CRenderViewIos()
+CRenderViewIOS::~CRenderViewIOS()
 {
 
 }
 
-void CRenderViewIos::CreateView()
+void CRenderViewIOS::CreateView()
 {
     switch (m_RenderApi)
     {
-        case OGLES1:
+        case OGLES1_1:
         {
             m_GLContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1];
             [EAGLContext setCurrentContext:m_GLContext];
             
-            GRenderer.reset(new CRendererOGLES1(shared_from_this()));
+            GRenderer.reset(new CRendererOGLES1_1(shared_from_this()));
             
             glGenRenderbuffers(1, &m_ColorBuffer);
             glBindRenderbuffer(GL_RENDERBUFFER, m_ColorBuffer);
             [m_GLContext renderbufferStorage:GL_RENDERBUFFER fromDrawable:(CAEAGLLayer*)(m_GLKView.layer)];
             
-            std::shared_ptr<CFrameBufferTargetOGLES1> renderTarget(new CFrameBufferTargetOGLES1(Width(), Height()));
+            std::shared_ptr<CFrameBufferTargetOGLES1_1> renderTarget(new CFrameBufferTargetOGLES1_1(Width(), Height()));
             renderTarget->Initialize(-1, m_ColorBuffer);
             glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, m_ColorBuffer);
             glViewport(0, 0, Width(), Height());
@@ -70,18 +68,18 @@ void CRenderViewIos::CreateView()
         }
         break;
             
-        case OGLES2:
+        case OGLES2_0:
         {
             m_GLContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
             [EAGLContext setCurrentContext:m_GLContext];
             
-            GRenderer.reset(new CRendererOGLES2(shared_from_this()));
+            GRenderer.reset(new CRendererOGLES2_0(shared_from_this()));
             
             glGenRenderbuffers(1, &m_ColorBuffer);
             glBindRenderbuffer(GL_RENDERBUFFER, m_ColorBuffer);
             [m_GLContext renderbufferStorage:GL_RENDERBUFFER fromDrawable:(CAEAGLLayer*)(m_GLKView.layer)];
             
-            std::shared_ptr<CFrameBufferTargetOGLES2> renderTarget(new CFrameBufferTargetOGLES2(Width(), Height()));
+            std::shared_ptr<CFrameBufferTargetOGLES2_0> renderTarget(new CFrameBufferTargetOGLES2_0(Width(), Height()));
             renderTarget->Initialize(-1, m_ColorBuffer);
             glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, m_ColorBuffer);
             glViewport(0, 0, Width(), Height());
@@ -89,18 +87,18 @@ void CRenderViewIos::CreateView()
         }
         break;
             
-        case OGLES3:
-        {
+        case OGLES3_0:
+        {   // TODO: OGLES3
             m_GLContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1];
             [EAGLContext setCurrentContext:m_GLContext];
             
-            GRenderer.reset(new CRendererOGLES1(shared_from_this()));
+            GRenderer.reset(new CRendererOGLES1_1(shared_from_this()));
             
             glGenRenderbuffers(1, &m_ColorBuffer);
             glBindRenderbuffer(GL_RENDERBUFFER, m_ColorBuffer);
             [m_GLContext renderbufferStorage:GL_RENDERBUFFER fromDrawable:(CAEAGLLayer*)(m_GLKView.layer)];
             
-            std::shared_ptr<CFrameBufferTargetOGLES1> renderTarget(new CFrameBufferTargetOGLES1(Width(), Height()));
+            std::shared_ptr<CFrameBufferTargetOGLES1_1> renderTarget(new CFrameBufferTargetOGLES1_1(Width(), Height()));
             renderTarget->Initialize(-1, m_ColorBuffer);
             glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, m_ColorBuffer);
             glViewport(0, 0, Width(), Height());
@@ -112,31 +110,30 @@ void CRenderViewIos::CreateView()
             break;
     };
     
-    m_DefaultRenderTarget->ClearColor(CColor(0.0f, 0.0f, 1.0f, 1.0f));
     m_DefaultRenderTarget->CreateDepthAttachment();
     m_DefaultRenderTarget->CreateStencilAttachment();
     
     assert(GRenderer);
 }
 
-void CRenderViewIos::Begin() const
+void CRenderViewIOS::Begin() const
 {
     [EAGLContext setCurrentContext:m_GLContext];
     glBindRenderbuffer(GL_RENDERBUFFER, m_ColorBuffer);
 }
 
-void CRenderViewIos::End() const
+void CRenderViewIOS::End() const
 {
     [m_GLContext presentRenderbuffer:GL_RENDERBUFFER];
     glBindRenderbuffer(GL_RENDERBUFFER, 0);
 }
 
-void CRenderViewIos::UpdateEvents() const
+void CRenderViewIOS::UpdateEvents() const
 {
 
 }
 
-IRenderTargetPtr CRenderViewIos::DefaultRenderTarget() const
+IRenderTargetPtr CRenderViewIOS::DefaultRenderTarget() const
 {
     return m_DefaultRenderTarget;
 }

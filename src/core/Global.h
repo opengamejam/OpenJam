@@ -43,6 +43,8 @@
 #elif defined(OS_MAC)
 #	include <OpenGL/gl.h>
 #	include <OpenGL/glext.h>
+#	include <OpenGL/gl3.h>
+#	include <OpenGL/gl3ext.h>
 #   include <sys/time.h>
 #if defined(__OBJC__)
 #   import <Cocoa/Cocoa.h>

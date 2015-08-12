@@ -15,7 +15,7 @@ using namespace jam;
 
 const std::string CShaderSourceSprite::s_GeomentryShader;
 const std::string CShaderSourceSprite::s_VertexShader = MULTI_LINE_STRING(
-\n#ifdef OGLES2\n
+\n#ifdef OGL2_0\n
 attribute highp vec4     MainPositionVertex;
 attribute mediump vec2   MainTextureCoord;
 attribute highp vec4     MainVertexColor;

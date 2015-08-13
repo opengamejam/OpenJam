@@ -5,7 +5,7 @@
 //  Created by Yevgeniy Logachev
 //  Copyright (c) 2014 yev. All rights reserved.
 //
-#if defined(RENDER_OGL1_3)
+#if defined(RENDER_OGLES1_1)
 
 #include "CFrameBufferTargetOGLES1_0.h"
 
@@ -254,4 +254,4 @@ std::vector<unsigned char> CFrameBufferTargetOGLES1_0::RawData()
 // Private Methods
 // *****************************************************************************
 
-#endif // RENDER_OGL1_3
+#endif // RENDER_OGLES1_1

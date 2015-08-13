@@ -10,7 +10,7 @@
 #ifndef CSHADEROGLES1_0_H
 #define	CSHADEROGLES1_0_H
 
-#include "IShader.h"
+#include "CShaderOGL1_3.h"
 
 namespace jam
 {

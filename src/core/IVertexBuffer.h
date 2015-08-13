@@ -81,7 +81,7 @@ public:
             const char* src = reinterpret_cast<const char*>(array.data());
             
             size_t srcElemSize = sizeof(T);
-            size_t dstElemSize = sizeof(float); // TODO: dataType
+            size_t dstElemSize = sizeForType(dataType);
             size_t sizeElemToCopy = dstElemSize * stride;
             
             size_t srcSize = array.size() * srcElemSize;
@@ -103,6 +103,23 @@ public:
             {
                 vb->Unlock();
             }
+        }
+        
+        size_t sizeForType(DataTypes type)
+        {
+            static std::map<DataTypes, size_t> types = {
+                {Unknown, 0},
+                {Byte, sizeof(char)},
+                {UByte, sizeof(unsigned char)},
+                {Short, sizeof(short)},
+                {UShort, sizeof(unsigned short)},
+                {Int, sizeof(int)},
+                {UInt, sizeof(unsigned int)},
+                {Float, sizeof(float)},
+                {ShortFloat, 2}, // TODO:
+            };
+            
+            return types[type];
         }
     };
     

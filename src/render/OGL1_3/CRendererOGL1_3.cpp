@@ -140,19 +140,14 @@ void CRendererOGL1_3::Draw(IVertexBufferPtr vertexBuffer, IMaterialPtr material)
     int primitiveType = CovertPrimitiveType(material->PrimitiveType());
     glBegin(primitiveType);
     
-    const IVertexBuffer::TVertexStreamMap& vertexStreams = VertexStreams();
+    const IVertexBuffer::TVertexStreamMap& vertexStreams = vertexBuffer->VertexStreams();
     std::for_each(vertexStreams.begin(), vertexStreams.end(),
                   [&](const IVertexBuffer::TVertexStreamMap::value_type& value)
     {
-        const SVertexStream& stream = value.second;
+        const IVertexBuffer::SVertexStream& stream = value.second;
         if (stream.IsActive())
         {
-            IVertexBufferPtr vertexBuffer = stream.vertexBuffer.lock();
-            if (vertexBuffer)
-            {
-                size_t size = vertexBuffer->Size();
-                
-            }
+            
             
             /*GLbyte *offset = nullptr;
             offset += value.second.offset;
@@ -207,7 +202,7 @@ void CRendererOGL1_3::Draw(IVertexBufferPtr vertexBuffer, IIndexBufferPtr indexB
         return;
     }
         
-    int primitiveType = CovertPrimitiveType(material->PrimitiveType());
+    //int primitiveType = CovertPrimitiveType(material->PrimitiveType());
     //glDrawElements(primitiveType, (GLsizei)indexBuffer->Size(), GL_UNSIGNED_INT, (void *)0);
 }
 

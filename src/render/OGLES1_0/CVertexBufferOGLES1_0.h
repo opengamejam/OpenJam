@@ -10,7 +10,7 @@
 #ifndef CVERTEXBUFFEROGLES1_0_H
 #define CVERTEXBUFFEROGLES1_0_H
 
-#include "IVertexBuffer.h"
+#include "CVertexBufferOGL1_3.h"
 
 namespace jam
 {

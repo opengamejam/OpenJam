@@ -119,16 +119,19 @@ void CVertexBufferOGL2_0::Bind()
     std::for_each(vertexStreams.begin(), vertexStreams.end(),
                   [&](const IVertexBuffer::TVertexStreamMap::value_type& value)
     {
-        if (value.second.IsActive())
+        const SVertexStream& stream = value.second;
+        if (stream.IsActive())
         {
             GLbyte *ptr = nullptr;
-            glEnableVertexAttribArray(value.second.binding);
-            glVertexAttribPointer(value.second.binding,
-                                  value.second.stride,
-                                  GL_FLOAT, // TODO: type
+            int type = ConvertDataType(stream.dataType);
+            
+            glEnableVertexAttribArray(stream.binding);
+            glVertexAttribPointer(stream.binding,
+                                  stream.stride,
+                                  type,
                                   GL_FALSE,
                                   (GLsizei)ElementSize(),
-                                  (GLvoid*)(ptr + value.second.offset));
+                                  (GLvoid*)(ptr + stream.offset));
         }
     });
 }
@@ -155,5 +158,22 @@ void CVertexBufferOGL2_0::ElementSize(size_t elementSize)
 // *****************************************************************************
 // Private Methods
 // *****************************************************************************
+
+int CVertexBufferOGL2_0::ConvertDataType(DataTypes dataType)
+{
+    static std::map<DataTypes, int> converter = {
+        {Unknown, GL_BYTE},
+        {Byte, GL_BYTE},
+        {UByte, GL_UNSIGNED_BYTE},
+        {Short, GL_SHORT},
+        {UShort, GL_UNSIGNED_SHORT},
+        {Int, GL_INT},
+        {UInt, GL_UNSIGNED_INT},
+        {Float, GL_FLOAT},
+        {ShortFloat, GL_2_BYTES}, // TODO
+    };
+    
+    return converter[dataType];
+}
 
 #endif // RENDER_OGL2_0 || RENDER_OGLES2_0

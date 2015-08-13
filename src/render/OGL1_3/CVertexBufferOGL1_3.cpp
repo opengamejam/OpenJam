@@ -128,4 +128,21 @@ void CVertexBufferOGL1_3::ElementSize(size_t elementSize)
 // Private Methods
 // *****************************************************************************
 
+int CVertexBufferOGL1_3::ConvertDataType(DataTypes dataType)
+{
+    static std::map<DataTypes, int> converter = {
+        {Unknown, GL_BYTE},
+        {Byte, GL_BYTE},
+        {UByte, GL_UNSIGNED_BYTE},
+        {Short, GL_SHORT},
+        {UShort, GL_UNSIGNED_SHORT},
+        {Int, GL_INT},
+        {UInt, GL_UNSIGNED_INT},
+        {Float, GL_FLOAT},
+        {ShortFloat, GL_2_BYTES}, // TODO
+    };
+    
+    return converter[dataType];
+}
+
 #endif // RENDER_OGL1_3

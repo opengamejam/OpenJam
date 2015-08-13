@@ -5,7 +5,7 @@
 //  Created by Yevgeniy Logachev
 //  Copyright (c) 2014 yev. All rights reserved.
 //
-#if defined(RENDER_OGL1_3)
+#if defined(RENDER_OGLES1_1)
 
 #ifndef CFRAMEBUFFERTARGETOGLES1_0_H
 #define CFRAMEBUFFERTARGETOGLES1_0_H
@@ -65,4 +65,4 @@ private:
 
 #endif /* defined(CFRAMEBUFFERTARGETOGLES1_0_H) */
 
-#endif /* RENDER_OGLES1 */
+#endif /* RENDER_OGLES1_1 */

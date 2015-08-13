@@ -45,6 +45,9 @@ protected:
     virtual void ElementSize(size_t elementSize);
     
 private:
+    int ConvertDataType(DataTypes dataType);
+    
+private:
     unsigned int m_Id;
     std::vector<char> m_Buffer;
     size_t m_ElementSize;

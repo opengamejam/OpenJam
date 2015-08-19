@@ -108,7 +108,7 @@ void CRendererOGL1_5::Draw(IMeshPtr mesh, IMaterialPtr material, IShaderProgramP
     {
         CMatrix4x4f matrix = it->second;
         glMatrixMode(GL_PROJECTION);
-        glLoadMatrixf(matrix.Transpose()().data());
+        glLoadTransposeMatrixf(matrix().data());
     }   // TODO: load identity for other case
     
     it = uniforms.find(shader->ModelMatrix());
@@ -116,7 +116,7 @@ void CRendererOGL1_5::Draw(IMeshPtr mesh, IMaterialPtr material, IShaderProgramP
     {
         CMatrix4x4f matrix = it->second;
         glMatrixMode(GL_MODELVIEW);
-        glLoadMatrixf(matrix.Transpose()().data());
+        glLoadTransposeMatrixf(matrix().data());
     }   // TODO: load identity for other case
     
     if (mesh->IndexBuffer())
@@ -151,7 +151,7 @@ void CRendererOGL1_5::Draw(IVertexBufferPtr vertexBuffer, IIndexBufferPtr indexB
     }
         
     int primitiveType = CovertPrimitiveType(material->PrimitiveType());
-    glDrawElements(primitiveType, (GLsizei)indexBuffer->Size(), GL_UNSIGNED_INT, (void *)0);
+    glDrawElements(primitiveType, (GLsizei)indexBuffer->Size(), GL_UNSIGNED_SHORT, (void *)0);
 }
 
 // *****************************************************************************

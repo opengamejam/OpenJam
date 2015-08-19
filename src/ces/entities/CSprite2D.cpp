@@ -14,7 +14,6 @@
 #include "CVertex.h"
 #include "CColor.h"
 #include "CShaderSourceSprite.h"
-#include "CImagePVR.h"
 #include "CSpriteXML.h"
 #include "CAnimation2DComponent.h"
 #include "CTransformationComponent.h"
@@ -69,7 +68,7 @@ CSprite2DPtr CSprite2D::Create(const std::string& filename, unsigned int cameraI
     
     vertexBuffer->Resize(4);
     IVertexBuffer::SVertexStream& position = vertexBuffer->Lock(IVertexBuffer::Position);
-    position.binding = shaderProgram->VertexPosition();
+    position.attributeIndex = shaderProgram->VertexPosition();
     position.dataType = IVertexBuffer::Float;
     position.stride = 3;
     position.offset = 0;
@@ -82,20 +81,20 @@ CSprite2DPtr CSprite2D::Create(const std::string& filename, unsigned int cameraI
     });
     
     IVertexBuffer::SVertexStream& color = vertexBuffer->Lock(IVertexBuffer::Color);
-    color.binding = shaderProgram->VertexColor();
+    color.attributeIndex = shaderProgram->VertexColor();
     color.dataType = IVertexBuffer::Float;
     color.stride = 4;
     color.offset = sizeof(CVector3Df);
     color.Set<CColor>(0,
     {
-        CColor(1.0f, 1.0f, 1.0f, 1.0),
-        CColor(1.0f, 1.0f, 1.0f, 1.0),
-        CColor(1.0f, 1.0f, 1.0f, 1.0),
-        CColor(1.0f, 1.0f, 1.0f, 1.0)
+        CColor(1.0f, 1.0f, 1.0f, 1.0f),
+        CColor(1.0f, 1.0f, 1.0f, 1.0f),
+        CColor(1.0f, 1.0f, 1.0f, 1.0f),
+        CColor(1.0f, 1.0f, 1.0f, 1.0f)
     });
     
     IVertexBuffer::SVertexStream& textureCoord = vertexBuffer->Lock(IVertexBuffer::TextureCoors);
-    textureCoord.binding = shaderProgram->TextureCoord();
+    textureCoord.attributeIndex = shaderProgram->TextureCoord();
     textureCoord.dataType = IVertexBuffer::Float;
     textureCoord.stride = 2;
     textureCoord.offset = sizeof(CVector3Df) + sizeof(CColor);
@@ -111,11 +110,11 @@ CSprite2DPtr CSprite2D::Create(const std::string& filename, unsigned int cameraI
     
     // Index buffer
     indexBuffer = GRenderer->CreateIndexBuffer();
-    indexBuffer->Initialize(sizeof(unsigned int));
+    indexBuffer->Initialize(sizeof(unsigned short));
     assert(indexBuffer && indexBuffer->IsValid());
     
     indexBuffer->Resize(6);
-    unsigned int* lockedIndex = indexBuffer->Lock<unsigned int>();
+    unsigned short* lockedIndex = indexBuffer->Lock<unsigned short>();
     if (lockedIndex)
     {
         lockedIndex[0] = 0;

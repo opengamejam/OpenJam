@@ -43,6 +43,8 @@ public:
     void AnchorPoint(const CVector3Df& anchorPoint);
     const CVector3Df& AnchorPoint();
     
+    void Update(unsigned long dt);
+
 private:
     CRenderComponentPtr m_RenderComponent;
     CTransformationComponentPtr m_TransformationComponent;

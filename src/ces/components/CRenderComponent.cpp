@@ -23,7 +23,7 @@ CRenderComponent::CRenderComponent()
 : IComponent(ComponentId<CRenderComponent>())
 , m_IsVisible(true)
 , m_IsBatchable(false)
-, m_BatchIndex(std::numeric_limits<typeof(m_BatchIndex)>::max())
+, m_BatchIndex(std::numeric_limits<unsigned int>::max())
 {
 
 }
@@ -117,7 +117,7 @@ void CRenderComponent::Visible(bool isVisible)
 
 bool CRenderComponent::Batchable() const
 {
-    return (m_BatchIndex != std::numeric_limits<typeof(m_BatchIndex)>::max());
+    return (m_BatchIndex != std::numeric_limits<unsigned int>::max());
 }
 
 void CRenderComponent::Batchable(bool isBatchable)
@@ -143,7 +143,7 @@ void CRenderComponent::BatchIndex(unsigned int batchIndex)
 
 bool CRenderComponent::IsBatchIndexValid() const
 {
-    return (m_BatchIndex != std::numeric_limits<typeof(m_BatchIndex)>::max());
+    return (m_BatchIndex != std::numeric_limits<unsigned int>::max());
 }
 
 bool CRenderComponent::IsValid() const

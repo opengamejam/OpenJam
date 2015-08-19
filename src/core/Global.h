@@ -70,7 +70,14 @@
 #   include <jni.h>
 #   include <android/log.h>
 #	include <GLES2/gl2.h>
-#define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, "INFO: ", __VA_ARGS__))
+#	define LOGI(...) ((void)__android_log_print(ANDROID_LOG_INFO, "INFO: ", __VA_ARGS__))
+#elif defined(OS_KOS)
+#	include <kos.h>
+#	include <GL/gl.h>
+#	include <GL/glu.h>
+#	include <GL/glut.h>
+#	include <GL/glext.h>
+#	include <sys/time.h>
 #endif
 
 #define CLASS_PTR(_class) typedef std::shared_ptr<class _class> _class##Ptr

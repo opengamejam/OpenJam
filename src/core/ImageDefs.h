@@ -29,6 +29,10 @@ enum TexelFormats
     TF_PVRTC4,
     TF_PVRTC4Alpha,
     TF_ETC,
+    // Twiddled
+    TF_RGB565_TWID,
+    TF_ARGB1555_TWID,
+    TF_ARGB4444_TWID
 };
 
 enum TexelTypes

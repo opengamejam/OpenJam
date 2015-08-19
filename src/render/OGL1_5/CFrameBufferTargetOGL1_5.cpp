@@ -30,7 +30,7 @@ CFrameBufferTargetOGL1_5::CFrameBufferTargetOGL1_5(unsigned int width, unsigned 
 , m_IsStencilBufferExt(false)
 , m_Width(width)
 , m_Height(height)
-, m_ClearColor(CColor(0.0f, 0.0f, 0.0f, 1.0f))
+, m_ClearColor(CColor(0.0f, 0.0f, 1.0f, 1.0f))
 {
 #if GL_MAX_COLOR_ATTACHMENTS
     glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS, &m_NumColorAtachments);
@@ -226,7 +226,7 @@ std::vector<unsigned char> CFrameBufferTargetOGL1_5::RawData()
     Bind();
     
     unsigned int rawdataSize = Width() * Height() * 4;
-    std::vector<unsigned char> data(rawdataSize);
+    std::vector<unsigned char> data(rawdataSize, 0);
     glReadPixels(0, 0, Width(), Height(), GL_RGBA, GL_UNSIGNED_BYTE, &data[0]);
     
     Unbind();

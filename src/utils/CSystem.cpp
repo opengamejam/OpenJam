@@ -7,7 +7,7 @@
 
 unsigned long CSystem::GetTickCount()
 {
-#if defined(OS_IPHONE) || defined(OS_LINUX) || defined(OS_ANDROID) || defined(OS_MAC)
+#if defined(OS_IPHONE) || defined(OS_LINUX) || defined(OS_ANDROID) || defined(OS_MAC) || defined(OS_KOS)
     struct timeval t;
     gettimeofday( &t, 0 );
     return ((t.tv_sec * 1000) + (t.tv_usec / 1000));
@@ -30,6 +30,8 @@ const std::string& CSystem::GetBundlePath()
         NSString* path = [[NSBundle mainBundle] bundlePath];
         
         g_bundlePath = std::string([path UTF8String]) + std::string("/");
+#elif defined(OS_KOS)
+        g_bundlePath = "/rd/";
 #endif
     }
     

@@ -23,6 +23,7 @@ CVertexBufferOGL1_5::CVertexBufferOGL1_5()
 : m_Id(0)
 , m_ElementSize(0)
 , m_IsLocked(false)
+, m_ZeroStride(false)
 {
     
 }
@@ -52,7 +53,18 @@ IVertexBuffer::SVertexStream& CVertexBufferOGL1_5::Lock(IVertexBuffer::VertexTyp
     
     if (m_VertexStreamers.find(vertexType) == m_VertexStreamers.end())
     {
-        m_VertexStreamers[vertexType] = SVertexStream(shared_from_this());
+        unsigned int absoluteOffset = 0;
+        std::for_each(m_VertexStreamers.begin(), m_VertexStreamers.end(), [&](const TVertexStreamMap::value_type& value)
+        {
+            const IVertexBuffer::SVertexStream& stream = value.second;
+            absoluteOffset += (stream.DataSize() * stream.stride * Size());
+        });
+        
+        SVertexStream stream = SVertexStream(shared_from_this());
+        stream.streamIndex = m_VertexStreamers.size();
+        stream.absoluteOffset = absoluteOffset;
+        
+        m_VertexStreamers[vertexType] = stream;
     }
     
     return m_VertexStreamers[vertexType];
@@ -117,6 +129,16 @@ bool CVertexBufferOGL1_5::HasStream(IVertexBuffer::VertexTypes vertexType)
     return (m_VertexStreamers.find(vertexType) != m_VertexStreamers.end());
 }
 
+void CVertexBufferOGL1_5::ZeroStride(bool isZeroStride)
+{
+    m_ZeroStride = isZeroStride;
+}
+
+bool CVertexBufferOGL1_5::ZeroStride()
+{
+    return m_ZeroStride;
+}
+
 void CVertexBufferOGL1_5::Bind()
 {
     glBindBuffer(GL_ARRAY_BUFFER, m_Id);
@@ -129,28 +151,29 @@ void CVertexBufferOGL1_5::Bind()
         if (stream.IsActive())
         {
             GLbyte *offset = nullptr;
-            offset += value.second.offset;
+            offset += (ZeroStride() ? stream.absoluteOffset : stream.offset);
             int type = ConvertDataType(stream.dataType);
+            GLsizei elementSize = (ZeroStride() ? 0 : (GLsizei)ElementSize());
             
             if (value.first == IVertexBuffer::Position)
             {
                 glEnableClientState(GL_VERTEX_ARRAY);
-                glVertexPointer(stream.stride, type, (GLsizei)ElementSize(), (GLvoid*)offset);
+                glVertexPointer(stream.stride, type, elementSize, (GLvoid*)offset);
             }
             else if (value.first == IVertexBuffer::TextureCoors)
             {
                 glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-                glTexCoordPointer(stream.stride, type, (GLsizei)ElementSize(), (GLvoid*)offset);
+                glTexCoordPointer(stream.stride, type, elementSize, (GLvoid*)offset);
             }
             else if (value.first == IVertexBuffer::Color)
             {
                 glEnableClientState(GL_COLOR_ARRAY);
-                glColorPointer(stream.stride, type, (GLsizei)ElementSize(), (GLvoid*)offset);
+                glColorPointer(stream.stride, type, elementSize, (GLvoid*)offset);
             }
             else if (value.first == IVertexBuffer::Normal)
             {
                 glEnableClientState(GL_NORMAL_ARRAY);
-                glNormalPointer(type, (GLsizei)ElementSize(), (GLvoid*)offset);
+                glNormalPointer(type, elementSize, (GLvoid*)offset);
             }
             else if (value.first == IVertexBuffer::Tangent)
             {
@@ -216,7 +239,7 @@ int CVertexBufferOGL1_5::ConvertDataType(DataTypes dataType)
         {Int, GL_INT},
         {UInt, GL_UNSIGNED_INT},
         {Float, GL_FLOAT},
-        {ShortFloat, GL_2_BYTES}, // TODO
+        //{ShortFloat, GL_2_BYTES}, // TODO
     };
     
     return converter[dataType];

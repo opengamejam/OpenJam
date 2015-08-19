@@ -38,6 +38,9 @@ public:
     virtual void Unlock();
     virtual bool HasStream(VertexTypes vertexType);
     
+    virtual void ZeroStride(bool isZeroStride);
+    virtual bool ZeroStride();
+    
     virtual void Bind();
     virtual void Unbind();
     
@@ -53,6 +56,7 @@ private:
     size_t m_ElementSize;
     bool m_IsLocked;
     TVertexStreamMap m_VertexStreamers;
+    bool m_ZeroStride;
 };
     
 }; // namespace jam

@@ -160,7 +160,7 @@ bool CModelObj::ParseLine(const std::string& line,
             }
         }
         
-        for (long i = 0; i < faces.size(); ++i)
+        for (unsigned long i = 0; i < faces.size(); ++i)
         {
             std::vector<std::string> face;
             SplitString(face, faces[i], '/');

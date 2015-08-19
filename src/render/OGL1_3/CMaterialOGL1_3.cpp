@@ -40,28 +40,40 @@ CMaterialOGL1_3::~CMaterialOGL1_3()
 
 void CMaterialOGL1_3::Bind()
 {
+#ifdef GL3_PROTOTYPES
     if (LineWidth() > 0.0f)
     {
         glLineWidth(LineWidth());
     }
+#endif
     
-    IStencilPtr stencil = Stencil();
+    glEnable(GL_TEXTURE_2D);
+    glEnable(GL_DEPTH_TEST);
+	glDepthFunc(GL_LEQUAL);
+
+    /*IStencilPtr stencil = Stencil();
     if (stencil)
     {
+#ifdef GL_STENCIL_TEST
         glEnable(GL_STENCIL_TEST);
+#endif
         glDisable(GL_DEPTH_TEST);
         glDepthMask(GL_FALSE);
         
+#ifdef GL_STENCIL_TEST
         unsigned int stencilFunc = CovertStencilFunc(stencil->Func());
         glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
         glStencilFunc(stencilFunc, stencil->Ref(), stencil->Mask());
         glStencilOp(GL_REPLACE, GL_KEEP, GL_KEEP); // TODO:
+#endif
     }
     else
     {
+#ifdef GL_STENCIL_TEST
         glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
         glStencilFunc(GL_EQUAL, 0xFF, 0xFF);
         glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
+#endif
         
         glEnable(GL_DEPTH_TEST);
         glDepthMask(GL_TRUE);
@@ -72,8 +84,6 @@ void CMaterialOGL1_3::Bind()
         
         glEnable(GL_TEXTURE_2D);
         glShadeModel(GL_SMOOTH);
-        
-        //glFrontFace(GL_CCW);
     }
     
     if (CullFace())
@@ -83,7 +93,7 @@ void CMaterialOGL1_3::Bind()
     else
     {
         glDisable(GL_CULL_FACE);
-    }
+    }*/
 }
 
 void CMaterialOGL1_3::Unbind()
@@ -91,7 +101,9 @@ void CMaterialOGL1_3::Unbind()
     IStencilPtr stencil = Stencil();
     if (stencil)
     {
+#ifdef GL_STENCIL_TEST
         glDisable(GL_STENCIL_TEST);
+#endif
     }
 }
 

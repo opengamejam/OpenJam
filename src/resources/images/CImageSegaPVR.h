@@ -18,7 +18,7 @@ public:
     virtual ~CImageDreamPVR();
     
     virtual bool            Load();
-    virtual const ResourceData_t& RawData();
+    virtual const TResourceData& RawData();
     virtual unsigned int    Width() const;
     virtual unsigned int    Height() const;
     virtual unsigned int    Bpp() const;
@@ -37,7 +37,7 @@ private:
     unsigned int            m_Width;
     unsigned int            m_Height;
     unsigned int            m_Mipmaps;
-    ResourceData_t          m_Data;
+    TResourceData	        m_Data;
     TexelProps              m_TexelProps;
     bool 					m_IsCompressed;
     
@@ -60,8 +60,6 @@ private:
 		unsigned short      height;             // Height of the texture.
 	};
 	#pragma pack(pop)
-    
-    static const size_t     s_PVRT_HEADER_SIZE = sizeof(PVRTHeader);
     
     static const std::map<unsigned long long, TexelProps> s_TexelProps;
 };

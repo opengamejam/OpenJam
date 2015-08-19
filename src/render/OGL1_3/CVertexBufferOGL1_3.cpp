@@ -8,6 +8,7 @@
 #if defined(RENDER_OGL1_3)
 
 #include "CVertexBufferOGL1_3.h"
+#include "CVector3d.h"
 
 using namespace jam;
 
@@ -20,20 +21,29 @@ using namespace jam;
 // *****************************************************************************
 
 CVertexBufferOGL1_3::CVertexBufferOGL1_3()
-: m_Id(1)
+: m_Id(0)
 , m_ElementSize(0)
 , m_IsLocked(false)
+, m_ZeroStride(false)
 {
     
 }
 
 CVertexBufferOGL1_3::~CVertexBufferOGL1_3()
 {
-    
+    Destroy();
 }
 
 void CVertexBufferOGL1_3::Initialize(size_t elementSize)
 {
+    if (!IsValid())
+    {
+#ifdef GL_ARRAY_BUFFER
+        glGenBuffers(1, &m_Id);
+#else
+        m_Id = 1;
+#endif
+    }
     ElementSize(elementSize);
 }
 
@@ -48,7 +58,18 @@ IVertexBuffer::SVertexStream& CVertexBufferOGL1_3::Lock(IVertexBuffer::VertexTyp
     
     if (m_VertexStreamers.find(vertexType) == m_VertexStreamers.end())
     {
-        m_VertexStreamers[vertexType] = SVertexStream(shared_from_this());
+        size_t absoluteOffset = 0;
+        std::for_each(m_VertexStreamers.begin(), m_VertexStreamers.end(), [&](const TVertexStreamMap::value_type& value)
+        {
+            const IVertexBuffer::SVertexStream& stream = value.second;
+            absoluteOffset += (stream.DataSize() * stream.stride * Size());
+        });
+        
+        IVertexBuffer::SVertexStream stream = IVertexBuffer::SVertexStream(shared_from_this());
+        stream.streamIndex = m_VertexStreamers.size();
+        stream.absoluteOffset = absoluteOffset;
+        
+        m_VertexStreamers[vertexType] = stream;
     }
     
     return m_VertexStreamers[vertexType];
@@ -56,7 +77,13 @@ IVertexBuffer::SVertexStream& CVertexBufferOGL1_3::Lock(IVertexBuffer::VertexTyp
 
 void CVertexBufferOGL1_3::Destroy()
 {
-    
+    if (IsValid())
+    {
+#ifdef GL_ARRAY_BUFFER
+        glDeleteBuffers(1, &m_Id);
+#endif
+        m_Id = 0;
+    }
 }
 
 bool CVertexBufferOGL1_3::IsValid() const
@@ -97,6 +124,12 @@ void CVertexBufferOGL1_3::Unlock()
         return;
     }
     
+#ifdef GL_ARRAY_BUFFER
+    glBindBuffer(GL_ARRAY_BUFFER, m_Id);
+    glBufferData(GL_ARRAY_BUFFER, m_Buffer.size(), m_Buffer.data(), GL_DYNAMIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+#endif
+    
     m_IsLocked = false;
 }
 
@@ -105,14 +138,97 @@ bool CVertexBufferOGL1_3::HasStream(IVertexBuffer::VertexTypes vertexType)
     return (m_VertexStreamers.find(vertexType) != m_VertexStreamers.end());
 }
 
+void CVertexBufferOGL1_3::ZeroStride(bool isZeroStride)
+{
+    m_ZeroStride = isZeroStride;
+}
+
+bool CVertexBufferOGL1_3::ZeroStride()
+{
+    return m_ZeroStride;
+}
+
 void CVertexBufferOGL1_3::Bind()
 {
+#ifdef GL_ARRAY_BUFFER
+    glBindBuffer(GL_ARRAY_BUFFER, m_Id);
+#endif
     
+    const IVertexBuffer::TVertexStreamMap& vertexStreams = VertexStreams();
+    std::for_each(vertexStreams.begin(), vertexStreams.end(),
+                  [&](const IVertexBuffer::TVertexStreamMap::value_type& value)
+    {
+        const SVertexStream& stream = value.second;
+        if (stream.IsActive())
+        {
+            GLubyte *offset = (GLubyte *)m_Buffer.data();
+            offset += (ZeroStride() ? stream.absoluteOffset : stream.offset);
+            int type = ConvertDataType(stream.dataType);
+            GLsizei elementSize = (ZeroStride() ? 0 : (GLsizei)ElementSize());
+
+            if (value.first == IVertexBuffer::Position)
+            {
+                glEnableClientState(GL_VERTEX_ARRAY);
+                glVertexPointer(stream.stride, type, elementSize, (GLvoid*)offset);
+            }
+            else if (value.first == IVertexBuffer::TextureCoors)
+            {
+                glEnableClientState(GL_TEXTURE_COORD_ARRAY);
+                glTexCoordPointer(stream.stride, type, elementSize, (GLvoid*)offset);
+            }
+            else if (value.first == IVertexBuffer::Color)
+            {
+            	// TODO: glColorPointer doesn't work properly
+                //glEnableClientState(GL_COLOR_ARRAY);
+                //glColorPointer(stream.stride, type, elementSize, (GLvoid*)offset);
+            }
+            else if (value.first == IVertexBuffer::Normal)
+            {
+                glEnableClientState(GL_NORMAL_ARRAY);
+                glNormalPointer(type, elementSize, (GLvoid*)offset);
+            }
+            else if (value.first == IVertexBuffer::Tangent)
+            {
+            }
+        }
+    });
+
+    Unlock();
 }
 
 void CVertexBufferOGL1_3::Unbind()
 {
+#ifdef GL_ARRAY_BUFFER
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+#endif
     
+    const IVertexBuffer::TVertexStreamMap& vertexStreams = VertexStreams();
+    std::for_each(vertexStreams.begin(), vertexStreams.end(),
+                  [&](const IVertexBuffer::TVertexStreamMap::value_type& value)
+    {
+        if (value.second.IsActive())
+        {
+            if (value.first == IVertexBuffer::Position)
+            {
+                glDisableClientState(GL_VERTEX_ARRAY);
+            }
+            else if (value.first == IVertexBuffer::TextureCoors)
+            {
+                glDisableClientState(GL_TEXTURE_COORD_ARRAY);
+            }
+            else if (value.first == IVertexBuffer::Color)
+            {
+                glDisableClientState(GL_COLOR_ARRAY);
+            }
+            else if (value.first == IVertexBuffer::Normal)
+            {
+                glDisableClientState(GL_NORMAL_ARRAY);
+            }
+            else if (value.first == IVertexBuffer::Tangent)
+            {
+            }
+        }
+    });
 }
 
 // *****************************************************************************

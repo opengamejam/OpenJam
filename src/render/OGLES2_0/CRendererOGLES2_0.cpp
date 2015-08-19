@@ -134,7 +134,7 @@ void CRendererOGLES2_0::Draw(IVertexBufferPtr vertexBuffer, IIndexBufferPtr inde
     }
     
     int primitiveType = CovertPrimitiveType(material->PrimitiveType());
-    glDrawElements(primitiveType, (GLsizei)indexBuffer->Size(), GL_UNSIGNED_INT, (void *)0);
+    glDrawElements(primitiveType, (GLsizei)indexBuffer->Size(), GL_UNSIGNED_SHORT, (void *)0);
 }
 
 // *****************************************************************************

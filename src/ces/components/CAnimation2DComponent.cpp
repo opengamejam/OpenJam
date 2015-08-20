@@ -10,6 +10,7 @@
 #include "CMathFunc.h"
 #include "ISprite.h"
 #include "CImagePVR.h"
+#include "CImageSegaPVR.h"
 #include "RenderGlobal.h"
 #include "CResourceCache.hpp"
 
@@ -288,7 +289,11 @@ void CAnimation2DComponent::LoadTextures(const std::vector<std::string>& texture
             IImagePtr image = imageCache.AcquireResource(filename, false,
                                                         [](const std::string& filename) -> IImagePtr
             {
+#ifdef OS_KOS
+                IImagePtr resultImage(new CImageDreamPVR(filename));
+#else
                 IImagePtr resultImage(new CImagePVR(filename));
+#endif
                 if (!resultImage->Load())
                 {
                     resultImage = nullptr;

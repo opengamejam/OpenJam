@@ -40,7 +40,7 @@ bool CThreadPool::IsMainThread()
 
 void CThreadPool::Initialize(size_t threadsNum)
 {
-    threadsNum = std::max(1ul, threadsNum);
+    threadsNum = std::max<unsigned int>(1, threadsNum);
     
     std::unique_lock<std::mutex> locker(m_Mutex);
     

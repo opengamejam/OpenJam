@@ -238,7 +238,7 @@ std::vector<unsigned char> CFrameBufferTargetOGLES1_1::RawData()
     Bind();
     
     unsigned int rawdataSize = Width() * Height() * 4;
-    std::vector<unsigned char> data(rawdataSize);
+    std::vector<unsigned char> data(rawdataSize, 0);
     glReadPixels(0, 0, Width(), Height(), GL_RGBA, GL_UNSIGNED_BYTE, &data[0]);
     
     Unbind();

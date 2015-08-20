@@ -23,6 +23,7 @@ CVertexBufferOGL2_0::CVertexBufferOGL2_0()
 : m_Id(0)
 , m_ElementSize(0)
 , m_IsLocked(false)
+, m_ZeroStride(false)
 {
     
 }
@@ -52,7 +53,18 @@ IVertexBuffer::SVertexStream& CVertexBufferOGL2_0::Lock(IVertexBuffer::VertexTyp
     
     if (m_VertexStreamers.find(vertexType) == m_VertexStreamers.end())
     {
-        m_VertexStreamers[vertexType] = SVertexStream(shared_from_this());
+        unsigned int absoluteOffset = 0;
+        std::for_each(m_VertexStreamers.begin(), m_VertexStreamers.end(), [&](const TVertexStreamMap::value_type& value)
+                      {
+                          const IVertexBuffer::SVertexStream& stream = value.second;
+                          absoluteOffset += (stream.DataSize() * stream.stride * Size());
+                      });
+        
+        SVertexStream stream = SVertexStream(shared_from_this());
+        stream.streamIndex = (unsigned int)m_VertexStreamers.size();
+        stream.absoluteOffset = absoluteOffset;
+        
+        m_VertexStreamers[vertexType] = stream;
     }
     
     return m_VertexStreamers[vertexType];
@@ -111,6 +123,21 @@ void CVertexBufferOGL2_0::Unlock()
     m_IsLocked = false;
 }
 
+bool CVertexBufferOGL2_0::HasStream(IVertexBuffer::VertexTypes vertexType)
+{
+    return (m_VertexStreamers.find(vertexType) != m_VertexStreamers.end());
+}
+
+void CVertexBufferOGL2_0::ZeroStride(bool isZeroStride)
+{
+    m_ZeroStride = isZeroStride;
+}
+
+bool CVertexBufferOGL2_0::ZeroStride()
+{
+    return m_ZeroStride;
+}
+
 void CVertexBufferOGL2_0::Bind()
 {
     glBindBuffer(GL_ARRAY_BUFFER, m_Id);
@@ -122,23 +149,20 @@ void CVertexBufferOGL2_0::Bind()
         const SVertexStream& stream = value.second;
         if (stream.IsActive())
         {
-            GLbyte *ptr = nullptr;
+            GLbyte *offset = nullptr;
+            offset += (ZeroStride() ? stream.absoluteOffset : stream.offset);
             int type = ConvertDataType(stream.dataType);
+            GLsizei elementSize = (ZeroStride() ? 0 : (GLsizei)ElementSize());
             
-            glEnableVertexAttribArray(stream.binding);
-            glVertexAttribPointer(stream.binding,
+            glEnableVertexAttribArray(stream.attributeIndex);
+            glVertexAttribPointer(stream.attributeIndex,
                                   stream.stride,
                                   type,
                                   GL_FALSE,
-                                  (GLsizei)ElementSize(),
-                                  (GLvoid*)(ptr + stream.offset));
+                                  elementSize,
+                                  (GLvoid*)offset);
         }
     });
-}
-
-bool CVertexBufferOGL2_0::HasStream(IVertexBuffer::VertexTypes vertexType)
-{
-    return (m_VertexStreamers.find(vertexType) != m_VertexStreamers.end());
 }
 
 void CVertexBufferOGL2_0::Unbind()
@@ -170,7 +194,7 @@ int CVertexBufferOGL2_0::ConvertDataType(DataTypes dataType)
         {Int, GL_INT},
         {UInt, GL_UNSIGNED_INT},
         {Float, GL_FLOAT},
-        {ShortFloat, GL_2_BYTES}, // TODO
+        //{ShortFloat, GL_2_BYTES}, // TODO
     };
     
     return converter[dataType];

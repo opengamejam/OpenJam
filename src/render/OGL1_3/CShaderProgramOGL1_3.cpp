@@ -22,6 +22,7 @@ using namespace jam;
 
 CShaderProgramOGL1_3::CShaderProgramOGL1_3()
 : m_ProectionMatrixHadle(-1)
+, m_ModelMatrixHadle(-1)
 , m_VertexCoordHandle(-1)
 , m_TextureCoordHandle(-1)
 , m_VertexColorHandle(-1)

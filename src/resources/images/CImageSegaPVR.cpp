@@ -3,7 +3,7 @@
  * Author: yevgeniy.logachev
  */
 
-#include "CImageDreamPVR.h"
+#include "CImageSegaPVR.h"
 #include "Global.h"
 #include "ILoader.h"
 
@@ -19,6 +19,8 @@ const std::map<unsigned long long, TexelProps> CImageDreamPVR::s_TexelProps =
     std::make_pair(0x02, TexelProps(TF_RGBA4444,      TT_UByte,   16)),
 	//std::make_pair(0x03, TexelProps(TF_YUV422,      TT_UByte,   16)),
 };
+
+INL int MipMapsCountFromWidth(unsigned long int width);
 
 // *****************************************************************************
 // Public Methods
@@ -44,7 +46,7 @@ bool CImageDreamPVR::Load()
 {
     if (IResource::Load())
     {
-		const IResource::ResourceData_t& data = IResource::RawData();
+		const IResource::TResourceData& data = IResource::RawData();
 
 		unsigned int offset = 0;
 		struct GBIXHeader gbixHeader;
@@ -55,25 +57,33 @@ bool CImageDreamPVR::Load()
 		}
 
 		PVRTHeader header;
-		memset(&header, 0, s_PVRT_HEADER_SIZE);
-        memcpy(&header, data.data() + offset, s_PVRT_HEADER_SIZE);
+        memcpy(&header, data.data() + offset, sizeof(PVRTHeader));
+        offset += sizeof(PVRTHeader);
 
         m_Width = header.width;
         m_Height = header.height;
-        m_Mipmaps = 0;//((header.textureAttributes & 0x02) || (header.textureAttributes & 0x04) || (header.textureAttributes & 0x11));
 
         int format = ((header.textureAttributes >> 8) & 0xFF);
+        
+        bool hasMipMaps = ((format == 0x02) || (format == 0x04) || (format == 0x11));
+        if (hasMipMaps)
+        {
+            m_Mipmaps = MipMapsCountFromWidth(m_Width);
+        }
+        else
+        {
+            m_Mipmaps = 1;
+        }
+
         m_IsCompressed = ((format == 0x03) || (format == 0x04) || (format == 0x10) || (format == 0x11));
         
         std::map<unsigned long long, TexelProps>::const_iterator prop = s_TexelProps.find(header.textureAttributes & 0xFF);
         assert(prop != s_TexelProps.end());
         m_TexelProps = prop->second;
 
-        m_Data.assign(data.begin() + s_PVRT_HEADER_SIZE + offset, data.end());
+        m_Data.assign(data.begin() + offset, data.end());
 
 		IResource::Unload();
-
-		printf("Loaded image: %s\n", Filename().c_str());
 
         return true;
     }
@@ -81,7 +91,7 @@ bool CImageDreamPVR::Load()
     return false;
 }
 
-const IResource::ResourceData_t& CImageDreamPVR::RawData()
+const IResource::TResourceData& CImageDreamPVR::RawData()
 { 
     return m_Data; 
 }
@@ -128,3 +138,15 @@ TexelTypes CImageDreamPVR::TexelType() const
 // *****************************************************************************
 // Private Methods
 // *****************************************************************************
+
+INL int MipMapsCountFromWidth(unsigned long int width)
+{
+    unsigned int mipMapsCount = 0;
+    while( width )
+    {
+        ++mipMapsCount;
+        width *= 0.5f;
+    }
+    
+    return mipMapsCount;
+}

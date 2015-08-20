@@ -47,16 +47,30 @@ public:
         unsigned char offset;
         unsigned char stride;
         DataTypes dataType;
-        int binding;
+        int attributeIndex;
+        unsigned int streamIndex;
+        unsigned int absoluteOffset; // Used for zero-stride mode
         
         SVertexStream(IVertexBufferWeak _vertexBuffer)
         : vertexBuffer(_vertexBuffer)
+        , offset(0)
+        , stride(0)
+        , dataType(Unknown)
+        , attributeIndex(0)
+        , streamIndex(0)
+        , absoluteOffset(0)
         {
         
         }
         
         SVertexStream()
         : vertexBuffer(IVertexBufferWeak())
+        , offset(0)
+		, stride(0)
+		, dataType(Unknown)
+		, attributeIndex(0)
+		, streamIndex(0)
+		, absoluteOffset(0)
         {
         
         }
@@ -88,15 +102,22 @@ public:
             size_t dstSize = (vb->Size() - startIndex) * dstElemSize * stride;
             size_t sizeToCopy = std::min(srcSize, dstSize);
             
-            size_t srcIndex = 0;
-            size_t dstIndex = 0;
-            size_t num = sizeToCopy / (dstElemSize * stride);
-            for (size_t i = 0; i < num; ++i)
+            if (vb->ZeroStride())
             {
-                dstIndex = (startIndex + i) * vb->ElementSize() + offset;
-                srcIndex = i * sizeElemToCopy;
-                
-                memcpy(&dst[dstIndex], &src[srcIndex], sizeElemToCopy);
+                memcpy(dst + absoluteOffset, src, sizeToCopy);
+            }
+            else
+            {
+                size_t srcIndex = 0;
+                size_t dstIndex = 0;
+                size_t num = sizeToCopy / (dstElemSize * stride);
+                for (size_t i = 0; i < num; ++i)
+                {
+                    dstIndex = (startIndex + i) * vb->ElementSize() + offset;
+                    srcIndex = i * sizeElemToCopy;
+                    
+                    memcpy(&dst[dstIndex], &src[srcIndex], sizeElemToCopy);
+                }
             }
             
             if (needRestoreLock)
@@ -105,7 +126,12 @@ public:
             }
         }
         
-        size_t sizeForType(DataTypes type)
+        size_t DataSize() const
+        {
+            return sizeForType(dataType);
+        }
+        
+        static size_t sizeForType(DataTypes type)
         {
             static std::map<DataTypes, size_t> types = {
                 {Unknown, 0},
@@ -156,6 +182,9 @@ public:
     virtual bool IsLocked() const = 0;
     virtual void Unlock() = 0;
     virtual bool HasStream(VertexTypes vertexType) = 0;
+    
+    virtual void ZeroStride(bool isZeroStride) = 0;
+    virtual bool ZeroStride() = 0;
     
     virtual const TVertexStreamMap& VertexStreams() const = 0;
     

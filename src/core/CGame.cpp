@@ -10,12 +10,6 @@
 #include "CLoaderFile.h"
 #include "IEventDispatcher.hpp"
 
-#include "CImagePVR.h"
-#include "CSpriteXML.h"
-
-#include "CCamera2D.h"
-#include "CTextureRenderTarget.h"
-
 #include "CRenderSystem.h"
 #include "CAnimation2DSystem.h"
 #include "CTransformationSystem.h"

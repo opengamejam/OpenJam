@@ -15,10 +15,12 @@
 #include "CColor.h"
 #include "CShaderSourceSprite.h"
 #include "CImagePVR.h"
+#include "CImageSegaPVR.h"
 #include "CModelObj.h"
 #include "CTransformationComponent.h"
 #include "CResourceCache.hpp"
 #include "CTransformAffector.h"
+#include "CUpdateComponent.h"
 
 using namespace jam;
 
@@ -104,6 +106,7 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, unsigned int came
         {
             vertexBuffer = GRenderer->CreatVertexBuffer();
             vertexBuffer->Initialize(elementSize);
+            material->CullFace(false); // TODO: temp
             assert(vertexBuffer && vertexBuffer->IsValid());
             
             size_t offset = 0;
@@ -111,7 +114,7 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, unsigned int came
             {
                 vertexBuffer->Resize(model3D->Vertices(group).size());
                 IVertexBuffer::SVertexStream& position = vertexBuffer->Lock(IVertexBuffer::Position);
-                position.binding = shaderProgram->VertexPosition();
+                position.attributeIndex = shaderProgram->VertexPosition();
                 position.dataType = IVertexBuffer::Float;
                 position.stride = 3;
                 position.offset = offset;
@@ -123,7 +126,7 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, unsigned int came
             if (model3D->UVs(group).size() > 0)
             {
                 IVertexBuffer::SVertexStream& textureCoord = vertexBuffer->Lock(IVertexBuffer::TextureCoors);
-                textureCoord.binding = shaderProgram->TextureCoord();
+                textureCoord.attributeIndex = shaderProgram->TextureCoord();
                 textureCoord.dataType = IVertexBuffer::Float;
                 textureCoord.stride = 2;
                 textureCoord.offset = offset;
@@ -135,7 +138,7 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, unsigned int came
             if (model3D->Normals(group).size() > 0)
             {
                 IVertexBuffer::SVertexStream& normals = vertexBuffer->Lock(IVertexBuffer::Normal);
-                normals.binding = shaderProgram->NormalTexture();
+                normals.attributeIndex = shaderProgram->NormalTexture();
                 normals.dataType = IVertexBuffer::Float;
                 normals.stride = 3;
                 normals.offset = offset;
@@ -151,14 +154,20 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, unsigned int came
         if (model3D->Indices(group).size() > 0)
         {
             indexBuffer = GRenderer->CreateIndexBuffer();
-            indexBuffer->Initialize(sizeof(unsigned int));
+            indexBuffer->Initialize(sizeof(unsigned short));
             assert(indexBuffer && indexBuffer->IsValid());
             
             indexBuffer->Resize(model3D->Indices(group).size());
-            unsigned int* lockedIndex = indexBuffer->Lock<unsigned int>();
+            unsigned short* lockedIndex = indexBuffer->Lock<unsigned short>();
             if (lockedIndex)
             {
-                memcpy(lockedIndex, model3D->Indices(group).data(), model3D->Indices(group).size() * sizeof(unsigned int));
+                const std::vector<unsigned int>& indices = model3D->Indices(group);
+                std::for_each(indices.begin(), indices.end(), [&](unsigned int face)
+                {
+                    *lockedIndex++ = face;
+                });
+                
+                //memcpy(lockedIndex, model3D->Indices(group).data(), model3D->Indices(group).size() * sizeof(unsigned short));
             }
             indexBuffer->Unlock();
         }
@@ -178,7 +187,11 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, unsigned int came
            IImagePtr image = imageCache.AcquireResource(filename, false,
                                                         [](const std::string& filename) -> IImagePtr
            {
+#ifdef OS_KOS
+               IImagePtr resultImage(new CImageDreamPVR(filename));
+#else
                IImagePtr resultImage(new CImagePVR(filename));
+#endif
                if (!resultImage->Load())
                {
                    resultImage = nullptr;
@@ -209,16 +222,21 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, unsigned int came
     
     // Transform component
     CTransformationComponentPtr transformComponent(new CTransformationComponent());
+    CUpdateComponentPtr updateComponent(new CUpdateComponent());
      
     CObject3DPtr entity(new CObject3D());
     entity->Initialize(filename, {
                                   renderComponent,
-                                  transformComponent
+                                  transformComponent,
+								  updateComponent
                                  });
     // Store links to components
     entity->m_RenderComponent = renderComponent;
     entity->m_TransformationComponent = transformComponent;
     
+    updateComponent->SetUpdateFunc(std::bind(&CObject3D::Update, entity.get(), std::placeholders::_1));
+    updateComponent->Dirty();
+
     return entity;
 }
 
@@ -292,6 +310,13 @@ const CVector3Df& CObject3D::AnchorPoint()
     CTransformationComponentPtr component = TransformComponent();
     const CTransform3Df& transform = component->Transform(CTransformationComponent::Local);
     return transform.Offset();
+}
+
+void CObject3D::Update(unsigned long dt)
+{
+	CTransformAffector::Rotating(shared_from_this(), CVector3Df(1 * 3.14f / 180.0f,
+																1 * 3.14f / 180.0f,
+																1 * 3.14f / 180.0f));
 }
 
 // *****************************************************************************

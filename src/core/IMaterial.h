@@ -119,7 +119,7 @@ public:
         {
         }
     };
-    
+
 public:
     IMaterial() = default;
     virtual ~IMaterial() = default;

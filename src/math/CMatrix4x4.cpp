@@ -76,7 +76,7 @@ const std::vector<T>& CMatrix4x4<T>::operator()()const
 template <class T>
 void CMatrix4x4<T>::Element(unsigned short x, unsigned short y, T element)
 {
-    if (y * s_Dimension + x < m_Matrix.size())
+    if ((size_t)(y * s_Dimension + x) < m_Matrix.size())
     {
         m_Matrix[y * s_Dimension + x] = element;
     }
@@ -85,7 +85,7 @@ void CMatrix4x4<T>::Element(unsigned short x, unsigned short y, T element)
 template <class T>
 const T& CMatrix4x4<T>::Element(unsigned short x, unsigned short y) const
 {
-    if (y * s_Dimension + x < m_Matrix.size())
+    if ((size_t)(y * s_Dimension + x) < m_Matrix.size())
     {
         return m_Matrix[y * s_Dimension + x];
     }
@@ -96,8 +96,8 @@ const T& CMatrix4x4<T>::Element(unsigned short x, unsigned short y) const
 template <class T>
 void CMatrix4x4<T>::SwapElement(unsigned short x1, unsigned short y1, unsigned short x2, unsigned short y2)
 {
-    if (y1 * s_Dimension + x1 < m_Matrix.size() &&
-        y2 * s_Dimension + x2 < m_Matrix.size())
+    if ((size_t)(y1 * s_Dimension + x1) < m_Matrix.size() &&
+        (size_t)(y2 * s_Dimension + x2) < m_Matrix.size())
     {
         std::swap(m_Matrix[y1 * s_Dimension + x1], m_Matrix[y2 * s_Dimension + x2]);
     }
@@ -297,10 +297,10 @@ void CMatrix4x4<T>::Dump() const
     printf("{\n");
     for (unsigned int i = 0; i < s_Dimension; ++i)
     {
-        printf("%f\t%f\t%f\t%f\n", static_cast<float>(m_Matrix[i * s_Dimension + 0]),
-                                   static_cast<float>(m_Matrix[i * s_Dimension + 1]),
-                                   static_cast<float>(m_Matrix[i * s_Dimension + 2]),
-                                   static_cast<float>(m_Matrix[i * s_Dimension + 3]));
+        printf("%f\t%f\t%f\t%f\n", static_cast<double>(m_Matrix[i * s_Dimension + 0]),
+                                   static_cast<double>(m_Matrix[i * s_Dimension + 1]),
+                                   static_cast<double>(m_Matrix[i * s_Dimension + 2]),
+                                   static_cast<double>(m_Matrix[i * s_Dimension + 3]));
     }
     printf("}\n");
 }

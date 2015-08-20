@@ -30,7 +30,7 @@ CFrameBufferTargetOGL1_3::CFrameBufferTargetOGL1_3(unsigned int width, unsigned 
 , m_IsStencilBufferExt(false)
 , m_Width(width)
 , m_Height(height)
-, m_ClearColor(CColor(0.0f, 0.0f, 0.0f, 1.0f))
+, m_ClearColor(CColor(0.0f, 0.0f, 1.0f, 1.0f))
 {
 #if GL_MAX_COLOR_ATTACHMENTS
     glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS, &m_NumColorAtachments);
@@ -44,10 +44,11 @@ CFrameBufferTargetOGL1_3::CFrameBufferTargetOGL1_3(unsigned int width, unsigned 
 
 CFrameBufferTargetOGL1_3::~CFrameBufferTargetOGL1_3()
 {
+#if GL_ARB_framebuffer_object
     unsigned int i = 0;
     std::for_each(m_ColorBuffers.begin(), m_ColorBuffers.end(), [&](unsigned int colorBuffer)
     {
-        if (colorBuffer != -1 && (i != 0 || !m_IsColor0BufferExt))
+        if (colorBuffer != -1u && (i != 0 || !m_IsColor0BufferExt))
         {
             glDeleteRenderbuffers(1, &colorBuffer);
         }
@@ -62,8 +63,9 @@ CFrameBufferTargetOGL1_3::~CFrameBufferTargetOGL1_3()
     {
         glDeleteRenderbuffers(1, &m_StencilBuffer);
     }
+#endif
     
-    if (m_FrameBuffer != -1 && !m_IsDepthBufferExt)
+    if (m_FrameBuffer != -1u && !m_IsDepthBufferExt)
     {
         glDeleteFramebuffers(1, &m_FrameBuffer);
     }
@@ -72,25 +74,25 @@ CFrameBufferTargetOGL1_3::~CFrameBufferTargetOGL1_3()
 void CFrameBufferTargetOGL1_3::Initialize(unsigned int externalFrameBuffer, unsigned int externalColorBuffer,
                                           unsigned int externalDepthBuffer, unsigned int externalStencilBuffer)
 {
-    if (m_FrameBuffer == -1 && externalFrameBuffer != -1)
+    if (m_FrameBuffer == -1u && externalFrameBuffer != -1u)
     {
         m_FrameBuffer = externalFrameBuffer;
         m_IsFrameBufferExt = true;
     }
     
-    if (m_ColorBuffers[0] == -1 && externalColorBuffer != -1)
+    if (m_ColorBuffers[0] == -1u && externalColorBuffer != -1u)
     {
         m_ColorBuffers[0] = externalColorBuffer;
         m_IsColor0BufferExt = true;
     }
     
-    if (m_DepthBuffer == -1 && externalDepthBuffer != -1)
+    if (m_DepthBuffer == -1u && externalDepthBuffer != -1u)
     {
         m_DepthBuffer = externalDepthBuffer;
         m_IsDepthBufferExt = true;
     }
     
-    if (m_StencilBuffer == -1 && externalStencilBuffer != -1)
+    if (m_StencilBuffer == -1u && externalStencilBuffer != -1u)
     {
         m_StencilBuffer = externalStencilBuffer;
         m_IsStencilBufferExt = true;
@@ -101,7 +103,7 @@ void CFrameBufferTargetOGL1_3::Initialize(unsigned int externalFrameBuffer, unsi
 
 void CFrameBufferTargetOGL1_3::Initialize()
 {
-    if (m_FrameBuffer == -1)
+    if (m_FrameBuffer == -1u)
     {
         glGenFramebuffers(1, &m_FrameBuffer);
     }
@@ -110,20 +112,22 @@ void CFrameBufferTargetOGL1_3::Initialize()
 
 bool CFrameBufferTargetOGL1_3::CreateColorAttachment(int index)
 {
-    if (index >= m_ColorBuffers.size())
+    if ((size_t)index >= m_ColorBuffers.size())
     {
         return false;
     }
     
-    if (m_ColorBuffers[index] != -1)
+    if (m_ColorBuffers[index] != -1u)
     {
         return true;
     }
     
+#if GL_ARB_framebuffer_object
     glGenRenderbuffers(1, &m_ColorBuffers[index]);
     glBindRenderbuffer(GL_RENDERBUFFER, m_ColorBuffers[index]);
     glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, Width(), Height());
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + index, GL_RENDERBUFFER, m_ColorBuffers[index]);
+#endif
     
     bool result = (glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
     if (result)
@@ -135,11 +139,12 @@ bool CFrameBufferTargetOGL1_3::CreateColorAttachment(int index)
 
 bool CFrameBufferTargetOGL1_3::CreateDepthAttachment()
 {
-    if (m_DepthBuffer != -1)
+    if (m_DepthBuffer != -1u)
     {
         return true;
     }
     
+#if GL_ARB_framebuffer_object
     glGenRenderbuffers(1, &m_DepthBuffer);
     glBindRenderbuffer(GL_RENDERBUFFER, m_DepthBuffer);
     
@@ -147,6 +152,7 @@ bool CFrameBufferTargetOGL1_3::CreateDepthAttachment()
     
     glBindFramebuffer(GL_FRAMEBUFFER, m_FrameBuffer);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_DepthBuffer);
+#endif
     
     bool result = (glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
     return result;
@@ -154,7 +160,7 @@ bool CFrameBufferTargetOGL1_3::CreateDepthAttachment()
 
 bool CFrameBufferTargetOGL1_3::CreateStencilAttachment()
 {
-    if (m_StencilBuffer != -1)
+    if (m_StencilBuffer != -1u)
     {
         return true;
     }
@@ -187,11 +193,11 @@ void CFrameBufferTargetOGL1_3::Clear() const
     {
         clearBits |= GL_COLOR_BUFFER_BIT;
     }
-    if (m_DepthBuffer != 0)
+    //if (m_DepthBuffer != 0)
     {
         clearBits |= GL_DEPTH_BUFFER_BIT;
     }
-    if (m_StencilBuffer != 0)
+    //if (m_StencilBuffer != 0)
     {
         clearBits |= GL_STENCIL_BUFFER_BIT;
     }
@@ -226,8 +232,11 @@ std::vector<unsigned char> CFrameBufferTargetOGL1_3::RawData()
     Bind();
     
     unsigned int rawdataSize = Width() * Height() * 4;
-    std::vector<unsigned char> data(rawdataSize);
+    std::vector<unsigned char> data(rawdataSize, 0);
+    
+#ifdef GL3_PROTOTYPES // TODO
     glReadPixels(0, 0, Width(), Height(), GL_RGBA, GL_UNSIGNED_BYTE, &data[0]);
+#endif
     
     Unbind();
     

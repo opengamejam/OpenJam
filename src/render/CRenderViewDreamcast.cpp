@@ -6,8 +6,6 @@
 #if defined(OS_KOS)
 
 #include "CRenderViewDreamcast.h"
-#include "CRenderAPIOGL1_0.h"
-#include "IRenderable.h"
 #include "IEventable.h"
 #include "CTouchEvent.h"
 #include "IEventDispatcher.hpp"
@@ -42,14 +40,7 @@ CRenderViewDreamcast::~CRenderViewDreamcast()
 
 void CRenderViewDreamcast::CreateView()
 {
-	pvr_init_defaults();
 	glKosInit();
-	glEnable(GL_TEXTURE_2D);
-	//glFrontFace(GL_CW);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	glEnable(GL_BLEND);
-	glEnable(GL_DEPTH_TEST);
-	glDepthFunc(GL_LEQUAL);
 
 	GRenderer.reset(new CRendererOGL1_3(shared_from_this()));
 	m_DefaultRenderTarget.reset(new CFrameBufferTargetOGL1_3(Width(), Height()));

@@ -16,20 +16,18 @@ using namespace jam;
 // Constants
 // *****************************************************************************
 
-INL unsigned int CovertStencilFunc(IStencil::StencilFunc func);
-
 // *****************************************************************************
 // Public Methods
 // *****************************************************************************
 
+INL unsigned int CovertTestFunc(IMaterial::TestFuncs func);
+INL unsigned int CovertOperation(IMaterial::Operations op);
+
+std::stack<IMaterial::MaterialState> CMaterialOGL1_5::s_States;
+
 CMaterialOGL1_5::CMaterialOGL1_5()
-: m_IsDefault(true)
-, m_LineWidth(0)
-, m_CullFace(true)
-, m_Flags(IMaterial::NoneFlag)
-, m_PrimitiveType(IMaterial::PT_Triangles)
-, m_DepthEnabled(false)
-, m_IsDirty(true)
+: m_IsDirty(true)
+, m_IsBound(false)
 {
     
 }
@@ -40,137 +38,151 @@ CMaterialOGL1_5::~CMaterialOGL1_5()
 
 void CMaterialOGL1_5::Bind()
 {
-    if (LineWidth() > 0.0f)
+    if (m_IsBound)
     {
-        glLineWidth(LineWidth());
+        return;
     }
     
-    IStencilPtr stencil = Stencil();
-    if (stencil)
+    IMaterial::MaterialState prevState;
+    if (!s_States.empty())
     {
-        glEnable(GL_STENCIL_TEST);
-        glDisable(GL_DEPTH_TEST);
-        glDepthMask(GL_FALSE);
-        
-        unsigned int stencilFunc = CovertStencilFunc(stencil->Func());
-        glColorMask(GL_FALSE, GL_FALSE, GL_FALSE, GL_FALSE);
-        glStencilFunc(stencilFunc, stencil->Ref(), stencil->Mask());
-        glStencilOp(GL_REPLACE, GL_KEEP, GL_KEEP); // TODO:
+        prevState = s_States.top();
     }
-    else
-    {
-        glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
-        glStencilFunc(GL_EQUAL, 0xFF, 0xFF);
-        glStencilOp(GL_KEEP, GL_KEEP, GL_KEEP);
-        
-        glEnable(GL_DEPTH_TEST);
-        glDepthMask(GL_TRUE);
-        glDepthFunc(GL_LESS); 
-        
-        glEnable(GL_BLEND);
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-        
-        glEnable(GL_TEXTURE_2D);
-        glShadeModel(GL_SMOOTH);
-        
-        //glFrontFace(GL_CCW);
-    }
+    s_States.push(m_State);
     
-    if (CullFace())
-    {
-        glEnable(GL_CULL_FACE);
-    }
-    else
-    {
-        glDisable(GL_CULL_FACE);
-    }
+    ApplyState(m_State, prevState);
+    
+    m_IsBound = true;
 }
 
 void CMaterialOGL1_5::Unbind()
 {
-    IStencilPtr stencil = Stencil();
-    if (stencil)
+    if (!m_IsBound)
     {
-        glDisable(GL_STENCIL_TEST);
+        return;
     }
-}
-
-bool CMaterialOGL1_5::IsDefault()
-{
-    return m_IsDefault;
+    
+    s_States.pop();
+    
+    IMaterial::MaterialState prevState;
+    if (!s_States.empty())
+    {
+        prevState = s_States.top();
+    }
+    ApplyState(prevState, m_State);
+    
+    m_IsBound = false;
 }
 
 const CColor& CMaterialOGL1_5::Color() const
 {
-    return m_Color;
-}
-
-float CMaterialOGL1_5::LineWidth() const
-{
-    return m_LineWidth;
-}
-
-IMaterial::PrimitiveTypes CMaterialOGL1_5::PrimitiveType() const
-{
-    return m_PrimitiveType;
-}
-
-void CMaterialOGL1_5::PrimitiveType(IMaterial::PrimitiveTypes primitiveType)
-{
-    m_PrimitiveType = primitiveType;
+    return m_State.color;
 }
 
 void CMaterialOGL1_5::Color(const CColor& color)
 {
-    m_Color = color;
+    m_State.color = color;
+    m_IsDirty = true;
+}
+
+float CMaterialOGL1_5::LineWidth() const
+{
+    return m_State.lineWidth;
 }
 
 void CMaterialOGL1_5::LineWidth(float lineWidth)
 {
-    m_LineWidth = lineWidth;
+    m_State.lineWidth = lineWidth;
+    m_IsDirty = true;
+}
+
+IMaterial::PrimitiveTypes CMaterialOGL1_5::PrimitiveType() const
+{
+    return m_State.primitiveType;
+}
+
+void CMaterialOGL1_5::PrimitiveType(IMaterial::PrimitiveTypes primitiveType)
+{
+    m_State.primitiveType = primitiveType;
     m_IsDirty = true;
 }
 
 bool CMaterialOGL1_5::CullFace() const
 {
-    return m_CullFace;
+    return m_State.cullFace;
 }
 
 void CMaterialOGL1_5::CullFace(bool isEnabled)
 {
-    m_CullFace = isEnabled;
-}
-
-IStencilPtr CMaterialOGL1_5::Stencil() const
-{
-    return m_Stencil;
-}
-
-void CMaterialOGL1_5::Stencil(IStencilPtr stencil)
-{
-    m_Stencil = stencil;
+    m_State.cullFace = isEnabled;
     m_IsDirty = true;
 }
 
 bool CMaterialOGL1_5::DepthEnable() const
 {
-    return m_DepthEnabled;
+    return m_State.depthTest.isEnabled;
 }
 
 void CMaterialOGL1_5::DepthEnable(bool value)
 {
-    m_DepthEnabled = value;
+    m_State.depthTest.isEnabled = value;
     m_IsDirty = true;
 }
 
-int CMaterialOGL1_5::UseFromParent() const
+bool CMaterialOGL1_5::DepthWriteEnable() const
 {
-    return m_Flags;
+    return m_State.depthTest.isWriteEnabled;
 }
 
-void CMaterialOGL1_5::UseFromParent(int flags)
+void CMaterialOGL1_5::DepthWriteEnable(bool value)
 {
-    m_Flags = flags;
+    m_State.depthTest.isWriteEnabled = value;
+    m_IsDirty = true;
+}
+
+void CMaterialOGL1_5::DepthRange(double near, double far)
+{
+    m_State.depthTest.rangeNear = near;
+    m_State.depthTest.rangeFar = far;
+    m_IsDirty = true;
+}
+
+IMaterial::TestFuncs CMaterialOGL1_5::DepthFunc()
+{
+    return m_State.depthTest.func;
+}
+
+void CMaterialOGL1_5::DepthFunc(TestFuncs func)
+{
+    m_State.depthTest.func = func;
+    m_IsDirty = true;
+}
+
+bool CMaterialOGL1_5::StencilEnable() const
+{
+    return m_State.stencilTest.isEnabled;
+}
+
+void CMaterialOGL1_5::StencilEnable(bool value)
+{
+    m_State.stencilTest.isEnabled = value;
+    m_IsDirty = true;
+}
+
+void CMaterialOGL1_5::StencilFunc(TestFuncs func, unsigned int ref, unsigned int mask)
+{
+    m_State.stencilTest.func = func;
+    m_State.stencilTest.ref = ref;
+    m_State.stencilTest.mask = mask;
+    m_IsDirty = true;
+}
+
+void CMaterialOGL1_5::StencilOperations(Operations failOp, Operations zFailOp, Operations zPassOp)
+{
+    m_State.stencilTest.failOp = failOp;
+    m_State.stencilTest.zFailOp = zFailOp;
+    m_State.stencilTest.zPassOp = zPassOp;
+    m_IsDirty = true;
 }
 
 const std::string& CMaterialOGL1_5::Hash()
@@ -259,55 +271,176 @@ void CMaterialOGL1_5::UpdateUniforms() const
 // Private Methods
 // *****************************************************************************
 
+void CMaterialOGL1_5::ApplyState(IMaterial::MaterialState state, IMaterial::MaterialState prevState)
+{
+    if (state.lineWidth != prevState.lineWidth)
+    {
+        glLineWidth(state.lineWidth);
+    }
+    
+    if (state.cullFace != prevState.cullFace)
+    {
+        if (state.cullFace)
+        {
+            glEnable(GL_CULL_FACE);
+        }
+        else
+        {
+            glDisable(GL_CULL_FACE);
+        }
+    }
+    
+    // Depth
+    if (state.depthTest.isEnabled != prevState.depthTest.isEnabled)
+    {
+        if (state.depthTest.isEnabled)
+        {
+            glEnable(GL_DEPTH_TEST);
+        }
+        else
+        {
+            glDisable(GL_DEPTH_TEST);
+        }
+    }
+    if (state.depthTest.isWriteEnabled != prevState.depthTest.isWriteEnabled)
+    {
+        glDepthMask(state.depthTest.isWriteEnabled ? GL_TRUE : GL_FALSE);
+    }
+    if (state.depthTest.func != prevState.depthTest.func)
+    {
+        glDepthFunc(CovertTestFunc(state.depthTest.func));
+    }
+    if (state.depthTest.rangeNear != prevState.depthTest.rangeNear ||
+        state.depthTest.rangeFar != prevState.depthTest.rangeFar)
+    {
+        glDepthRange(state.depthTest.rangeNear, state.depthTest.rangeFar);
+    }
+    
+    // Stencil
+    if (state.stencilTest.isEnabled != prevState.stencilTest.isEnabled)
+    {
+        if (state.stencilTest.isEnabled)
+        {
+            glEnable(GL_STENCIL_TEST);
+        }
+        else
+        {
+            glDisable(GL_STENCIL_TEST);
+        }
+    }
+    if (state.stencilTest.func != prevState.stencilTest.func ||
+        state.stencilTest.ref != prevState.stencilTest.ref ||
+        state.stencilTest.mask != prevState.stencilTest.mask)
+    {
+        glStencilFunc(CovertTestFunc(state.stencilTest.func), state.stencilTest.ref, state.stencilTest.mask);
+    }
+    if (state.stencilTest.failOp != prevState.stencilTest.failOp ||
+        state.stencilTest.zFailOp != prevState.stencilTest.zFailOp ||
+        state.stencilTest.zPassOp != prevState.stencilTest.zPassOp)
+    {
+        glStencilOp(CovertOperation(state.stencilTest.failOp),
+                    CovertOperation(state.stencilTest.zFailOp),
+                    CovertOperation(state.stencilTest.zPassOp));
+    }
+    
+    {
+        //glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+        
+        glEnable(GL_BLEND);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        
+        glShadeModel(GL_SMOOTH);
+        
+        //glFrontFace(GL_CCW);
+    }
+}
+
 void CMaterialOGL1_5::HashMe()
 {
     std::stringstream ss;    
     ss << PrimitiveType();
     ss << LineWidth();
-    ss << (Stencil() != nullptr);
+    //ss << (Stencil() != nullptr);
     ss << DepthEnable();
     m_Hash = ss.str();
 }
 
-INL unsigned int CovertStencilFunc(IStencil::StencilFunc func)
+INL unsigned int CovertTestFunc(IMaterial::TestFuncs func)
 {
     unsigned int stencilFunc = GL_NEVER;
     switch (func)
     {
-        case IStencil::Never:
+        case IMaterial::Never:
             stencilFunc = GL_NEVER;
             break;
             
-        case IStencil::Less:
+        case IMaterial::Less:
             stencilFunc = GL_LESS;
             break;
             
-        case IStencil::Equal:
+        case IMaterial::Equal:
             stencilFunc = GL_EQUAL;
             break;
             
-        case IStencil::LEqual:
+        case IMaterial::LEqual:
             stencilFunc = GL_LEQUAL;
             break;
             
-        case IStencil::Greater:
+        case IMaterial::Greater:
             stencilFunc = GL_GREATER;
             break;
             
-        case IStencil::NotEqual:
+        case IMaterial::NotEqual:
             stencilFunc = GL_NOTEQUAL;
             break;
             
-        case IStencil::GEqual:
+        case IMaterial::GEqual:
             stencilFunc = GL_GEQUAL;
             break;
             
-        case IStencil::Always:
+        case IMaterial::Always:
             stencilFunc = GL_ALWAYS;
             break;
     };
     
     return stencilFunc;
+}
+
+INL unsigned int CovertOperation(IMaterial::Operations op)
+{
+    unsigned int operation = GL_KEEP;
+    switch (op)
+    {
+        case IMaterial::Keep:
+            operation = GL_KEEP;
+            break;
+
+        case IMaterial::Replace:
+            operation = GL_REPLACE;
+            break;
+            
+        case IMaterial::Incr:
+            operation = GL_INCR;
+            break;
+            
+        case IMaterial::Decr:
+            operation = GL_DECR;
+            break;
+            
+        case IMaterial::Invert:
+            // TODO:
+            break;
+            
+        case IMaterial::IncrWrap:
+            // TODO:
+            break;
+            
+        case IMaterial::DecrWrap:
+            // TODO:
+            break;
+    };
+    
+    return operation;
 }
 
 #endif // RENDER_OGL1_5 || RENDER_OGLES1_1

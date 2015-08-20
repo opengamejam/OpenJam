@@ -39,23 +39,85 @@ public:
     
     enum PrimitiveTypes
     {
-        PT_Points = 0,
-        PT_Lines,
-        PT_LinesLoop,
-        PT_LinesStrip,
-        PT_Triangles,
-        PT_TrianglesFan,
-        PT_TrianglesStrip
+        Points = 0,
+        Lines,
+        LinesLoop,
+        LinesStrip,
+        Triangles,
+        TrianglesFan,
+        TrianglesStrip
     };
     
-    enum Flags  // TODO: to remove
+    enum TestFuncs
     {
-        NoneFlag = 0,
-        ShaderFlag = 0x01,
-        PrimitiveFlag = 0x02,
-        ColorFlag = 0x04,
-        LineWidthFlag = 0x08,
-        StencilFlag = 0x10
+        Never = 0,
+        Less,
+        Equal,
+        LEqual,
+        Greater,
+        NotEqual,
+        GEqual,
+        Always
+    };
+    
+    enum Operations
+    {
+        Keep = 0,
+        Replace,
+        Incr,
+        Decr,
+        Invert,
+        IncrWrap,
+        DecrWrap
+    };
+    
+    struct MaterialState
+    {
+        CColor color;
+        float lineWidth;
+        bool cullFace;
+        PrimitiveTypes primitiveType;
+        
+        struct DepthTest
+        {
+            bool isEnabled;
+            bool isWriteEnabled;
+            double rangeNear;
+            double rangeFar;
+            TestFuncs func;
+            
+            DepthTest()
+            : isEnabled(false)
+            , isWriteEnabled(true)
+            , rangeNear(0.0)
+            , rangeFar(1.0)
+            , func(Less)
+            {
+            }
+        } depthTest;
+        
+        struct StencilTest
+        {
+            bool isEnabled;
+            
+            TestFuncs func;
+            unsigned int ref;
+            unsigned int mask;
+            
+            Operations failOp;
+            Operations zFailOp;
+            Operations zPassOp;
+        } stencilTest;
+        
+        MaterialState()
+        : color(CColor(1.0f, 1.0f, 1.0f, 1.0f))
+        , lineWidth(1.0f)
+        , cullFace(true)
+        , primitiveType(TrianglesStrip)
+        , depthTest()
+        , stencilTest()
+        {
+        }
     };
     
 public:
@@ -64,8 +126,6 @@ public:
     
     virtual void Bind() = 0;
     virtual void Unbind() = 0;
-    
-    virtual bool IsDefault() = 0;
     
     virtual bool BindUniform1i(int uniform, int value) = 0;
     virtual bool BindUniform1f(int uniform, float value) = 0;
@@ -92,15 +152,20 @@ public:
     virtual bool CullFace() const = 0;
     virtual void CullFace(bool isEnabled) = 0;
     
-    virtual IStencilPtr Stencil() const = 0;
-    virtual void Stencil(IStencilPtr stencil) = 0;
-    
     virtual bool DepthEnable() const = 0;
     virtual void DepthEnable(bool value) = 0;
+    virtual bool DepthWriteEnable() const {return false;} // TODO:
+    virtual void DepthWriteEnable(bool value) {} // TODO:
+    virtual void DepthRange(double near, double far) {} // TODO:
+    virtual void DepthFunc(TestFuncs func) {} // TODO:
+    virtual TestFuncs DepthFunc() {return Less;} // TODO:
     
-    // TODO: to remove
-    virtual int UseFromParent() const = 0;
-    virtual void UseFromParent(int flags) = 0;
+    virtual bool StencilEnable() const {return false;};
+    virtual void StencilEnable(bool value) {};
+    virtual bool StencilWriteEnable() const {return false;} // TODO:
+    virtual void StencilWriteEnable(bool value) {} // TODO:
+    virtual void StencilFunc(TestFuncs func, unsigned int ref, unsigned int mask) {} // TODO:
+    virtual void StencilOperations(Operations failOp, Operations zFailOp, Operations zPassOp) {} // TODO:
 };
 
 }; // namespace jam

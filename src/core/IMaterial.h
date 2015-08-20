@@ -57,7 +57,7 @@ public:
         LineWidthFlag = 0x08,
         StencilFlag = 0x10
     };
-    
+
 public:
     IMaterial() = default;
     virtual ~IMaterial() = default;

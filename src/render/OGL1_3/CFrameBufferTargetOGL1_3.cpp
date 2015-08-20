@@ -112,7 +112,7 @@ void CFrameBufferTargetOGL1_3::Initialize()
 
 bool CFrameBufferTargetOGL1_3::CreateColorAttachment(int index)
 {
-    if (index >= m_ColorBuffers.size())
+    if ((size_t)index >= m_ColorBuffers.size())
     {
         return false;
     }

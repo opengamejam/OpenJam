@@ -84,8 +84,9 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, unsigned int came
         
         // Material
         material = GRenderer->CreateMaterial();
-        material->PrimitiveType(IMaterial::PT_Triangles);
+        material->PrimitiveType(IMaterial::Triangles);
         material->CullFace(false); // TODO: temp
+        material->DepthEnable(true);
         
         // Vertex buffer
         size_t elementSize = 0;

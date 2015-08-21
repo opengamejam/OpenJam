@@ -90,7 +90,7 @@ CTextureOGL2_0::CTextureOGL2_0()
 , m_Filter(ITexture::Linear)
 , m_IsDirty(true)
 {
-    
+    glEnable(GL_TEXTURE_2D);
 }
 
 CTextureOGL2_0::~CTextureOGL2_0()

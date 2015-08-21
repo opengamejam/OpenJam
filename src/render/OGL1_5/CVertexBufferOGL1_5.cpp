@@ -61,7 +61,7 @@ IVertexBuffer::SVertexStream& CVertexBufferOGL1_5::Lock(IVertexBuffer::VertexTyp
         });
         
         SVertexStream stream = SVertexStream(shared_from_this());
-        stream.streamIndex = m_VertexStreamers.size();
+        stream.streamIndex = (unsigned int)m_VertexStreamers.size();
         stream.absoluteOffset = absoluteOffset;
         
         m_VertexStreamers[vertexType] = stream;

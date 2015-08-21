@@ -24,8 +24,6 @@ public:
     virtual void Bind();
     virtual void Unbind();
     
-    virtual bool IsDefault();
-    
     virtual bool BindUniform1i(int uniform, int value);
     virtual bool BindUniform1f(int uniform, float value);
     virtual bool BindUniform2i(int uniform, int value1, int value2);
@@ -51,38 +49,38 @@ public:
     virtual bool CullFace() const;
     virtual void CullFace(bool isEnabled);
     
-    virtual IStencilPtr Stencil() const;
-    virtual void Stencil(IStencilPtr stencil);
-    
     virtual bool DepthEnable() const;
     virtual void DepthEnable(bool value);
+    virtual bool DepthWriteEnable() const;
+    virtual void DepthWriteEnable(bool value);
+    virtual void DepthRange(double near, double far);
+    virtual void DepthFunc(TestFuncs func);
+    virtual TestFuncs DepthFunc();
     
-    virtual int UseFromParent() const;
-    virtual void UseFromParent(int flags);
+    virtual bool StencilEnable() const;
+    virtual void StencilEnable(bool value);
+    virtual void StencilFunc(TestFuncs func, unsigned int ref, unsigned int mask);
+    virtual void StencilOperations(Operations failOp, Operations zFailOp, Operations zPassOp);
     
     virtual const std::string& Hash();
     
 private:
+    void ApplyState(MaterialState state, MaterialState prevState);
     void HashMe();
     
 private:
-    bool m_IsDefault;
+    IMaterial::MaterialState m_State;
+    static std::stack<IMaterial::MaterialState> s_States;
+    
     TUniInt m_UniInt;
     TUniFloat m_UniFloat;
     TUniInt m_UniIntVec;
     TUniFloat m_UniFloatVec;
     TUniMatrix4Float m_UniMatrixFloat;
-    CColor m_Color;
-    float m_LineWidth;
-    bool m_CullFace;
-    int m_Flags;
-    PrimitiveTypes m_PrimitiveType;
-    
-    IStencilPtr m_Stencil;
-    bool m_DepthEnabled;
     
     bool m_IsDirty;
     std::string m_Hash;
+    bool m_IsBound;
 };
 
 }; // namespace jam

@@ -20,8 +20,8 @@ using namespace jam;
 // Public Methods
 // *****************************************************************************
 
-INL unsigned int CovertTestFunc(IMaterial::TestFuncs func);
-INL unsigned int CovertOperation(IMaterial::Operations op);
+INL unsigned int ConvertTestFunc(IMaterial::TestFuncs func);
+INL unsigned int ConvertOperation(IMaterial::Operations op);
 
 std::stack<IMaterial::MaterialState> CMaterialOGL1_5::s_States;
 
@@ -308,12 +308,12 @@ void CMaterialOGL1_5::ApplyState(IMaterial::MaterialState state, IMaterial::Mate
     }
     if (state.depthTest.func != prevState.depthTest.func)
     {
-        glDepthFunc(CovertTestFunc(state.depthTest.func));
+        glDepthFunc(ConvertTestFunc(state.depthTest.func));
     }
     if (state.depthTest.rangeNear != prevState.depthTest.rangeNear ||
         state.depthTest.rangeFar != prevState.depthTest.rangeFar)
     {
-        glDepthRange(state.depthTest.rangeNear, state.depthTest.rangeFar);
+        glDepthRangef(state.depthTest.rangeNear, state.depthTest.rangeFar);
     }
     
     // Stencil
@@ -332,15 +332,15 @@ void CMaterialOGL1_5::ApplyState(IMaterial::MaterialState state, IMaterial::Mate
         state.stencilTest.ref != prevState.stencilTest.ref ||
         state.stencilTest.mask != prevState.stencilTest.mask)
     {
-        glStencilFunc(CovertTestFunc(state.stencilTest.func), state.stencilTest.ref, state.stencilTest.mask);
+        glStencilFunc(ConvertTestFunc(state.stencilTest.func), state.stencilTest.ref, state.stencilTest.mask);
     }
     if (state.stencilTest.failOp != prevState.stencilTest.failOp ||
         state.stencilTest.zFailOp != prevState.stencilTest.zFailOp ||
         state.stencilTest.zPassOp != prevState.stencilTest.zPassOp)
     {
-        glStencilOp(CovertOperation(state.stencilTest.failOp),
-                    CovertOperation(state.stencilTest.zFailOp),
-                    CovertOperation(state.stencilTest.zPassOp));
+        glStencilOp(ConvertOperation(state.stencilTest.failOp),
+                    ConvertOperation(state.stencilTest.zFailOp),
+                    ConvertOperation(state.stencilTest.zPassOp));
     }
     
     {
@@ -365,7 +365,7 @@ void CMaterialOGL1_5::HashMe()
     m_Hash = ss.str();
 }
 
-INL unsigned int CovertTestFunc(IMaterial::TestFuncs func)
+INL unsigned int ConvertTestFunc(IMaterial::TestFuncs func)
 {
     unsigned int stencilFunc = GL_NEVER;
     switch (func)
@@ -406,7 +406,7 @@ INL unsigned int CovertTestFunc(IMaterial::TestFuncs func)
     return stencilFunc;
 }
 
-INL unsigned int CovertOperation(IMaterial::Operations op)
+INL unsigned int ConvertOperation(IMaterial::Operations op)
 {
     unsigned int operation = GL_KEEP;
     switch (op)

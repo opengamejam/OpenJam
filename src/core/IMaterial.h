@@ -107,6 +107,17 @@ public:
             Operations failOp;
             Operations zFailOp;
             Operations zPassOp;
+            
+            StencilTest()
+            : isEnabled(false)
+            , func(Less)
+            , ref(0) // TODO: default value
+            , mask(0) // TODO
+            , failOp(Keep)
+            , zFailOp(Keep)
+            , zPassOp(Keep)
+            {
+            }
         } stencilTest;
         
         MaterialState()

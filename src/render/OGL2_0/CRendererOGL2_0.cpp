@@ -134,7 +134,7 @@ void CRendererOGL2_0::Draw(IVertexBufferPtr vertexBuffer, IIndexBufferPtr indexB
     }
         
     int primitiveType = CovertPrimitiveType(material->PrimitiveType());
-    glDrawElements(primitiveType, (GLsizei)indexBuffer->Size(), GL_UNSIGNED_SHORT, (void *)0);
+    glDrawElements(primitiveType, (GLsizei)indexBuffer->Size(), GL_UNSIGNED_SHORT, nullptr);
 }
 
 // *****************************************************************************
@@ -150,31 +150,31 @@ INL int CovertPrimitiveType(IMaterial::PrimitiveTypes type)
     int primitiveType = GL_TRIANGLES;
     switch (type)
     {
-        case IMaterial::PT_Points:
+        case IMaterial::Points:
             primitiveType = GL_POINTS;
             break;
             
-        case IMaterial::PT_Lines:
+        case IMaterial::Lines:
             primitiveType = GL_LINES;
             break;
             
-        case IMaterial::PT_LinesLoop:
+        case IMaterial::LinesLoop:
             primitiveType = GL_LINE_LOOP;
             break;
             
-        case IMaterial::PT_LinesStrip:
+        case IMaterial::LinesStrip:
             primitiveType = GL_LINE_STRIP;
             break;
             
-        case IMaterial::PT_Triangles:
+        case IMaterial::Triangles:
             primitiveType = GL_TRIANGLES;
             break;
             
-        case IMaterial::PT_TrianglesFan:
+        case IMaterial::TrianglesFan:
             primitiveType = GL_TRIANGLE_FAN;
             break;
             
-        case IMaterial::PT_TrianglesStrip:
+        case IMaterial::TrianglesStrip:
             primitiveType = GL_TRIANGLE_STRIP;
             break;
             

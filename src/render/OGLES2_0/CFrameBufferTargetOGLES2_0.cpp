@@ -30,7 +30,7 @@ CFrameBufferTargetOGLES2_0::CFrameBufferTargetOGLES2_0(unsigned int width, unsig
 , m_IsStencilBufferExt(false)
 , m_Width(width)
 , m_Height(height)
-, m_ClearColor(CColor(0.0f, 0.0f, 0.0f, 1.0f))
+, m_ClearColor(CColor(0.0f, 0.0f, 1.0f, 1.0f))
 {
 #if GL_MAX_COLOR_ATTACHMENTS
     glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS, &m_NumColorAtachments);

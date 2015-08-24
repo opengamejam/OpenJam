@@ -24,6 +24,7 @@
 #include <mutex>
 #include <random>
 #include <typeindex>
+#include <memory>
 #include <math.h>
 #include <assert.h>
 

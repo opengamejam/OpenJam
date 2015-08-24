@@ -77,6 +77,7 @@ public:
         float lineWidth;
         bool cullFace;
         PrimitiveTypes primitiveType;
+        bool opacity;
         
         struct DepthTest
         {
@@ -125,6 +126,7 @@ public:
         , lineWidth(1.0f)
         , cullFace(true)
         , primitiveType(TrianglesStrip)
+        , opacity(true)
         , depthTest()
         , stencilTest()
         {
@@ -165,18 +167,19 @@ public:
     
     virtual bool DepthEnable() const = 0;
     virtual void DepthEnable(bool value) = 0;
-    virtual bool DepthWriteEnable() const {return false;} // TODO:
-    virtual void DepthWriteEnable(bool value) {} // TODO:
-    virtual void DepthRange(double near, double far) {} // TODO:
-    virtual void DepthFunc(TestFuncs func) {} // TODO:
-    virtual TestFuncs DepthFunc() {return Less;} // TODO:
+    virtual bool DepthWriteEnable() const = 0;
+    virtual void DepthWriteEnable(bool value) = 0;
+    virtual void DepthRange(double near, double far) = 0;
+    virtual void DepthFunc(TestFuncs func) = 0;
+    virtual TestFuncs DepthFunc() = 0;
     
-    virtual bool StencilEnable() const {return false;};
-    virtual void StencilEnable(bool value) {};
-    virtual bool StencilWriteEnable() const {return false;} // TODO:
-    virtual void StencilWriteEnable(bool value) {} // TODO:
-    virtual void StencilFunc(TestFuncs func, unsigned int ref, unsigned int mask) {} // TODO:
-    virtual void StencilOperations(Operations failOp, Operations zFailOp, Operations zPassOp) {} // TODO:
+    virtual bool StencilEnable() const = 0;
+    virtual void StencilEnable(bool value) = 0;
+    virtual void StencilFunc(TestFuncs func, unsigned int ref, unsigned int mask) = 0;
+    virtual void StencilOperations(Operations failOp, Operations zFailOp, Operations zPassOp) = 0;
+    
+    virtual bool Opacity() const = 0;
+    virtual void Opacity(bool value) = 0;
 };
 
 }; // namespace jam

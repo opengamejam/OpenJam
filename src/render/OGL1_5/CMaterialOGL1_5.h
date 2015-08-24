@@ -62,6 +62,9 @@ public:
     virtual void StencilFunc(TestFuncs func, unsigned int ref, unsigned int mask);
     virtual void StencilOperations(Operations failOp, Operations zFailOp, Operations zPassOp);
     
+    virtual bool Opacity() const;
+    virtual void Opacity(bool value);
+    
     virtual const std::string& Hash();
     
 private:

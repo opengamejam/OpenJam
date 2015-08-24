@@ -34,7 +34,7 @@ CTransfromationSystem::~CTransfromationSystem()
 
 void CTransfromationSystem::Update(unsigned long dt)
 {
-    const ISystem::TEntitiesList& entities = DirtyEntities();
+    const ISystem::TEntities& entities = DirtyEntities();
     std::for_each(entities.begin(), entities.end(), [&](IEntityPtr entity)
     {
         if (!IsEntityAdded(entity))
@@ -44,6 +44,11 @@ void CTransfromationSystem::Update(unsigned long dt)
         
         CTransform3Df childTransform;
         IEntityPtr parent = entity->Parent().lock();
+        if (!parent)
+        {
+        	return;
+        }
+
         parent->Get<CTransformationComponent>([&](CTransformationComponentPtr transformComponent)
         {
             const CTransformationComponent::TTransformsList& transforms = transformComponent->Transforms();
@@ -94,8 +99,20 @@ void CTransfromationSystem::UpdateTransformsRecursively(IEntityPtr entity,
         });
         transformComponent->ResultTransform(resultTransform);
         
+        entity->Get<CRenderComponent>([&](CRenderComponentPtr renderComponent)
+        {
+            IShaderProgramPtr shader = renderComponent->Shader();
+            IMaterialPtr material = renderComponent->Material();
+            if (material && shader)
+            {
+                CTransform3Df resultTransform = transformComponent->ResultTransform();
+                material->BindUniformMatrix4x4f(shader->ModelMatrix(), resultTransform());
+                renderComponent->Material(material);
+            }
+        });
+        
         // Update transform in childrens
-        const IEntity::TEntitiesList& childs = entity->Childs();
+        const IEntity::TEntities& childs = entity->Childs();
         std::for_each(childs.begin(), childs.end(), [&](IEntityPtr entity)
         {
             UpdateTransformsRecursively(entity, childTransform);

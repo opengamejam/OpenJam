@@ -32,7 +32,7 @@ CUpdateSystem::~CUpdateSystem()
 
 void CUpdateSystem::Update(unsigned long dt)
 {
-    const ISystem::TEntitiesList& entities = Entities();
+    const ISystem::TEntities& entities = Entities();
     std::for_each(entities.begin(), entities.end(), [&](IEntityPtr entity)
     {
         entity->Get<CUpdateComponent>([dt](CUpdateComponentPtr updateComponent)

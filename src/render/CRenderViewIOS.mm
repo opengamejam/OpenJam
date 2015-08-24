@@ -17,8 +17,8 @@
 
 #include "CRendererOGLES1_1.h"
 #include "CRendererOGLES2_0.h"
-#include "CFrameBufferTargetOGLES1_1.h"
-#include "CFrameBufferTargetOGLES2_0.h"
+#include "CFrameBufferOGLES1_1.h"
+#include "CFrameBufferOGLES2_0.h"
 
 using namespace jam;
 
@@ -60,7 +60,7 @@ void CRenderViewIOS::CreateView()
             glBindRenderbuffer(GL_RENDERBUFFER, m_ColorBuffer);
             [m_GLContext renderbufferStorage:GL_RENDERBUFFER fromDrawable:(CAEAGLLayer*)(m_GLKView.layer)];
             
-            std::shared_ptr<CFrameBufferTargetOGLES1_1> renderTarget(new CFrameBufferTargetOGLES1_1(Width(), Height()));
+            std::shared_ptr<CFrameBufferOGLES1_1> renderTarget(new CFrameBufferOGLES1_1(Width(), Height()));
             renderTarget->Initialize(-1, m_ColorBuffer);
             glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, m_ColorBuffer);
             glViewport(0, 0, Width(), Height());
@@ -79,7 +79,7 @@ void CRenderViewIOS::CreateView()
             glBindRenderbuffer(GL_RENDERBUFFER, m_ColorBuffer);
             [m_GLContext renderbufferStorage:GL_RENDERBUFFER fromDrawable:(CAEAGLLayer*)(m_GLKView.layer)];
             
-            std::shared_ptr<CFrameBufferTargetOGLES2_0> renderTarget(new CFrameBufferTargetOGLES2_0(Width(), Height()));
+            std::shared_ptr<CFrameBufferOGLES2_0> renderTarget(new CFrameBufferOGLES2_0(Width(), Height()));
             renderTarget->Initialize(-1, m_ColorBuffer);
             glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, m_ColorBuffer);
             glViewport(0, 0, Width(), Height());
@@ -98,7 +98,7 @@ void CRenderViewIOS::CreateView()
             glBindRenderbuffer(GL_RENDERBUFFER, m_ColorBuffer);
             [m_GLContext renderbufferStorage:GL_RENDERBUFFER fromDrawable:(CAEAGLLayer*)(m_GLKView.layer)];
             
-            std::shared_ptr<CFrameBufferTargetOGLES1_1> renderTarget(new CFrameBufferTargetOGLES1_1(Width(), Height()));
+            std::shared_ptr<CFrameBufferOGLES1_1> renderTarget(new CFrameBufferOGLES1_1(Width(), Height()));
             renderTarget->Initialize(-1, m_ColorBuffer);
             glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, m_ColorBuffer);
             glViewport(0, 0, Width(), Height());

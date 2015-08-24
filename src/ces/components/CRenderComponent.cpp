@@ -7,6 +7,7 @@
 //
 
 #include "CRenderComponent.h"
+#include "IMaterial.h"
 
 using namespace jam;
 
@@ -24,6 +25,7 @@ CRenderComponent::CRenderComponent()
 , m_IsVisible(true)
 , m_IsBatchable(false)
 , m_BatchIndex(std::numeric_limits<unsigned int>::max())
+, m_DrawOrder(0)
 {
 
 }
@@ -53,6 +55,28 @@ void CRenderComponent::Material(IMaterialPtr material, const std::string& group)
 {
     m_Material[group] = material;
     m_Groups.insert(group);
+    
+    m_DrawOrder = 0;
+    std::for_each(m_Material.begin(), m_Material.end(), [&](const std::pair<std::string, IMaterialPtr>& element)
+    {
+        IMaterialPtr m = element.second;
+        if (!m->Opacity())
+        {
+            m_DrawOrder |= (1 << 2);
+        }
+        
+        // Objects without depth test draws after that passed depth test
+        if (!m->DepthEnable())
+        {
+            m_DrawOrder |= (1 << 1);
+        }
+        
+        // Stencil test like and depth test
+        if (!m->StencilEnable())
+        {
+            m_DrawOrder |= (1 << 0);
+        }
+    });
 }
 
 ITexturePtr CRenderComponent::Texture(const std::string& group)
@@ -102,6 +126,11 @@ bool CRenderComponent::HasCameraId(unsigned int cameraId)
     return (m_CameraIds.find(cameraId) != m_CameraIds.end());
 }
 
+const std::set<unsigned int>& CRenderComponent::CameraIds() const
+{
+    return m_CameraIds;
+}
+
 bool CRenderComponent::Visible() const
 {
     return m_IsVisible;
@@ -149,6 +178,11 @@ bool CRenderComponent::IsBatchIndexValid() const
 bool CRenderComponent::IsValid() const
 {
     return (m_Groups.size() > 0);
+}
+
+uint32_t CRenderComponent::DrawOrder() const
+{
+    return m_DrawOrder;
 }
 
 // *****************************************************************************

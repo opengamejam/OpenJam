@@ -27,7 +27,7 @@ public:
     virtual ~CThreadExecutor();
     
     void AddTask(const TExecuteBlock& block);
-    size_t TaskCount();
+    uint32_t TaskCount();
     bool IsEmpty();
     
 private:

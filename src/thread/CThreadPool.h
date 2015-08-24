@@ -33,7 +33,7 @@ public:
     static CThreadPoolPtr Get();
     static bool IsMainThread();
     
-    void Initialize(size_t threadsNum = 1);
+    void Initialize(uint32_t threadsNum = 1);
     void Destroy();
     
     void RunAsync(ThreadType threadType, const CThreadExecutor::TExecuteBlock& block);

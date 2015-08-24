@@ -38,10 +38,10 @@ void CThreadExecutor::AddTask(const TExecuteBlock& block)
     m_ConditionVariable.notify_one();
 }
 
-size_t CThreadExecutor::TaskCount()
+uint32_t CThreadExecutor::TaskCount()
 {
     std::unique_lock<std::mutex> locker(m_Mutex);
-    return m_Tasks.size();
+    return static_cast<uint32_t>(m_Tasks.size());
 }
 
 bool CThreadExecutor::IsEmpty()

@@ -1,13 +1,13 @@
 //
-//  CFrameBufferTargetOGLES2_0.h
+//  CFrameBufferOGLES1_0.h
 //  OpenJam
 //
 //  Created by Yevgeniy Logachev
 //  Copyright (c) 2014 yev. All rights reserved.
 //
-#if defined(RENDER_OGLES2_0)
+#if defined(RENDER_OGLES1_1)
 
-#include "CFrameBufferTargetOGLES2_0.h"
+#include "CFrameBufferOGLES1_0.h"
 
 using namespace jam;
 
@@ -19,7 +19,7 @@ using namespace jam;
 // Public Methods
 // *****************************************************************************
 
-CFrameBufferTargetOGLES2_0::CFrameBufferTargetOGLES2_0(unsigned int width, unsigned int height)
+CFrameBufferOGLES1_0::CFrameBufferOGLES1_0(unsigned int width, unsigned int height)
 : m_FrameBuffer(-1)
 , m_DepthBuffer(-1)
 , m_StencilBuffer(-1)
@@ -30,28 +30,28 @@ CFrameBufferTargetOGLES2_0::CFrameBufferTargetOGLES2_0(unsigned int width, unsig
 , m_IsStencilBufferExt(false)
 , m_Width(width)
 , m_Height(height)
-, m_ClearColor(CColor(0.0f, 0.0f, 1.0f, 1.0f))
+, m_ClearColor(CColor(0.0f, 0.0f, 0.0f, 1.0f))
 {
 #if GL_MAX_COLOR_ATTACHMENTS
     glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS, &m_NumColorAtachments);
 #endif
     m_ColorBuffers.resize(m_NumColorAtachments);
     std::for_each(m_ColorBuffers.begin(), m_ColorBuffers.end(), [&](unsigned int& colorBuffer)
-                  {
-                      colorBuffer = -1;
-                  });
+    {
+        colorBuffer = -1;
+    });
 }
 
-CFrameBufferTargetOGLES2_0::~CFrameBufferTargetOGLES2_0()
+CFrameBufferOGLES1_0::~CFrameBufferOGLES1_0()
 {
     unsigned int i = 0;
     std::for_each(m_ColorBuffers.begin(), m_ColorBuffers.end(), [&](unsigned int colorBuffer)
-                  {
-                      if (colorBuffer != -1 && (i != 0 || !m_IsColor0BufferExt))
-                      {
-                          glDeleteRenderbuffers(1, &colorBuffer);
-                      }
-                  });
+    {
+        if (colorBuffer != -1 && (i != 0 || !m_IsColor0BufferExt))
+        {
+            glDeleteRenderbuffers(1, &colorBuffer);
+        }
+    });
     
     if (m_DepthBuffer != -1)
     {
@@ -72,8 +72,8 @@ CFrameBufferTargetOGLES2_0::~CFrameBufferTargetOGLES2_0()
     }
 }
 
-void CFrameBufferTargetOGLES2_0::Initialize(unsigned int externalFrameBuffer, unsigned int externalColorBuffer,
-                                            unsigned int externalDepthBuffer, unsigned int externalStencilBuffer)
+void CFrameBufferOGLES1_0::Initialize(unsigned int externalFrameBuffer, unsigned int externalColorBuffer,
+                                      unsigned int externalDepthBuffer, unsigned int externalStencilBuffer)
 {
     if (m_FrameBuffer == -1 && externalFrameBuffer != -1)
     {
@@ -102,7 +102,7 @@ void CFrameBufferTargetOGLES2_0::Initialize(unsigned int externalFrameBuffer, un
     Initialize();
 }
 
-void CFrameBufferTargetOGLES2_0::Initialize()
+void CFrameBufferOGLES1_0::Initialize()
 {
     if (m_FrameBuffer == -1)
     {
@@ -111,7 +111,7 @@ void CFrameBufferTargetOGLES2_0::Initialize()
     glBindFramebufferOES(GL_FRAMEBUFFER, m_FrameBuffer);
 }
 
-bool CFrameBufferTargetOGLES2_0::CreateColorAttachment(int index)
+bool CFrameBufferOGLES1_0::CreateColorAttachment(int index)
 {
     if (index >= m_ColorBuffers.size())
     {
@@ -136,7 +136,7 @@ bool CFrameBufferTargetOGLES2_0::CreateColorAttachment(int index)
     return result;
 }
 
-bool CFrameBufferTargetOGLES2_0::CreateDepthAttachment()
+bool CFrameBufferOGLES1_0::CreateDepthAttachment()
 {
     if (m_DepthBuffer != -1)
     {
@@ -164,7 +164,7 @@ bool CFrameBufferTargetOGLES2_0::CreateDepthAttachment()
     return result;
 }
 
-bool CFrameBufferTargetOGLES2_0::CreateStencilAttachment()
+bool CFrameBufferOGLES1_0::CreateStencilAttachment()
 {
     if (m_StencilBuffer != -1)
     {
@@ -175,27 +175,27 @@ bool CFrameBufferTargetOGLES2_0::CreateStencilAttachment()
     return result;
 }
 
-bool CFrameBufferTargetOGLES2_0::CreateTextureAttachment()
+bool CFrameBufferOGLES1_0::CreateTextureAttachment()
 {
     return false;   // TODO:
 }
 
-void CFrameBufferTargetOGLES2_0::Bind() const
+void CFrameBufferOGLES1_0::Bind() const
 {
     glBindFramebuffer(GL_FRAMEBUFFER, m_FrameBuffer);
 }
 
-void CFrameBufferTargetOGLES2_0::Unbind() const
+void CFrameBufferOGLES1_0::Unbind() const
 {
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void CFrameBufferTargetOGLES2_0::Clear() const
+void CFrameBufferOGLES1_0::Clear() const
 {
     glClearColor(m_ClearColor.R(), m_ClearColor.G(), m_ClearColor.B(), m_ClearColor.A());
     
     GLbitfield clearBits = 0;
-    if (true) // TODO: checks for targets, that has only depth or stencil render buffers
+    if (true) // TODO: checks for s, that has only depth or stencil render buffers
     {
         clearBits |= GL_COLOR_BUFFER_BIT;
     }
@@ -213,27 +213,27 @@ void CFrameBufferTargetOGLES2_0::Clear() const
     }
 }
 
-void CFrameBufferTargetOGLES2_0::ClearColor(const CColor& color)
+void CFrameBufferOGLES1_0::ClearColor(const CColor& color)
 {
     m_ClearColor = color;
 }
 
-const CColor& CFrameBufferTargetOGLES2_0::ClearColor() const
+const CColor& CFrameBufferOGLES1_0::ClearColor() const
 {
     return m_ClearColor;
 }
 
-unsigned int CFrameBufferTargetOGLES2_0::Width() const
+unsigned int CFrameBufferOGLES1_0::Width() const
 {
     return m_Width;
 }
 
-unsigned int CFrameBufferTargetOGLES2_0::Height() const
+unsigned int CFrameBufferOGLES1_0::Height() const
 {
     return m_Height;
 }
 
-std::vector<unsigned char> CFrameBufferTargetOGLES2_0::RawData()
+std::vector<unsigned char> CFrameBufferOGLES1_0::RawData()
 {
     Bind();
     
@@ -254,4 +254,4 @@ std::vector<unsigned char> CFrameBufferTargetOGLES2_0::RawData()
 // Private Methods
 // *****************************************************************************
 
-#endif // RENDER_OGLES2_0
+#endif // RENDER_OGLES1_1

@@ -43,7 +43,7 @@ public:
     static void Rotation(CTransformationComponentPtr component, const CVector3Df& rotation);
     static void Scale(CTransformationComponentPtr component, const CVector3Df& scaling);
 };
-    
+
 }; // namespace jam
 
 #endif /* defined(CTRANSFORMAFFECTOR_H) */

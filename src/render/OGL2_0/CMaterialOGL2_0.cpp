@@ -185,6 +185,17 @@ void CMaterialOGL2_0::StencilOperations(Operations failOp, Operations zFailOp, O
     m_IsDirty = true;
 }
 
+bool CMaterialOGL2_0::Opacity() const
+{
+    return m_State.opacity;
+}
+
+void CMaterialOGL2_0::Opacity(bool value)
+{
+    m_State.opacity = value;
+    m_IsDirty = true;
+}
+
 const std::string& CMaterialOGL2_0::Hash()
 {
     if (m_IsDirty)

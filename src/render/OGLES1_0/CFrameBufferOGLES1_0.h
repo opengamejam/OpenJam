@@ -1,25 +1,25 @@
 //
-//  CFrameBufferTargetOGL1_3.h
+//  CFrameBufferOGLES1_0.h
 //  OpenJam
 //
 //  Created by Yevgeniy Logachev
 //  Copyright (c) 2014 yev. All rights reserved.
 //
-#if defined(RENDER_OGL1_3)
+#if defined(RENDER_OGLES1_1)
 
-#ifndef CFRAMEBUFFERTARGETOGLES1_H
-#define CFRAMEBUFFERTARGETOGLES1_H
+#ifndef CFRAMEBUFFEROGLES1_0_H
+#define CFRAMEBUFFEROGLES1_0_H
 
 #include "IRenderTarget.h"
 
 namespace jam
 {
-
-class CFrameBufferTargetOGL1_3 : public IRenderTarget
+    
+class CFrameBufferOGLES1_0 : public IRenderTarget
 {
 public:
-    CFrameBufferTargetOGL1_3(unsigned int width, unsigned int height);
-    virtual ~CFrameBufferTargetOGL1_3();
+    CFrameBufferOGLES1_0(unsigned int width, unsigned int height);
+    virtual ~CFrameBufferOGLES1_0();
     
     void Initialize(unsigned int externalFrameBuffer, unsigned int externalColorBuffer = -1,
                     unsigned int externalDepthBuffer = -1, unsigned int externalStencilBuffer = -1);
@@ -63,6 +63,6 @@ private:
 
 }; // namespace jam
 
-#endif /* defined(CFRAMEBUFFERRENDERTARGETOGLES1_H) */
+#endif /* defined(CFRAMEBUFFEROGLES1_0_H) */
 
-#endif /* RENDER_OGL1_3 */
+#endif /* RENDER_OGLES1_1 */

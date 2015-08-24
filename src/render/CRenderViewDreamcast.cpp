@@ -13,7 +13,7 @@
 #include "IRenderTarget.h"
 
 #include "CRendererOGL1_3.h"
-#include "CFrameBufferTargetOGL1_3.h"
+#include "CFrameBufferOGL1_3.h"
 
 using namespace jam;
 
@@ -43,7 +43,7 @@ void CRenderViewDreamcast::CreateView()
 	glKosInit();
 
 	GRenderer.reset(new CRendererOGL1_3(shared_from_this()));
-	m_DefaultRenderTarget.reset(new CFrameBufferTargetOGL1_3(Width(), Height()));
+	m_DefaultRenderTarget.reset(new CFrameBufferOGL1_3(Width(), Height()));
 }
 
 void CRenderViewDreamcast::Begin() const

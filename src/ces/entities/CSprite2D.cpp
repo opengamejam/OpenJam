@@ -61,6 +61,7 @@ CSprite2DPtr CSprite2D::Create(const std::string& filename, unsigned int cameraI
     material = GRenderer->CreateMaterial();
     material->PrimitiveType(IMaterial::TrianglesStrip);
     material->DepthEnable(true);
+    material->Opacity(false);
     
     // Vertex buffer
     vertexBuffer = GRenderer->CreatVertexBuffer();

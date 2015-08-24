@@ -1,3 +1,4 @@
+
 //
 //  CRendererOGL1_3.h
 //  OpenJam
@@ -16,7 +17,7 @@
 #include "CMeshOGL1_3.h"
 #include "CShaderOGL1_3.h"
 #include "CShaderProgramOGL1_3.h"
-#include "CFrameBufferTargetOGL1_3.h"
+#include <CFrameBufferOGL1_3.h>
 
 using namespace jam;
 
@@ -90,7 +91,7 @@ IShaderProgramPtr CRendererOGL1_3::CreateShaderProgram()
 
 IRenderTargetPtr CRendererOGL1_3::CreateRenderTarget(unsigned int width, unsigned int height)
 {
-    IRenderTargetPtr renderTarget(new CFrameBufferTargetOGL1_3(width, height));
+    IRenderTargetPtr renderTarget(new CFrameBufferOGL1_3(width, height));
     return renderTarget;
 }
 
@@ -152,9 +153,14 @@ void CRendererOGL1_3::Draw(IVertexBufferPtr vertexBuffer, IIndexBufferPtr indexB
     }
     
     int primitiveType = CovertPrimitiveType(material->PrimitiveType());
-    const GLvoid *data = indexBuffer->LockRaw();
+    const GLvoid *data = nullptr;
+#if	defined(OS_KOS)
+    data = indexBuffer->LockRaw();
+#endif
     glDrawElements(primitiveType, (GLsizei)indexBuffer->Size(), GL_UNSIGNED_SHORT, data);
+#if defined(OS_KOS)
     indexBuffer->Unlock();
+#endif
 }
 
 // *****************************************************************************

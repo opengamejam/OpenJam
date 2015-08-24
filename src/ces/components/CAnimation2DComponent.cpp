@@ -49,11 +49,11 @@ void CAnimation2DComponent::Sprite(ISpritePtr sprite)
     {
         return;
     }
-    
+
     m_Sprite = sprite;
     m_Sequences.clear();
     m_SequencesNames.clear();
-    
+
     if (sprite)
     {
         // Sequences
@@ -63,10 +63,10 @@ void CAnimation2DComponent::Sprite(ISpritePtr sprite)
         {
             m_SequencesNames.push_back(sequenceDef.name);
             TSequence& sequence = m_Sequences[sequenceDef.name];
-            
+
             m_SequenceDurations[sequenceDef.name] = 0;
             unsigned long& duration = m_SequenceDurations[sequenceDef.name];
-            
+
             const ISprite::TFramesList& frames = sequenceDef.frames;
             std::for_each(frames.begin(), frames.end(), [&](const CFrameDef& frameDef)
             {
@@ -74,7 +74,7 @@ void CAnimation2DComponent::Sprite(ISpritePtr sprite)
                 // Object transform
                 frame.transform.Position(CVector3Df(frameDef.offsetX, frameDef.offsetY, 0.0f));
                 frame.transform.Scale(CVector3Df(frameDef.originalWidth, frameDef.originalHeight, 1.0f));
-                
+
                 // Texture frame
                 frame.textureFrame.push_back(frameDef.textureFrame.u); // (0, 0)
                 frame.textureFrame.push_back(CVector2Df(frameDef.textureFrame.v.X(),
@@ -86,11 +86,11 @@ void CAnimation2DComponent::Sprite(ISpritePtr sprite)
                 frame.textureName = textures[frameDef.textureFrame.textureIdx];
                 frame.duration = frameDef.animDuration;
                 duration += frameDef.animDuration;
-                
+
                 sequence.push_back(frame);
             });
         });
-        
+
         // Load texture atlases
         LoadTextures(textures);
     }
@@ -100,11 +100,11 @@ void CAnimation2DComponent::Sprite(ISpritePtr sprite)
         TSequence& sequence = m_Sequences["null"];
         sequence.push_back(SFrame());
     }
-    
+
     m_AnimationName = m_SequencesNames.front();
     m_FullTime = 2000;
     m_Time = 0;
-    
+
     Cache();
 }
 
@@ -133,7 +133,7 @@ ITexturePtr CAnimation2DComponent::Texture()
     return m_CachedTexture;
 }
 
-bool CAnimation2DComponent::IsStatic() 
+bool CAnimation2DComponent::IsStatic()
 {
     return m_CachedIsStatic;
 }
@@ -148,7 +148,7 @@ void CAnimation2DComponent::AnimationName(const std::string& name)
     if (m_Sequences.find(name) != m_Sequences.end())
     {
         m_AnimationName = name;
-        
+
         m_Time = 0;
         m_FullTime = m_SequenceDurations[m_AnimationName];
     }
@@ -164,10 +164,10 @@ unsigned int CAnimation2DComponent::AnimationIndex() const
             return false;
         }
         ++index;
-        
+
         return true;
     });
-    
+
     return index;
 }
 
@@ -192,13 +192,13 @@ bool CAnimation2DComponent::Time(unsigned long ms)
     {
         m_Time = 0;
     }
-    
+
     bool wasChanged = FrameId() != frameIndex;
     if (wasChanged)
     {
         Cache();
     }
-    
+
     return wasChanged;
 }
 
@@ -223,12 +223,12 @@ bool CAnimation2DComponent::FrameId(unsigned int frameIndex)
     if (FrameId() != frameIndex && frameIndex < Sequence().size())
     {
         m_Time = ((float)frameIndex / Sequence().size()) * FullTime();
-        
+
         Cache();
-        
+
         return true;
     }
-    
+
     return false;
 }
 
@@ -279,7 +279,7 @@ void CAnimation2DComponent::Cache()
 void CAnimation2DComponent::LoadTextures(const std::vector<std::string>& textureNames)
 {
     CResourceCache<ITexture> textureCache;
-    
+
     std::for_each(textureNames.begin(), textureNames.end(), [&](const std::string& textureName)
     {
         ITexturePtr texture = textureCache.AcquireResource(textureName, false,
@@ -298,7 +298,7 @@ void CAnimation2DComponent::LoadTextures(const std::vector<std::string>& texture
                 {
                     resultImage = nullptr;
                 }
-                
+
                 return resultImage;
             });
 
@@ -310,7 +310,7 @@ void CAnimation2DComponent::LoadTextures(const std::vector<std::string>& texture
 
             return resultTexture;
         });
-        
+
         m_Textures[textureName] = texture;
     });
 }

@@ -10,14 +10,15 @@
 #define CRENDERSYSTEM_H
 
 #include "ISystem.h"
+#include "CRenderComponent.h"
 
 namespace jam
 {
 CLASS_PTR(CRenderSystem);
 CLASS_PTR(IEntity);
 CLASS_PTR(ICamera);
-CLASS_PTR(CRenderComponent);
 CLASS_PTR(IRenderTarget);
+CLASS_PTR(CRenderComponent);
 
 class CRenderSystem : public ISystem
 {
@@ -28,8 +29,17 @@ public:
     void Update(unsigned long dt);
     void Draw(ICameraPtr camera);
     
+protected:
+    virtual void OnAddedEntity(IEntityPtr entity);
+    virtual void OnChangedEntity(IEntityPtr entity);
+    virtual void OnRemovedEntity(IEntityPtr entity);
+    
 private:
+    
     std::set<IRenderTargetPtr> m_ProccededRenderTargets;
+    
+    std::list<CRenderComponentPtr> m_SortedComponents;
+    std::map<CRenderComponentPtr, uint64_t> m_OrderKeys;
 };
     
 } // namespace jam

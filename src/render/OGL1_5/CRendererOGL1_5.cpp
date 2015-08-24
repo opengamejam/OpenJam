@@ -16,7 +16,7 @@
 #include "CMeshOGL1_5.h"
 #include "CShaderOGL1_5.h"
 #include "CShaderProgramOGL1_5.h"
-#include "CFrameBufferTargetOGL1_5.h"
+#include "CFrameBufferOGL1_5.h"
 
 using namespace jam;
 
@@ -90,7 +90,7 @@ IShaderProgramPtr CRendererOGL1_5::CreateShaderProgram()
 
 IRenderTargetPtr CRendererOGL1_5::CreateRenderTarget(unsigned int width, unsigned int height)
 {
-    IRenderTargetPtr renderTarget(new CFrameBufferTargetOGL1_5(width, height));
+    IRenderTargetPtr renderTarget(new CFrameBufferOGL1_5(width, height));
     return renderTarget;
 }
 

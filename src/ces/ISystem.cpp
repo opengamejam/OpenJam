@@ -44,20 +44,20 @@ void ISystem::RemoveEntity(IEntityPtr entity)
     m_Entities.erase(entity);
 }
 
-const ISystem::TEntitiesList& ISystem::Entities() const
+const ISystem::TEntities& ISystem::Entities() const
 {
     return m_Entities;
 }
 
 bool ISystem::IsEntityAdded(IEntityPtr entity)
 {
-    const ISystem::TEntitiesList& entities = Entities();
-    ISystem::TEntitiesList::const_iterator it = std::find(entities.begin(), entities.end(), entity);
+    const ISystem::TEntities& entities = Entities();
+    ISystem::TEntities::const_iterator it = std::find(entities.begin(), entities.end(), entity);
 
     return (it != entities.end());
 }
 
-const ISystem::TComponentIdsList& ISystem::RegisteredComponents()
+const ISystem::TComponentIds& ISystem::RegisteredComponents()
 {
     return m_RegisteredComponents;
 }
@@ -89,7 +89,7 @@ bool ISystem::IsHasSupportedComponents(IEntityPtr entity)
     }
     
     bool found = false;
-    const ISystem::TComponentIdsList& componentIds = RegisteredComponents();
+    const ISystem::TComponentIds& componentIds = RegisteredComponents();
     std::all_of(componentIds.begin(), componentIds.end(), [&](const std::type_index& id)
     {
         found = entity->HasComponent(id);
@@ -109,7 +109,7 @@ void ISystem::UnmarkDirtyEntity(IEntityPtr entity)
     m_DirtyEntities.erase(entity);
 }
 
-const ISystem::TEntitiesList& ISystem::DirtyEntities() const
+const ISystem::TEntities& ISystem::DirtyEntities() const
 {
     return m_DirtyEntities;
 }
@@ -117,6 +117,30 @@ const ISystem::TEntitiesList& ISystem::DirtyEntities() const
 void ISystem::ClearDirtyEntities()
 {
     m_DirtyEntities.clear();
+}
+
+void ISystem::OnAddedEntity(IEntityPtr entity)
+{
+    if (!IsEntityAdded(entity))
+    {
+        AddEntity(entity);
+    }
+}
+
+void ISystem::OnChangedEntity(IEntityPtr entity)
+{
+    if (IsHasSupportedComponents(entity))
+    {
+        MarkDirtyEntity(entity);
+    }
+}
+
+void ISystem::OnRemovedEntity(IEntityPtr entity)
+{
+    if (IsEntityAdded(entity))
+    {
+        RemoveEntity(entity);
+    }
 }
 
 // *****************************************************************************
@@ -139,26 +163,17 @@ bool ISystem::OnComponentChanged(IEventPtr event)
     {
         case CCESEvent::Added:
         {
-            if (!IsEntityAdded(entity))
-            {
-                AddEntity(entity);
-            }
+            OnAddedEntity(entity);
         }
         break;
         case CCESEvent::Changed:
         {
-            if (IsHasSupportedComponents(entity))
-            {
-                MarkDirtyEntity(entity);
-            }
+            OnChangedEntity(entity);
         }
         break;
         case CCESEvent::Removed:
         {
-            if (IsEntityAdded(entity))
-            {
-                RemoveEntity(entity);
-            }
+            OnRemovedEntity(entity);
         }
         break;
     };

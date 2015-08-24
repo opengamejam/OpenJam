@@ -26,8 +26,8 @@ inline static std::type_index SystemId()
 class ISystem : public IEventable
 {
 public:
-    typedef std::set<IEntityPtr> TEntitiesList;
-    typedef std::set<std::type_index> TComponentIdsList;
+    typedef std::set<IEntityPtr> TEntities;
+    typedef std::set<std::type_index> TComponentIds;
     
 public:
     ISystem();
@@ -35,12 +35,12 @@ public:
     
     void AddEntity(IEntityPtr entity);
     void RemoveEntity(IEntityPtr entity);
-    const TEntitiesList& Entities() const;
+    const TEntities& Entities() const;
     bool IsEntityAdded(IEntityPtr entity);
     
     virtual void Update(unsigned long dt) = 0;
     
-    const TComponentIdsList& RegisteredComponents();
+    const TComponentIds& RegisteredComponents();
     bool IsComponentRegistered(const std::type_index& id);
     bool IsHasSupportedComponents(IEntityPtr entity);
     
@@ -50,16 +50,20 @@ protected:
     
     void MarkDirtyEntity(IEntityPtr entity);
     void UnmarkDirtyEntity(IEntityPtr entity);
-    const TEntitiesList& DirtyEntities() const;
+    const TEntities& DirtyEntities() const;
     void ClearDirtyEntities();
+    
+    virtual void OnAddedEntity(IEntityPtr entity);
+    virtual void OnChangedEntity(IEntityPtr entity);
+    virtual void OnRemovedEntity(IEntityPtr entity);
     
 private:
     bool OnComponentChanged(IEventPtr event);
     
 private:
-    TEntitiesList m_Entities;
-    TEntitiesList m_DirtyEntities;
-    TComponentIdsList m_RegisteredComponents;
+    TEntities m_Entities;
+    TEntities m_DirtyEntities;
+    TComponentIds m_RegisteredComponents;
 };
     
 }; // namespace jam

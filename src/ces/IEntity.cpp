@@ -21,6 +21,7 @@ using namespace jam;
 // *****************************************************************************
 
 IEntity::IEntity()
+: m_HierarchyIndex(0)
 {
     
 }
@@ -118,6 +119,11 @@ size_t IEntity::ComponentsNum(const std::type_index& id)
 
 void IEntity::AddChild(IEntityPtr entity)
 {
+    if (!entity)
+    {
+        return;
+    }
+    
     IEntityPtr prevParent = entity->Parent().lock();
     assert(prevParent != entity);
     if (prevParent == entity &&
@@ -132,6 +138,7 @@ void IEntity::AddChild(IEntityPtr entity)
     }
     
     entity->Parent(shared_from_this());
+    entity->HierarchyIndex(HierarchyIndex() + 1);
     m_Entities.push_back(entity);
     
     CCESEventPtr addedEvent(new CCESEvent(entity, CCESEvent::Added));
@@ -143,10 +150,11 @@ void IEntity::AddChild(IEntityPtr entity)
 
 void IEntity::RemoveChild(IEntityPtr entity)
 {
-    IEntity::TEntitiesList::const_iterator it = std::find(m_Entities.begin(), m_Entities.end(), entity);
+    IEntity::TEntities::const_iterator it = std::find(m_Entities.begin(), m_Entities.end(), entity);
     if (it != m_Entities.end())
     {
         (*it)->Parent(IEntityWeak());
+        (*it)->HierarchyIndex(0);
         m_Entities.erase(it);
     }
     
@@ -154,15 +162,9 @@ void IEntity::RemoveChild(IEntityPtr entity)
     Dispatcher()->DispatchEvent(event);
 }
 
-const IEntity::TEntitiesList& IEntity::Childs() const
+const IEntity::TEntities& IEntity::Childs() const
 {
     return m_Entities;
-}
-
-void IEntity::Parent(IEntityWeak parent)
-{
-    // TODO: remove from prev parent
-    m_Parent = parent;
 }
 
 IEntityWeak IEntity::Parent() const
@@ -170,9 +172,29 @@ IEntityWeak IEntity::Parent() const
     return m_Parent;
 }
 
+uint32_t IEntity::HierarchyIndex() const
+{
+    return m_HierarchyIndex;
+}
+
 // *****************************************************************************
 // Protected Methods
 // *****************************************************************************
+
+void IEntity::Parent(IEntityWeak parent)
+{
+    m_Parent = parent;
+}
+
+void IEntity::HierarchyIndex(uint32_t hierarchyIndex)
+{
+    m_HierarchyIndex = hierarchyIndex;
+    const TEntities& childs = Childs();
+    std::for_each(childs.begin(), childs.end(), [&](IEntityPtr entity)
+    {
+        entity->HierarchyIndex(HierarchyIndex() + 1);
+    });
+}
 
 // *****************************************************************************
 // Private Methods

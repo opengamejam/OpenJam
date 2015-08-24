@@ -16,7 +16,7 @@
 #include "CMeshOGLES1_0.h"
 #include "CShaderOGLES1_0.h"
 #include "CShaderProgramOGLES1_0.h"
-#include "CFrameBufferTargetOGLES1_0.h"
+#include "CFrameBufferOGLES1_0.h"
 
 using namespace jam;
 
@@ -90,7 +90,7 @@ IShaderProgramPtr CRendererOGLES1_0::CreateShaderProgram()
 
 IRenderTargetPtr CRendererOGLES1_0::CreateRenderTarget(unsigned int width, unsigned int height)
 {
-    IRenderTargetPtr renderTarget(new CFrameBufferTargetOGLES1_0(width, height));
+    IRenderTargetPtr renderTarget(new CFrameBufferOGLES1_0(width, height));
     return renderTarget;
 }
 
@@ -104,11 +104,12 @@ void CRendererOGLES1_0::Draw(IMeshPtr mesh, IMaterialPtr material, IShaderProgra
     
     const IMaterial::TUniMatrix4Float& uniforms = material->UniformsMatrix4x4f();
     IMaterial::TUniMatrix4Float::const_iterator it = uniforms.find(shader->ProjectionMatrix());
+    
     if (it != uniforms.end())
     {
         CMatrix4x4f matrix = it->second;
         glMatrixMode(GL_PROJECTION);
-        glLoadMatrixf(matrix.Transpose()().data());
+        glLoadTransposeMatrixf(matrix().data());
     }   // TODO: load identity for other case
     
     it = uniforms.find(shader->ModelMatrix());
@@ -116,7 +117,7 @@ void CRendererOGLES1_0::Draw(IMeshPtr mesh, IMaterialPtr material, IShaderProgra
     {
         CMatrix4x4f matrix = it->second;
         glMatrixMode(GL_MODELVIEW);
-        glLoadMatrixf(matrix.Transpose()().data());
+        glLoadTransposeMatrixf(matrix().data());
     }   // TODO: load identity for other case
     
     if (mesh->IndexBuffer())
@@ -138,64 +139,7 @@ void CRendererOGLES1_0::Draw(IVertexBufferPtr vertexBuffer, IMaterialPtr materia
     }
     
     int primitiveType = CovertPrimitiveType(material->PrimitiveType());
-    glBegin(primitiveType);
-    
-    const IVertexBuffer::TVertexStreamMap& vertexStreams = VertexStreams();
-    std::for_each(vertexStreams.begin(), vertexStreams.end(),
-                  [&](const IVertexBuffer::TVertexStreamMap::value_type& value)
-                  {
-                      const SVertexStream& stream = value.second;
-                      if (stream.IsActive())
-                      {
-                          IVertexBufferPtr vertexBuffer = stream.vertexBuffer.lock();
-                          if (vertexBuffer)
-                          {
-                              size_t size = vertexBuffer->Size();
-                              
-                          }
-                          
-                          /*GLbyte *offset = nullptr;
-                           offset += value.second.offset;
-                           if (value.first == IVertexBuffer::Position)
-                           {
-                           glEnableClientState(GL_VERTEX_ARRAY);
-                           glVertexPointer(value.second.stride,
-                           GL_FLOAT,   // TODO: parse type
-                           (GLsizei)ElementSize(),
-                           (GLvoid*)offset);
-                           }
-                           else if (value.first == IVertexBuffer::TextureCoors)
-                           {
-                           glEnableClientState(GL_TEXTURE_COORD_ARRAY);
-                           glTexCoordPointer(value.second.stride,
-                           GL_FLOAT,   // TODO: parse type
-                           (GLsizei)ElementSize(),
-                           (GLvoid*)offset);
-                           }
-                           else if (value.first == IVertexBuffer::Color)
-                           {
-                           glEnableClientState(GL_COLOR_ARRAY);
-                           glColorPointer(value.second.stride,
-                           GL_FLOAT,   // TODO: parse type
-                           (GLsizei)ElementSize(),
-                           (GLvoid*)offset);
-                           }
-                           else if (value.first == IVertexBuffer::Normal)
-                           {
-                           glEnableClientState(GL_NORMAL_ARRAY);
-                           glNormalPointer(GL_FLOAT,   // TODO: parse type
-                           (GLsizei)ElementSize(),
-                           (GLvoid*)offset);
-                           }
-                           else if (value.first == IVertexBuffer::Tangent)
-                           {
-                           }*/
-                      }
-                  });
-    
     glDrawArrays(primitiveType, 0, (GLsizei)vertexBuffer->Size());
-    
-    glEnd();
 }
 
 void CRendererOGLES1_0::Draw(IVertexBufferPtr vertexBuffer, IIndexBufferPtr indexBuffer, IMaterialPtr material)
@@ -208,8 +152,17 @@ void CRendererOGLES1_0::Draw(IVertexBufferPtr vertexBuffer, IIndexBufferPtr inde
     }
     
     int primitiveType = CovertPrimitiveType(material->PrimitiveType());
-    //glDrawElements(primitiveType, (GLsizei)indexBuffer->Size(), GL_UNSIGNED_INT, (void *)0);
+    const GLvoid *data = nullptr;
+    glDrawElements(primitiveType, (GLsizei)indexBuffer->Size(), GL_UNSIGNED_SHORT, data);
 }
+
+// *****************************************************************************
+// Protected Methods
+// *****************************************************************************
+
+// *****************************************************************************
+// Private Methods
+// *****************************************************************************
 
 INL int CovertPrimitiveType(IMaterial::PrimitiveTypes type)
 {

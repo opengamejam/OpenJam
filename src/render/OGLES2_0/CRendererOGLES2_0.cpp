@@ -16,7 +16,7 @@
 #include "CMeshOGLES2_0.h"
 #include "CShaderOGLES2_0.h"
 #include "CShaderProgramOGLES2_0.h"
-#include "CFrameBufferTargetOGLES2_0.h"
+#include "CFrameBufferOGLES2_0.h"
 
 using namespace jam;
 
@@ -90,7 +90,7 @@ IShaderProgramPtr CRendererOGLES2_0::CreateShaderProgram()
 
 IRenderTargetPtr CRendererOGLES2_0::CreateRenderTarget(unsigned int width, unsigned int height)
 {
-    IRenderTargetPtr renderTarget(new CFrameBufferTargetOGLES2_0(width, height));
+    IRenderTargetPtr renderTarget(new CFrameBufferOGLES2_0(width, height));
     return renderTarget;
 }
 

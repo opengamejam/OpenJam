@@ -43,6 +43,7 @@ public:
     void AddCameraId(unsigned int cameraId);
     void RemoveCameraId(unsigned int cameraId);
     bool HasCameraId(unsigned int cameraId);
+    const std::set<unsigned int>& CameraIds() const;
     
     bool Visible() const;
     void Visible(bool isVisible);
@@ -56,6 +57,8 @@ public:
     
     bool IsValid() const;
     
+    uint32_t DrawOrder() const;
+    
 private:
     std::unordered_map<std::string, IMeshPtr> m_Mesh;
     std::unordered_map<std::string, IMaterialPtr> m_Material;
@@ -66,6 +69,7 @@ private:
     bool m_IsBatchable;
     unsigned int m_BatchIndex;
     std::set<unsigned int> m_CameraIds;
+    uint32_t m_DrawOrder;
 };
     
 }; // namespace jam

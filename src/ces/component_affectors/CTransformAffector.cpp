@@ -17,11 +17,11 @@ void CTransformAffector::Translating(IEntityPtr entity, const CVector3Df& transl
     entity->Get<CTransformationComponent>([translation](CTransformationComponentPtr component)
     {
         CTransform3Df transform = component->Transform(CTransformationComponent::Local);
-        
+
         CVector3Df value = transform.Position();
         value += translation;
         transform.Position(value);
-        
+
         component->AddTransform(CTransformationComponent::Local, transform);
         component->Dirty();
     });
@@ -104,7 +104,7 @@ CVector3Df CTransformAffector::Position(IEntityPtr entity)
         CTransform3Df transform = component->Transform(CTransformationComponent::Local);
         value = transform.Position();
     });
-    
+
     return value;
 }
 
@@ -116,7 +116,7 @@ CVector3Df CTransformAffector::Rotation(IEntityPtr entity)
         CTransform3Df transform = component->Transform(CTransformationComponent::Local);
         value = transform.Rotation();
     });
-    
+
     return value;
 }
 
@@ -128,7 +128,7 @@ CVector3Df CTransformAffector::Scale(IEntityPtr entity)
         CTransform3Df transform = component->Transform(CTransformationComponent::Local);
         value = transform.Scale();
     });
-    
+
     return value;
 }
 
@@ -138,13 +138,13 @@ void CTransformAffector::Translating(CTransformationComponentPtr component, cons
     {
         return;
     }
-    
+
     CTransform3Df transform = component->Transform(CTransformationComponent::Local);
-    
+
     CVector3Df value = transform.Position();
     value += translation;
     transform.Position(value);
-    
+
     component->AddTransform(CTransformationComponent::Local, transform);
     component->Dirty();
 }
@@ -155,13 +155,13 @@ void CTransformAffector::Rotating(CTransformationComponentPtr component, const C
     {
         return;
     }
-    
+
     CTransform3Df transform = component->Transform(CTransformationComponent::Local);
-    
+
     CVector3Df value = transform.Rotation();
     value += rotation;
     transform.Rotation(value);
-    
+
     component->AddTransform(CTransformationComponent::Local, transform);
     component->Dirty();
 }
@@ -172,13 +172,13 @@ void CTransformAffector::Scaling(CTransformationComponentPtr component, const CV
     {
         return;
     }
-    
+
     CTransform3Df transform = component->Transform(CTransformationComponent::Local);
-    
+
     CVector3Df value = transform.Scale();
     value += scaling;
     transform.Scale(value);
-    
+
     component->AddTransform(CTransformationComponent::Local, transform);
     component->Dirty();
 }
@@ -189,11 +189,11 @@ void CTransformAffector::Position(CTransformationComponentPtr component, const C
     {
         return;
     }
-    
+
     CTransform3Df transform = component->Transform(CTransformationComponent::Local);
-    
+
     transform.Position(position);
-    
+
     component->AddTransform(CTransformationComponent::Local, transform);
     component->Dirty();
 }
@@ -204,11 +204,11 @@ void CTransformAffector::Rotation(CTransformationComponentPtr component, const C
     {
         return;
     }
-    
+
     CTransform3Df transform = component->Transform(CTransformationComponent::Local);
-    
+
     transform.Rotation(rotation);
-    
+
     component->AddTransform(CTransformationComponent::Local, transform);
     component->Dirty();
 }
@@ -219,11 +219,11 @@ void CTransformAffector::Scale(CTransformationComponentPtr component, const CVec
     {
         return;
     }
-    
+
     CTransform3Df transform = component->Transform(CTransformationComponent::Local);
-    
+
     transform.Scale(scaling);
-    
+
     component->AddTransform(CTransformationComponent::Local, transform);
     component->Dirty();
 }

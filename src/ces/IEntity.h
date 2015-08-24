@@ -21,7 +21,7 @@ class IEntity : public IEventable, public std::enable_shared_from_this<IEntity>
 public:
     typedef std::vector<IComponentPtr> TComponentsList;
     typedef std::unordered_map<std::type_index, TComponentsList> TComponentsMap;
-    typedef std::vector<IEntityPtr> TEntitiesList;
+    typedef std::vector<IEntityPtr> TEntities;
     
 public:
     IEntity();
@@ -59,16 +59,22 @@ public:
     
     void AddChild(IEntityPtr entity);
     void RemoveChild(IEntityPtr entity);
-    const TEntitiesList& Childs() const;
+    const TEntities& Childs() const;
 
-    void Parent(IEntityWeak parent);
     IEntityWeak Parent() const;
+    
+    uint32_t HierarchyIndex() const;
+    
+protected:
+    void Parent(IEntityWeak parent);
+    void HierarchyIndex(uint32_t hierarchyIndex);
     
 private:
     std::string m_Name;
     TComponentsMap m_Components;
-    TEntitiesList m_Entities;
+    TEntities m_Entities;
     IEntityWeak m_Parent;
+    uint32_t m_HierarchyIndex;
 };
     
 }; // namespace jam

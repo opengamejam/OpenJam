@@ -161,7 +161,10 @@ void CVertexBufferOGL1_3::Bind()
         const SVertexStream& stream = value.second;
         if (stream.IsActive())
         {
-            GLubyte *offset = (GLubyte *)m_Buffer.data();
+            GLubyte *offset = nullptr;
+#if defined(OS_KOS)
+            offset = (GLubyte *)m_Buffer.data();
+#endif
             offset += (ZeroStride() ? stream.absoluteOffset : stream.offset);
             int type = ConvertDataType(stream.dataType);
             GLsizei elementSize = (ZeroStride() ? 0 : (GLsizei)ElementSize());

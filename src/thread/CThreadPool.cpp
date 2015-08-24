@@ -38,14 +38,14 @@ bool CThreadPool::IsMainThread()
     return (s_MainThreadId == std::this_thread::get_id());
 }
 
-void CThreadPool::Initialize(size_t threadsNum)
+void CThreadPool::Initialize(uint32_t threadsNum)
 {
-    threadsNum = std::max<unsigned int>(1, threadsNum);
+    threadsNum = std::max<uint32_t>(1, threadsNum);
     
     std::unique_lock<std::mutex> locker(m_Mutex);
     
     m_ThreadExecutors.clear();
-    for (size_t i = 0; i < threadsNum; ++i)
+    for (uint32_t i = 0; i < threadsNum; ++i)
     {
         CThreadExecutorPtr executor = CThreadExecutor::Create();
         m_ThreadExecutors.push_back(executor);
@@ -113,11 +113,11 @@ void CThreadPool::Update(unsigned long dt)
 CThreadExecutorPtr CThreadPool::FindLeisureExecutor()
 {
     CThreadExecutorPtr executor = nullptr;
-    size_t minTasks = UINT32_MAX;
+    uint32_t minTasks = UINT32_MAX;
     
     std::all_of(m_ThreadExecutors.begin(), m_ThreadExecutors.end(), [&](CThreadExecutorPtr ex)
     {
-        size_t taskCount = ex->TaskCount();
+        uint32_t taskCount = ex->TaskCount();
         
         if (taskCount == 0)
         {

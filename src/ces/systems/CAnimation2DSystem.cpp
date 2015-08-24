@@ -39,7 +39,7 @@ CAnimation2DSystem::~CAnimation2DSystem()
 
 void CAnimation2DSystem::Update(unsigned long dt)
 {
-    const ISystem::TEntitiesList& entities = Entities();
+    const ISystem::TEntities& entities = Entities();
     std::for_each(entities.begin(), entities.end(), [&](IEntityPtr entity)
     {
         if (!IsEntityAdded(entity))

@@ -14,7 +14,7 @@
 #include "RenderGlobal.h"
 
 #include "CRendererOGL1_5.h"
-#include "CFrameBufferTargetOGL1_5.h"
+#include "CFrameBufferOGL1_5.h"
 
 using namespace jam;
 
@@ -63,7 +63,7 @@ void CRenderViewOSX::CreateView()
             
             GRenderer.reset(new CRendererOGL1_5(shared_from_this()));
             
-            std::shared_ptr<CFrameBufferTargetOGL1_5> renderTarget(new CFrameBufferTargetOGL1_5(Width(), Height()));
+            std::shared_ptr<CFrameBufferOGL1_5> renderTarget(new CFrameBufferOGL1_5(Width(), Height()));
             renderTarget->Initialize(0, 0);
             m_DefaultRenderTarget = renderTarget;
         }

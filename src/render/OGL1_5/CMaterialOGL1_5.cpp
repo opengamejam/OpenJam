@@ -185,6 +185,17 @@ void CMaterialOGL1_5::StencilOperations(Operations failOp, Operations zFailOp, O
     m_IsDirty = true;
 }
 
+bool CMaterialOGL1_5::Opacity() const
+{
+    return m_State.opacity;
+}
+
+void CMaterialOGL1_5::Opacity(bool value)
+{
+    m_State.opacity = value;
+    m_IsDirty = true;
+}
+
 const std::string& CMaterialOGL1_5::Hash()
 {
     if (m_IsDirty)
@@ -343,10 +354,22 @@ void CMaterialOGL1_5::ApplyState(IMaterial::MaterialState state, IMaterial::Mate
                     ConvertOperation(state.stencilTest.zPassOp));
     }
     
+    if (state.opacity != prevState.opacity)
+    {
+        if (state.opacity)
+        {
+            glDisable(GL_BLEND);
+        }
+        else
+        {
+            glEnable(GL_BLEND);
+        }
+    }
+    
     {
         //glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
         
-        glEnable(GL_BLEND);
+        
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         
         glShadeModel(GL_SMOOTH);

@@ -105,7 +105,6 @@ void CTransfromationSystem::UpdateTransformsRecursively(IEntityPtr entity,
             IMaterialPtr material = renderComponent->Material();
             if (material && shader)
             {
-                CTransform3Df resultTransform = transformComponent->ResultTransform();
                 material->BindUniformMatrix4x4f(shader->ModelMatrix(), resultTransform());
                 renderComponent->Material(material);
             }

@@ -28,7 +28,7 @@ CIndexBufferOGL2_0::CIndexBufferOGL2_0()
 
 CIndexBufferOGL2_0::~CIndexBufferOGL2_0()
 {
-    Destroy();
+    Shutdown();
 }
 
 void CIndexBufferOGL2_0::Initialize(size_t elementSize)
@@ -40,7 +40,7 @@ void CIndexBufferOGL2_0::Initialize(size_t elementSize)
     ElementSize(elementSize);
 }
 
-void CIndexBufferOGL2_0::Destroy()
+void CIndexBufferOGL2_0::Shutdown()
 {
     if (IsValid())
     {

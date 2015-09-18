@@ -25,7 +25,7 @@ public:
     virtual SVertexStream& Lock(VertexTypes vertexType);
     
     virtual void Initialize(size_t elementSize);
-    virtual void Destroy();
+    virtual void Shutdown();
     virtual bool IsValid() const;
     
     virtual size_t SizeRaw() const;
@@ -35,7 +35,7 @@ public:
     
     virtual void* LockRaw();
     virtual bool IsLocked() const;
-    virtual void Unlock();
+    virtual void Unlock(bool isNeedCommit = false);
     virtual bool HasStream(VertexTypes vertexType);
     
     virtual void ZeroStride(bool isZeroStride);

@@ -31,7 +31,7 @@ CVertexBufferOGL1_3::CVertexBufferOGL1_3()
 
 CVertexBufferOGL1_3::~CVertexBufferOGL1_3()
 {
-    Destroy();
+    Shutdown();
 }
 
 void CVertexBufferOGL1_3::Initialize(size_t elementSize)
@@ -75,7 +75,7 @@ IVertexBuffer::SVertexStream& CVertexBufferOGL1_3::Lock(IVertexBuffer::VertexTyp
     return m_VertexStreamers[vertexType];
 }
 
-void CVertexBufferOGL1_3::Destroy()
+void CVertexBufferOGL1_3::Shutdown()
 {
     if (IsValid())
     {
@@ -117,7 +117,7 @@ bool CVertexBufferOGL1_3::IsLocked() const
     return m_IsLocked;
 }
 
-void CVertexBufferOGL1_3::Unlock()
+void CVertexBufferOGL1_3::Unlock(bool isNeedCommit)
 {
     if (!m_IsLocked)
     {
@@ -125,9 +125,12 @@ void CVertexBufferOGL1_3::Unlock()
     }
     
 #ifdef GL_ARRAY_BUFFER
-    glBindBuffer(GL_ARRAY_BUFFER, m_Id);
-    glBufferData(GL_ARRAY_BUFFER, m_Buffer.size(), m_Buffer.data(), GL_DYNAMIC_DRAW);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    if (isNeedCommit)
+    {
+        glBindBuffer(GL_ARRAY_BUFFER, m_Id);
+        glBufferData(GL_ARRAY_BUFFER, m_Buffer.size(), m_Buffer.data(), GL_DYNAMIC_DRAW);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+    }
 #endif
     
     m_IsLocked = false;
@@ -174,7 +177,7 @@ void CVertexBufferOGL1_3::Bind()
                 glEnableClientState(GL_VERTEX_ARRAY);
                 glVertexPointer(stream.stride, type, elementSize, (GLvoid*)offset);
             }
-            else if (value.first == IVertexBuffer::TextureCoors)
+            else if (value.first == IVertexBuffer::TextureCoords)
             {
                 glEnableClientState(GL_TEXTURE_COORD_ARRAY);
                 glTexCoordPointer(stream.stride, type, elementSize, (GLvoid*)offset);
@@ -215,7 +218,7 @@ void CVertexBufferOGL1_3::Unbind()
             {
                 glDisableClientState(GL_VERTEX_ARRAY);
             }
-            else if (value.first == IVertexBuffer::TextureCoors)
+            else if (value.first == IVertexBuffer::TextureCoords)
             {
                 glDisableClientState(GL_TEXTURE_COORD_ARRAY);
             }

@@ -126,7 +126,7 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, unsigned int came
             
             if (model3D->UVs(group).size() > 0)
             {
-                IVertexBuffer::SVertexStream& textureCoord = vertexBuffer->Lock(IVertexBuffer::TextureCoors);
+                IVertexBuffer::SVertexStream& textureCoord = vertexBuffer->Lock(IVertexBuffer::TextureCoords);
                 textureCoord.attributeIndex = shaderProgram->TextureCoord();
                 textureCoord.dataType = IVertexBuffer::Float;
                 textureCoord.stride = 2;
@@ -148,7 +148,7 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, unsigned int came
                 offset += sizeof(CVertex3Df);
             }
             
-            vertexBuffer->Unlock();
+            vertexBuffer->Unlock(true);
         }
         
         // Index buffer

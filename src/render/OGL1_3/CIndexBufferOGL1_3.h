@@ -22,7 +22,7 @@ public:
     virtual ~CIndexBufferOGL1_3();
     
     virtual void Initialize(size_t elementSize);
-    virtual void Destroy();
+    virtual void Shutdown();
     virtual bool IsValid() const;
     
     virtual size_t SizeRaw() const;

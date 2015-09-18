@@ -95,7 +95,7 @@ CSprite2DPtr CSprite2D::Create(const std::string& filename, unsigned int cameraI
         CColor(1.0f, 1.0f, 1.0f, 1.0f)
     });
     
-    IVertexBuffer::SVertexStream& textureCoord = vertexBuffer->Lock(IVertexBuffer::TextureCoors);
+    IVertexBuffer::SVertexStream& textureCoord = vertexBuffer->Lock(IVertexBuffer::TextureCoords);
     textureCoord.attributeIndex = shaderProgram->TextureCoord();
     textureCoord.dataType = IVertexBuffer::Float;
     textureCoord.stride = 2;
@@ -108,11 +108,11 @@ CSprite2DPtr CSprite2D::Create(const std::string& filename, unsigned int cameraI
         CVector2Df(1.0f, 1.0f)
     });
     
-    vertexBuffer->Unlock();
+    vertexBuffer->Unlock(true);
     
     // Index buffer
     indexBuffer = GRenderer->CreateIndexBuffer();
-    indexBuffer->Initialize(sizeof(unsigned short));
+    indexBuffer->Initialize(sizeof(unsigned short)); // TODO: 
     assert(indexBuffer && indexBuffer->IsValid());
     
     indexBuffer->Resize(6);

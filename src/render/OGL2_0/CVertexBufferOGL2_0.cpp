@@ -30,7 +30,7 @@ CVertexBufferOGL2_0::CVertexBufferOGL2_0()
 
 CVertexBufferOGL2_0::~CVertexBufferOGL2_0()
 {
-    Destroy();
+    Shutdown();
 }
 
 void CVertexBufferOGL2_0::Initialize(size_t elementSize)
@@ -70,7 +70,7 @@ IVertexBuffer::SVertexStream& CVertexBufferOGL2_0::Lock(IVertexBuffer::VertexTyp
     return m_VertexStreamers[vertexType];
 }
 
-void CVertexBufferOGL2_0::Destroy()
+void CVertexBufferOGL2_0::Shutdown()
 {
     if (IsValid())
     {
@@ -110,16 +110,20 @@ bool CVertexBufferOGL2_0::IsLocked() const
     return m_IsLocked;
 }
 
-void CVertexBufferOGL2_0::Unlock()
+void CVertexBufferOGL2_0::Unlock(bool isNeedCommit)
 {
     if (!m_IsLocked)
     {
         return;
     }
     
-    Bind();
-    glBufferData(GL_ARRAY_BUFFER, m_Buffer.size(), m_Buffer.data(), GL_DYNAMIC_DRAW);
-    Unbind();
+    if (isNeedCommit)
+    {
+        Bind();
+        glBufferData(GL_ARRAY_BUFFER, m_Buffer.size(), m_Buffer.data(), GL_DYNAMIC_DRAW);
+        Unbind();
+    }
+    
     m_IsLocked = false;
 }
 

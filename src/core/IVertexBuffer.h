@@ -48,14 +48,14 @@ public:
     IVertexBuffer() = default;
     virtual ~IVertexBuffer() = default;
     
-    virtual void Initialize(size_t elementSize) = 0;
+    virtual void Initialize(uint64_t elementSize) = 0;
     virtual void Destroy() = 0;
     virtual bool IsValid() const = 0;
     
-    virtual size_t ElementSize() const = 0;
+    virtual uint64_t ElementSize() const = 0;
     
-    virtual size_t SizeRaw() const = 0;
-    size_t Size()
+    virtual uint64_t SizeRaw() const = 0;
+    uint64_t Size()
     {
         if (SizeRaw() % ElementSize() == 0)
         {
@@ -64,8 +64,8 @@ public:
         return 0;
     }
     
-    virtual void ResizeRaw(size_t newSize) = 0;
-    void Resize(size_t newSize)
+    virtual void ResizeRaw(uint64_t newSize) = 0;
+    void Resize(uint64_t newSize)
     {
         ResizeRaw(newSize * ElementSize());
     }
@@ -85,7 +85,7 @@ public:
     virtual void Unbind() = 0;
     
 protected:
-    virtual void ElementSize(size_t elementSize) = 0;
+    virtual void ElementSize(uint64_t elementSize) = 0;
 };
     
     

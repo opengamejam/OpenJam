@@ -22,6 +22,7 @@ using namespace jam;
 CIndexBufferOGL1_3::CIndexBufferOGL1_3()
 : m_Id(0)
 , m_ElementSize(1)
+, m_IsLocked(false)
 {
     
 }
@@ -31,7 +32,7 @@ CIndexBufferOGL1_3::~CIndexBufferOGL1_3()
     Destroy();
 }
 
-void CIndexBufferOGL1_3::Initialize(size_t elementSize)
+void CIndexBufferOGL1_3::Initialize(uint64_t elementSize)
 {
     if (!IsValid())
     {
@@ -40,6 +41,7 @@ void CIndexBufferOGL1_3::Initialize(size_t elementSize)
 #else
         m_Id = 1;
 #endif
+        m_Stream = IIndexBuffer::SIndexStream(shared_from_this());
     }
     ElementSize(elementSize);
 }
@@ -60,24 +62,35 @@ bool CIndexBufferOGL1_3::IsValid() const
     return (m_Id != 0);
 }
 
-size_t CIndexBufferOGL1_3::SizeRaw() const
+uint64_t CIndexBufferOGL1_3::SizeRaw() const
 {
     return m_Buffer.size();
 }
 
-void CIndexBufferOGL1_3::ResizeRaw(size_t newSize)
+void CIndexBufferOGL1_3::ResizeRaw(uint64_t newSize)
 {
     m_Buffer.resize(newSize);
 }
 
-size_t CIndexBufferOGL1_3::ElementSize() const
+uint64_t CIndexBufferOGL1_3::ElementSize() const
 {
     return m_ElementSize;
 }
 
 void* CIndexBufferOGL1_3::LockRaw()
 {
+    m_IsLocked = true;
     return m_Buffer.data();
+}
+
+IIndexBuffer::SIndexStream& CIndexBufferOGL1_3::Lock()
+{
+    return m_Stream;
+}
+
+bool CIndexBufferOGL1_3::IsLocked() const
+{
+    return m_IsLocked;
 }
 
 void CIndexBufferOGL1_3::Unlock()
@@ -86,6 +99,7 @@ void CIndexBufferOGL1_3::Unlock()
     Bind();
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_Buffer.size(), m_Buffer.data(), GL_DYNAMIC_DRAW);
     Unbind();
+    m_IsLocked = false;
 #endif
 }
 
@@ -107,9 +121,9 @@ void CIndexBufferOGL1_3::Unbind()
 // Protected Methods
 // *****************************************************************************
 
-void CIndexBufferOGL1_3::ElementSize(size_t elementSize)
+void CIndexBufferOGL1_3::ElementSize(uint64_t elementSize)
 {
-    m_ElementSize = std::max<size_t>(elementSize, 1);
+    m_ElementSize = std::max<uint64_t>(elementSize, 1);
 }
 
 // *****************************************************************************

@@ -159,17 +159,13 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, unsigned int came
             assert(indexBuffer && indexBuffer->IsValid());
             
             indexBuffer->Resize(model3D->Indices(group).size());
-            unsigned short* lockedIndex = indexBuffer->Lock<unsigned short>();
-            if (lockedIndex)
+            IIndexBuffer::SIndexStream& streamIndex = indexBuffer->Lock();
+            
+            const std::vector<unsigned int>& indices = model3D->Indices(group);
+            std::for_each(indices.begin(), indices.end(), [&](unsigned int face)
             {
-                const std::vector<unsigned int>& indices = model3D->Indices(group);
-                std::for_each(indices.begin(), indices.end(), [&](unsigned int face)
-                {
-                    *lockedIndex++ = face;
-                });
-                
-                //memcpy(lockedIndex, model3D->Indices(group).data(), model3D->Indices(group).size() * sizeof(unsigned short));
-            }
+                streamIndex.Set<unsigned short>(0, face);
+            });
             indexBuffer->Unlock();
         }
 

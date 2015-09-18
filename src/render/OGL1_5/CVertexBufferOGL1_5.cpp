@@ -33,7 +33,7 @@ CVertexBufferOGL1_5::~CVertexBufferOGL1_5()
     Destroy();
 }
 
-void CVertexBufferOGL1_5::Initialize(size_t elementSize)
+void CVertexBufferOGL1_5::Initialize(uint64_t elementSize)
 {
     if (!IsValid())
     {
@@ -84,17 +84,17 @@ bool CVertexBufferOGL1_5::IsValid() const
     return (m_Id != 0);
 }
 
-size_t CVertexBufferOGL1_5::SizeRaw() const
+uint64_t CVertexBufferOGL1_5::SizeRaw() const
 {
     return m_Buffer.size();
 }
 
-void CVertexBufferOGL1_5::ResizeRaw(size_t newSize)
+void CVertexBufferOGL1_5::ResizeRaw(uint64_t newSize)
 {
     m_Buffer.resize(newSize);
 }
 
-size_t CVertexBufferOGL1_5::ElementSize() const
+uint64_t CVertexBufferOGL1_5::ElementSize() const
 {
     return m_ElementSize;
 }
@@ -219,9 +219,9 @@ void CVertexBufferOGL1_5::Unbind()
 // Protected Methods
 // *****************************************************************************
 
-void CVertexBufferOGL1_5::ElementSize(size_t elementSize)
+void CVertexBufferOGL1_5::ElementSize(uint64_t elementSize)
 {
-    m_ElementSize = std::max<size_t>(elementSize, 1);
+    m_ElementSize = std::max<uint64_t>(elementSize, 1);
 }
 
 // *****************************************************************************

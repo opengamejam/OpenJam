@@ -116,16 +116,9 @@ CSprite2DPtr CSprite2D::Create(const std::string& filename, unsigned int cameraI
     assert(indexBuffer && indexBuffer->IsValid());
     
     indexBuffer->Resize(6);
-    unsigned short* lockedIndex = indexBuffer->Lock<unsigned short>();
-    if (lockedIndex)
-    {
-        lockedIndex[0] = 0;
-        lockedIndex[1] = 1;
-        lockedIndex[2] = 3;
-        lockedIndex[3] = 0;
-        lockedIndex[4] = 2;
-        lockedIndex[5] = 3;
-    }
+    IIndexBuffer::SIndexStream& indices = indexBuffer->Lock();
+    indices.dataType = IIndexBuffer::UShort;
+    indices.Set<unsigned short>(0, {0, 1, 3, 0, 2, 3});
     indexBuffer->Unlock();
 
     // Mesh

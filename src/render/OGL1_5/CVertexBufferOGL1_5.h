@@ -24,14 +24,14 @@ public:
     virtual const TVertexStreamMap& VertexStreams() const;
     virtual SVertexStream& Lock(VertexTypes vertexType);
     
-    virtual void Initialize(size_t elementSize);
+    virtual void Initialize(uint64_t elementSize);
     virtual void Destroy();
     virtual bool IsValid() const;
     
-    virtual size_t SizeRaw() const;
-    virtual void ResizeRaw(size_t newSize);
+    virtual uint64_t SizeRaw() const;
+    virtual void ResizeRaw(uint64_t newSize);
     
-    virtual size_t ElementSize() const;
+    virtual uint64_t ElementSize() const;
     
     virtual void* LockRaw();
     virtual bool IsLocked() const;
@@ -45,7 +45,7 @@ public:
     virtual void Unbind();
     
 protected:
-    virtual void ElementSize(size_t elementSize);
+    virtual void ElementSize(uint64_t elementSize);
     
 private:
     int ConvertDataType(DataTypes dataType);
@@ -53,7 +53,7 @@ private:
 private:
     unsigned int m_Id;
     std::vector<char> m_Buffer;
-    size_t m_ElementSize;
+    uint64_t m_ElementSize;
     bool m_IsLocked;
     TVertexStreamMap m_VertexStreamers;
     bool m_ZeroStride;

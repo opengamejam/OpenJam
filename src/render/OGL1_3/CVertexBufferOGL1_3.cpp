@@ -31,7 +31,7 @@ CVertexBufferOGL1_3::CVertexBufferOGL1_3()
 
 CVertexBufferOGL1_3::~CVertexBufferOGL1_3()
 {
-    Destroy();
+    Shutdown();
 }
 
 void CVertexBufferOGL1_3::Initialize(uint64_t elementSize)
@@ -75,7 +75,7 @@ IVertexBuffer::SVertexStream& CVertexBufferOGL1_3::Lock(IVertexBuffer::VertexTyp
     return m_VertexStreamers[vertexType];
 }
 
-void CVertexBufferOGL1_3::Destroy()
+void CVertexBufferOGL1_3::Shutdown()
 {
     if (IsValid())
     {

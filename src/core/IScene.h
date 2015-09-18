@@ -38,7 +38,7 @@ public:
     virtual const TCamerasList& Cameras() const;
     virtual void AddCamera(ICameraPtr camera);
     virtual void RemoveCamera(ICameraPtr camera);
-    virtual void RemoveCameraById(unsigned int cameraId);
+    virtual void RemoveCameraById(uint32_t cameraId);
     virtual void RemoveAllCameras();
 
     virtual IEntityPtr Root();

@@ -31,22 +31,22 @@ public:
     virtual bool Link() = 0;
     virtual bool IsLinked() const = 0;
     
-    virtual unsigned int Attribute(const std::string& name) = 0;
-    virtual unsigned int Uniform(const std::string& name) = 0;
+    virtual uint32_t Attribute(const std::string& name) = 0;
+    virtual uint32_t Uniform(const std::string& name) = 0;
     
-    virtual unsigned int VertexPosition() = 0;
-    virtual unsigned int TextureCoord() = 0;
-    virtual unsigned int VertexColor() = 0;
-    virtual unsigned int MainTexture() = 0;
-    virtual unsigned int MainColor() = 0;
-    virtual unsigned int ProjectionMatrix() = 0;
-    virtual unsigned int ModelMatrix() = 0;
+    virtual uint32_t VertexPosition() = 0;
+    virtual uint32_t TextureCoord() = 0;
+    virtual uint32_t VertexColor() = 0;
+    virtual uint32_t MainTexture() = 0;
+    virtual uint32_t MainColor() = 0;
+    virtual uint32_t ProjectionMatrix() = 0;
+    virtual uint32_t ModelMatrix() = 0;
     
-    virtual unsigned int Texture(unsigned int index) = 0;
-    virtual unsigned int DiffuseTexture() = 0;
-    virtual unsigned int NormalTexture() = 0;
-    virtual unsigned int SpecularTexture() = 0;
-    virtual unsigned int EnvironmentTexture() = 0;
+    virtual uint32_t Texture(uint32_t index) = 0;
+    virtual uint32_t DiffuseTexture() = 0;
+    virtual uint32_t NormalTexture() = 0;
+    virtual uint32_t SpecularTexture() = 0;
+    virtual uint32_t EnvironmentTexture() = 0;
 };
     
 }; // namespace jam

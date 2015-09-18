@@ -12,7 +12,10 @@ using namespace jam;
 // *****************************************************************************
 // Constants
 // *****************************************************************************
-const std::map<unsigned long long, TexelProps> CImagePVR::s_TexelProps =
+
+const size_t CImagePVR::s_PVRT_HEADER_SIZE = sizeof(CImagePVR::PVRTHeader);
+
+const std::map<uint64_t, TexelProps> CImagePVR::s_TexelProps =
 {
     std::make_pair(0x0000000000000000ULL, TexelProps(TF_PVRTC2,        TT_UByte,   2)),
     std::make_pair(0x0000000000000001ULL, TexelProps(TF_PVRTC2Alpha,   TT_UByte,   2)),
@@ -57,7 +60,7 @@ bool CImagePVR::Load()
 		const IResource::TResourceData& data = IResource::RawData();
 
 		PVRTHeader header;
-		memset(&header, 0, sizeof(header));
+		memset(&header, 0, s_PVRT_HEADER_SIZE);
         memcpy(&header, &data[0], s_PVRT_HEADER_SIZE);
 
         assert(header.numsurfaces == 1); // "Multiple Surfaces not supported");
@@ -67,7 +70,7 @@ bool CImagePVR::Load()
         m_Height = header.height;
         m_Mipmaps = header.mipmapcount;
         
-        std::map<unsigned long long, TexelProps>::const_iterator prop = s_TexelProps.find(header.pixelformat);
+        std::map<uint64_t, TexelProps>::const_iterator prop = s_TexelProps.find(header.pixelformat);
         assert(prop != s_TexelProps.end());
         m_TexelProps = prop->second;
 
@@ -86,27 +89,27 @@ const IResource::TResourceData& CImagePVR::RawData()
     return m_Data; 
 }
 
-unsigned int CImagePVR::Width() const
+uint32_t CImagePVR::Width() const
 {
     return m_Width;
 }
 
-unsigned int CImagePVR::Height() const
+uint32_t CImagePVR::Height() const
 {
     return m_Height;
 }
 
-unsigned int CImagePVR::Bpp() const
+uint32_t CImagePVR::Bpp() const
 {
     return m_TexelProps.bpp;
 }
 
-unsigned int CImagePVR::MipsCount() const
+uint32_t CImagePVR::MipsCount() const
 {
     return m_Mipmaps;
 }
 
-unsigned int CImagePVR::IsCompressed() const
+bool CImagePVR::IsCompressed() const
 {
     return (m_TexelProps.texelFormat > TF_BGRA8888);
 }

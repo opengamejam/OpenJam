@@ -30,7 +30,7 @@ CVertexBufferOGL2_0::CVertexBufferOGL2_0()
 
 CVertexBufferOGL2_0::~CVertexBufferOGL2_0()
 {
-    Destroy();
+    Shutdown();
 }
 
 void CVertexBufferOGL2_0::Initialize(uint64_t elementSize)
@@ -70,7 +70,7 @@ IVertexBuffer::SVertexStream& CVertexBufferOGL2_0::Lock(IVertexBuffer::VertexTyp
     return m_VertexStreamers[vertexType];
 }
 
-void CVertexBufferOGL2_0::Destroy()
+void CVertexBufferOGL2_0::Shutdown()
 {
     if (IsValid())
     {

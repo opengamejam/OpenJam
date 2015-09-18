@@ -23,11 +23,11 @@ using namespace jam;
 CShaderProgramOGL2_0::CShaderProgramOGL2_0()
 : IShaderProgram()
 , m_ProgramObject(0)
-, m_ProectionMatrixHadle(-1)
-, m_VertexCoordHandle(-1)
-, m_TextureCoordHandle(-1)
-, m_VertexColorHandle(-1)
-, m_ColorHandle(-1)
+, m_ProectionMatrixHadle(-1u)
+, m_VertexCoordHandle(-1u)
+, m_TextureCoordHandle(-1u)
+, m_VertexColorHandle(-1u)
+, m_ColorHandle(-1u)
 , m_IsLinked(false)
 {
     m_ProgramObject = glCreateProgram();
@@ -35,7 +35,7 @@ CShaderProgramOGL2_0::CShaderProgramOGL2_0()
     m_TextureDataHadle.resize(IMaterial::MaxSamplingTextures);
     for (size_t i = 0; i < m_TextureDataHadle.size(); ++i)
     {
-        m_TextureDataHadle[i] = -1;
+        m_TextureDataHadle[i] = -1u;
     }
 }
 
@@ -135,76 +135,76 @@ bool CShaderProgramOGL2_0::IsLinked() const
     return m_IsLinked;
 }
 
-unsigned int CShaderProgramOGL2_0::Attribute(const std::string& name)
+uint32_t CShaderProgramOGL2_0::Attribute(const std::string& name)
 {
     return glGetAttribLocation(m_ProgramObject, name.c_str());
 }
 
-unsigned int CShaderProgramOGL2_0::Uniform(const std::string& name)
+uint32_t CShaderProgramOGL2_0::Uniform(const std::string& name)
 {
     return glGetUniformLocation(m_ProgramObject, name.c_str());
 }
 
-unsigned int CShaderProgramOGL2_0::VertexPosition()
+uint32_t CShaderProgramOGL2_0::VertexPosition()
 {
     return m_VertexCoordHandle;
 }
 
-unsigned int CShaderProgramOGL2_0::TextureCoord()
+uint32_t CShaderProgramOGL2_0::TextureCoord()
 {
     return m_TextureCoordHandle;
 }
 
-unsigned int CShaderProgramOGL2_0::VertexColor()
+uint32_t CShaderProgramOGL2_0::VertexColor()
 {
     return m_VertexColorHandle;
 }
 
-unsigned int CShaderProgramOGL2_0::MainTexture()
+uint32_t CShaderProgramOGL2_0::MainTexture()
 {
     return m_TextureDataHadle[0];
 }
 
-unsigned int CShaderProgramOGL2_0::MainColor()
+uint32_t CShaderProgramOGL2_0::MainColor()
 {
     return m_ColorHandle;
 }
 
-unsigned int CShaderProgramOGL2_0::ProjectionMatrix()
+uint32_t CShaderProgramOGL2_0::ProjectionMatrix()
 {
     return m_ProectionMatrixHadle;
 }
 
-unsigned int CShaderProgramOGL2_0::ModelMatrix()
+uint32_t CShaderProgramOGL2_0::ModelMatrix()
 {
     return m_ModelMatrixHadle;
 }
 
-unsigned int CShaderProgramOGL2_0::Texture(unsigned int index)
+uint32_t CShaderProgramOGL2_0::Texture(uint32_t index)
 {
     if (index < IMaterial::MaxSamplingTextures)
     {
         return m_TextureDataHadle[index];
     }
-    return -1;
+    return -1u;
 }
 
-unsigned int CShaderProgramOGL2_0::DiffuseTexture()
+uint32_t CShaderProgramOGL2_0::DiffuseTexture()
 {
     return m_TextureDataHadle[0];
 }
 
-unsigned int CShaderProgramOGL2_0::NormalTexture()
+uint32_t CShaderProgramOGL2_0::NormalTexture()
 {
     return m_TextureDataHadle[1];
 }
 
-unsigned int CShaderProgramOGL2_0::SpecularTexture()
+uint32_t CShaderProgramOGL2_0::SpecularTexture()
 {
     return m_TextureDataHadle[2];
 }
 
-unsigned int CShaderProgramOGL2_0::EnvironmentTexture()
+uint32_t CShaderProgramOGL2_0::EnvironmentTexture()
 {
     return m_TextureDataHadle[3];
 }

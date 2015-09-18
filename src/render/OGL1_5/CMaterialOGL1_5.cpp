@@ -168,7 +168,7 @@ void CMaterialOGL1_5::StencilEnable(bool value)
     m_IsDirty = true;
 }
 
-void CMaterialOGL1_5::StencilFunc(TestFuncs func, unsigned int ref, unsigned int mask)
+void CMaterialOGL1_5::StencilFunc(TestFuncs func, uint32_t ref, uint32_t mask)
 {
     m_State.stencilTest.func = func;
     m_State.stencilTest.ref = ref;

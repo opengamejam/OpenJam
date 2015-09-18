@@ -17,51 +17,51 @@ class CImageDreamPVR : public IImage
 public:
     virtual ~CImageDreamPVR();
     
-    virtual bool            Load();
+    virtual bool Load();
     virtual const TResourceData& RawData();
-    virtual unsigned int    Width() const;
-    virtual unsigned int    Height() const;
-    virtual unsigned int    Bpp() const;
-    virtual unsigned int    MipsCount() const;
-	virtual unsigned int    IsCompressed() const;
-    virtual TexelFormats    TexelFormat() const;
-    virtual TexelTypes      TexelType() const;
+    virtual uint32_t Width() const;
+    virtual uint32_t Height() const;
+    virtual uint32_t Bpp() const;
+    virtual uint32_t MipsCount() const;
+	virtual bool IsCompressed() const;
+    virtual TexelFormats TexelFormat() const;
+    virtual TexelTypes TexelType() const;
     
     CImageDreamPVR(const std::string& filename, const std::string& loader = "");
 
 private:
-    unsigned int 			TextureFormat(unsigned char* header);
+    uint32_t TextureFormat(unsigned char* header);
 
     
 private:
-    unsigned int            m_Width;
-    unsigned int            m_Height;
-    unsigned int            m_Mipmaps;
-    TResourceData	        m_Data;
-    TexelProps              m_TexelProps;
-    bool 					m_IsCompressed;
+    uint32_t m_Width;
+    uint32_t m_Height;
+    uint32_t m_Mipmaps;
+    TResourceData m_Data;
+    TexelProps m_TexelProps;
+    bool m_IsCompressed;
     
 	#pragma pack(push,1)
-	struct GBIXHeader                       // Global index header
+	struct GBIXHeader               // Global index header
 	{
-		unsigned int        version;        // ID, "GBIX" in ASCII
-		unsigned int        nextTagOffset;  // Bytes number to the next tag
-		unsigned long long	globalIndex;
+		uint32_t version;           // ID, "GBIX" in ASCII
+		uint32_t nextTagOffset;     // Bytes number to the next tag
+		uint64_t globalIndex;
 	};
 	#pragma pack(pop)
 
 	#pragma pack(push,1)
 	struct PVRTHeader
 	{
-		unsigned int        version;            // ID, "PVRT" in ASCII
-		unsigned int        textureDataSize;
-		unsigned int        textureAttributes;
-		unsigned short      width;              // Width of the texture.
-		unsigned short      height;             // Height of the texture.
+		uint32_t version;            // ID, "PVRT" in ASCII
+		uint32_t textureDataSize;
+		uint32_t textureAttributes;
+		uint16_t width;              // Width of the texture.
+		uint16_t height;             // Height of the texture.
 	};
 	#pragma pack(pop)
     
-    static const std::map<unsigned long long, TexelProps> s_TexelProps;
+    static const std::map<uint64_t, TexelProps> s_TexelProps;
 };
 
 }; // namespace jam

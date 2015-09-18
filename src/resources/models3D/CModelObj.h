@@ -22,14 +22,14 @@ public:
     CModelObj(const std::string& filename);
     virtual ~CModelObj();
     
-    virtual bool Load();
+    virtual bool Load() override;
     
-    virtual const std::vector<CVector3Df>& Vertices(const std::string& group = "default");
-    virtual const std::vector<CVector3Df>& Normals(const std::string& group = "default");
-    virtual const std::vector<CVector2Df>& UVs(const std::string& group = "default");
-    virtual const std::vector<unsigned int>& Indices(const std::string& group = "default");
-    virtual const std::string& TextureName(const std::string& group = "default");
-    virtual const std::set<std::string>& Groups() const;
+    virtual const std::vector<CVector3Df>& Vertices(const std::string& group = "default") override;
+    virtual const std::vector<CVector3Df>& Normals(const std::string& group = "default") override;
+    virtual const std::vector<CVector2Df>& UVs(const std::string& group = "default") override;
+    virtual const std::vector<unsigned int>& Indices(const std::string& group = "default") override;
+    virtual const std::string& TextureName(const std::string& group = "default") override;
+    virtual const std::set<std::string>& Groups() const override;
     
 private:
     bool ParseLine(const std::string& line,

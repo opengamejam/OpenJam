@@ -38,7 +38,7 @@ public:
     virtual IMeshPtr CreateMesh() = 0;
     virtual IShaderPtr CreateShader() = 0;
     virtual IShaderProgramPtr CreateShaderProgram() = 0;
-    virtual IRenderTargetPtr CreateRenderTarget(unsigned int width, unsigned int height) = 0;
+    virtual IRenderTargetPtr CreateRenderTarget(uint32_t width, uint32_t height) = 0;
     
     virtual void Draw(IMeshPtr mesh, IMaterialPtr material, IShaderProgramPtr shader) = 0;
     virtual void Draw(IVertexBufferPtr vertexBuffer, IMaterialPtr material) = 0;

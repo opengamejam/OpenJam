@@ -16,7 +16,7 @@ namespace jam
 {
 CLASS_PTR(IEvent);
     
-class IEventDispatcher
+class IEventDispatcher final
 {
 public:
     typedef std::function<bool(IEventPtr event)> TEventHandler;
@@ -25,7 +25,7 @@ public:
     
 public:
     IEventDispatcher() = default;
-    virtual ~IEventDispatcher() = default;
+    ~IEventDispatcher() = default;
     
     template<typename T>
     void RegisterEventHandler(const TEventHandler& eventHandler)

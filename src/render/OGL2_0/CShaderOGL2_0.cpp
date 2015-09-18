@@ -19,7 +19,7 @@ using namespace jam;
 // Public Methods
 // *****************************************************************************
 
-INL unsigned int ShaderTypeToGlType(IShader::ShaderType type);
+INL uint32_t ShaderTypeToGlType(IShader::ShaderType type);
 
 CShaderOGL2_0::CShaderOGL2_0()
 : IShader()
@@ -33,7 +33,7 @@ CShaderOGL2_0::~CShaderOGL2_0()
 {
 }
 
-unsigned int CShaderOGL2_0::Id()
+uint32_t CShaderOGL2_0::Id()
 {
     return m_Id;
 }
@@ -42,7 +42,7 @@ bool CShaderOGL2_0::Compile(const std::string& source, ShaderType shaderType)
 {
     m_IsCompiled = false;
     
-    unsigned int glType = ShaderTypeToGlType(shaderType);
+    uint32_t glType = ShaderTypeToGlType(shaderType);
     
     std::string sourceDefined = MULTI_LINE_STRING(\n#define OGL2_0\n);
     sourceDefined.append(source);
@@ -93,9 +93,9 @@ IShader::ShaderType CShaderOGL2_0::Type() const
 // Private Methods
 // *****************************************************************************
 
-INL unsigned int ShaderTypeToGlType(IShader::ShaderType type)
+INL uint32_t ShaderTypeToGlType(IShader::ShaderType type)
 {
-    unsigned int glType = GL_VERTEX_SHADER;
+    uint32_t glType = GL_VERTEX_SHADER;
     switch (type)
     {
         case IShader::Vertex:

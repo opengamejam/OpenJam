@@ -49,7 +49,7 @@ public:
     virtual ~IVertexBuffer() = default;
     
     virtual void Initialize(uint64_t elementSize) = 0;
-    virtual void Destroy() = 0;
+    virtual void Shutdown() = 0;
     virtual bool IsValid() const = 0;
     
     virtual uint64_t ElementSize() const = 0;

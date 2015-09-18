@@ -89,7 +89,7 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, unsigned int came
         material->DepthEnable(true);
         
         // Vertex buffer
-        size_t elementSize = 0;
+        uint32_t elementSize = 0;
         if (model3D->Vertices(group).size() > 0)
         {
             elementSize += sizeof(CVector3Df);
@@ -110,7 +110,7 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, unsigned int came
             material->CullFace(false); // TODO: temp
             assert(vertexBuffer && vertexBuffer->IsValid());
             
-            size_t offset = 0;
+            uint32_t offset = 0;
             if (model3D->Vertices(group).size() > 0)
             {
                 vertexBuffer->Resize(model3D->Vertices(group).size());

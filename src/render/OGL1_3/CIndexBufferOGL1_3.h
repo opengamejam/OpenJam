@@ -21,25 +21,25 @@ public:
     CIndexBufferOGL1_3();
     virtual ~CIndexBufferOGL1_3();
     
-    virtual void Initialize(uint64_t elementSize);
-    virtual void Destroy();
-    virtual bool IsValid() const;
+    virtual void Initialize(uint64_t elementSize) override;
+    virtual void Destroy() override;
+    virtual bool IsValid() const override;
     
-    virtual uint64_t SizeRaw() const;
-    virtual void ResizeRaw(uint64_t newSize);
+    virtual uint64_t SizeRaw() const override;
+    virtual void ResizeRaw(uint64_t newSize) override;
     
-    virtual uint64_t ElementSize() const;
+    virtual uint64_t ElementSize() const override;
     
-    virtual void* LockRaw();
-    virtual SIndexStream& Lock();
-    virtual bool IsLocked() const;
-    virtual void Unlock();
+    virtual void* LockRaw() override;
+    virtual SIndexStream& Lock() override;
+    virtual bool IsLocked() const override;
+    virtual void Unlock() override;
     
-    virtual void Bind();
-    virtual void Unbind();
+    virtual void Bind() override;
+    virtual void Unbind() override;
     
 protected:
-    virtual void ElementSize(uint64_t elementSize);
+    virtual void ElementSize(uint64_t elementSize) override;
     
 private:
     unsigned int m_Id;

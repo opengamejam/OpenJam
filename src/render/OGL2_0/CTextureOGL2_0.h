@@ -21,20 +21,21 @@ public:
     CTextureOGL2_0();
     virtual ~CTextureOGL2_0();
     
-    virtual void Bind();
-    virtual void Unbind();
-    virtual bool IsValid() const;
+    virtual bool AssignImage(IImagePtr image) override;
     
-    virtual void Filter(TextureFilters filter);
-    virtual TextureFilters Filter() const;
-    virtual bool AssignImage(IImagePtr image);
-    virtual const std::string& Hash();
+    virtual void Filter(TextureFilters filter) override;
+    virtual TextureFilters Filter() const override;
+    
+    virtual void Bind() override;
+    virtual void Unbind() override;
+    virtual const std::string& Hash() override;
     
 private:
+    bool IsValid() const;
     void HashMe();
     
 private:
-    unsigned int m_Id;
+    uint32_t m_Id;
     
     TextureFilters m_Filter;
     std::string m_Hash;

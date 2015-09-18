@@ -55,7 +55,7 @@ CCamera3D::~CCamera3D()
 
 }
 
-unsigned int CCamera3D::Id() const
+uint64_t CCamera3D::Id() const
 {
     return m_Id;
 }

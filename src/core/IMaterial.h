@@ -100,8 +100,8 @@ public:
             bool isEnabled;
             
             TestFuncs func;
-            unsigned int ref;
-            unsigned int mask;
+            uint32_t ref;
+            uint32_t mask;
             
             Operations failOp;
             Operations zFailOp;
@@ -173,11 +173,13 @@ public:
     
     virtual bool StencilEnable() const = 0;
     virtual void StencilEnable(bool value) = 0;
-    virtual void StencilFunc(TestFuncs func, unsigned int ref, unsigned int mask) = 0;
+    virtual void StencilFunc(TestFuncs func, uint32_t ref, uint32_t mask) = 0;
     virtual void StencilOperations(Operations failOp, Operations zFailOp, Operations zPassOp) = 0;
     
     virtual bool Opacity() const = 0;
     virtual void Opacity(bool value) = 0;
+    
+    virtual const std::string& Hash() = 0;
 };
 
 }; // namespace jam

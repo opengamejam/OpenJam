@@ -1,5 +1,5 @@
 //
-//  IScene.h
+//  IShader.h
 //  OpenJam
 //
 //  Created by yev
@@ -29,7 +29,7 @@ public:
     IShader() = default;
     virtual ~IShader() = default;
 
-    virtual unsigned int Id() = 0;
+    virtual uint32_t Id() = 0;
     virtual bool Compile(const std::string& source, ShaderType shaderType) = 0;
     virtual bool IsCompiled() const = 0;
     virtual ShaderType Type() const = 0;

@@ -8,7 +8,6 @@
 #if defined(RENDER_OGL2_0) || defined(RENDER_OGLES2_0)
 
 #include "CMaterialOGL2_0.h"
-#include "IStencil.h"
 
 using namespace jam;
 

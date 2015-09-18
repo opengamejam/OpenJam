@@ -15,8 +15,6 @@
 namespace jam
 {
     
-CLASS_PTR(IStencil);
-    
 class IMaterial
 {
 public:

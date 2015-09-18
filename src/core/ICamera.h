@@ -21,13 +21,13 @@ public:
     ICamera() = default;
     virtual ~ICamera() = default;
     
-    static unsigned int NextCameraId()
+    static uint32_t NextCameraId()
     {
-        static unsigned int nextId;
+        static uint32_t nextId;
         return nextId++;
     }
     
-    virtual unsigned int Id() const = 0;
+    virtual uint32_t Id() const = 0;
     
     virtual CMatrix4x4f ProjectionMatrix() = 0;
     virtual IRenderTargetPtr RenderTarget() const = 0;

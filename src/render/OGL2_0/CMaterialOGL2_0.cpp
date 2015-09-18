@@ -8,7 +8,6 @@
 #if defined(RENDER_OGL2_0) || defined(RENDER_OGLES2_0)
 
 #include "CMaterialOGL2_0.h"
-#include "IStencil.h"
 
 using namespace jam;
 
@@ -169,7 +168,7 @@ void CMaterialOGL2_0::StencilEnable(bool value)
     m_IsDirty = true;
 }
 
-void CMaterialOGL2_0::StencilFunc(TestFuncs func, unsigned int ref, unsigned int mask)
+void CMaterialOGL2_0::StencilFunc(TestFuncs func, uint32_t ref, uint32_t mask)
 {
     m_State.stencilTest.func = func;
     m_State.stencilTest.ref = ref;

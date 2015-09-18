@@ -18,7 +18,7 @@ CLASS_PTR(IRenderTarget);
 class IRenderView : public std::enable_shared_from_this<IRenderView>
 {
 public:
-	IRenderView(unsigned int width, unsigned int height)
+	IRenderView(uint32_t width, uint32_t height)
 		: m_Width(width)
 		, m_Height(height)
 	{}
@@ -30,12 +30,12 @@ public:
     virtual void UpdateEvents() const = 0;
 
     virtual IRenderTargetPtr DefaultRenderTarget() const = 0;
-	INL unsigned int Width() const { return m_Width; }
-	INL unsigned int Height() const { return m_Height; }
+	INL uint32_t Width() const { return m_Width; }
+	INL uint32_t Height() const { return m_Height; }
 
 private:
-	unsigned int m_Width;
-	unsigned int m_Height;
+	uint32_t m_Width;
+	uint32_t m_Height;
 };
 
 }; // namespace jam

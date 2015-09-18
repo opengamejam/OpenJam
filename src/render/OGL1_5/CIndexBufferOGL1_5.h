@@ -21,28 +21,32 @@ public:
     CIndexBufferOGL1_5();
     virtual ~CIndexBufferOGL1_5();
     
-    virtual void Initialize(size_t elementSize);
-    virtual void Shutdown();
-    virtual bool IsValid() const;
+    virtual void Initialize(uint64_t elementSize) override;
+    virtual void Shutdown() override;
+    virtual bool IsValid() const override;
     
-    virtual size_t SizeRaw() const;
-    virtual void ResizeRaw(size_t newSize);
+    virtual uint64_t SizeRaw() const override;
+    virtual void ResizeRaw(uint64_t newSize) override;
     
-    virtual size_t ElementSize() const;
+    virtual uint64_t ElementSize() const override;
     
-    virtual void* LockRaw();
-    virtual void Unlock();
+    virtual void* LockRaw() override;
+    virtual SIndexStream& Lock() override;
+    virtual bool IsLocked() const override;
+    virtual void Unlock() override;
     
-    virtual void Bind();
-    virtual void Unbind();
+    virtual void Bind() override;
+    virtual void Unbind() override;
     
 protected:
-    virtual void ElementSize(size_t elementSize);
+    virtual void ElementSize(uint64_t elementSize) override;
     
 private:
     unsigned int m_Id;
     std::vector<char> m_Buffer;
-    size_t m_ElementSize;
+    uint64_t m_ElementSize;
+    bool m_IsLocked;
+    SIndexStream m_Stream;
 };
     
 }; // namespace jam

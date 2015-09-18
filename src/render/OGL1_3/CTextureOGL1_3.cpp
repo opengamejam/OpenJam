@@ -149,11 +149,6 @@ void CTextureOGL1_3::Unbind()
     glBindTexture(GL_TEXTURE_2D, 0);    // TODO: texture type
 }
 
-bool CTextureOGL1_3::IsValid() const
-{
-    return (m_Id != 0);
-}
-
 void CTextureOGL1_3::Filter(ITexture::TextureFilters filter)
 {
     if (!IsValid())
@@ -201,12 +196,12 @@ bool CTextureOGL1_3::AssignImage(IImagePtr image)
         int glFormat = TexelFormatsToGlFormat(image->TexelFormat());
         int glType = TexelTypeToGlType(image->TexelType(), image->TexelFormat());
         
-        size_t mipDataOffset = 0;
-        for (unsigned int i = 0; i < image->MipsCount(); ++i)
+        uint32_t mipDataOffset = 0;
+        for (uint32_t i = 0; i < image->MipsCount(); ++i)
         {
-            unsigned int mipWidth = std::max<unsigned int>(image->Width() >> i, 1);
-            unsigned int mipHeight = std::max<unsigned int>(image->Height() >> i, 1);
-            size_t mipSize = std::max<unsigned int>(32, mipWidth * mipHeight * image->Bpp() / 8);
+            uint32_t mipWidth = std::max<uint32_t>(image->Width() >> i, 1);
+            uint32_t mipHeight = std::max<uint32_t>(image->Height() >> i, 1);
+            uint32_t mipSize = std::max<uint32_t>(32, mipWidth * mipHeight * image->Bpp() / 8);
             
             if (image->IsCompressed())
             {
@@ -264,6 +259,11 @@ void CTextureOGL1_3::HashMe()
     ss << Filter();
     
     m_Hash = ss.str();
+}
+
+bool CTextureOGL1_3::IsValid() const
+{
+    return (m_Id != 0);
 }
 
 INL float TextureFilterToGlFilter(ITexture::TextureFilters filter)

@@ -20,8 +20,8 @@ using namespace jam;
 
 CImageRaw::CImageRaw(const std::string& filename,
                      const IResource::TResourceData& data,
-                     unsigned int width,
-                     unsigned int height,
+                     uint32_t width,
+                     uint32_t height,
                      const TexelProps& texelProps)
 : IImage(filename, data)
 , m_Width(width)
@@ -41,27 +41,27 @@ bool CImageRaw::Load()
     return true;
 }
 
-unsigned int CImageRaw::Width() const
+uint32_t CImageRaw::Width() const
 {
     return m_Width;
 }
 
-unsigned int CImageRaw::Height() const
+uint32_t CImageRaw::Height() const
 {
     return m_Height;
 }
 
-unsigned int CImageRaw::Bpp() const
+uint32_t CImageRaw::Bpp() const
 {
     return m_TexelProps.bpp;
 }
 
-unsigned int CImageRaw::MipsCount() const
+uint32_t CImageRaw::MipsCount() const
 {
     return 1;
 }
 
-unsigned int CImageRaw::IsCompressed() const
+bool CImageRaw::IsCompressed() const
 {
     return false;
 }

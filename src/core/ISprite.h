@@ -19,7 +19,7 @@ class CTextureFrame
 {
 public:
     CTextureFrame(const std::string& _name = "",
-                  unsigned int _textureIdx = 0,
+                  uint32_t _textureIdx = 0,
                   const CVector2Df& _u = CVector2Df(),
                   const CVector2Df& _v = CVector2Df())
         : name(_name)
@@ -29,7 +29,7 @@ public:
     {}
     
     std::string name;
-    unsigned int textureIdx;
+    uint32_t textureIdx;
     CVector2Df u;
     CVector2Df v;
 };
@@ -40,7 +40,7 @@ struct CFrameDef
               float _offsetY = 0,
               float _originalWidth = 0,
               float _originalHeight = 0,
-              unsigned int _animDuration = 50)
+              uint32_t _animDuration = 50)
         : offsetX(_offsetX)
         , offsetY(_offsetY)
         , originalWidth(_originalWidth)
@@ -57,11 +57,11 @@ struct CFrameDef
 		animDuration = 50;
 	}
 
-	float        offsetX;		// Additional offset on X axis, used for centering frame for animation
-	float        offsetY;		// Additional offset on Y axis, used for centering frame for animation
-	float        originalWidth; // For future use
-	float        originalHeight;// For future use
-	unsigned int animDuration;	// Delay, which sprite will show, in ms
+	float offsetX;              // Additional offset on X axis, used for centering frame for animation
+	float offsetY;              // Additional offset on Y axis, used for centering frame for animation
+	float originalWidth;        // For future use
+	float originalHeight;       // For future use
+	uint32_t animDuration;      // Delay, which sprite will show, in ms
     
     CTextureFrame textureFrame;
 };

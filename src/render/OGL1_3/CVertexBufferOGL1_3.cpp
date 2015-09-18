@@ -34,7 +34,7 @@ CVertexBufferOGL1_3::~CVertexBufferOGL1_3()
     Shutdown();
 }
 
-void CVertexBufferOGL1_3::Initialize(size_t elementSize)
+void CVertexBufferOGL1_3::Initialize(uint64_t elementSize)
 {
     if (!IsValid())
     {
@@ -58,7 +58,7 @@ IVertexBuffer::SVertexStream& CVertexBufferOGL1_3::Lock(IVertexBuffer::VertexTyp
     
     if (m_VertexStreamers.find(vertexType) == m_VertexStreamers.end())
     {
-        size_t absoluteOffset = 0;
+        uint64_t absoluteOffset = 0;
         std::for_each(m_VertexStreamers.begin(), m_VertexStreamers.end(), [&](const TVertexStreamMap::value_type& value)
         {
             const IVertexBuffer::SVertexStream& stream = value.second;
@@ -91,17 +91,17 @@ bool CVertexBufferOGL1_3::IsValid() const
     return (m_Id != 0);
 }
 
-size_t CVertexBufferOGL1_3::SizeRaw() const
+uint64_t CVertexBufferOGL1_3::SizeRaw() const
 {
     return m_Buffer.size();
 }
 
-void CVertexBufferOGL1_3::ResizeRaw(size_t newSize)
+void CVertexBufferOGL1_3::ResizeRaw(uint64_t newSize)
 {
     m_Buffer.resize(newSize);
 }
 
-size_t CVertexBufferOGL1_3::ElementSize() const
+uint64_t CVertexBufferOGL1_3::ElementSize() const
 {
     return m_ElementSize;
 }
@@ -241,9 +241,9 @@ void CVertexBufferOGL1_3::Unbind()
 // Protected Methods
 // *****************************************************************************
 
-void CVertexBufferOGL1_3::ElementSize(size_t elementSize)
+void CVertexBufferOGL1_3::ElementSize(uint64_t elementSize)
 {
-    m_ElementSize = std::max<size_t>(elementSize, 1);
+    m_ElementSize = std::max<uint64_t>(elementSize, 1);
 }
 
 // *****************************************************************************

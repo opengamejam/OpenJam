@@ -17,8 +17,8 @@ namespace jam
 class IUnique
 {
 public:
-    Unique();
-    virtual Unique();
+    IUnique();
+    virtual ~IUnique();
     
     uint64_t UniqueId() const;
     

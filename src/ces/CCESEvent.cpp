@@ -30,6 +30,11 @@ CCESEvent::~CCESEvent()
 
 }
 
+const std::string& CCESEvent::Id() const
+{
+    return m_Id;
+}
+
 IEntityWeak CCESEvent::Entity() const
 {
     return m_Entity;

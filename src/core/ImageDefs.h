@@ -48,7 +48,7 @@ enum TexelTypes
 
 struct TexelProps
 {
-    TexelProps(TexelFormats _texelFormat, TexelTypes _texelType, unsigned int _bpp)
+    TexelProps(TexelFormats _texelFormat, TexelTypes _texelType, uint32_t _bpp)
         : texelFormat(_texelFormat)
         , texelType(_texelType)
         , bpp(_bpp)
@@ -56,7 +56,7 @@ struct TexelProps
     
     TexelFormats texelFormat;
     TexelTypes texelType;
-    unsigned int bpp;
+    uint32_t bpp;
 };
 
 }; // namespace jam

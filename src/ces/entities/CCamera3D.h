@@ -23,14 +23,14 @@ public:
     CCamera3D(float fov, float width, float height, float near = 0.3f, float far = 1000.0f);
     virtual ~CCamera3D();
     
-    virtual unsigned int Id() const;
+    virtual uint32_t Id() const override;
     
-    virtual CMatrix4x4f ProjectionMatrix();
-    virtual IRenderTargetPtr RenderTarget() const;
-    virtual void RenderTarget(IRenderTargetPtr renderTarget);
+    virtual CMatrix4x4f ProjectionMatrix() override;
+    virtual IRenderTargetPtr RenderTarget() const override;
+    virtual void RenderTarget(IRenderTargetPtr renderTarget) override;
     
-    virtual void FlipY();
-    virtual void FlipX();
+    virtual void FlipY() override;
+    virtual void FlipX() override;
     
 private:
     float m_Width;
@@ -40,8 +40,7 @@ private:
     CMatrix4x4f m_ProjectionMatrix;
     IRenderTargetPtr m_RenderTarget;
     
-    unsigned int m_Id;
-    static unsigned int s_NextCamId;
+    uint32_t m_Id;
 };
 
 }; // namespace jam

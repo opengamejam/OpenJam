@@ -21,17 +21,17 @@ using namespace jam;
 // *****************************************************************************
 
 CShaderProgramOGL1_5::CShaderProgramOGL1_5()
-: m_ProectionMatrixHadle(-1)
-, m_VertexCoordHandle(-1)
-, m_TextureCoordHandle(-1)
-, m_VertexColorHandle(-1)
-, m_ColorHandle(-1)
+: m_ProectionMatrixHadle(-1u)
+, m_VertexCoordHandle(-1u)
+, m_TextureCoordHandle(-1u)
+, m_VertexColorHandle(-1u)
+, m_ColorHandle(-1u)
 , m_IsLinked(false)
 {
     m_TextureDataHadle.resize(IMaterial::MaxSamplingTextures);
     for (size_t i = 0; i < m_TextureDataHadle.size(); ++i)
     {
-        m_TextureDataHadle[i] = -1;
+        m_TextureDataHadle[i] = -1u;
     }
 }
 
@@ -106,7 +106,7 @@ bool CShaderProgramOGL1_5::IsLinked() const
     return m_IsLinked;
 }
 
-unsigned int CShaderProgramOGL1_5::Attribute(const std::string& name)
+uint32_t CShaderProgramOGL1_5::Attribute(const std::string& name)
 {
     static std::unordered_map<std::string, int> attributes = {
         {"MainPositionVertex", 0},
@@ -119,10 +119,10 @@ unsigned int CShaderProgramOGL1_5::Attribute(const std::string& name)
         return attributes[name];
     }
     
-    return -1;
+    return -1u;
 }
 
-unsigned int CShaderProgramOGL1_5::Uniform(const std::string& name)
+uint32_t CShaderProgramOGL1_5::Uniform(const std::string& name)
 {
     static std::unordered_map<std::string, int> uniforms = {
         {"MainTexture0", 0},
@@ -141,69 +141,69 @@ unsigned int CShaderProgramOGL1_5::Uniform(const std::string& name)
         return uniforms[name];
     }
     
-    return -1;
+    return -1u;
 }
 
-unsigned int CShaderProgramOGL1_5::VertexPosition()
+uint32_t CShaderProgramOGL1_5::VertexPosition()
 {
     return m_VertexCoordHandle;
 }
 
-unsigned int CShaderProgramOGL1_5::TextureCoord()
+uint32_t CShaderProgramOGL1_5::TextureCoord()
 {
     return m_TextureCoordHandle;
 }
 
-unsigned int CShaderProgramOGL1_5::VertexColor()
+uint32_t CShaderProgramOGL1_5::VertexColor()
 {
     return m_VertexColorHandle;
 }
 
-unsigned int CShaderProgramOGL1_5::MainTexture()
+uint32_t CShaderProgramOGL1_5::MainTexture()
 {
     return m_TextureDataHadle[0];
 }
 
-unsigned int CShaderProgramOGL1_5::MainColor()
+uint32_t CShaderProgramOGL1_5::MainColor()
 {
     return m_ColorHandle;
 }
 
-unsigned int CShaderProgramOGL1_5::ProjectionMatrix()
+uint32_t CShaderProgramOGL1_5::ProjectionMatrix()
 {
     return m_ProectionMatrixHadle;
 }
 
-unsigned int CShaderProgramOGL1_5::ModelMatrix()
+uint32_t CShaderProgramOGL1_5::ModelMatrix()
 {
     return m_ModelMatrixHadle;
 }
 
-unsigned int CShaderProgramOGL1_5::Texture(unsigned int index)
+uint32_t CShaderProgramOGL1_5::Texture(uint32_t index)
 {
     if (index < IMaterial::MaxSamplingTextures)
     {
         return m_TextureDataHadle[index];
     }
-    return -1;
+    return -1u;
 }
 
-unsigned int CShaderProgramOGL1_5::DiffuseTexture()
+uint32_t CShaderProgramOGL1_5::DiffuseTexture()
 {
     return m_TextureDataHadle[0];
 }
 
-unsigned int CShaderProgramOGL1_5::NormalTexture()
+uint32_t CShaderProgramOGL1_5::NormalTexture()
 {
     return m_TextureDataHadle[1];
 }
 
-unsigned int CShaderProgramOGL1_5::SpecularTexture()
+uint32_t CShaderProgramOGL1_5::SpecularTexture()
 {
     return m_TextureDataHadle[2];
 }
 
-unsigned int CShaderProgramOGL1_5::EnvironmentTexture()
+uint32_t CShaderProgramOGL1_5::EnvironmentTexture()
 {
     return m_TextureDataHadle[3];
 }

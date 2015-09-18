@@ -55,7 +55,7 @@ public:
     void RemoveComponent(IComponentPtr component);
     void RemoveAllComponents(const std::type_index& id);
     bool HasComponent(const std::type_index& id);
-    size_t ComponentsNum(const std::type_index& id);
+    uint32_t ComponentsNum(const std::type_index& id);
     
     void AddChild(IEntityPtr entity);
     void RemoveChild(IEntityPtr entity);

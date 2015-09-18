@@ -38,11 +38,11 @@ public:
     const TEntities& Entities() const;
     bool IsEntityAdded(IEntityPtr entity);
     
-    virtual void Update(unsigned long dt) = 0;
-    
     const TComponentIds& RegisteredComponents();
     bool IsComponentRegistered(const std::type_index& id);
     bool IsHasSupportedComponents(IEntityPtr entity);
+    
+    virtual void Update(unsigned long dt) = 0;
     
 protected:
     void RegisterComponent(const std::type_index& id);

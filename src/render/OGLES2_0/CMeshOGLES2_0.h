@@ -21,18 +21,18 @@ public:
     CMeshOGLES2_0();
     virtual ~CMeshOGLES2_0();
     
-    virtual void Bind();
-    virtual void Unbind();
-    virtual bool IsValid() const;
+    virtual void Bind() override;
+    virtual void Unbind() override;
+    virtual bool IsValid() const override;
     
-    virtual IVertexBufferPtr VertexBuffer() const;
-    virtual void VertexBuffer(IVertexBufferPtr vertexBuffer);
+    virtual IVertexBufferPtr VertexBuffer() const override;
+    virtual void VertexBuffer(IVertexBufferPtr vertexBuffer) override;
     
-    virtual IIndexBufferPtr IndexBuffer() const;
-    virtual void IndexBuffer(IIndexBufferPtr indexBuffer);
+    virtual IIndexBufferPtr IndexBuffer() const override;
+    virtual void IndexBuffer(IIndexBufferPtr indexBuffer) override;
     
 private:
-    unsigned int m_VAO;
+    uint32_t m_VAO;
     IVertexBufferPtr m_VertexBuffer;
     IIndexBufferPtr m_IndexBuffer;
 };

@@ -154,9 +154,9 @@ void CAnimation2DComponent::AnimationName(const std::string& name)
     }
 }
 
-unsigned int CAnimation2DComponent::AnimationIndex() const
+uint32_t CAnimation2DComponent::AnimationIndex() const
 {
-    unsigned int index = 0;
+    uint32_t index = 0;
     std::all_of(m_SequencesNames.begin(), m_SequencesNames.end(), [&](const std::string& name)
     {
         if (name == m_AnimationName)
@@ -171,7 +171,7 @@ unsigned int CAnimation2DComponent::AnimationIndex() const
     return index;
 }
 
-void CAnimation2DComponent::AnimationIndex(unsigned index)
+void CAnimation2DComponent::AnimationIndex(uint32_t index)
 {
     if (index < m_SequencesNames.size())
     {
@@ -212,13 +212,13 @@ void CAnimation2DComponent::Percentage(float percent)
     m_Time = clamp<float>(percent, 0.0f, 1.0f) * m_FullTime;
 }
 
-unsigned int CAnimation2DComponent::FrameId()
+uint32_t CAnimation2DComponent::FrameId()
 {
     const TSequence& sequence = Sequence();
     return (Percentage() * sequence.size());
 }
 
-bool CAnimation2DComponent::FrameId(unsigned int frameIndex)
+bool CAnimation2DComponent::FrameId(uint32_t frameIndex)
 {
     if (FrameId() != frameIndex && frameIndex < Sequence().size())
     {

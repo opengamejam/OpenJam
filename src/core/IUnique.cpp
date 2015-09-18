@@ -10,25 +10,25 @@
 
 using namespace jam;
 
-uint64_t Unique::s_NextId = 0;
+uint64_t IUnique::s_NextId = 0;
 
-Unique::Unique()
+IUnique::IUnique()
 : m_UniqueId(NextId())
 {
 
 }
 
-Unique::~Unique()
+IUnique::~IUnique()
 {
 
 }
 
-uint64_t Unique::UniqueId() const
+uint64_t IUnique::UniqueId() const
 {
     return m_UniqueId;
 }
 
-uint64_t Unique::NextId()
+uint64_t IUnique::NextId()
 {
     return s_NextId++;
 }

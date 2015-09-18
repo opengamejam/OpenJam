@@ -43,7 +43,7 @@ CGame::CGame(IRenderViewPtr render)
 
 CGame::~CGame() 
 {
-    CThreadPool::Get()->Destroy();
+    CThreadPool::Get()->Shutdown();
 }
 
 void CGame::Initialize()
@@ -62,7 +62,7 @@ void CGame::Initialize()
     m_IsInitialized = true;
 }
 
-void CGame::Destroy()
+void CGame::Shutdown()
 {
     m_IsInitialized = false;
 }

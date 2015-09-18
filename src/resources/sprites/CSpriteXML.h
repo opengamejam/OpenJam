@@ -20,10 +20,10 @@ public:
     CSpriteXML(const std::string& filename, const std::string& loader = "");
     virtual ~CSpriteXML();
     
-    virtual bool Load();
-	virtual const TTexturesList& Textures() const;
-    virtual const TTextureFramesList& Frames() const;
-	virtual const TAnimationsList& Animations() const;
+    virtual bool Load() override;
+	virtual const TTexturesList& Textures() const override;
+    virtual const TTextureFramesList& Frames() const override;
+	virtual const TAnimationsList& Animations() const override;
     
 private:
 	bool Parse(const TResourceData& data);

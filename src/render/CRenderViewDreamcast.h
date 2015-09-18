@@ -23,12 +23,12 @@ public:
 	CRenderViewDreamcast();
 	virtual ~CRenderViewDreamcast();
 
-	virtual void CreateView();
-    virtual void Begin() const;
-    virtual void End() const;
-    virtual void UpdateEvents() const;
+	virtual void CreateView() override;
+    virtual void Begin() const override;
+    virtual void End() const override;
+    virtual void UpdateEvents() const override;
 
-    virtual IRenderTargetPtr DefaultRenderTarget() const;
+    virtual IRenderTargetPtr DefaultRenderTarget() const override;
 
 private:
     IRenderTargetPtr m_DefaultRenderTarget;

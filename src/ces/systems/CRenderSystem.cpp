@@ -156,7 +156,7 @@ void CRenderSystem::Draw(ICameraPtr camera)
 			mesh->Unbind();
 			if (texture)
 			{
-			texture->Unbind();
+                texture->Unbind();
 			}
 			material->Unbind();
 			shader->Unbind();

@@ -31,7 +31,7 @@ public:
     CCESEvent(IEntityWeak entity, ActionType action);
     virtual ~CCESEvent();
     
-    virtual const std::string& Id() const {return m_Id;}
+    virtual const std::string& Id() const override;
     
     IEntityWeak Entity() const;
     ActionType Action() const;

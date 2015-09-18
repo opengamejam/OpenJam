@@ -19,7 +19,7 @@ using namespace jam;
 // Public Methods
 // *****************************************************************************
 
-CFrameBufferOGL1_3::CFrameBufferOGL1_3(unsigned int width, unsigned int height)
+CFrameBufferOGL1_3::CFrameBufferOGL1_3(uint32_t width, uint32_t height)
 : m_FrameBuffer(-1)
 , m_DepthBuffer(-1)
 , m_StencilBuffer(-1)
@@ -36,7 +36,7 @@ CFrameBufferOGL1_3::CFrameBufferOGL1_3(unsigned int width, unsigned int height)
     glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS, &m_NumColorAtachments);
 #endif
     m_ColorBuffers.resize(m_NumColorAtachments);
-    std::for_each(m_ColorBuffers.begin(), m_ColorBuffers.end(), [&](unsigned int& colorBuffer)
+    std::for_each(m_ColorBuffers.begin(), m_ColorBuffers.end(), [&](uint32_t& colorBuffer)
     {
         colorBuffer = -1;
     });
@@ -45,8 +45,8 @@ CFrameBufferOGL1_3::CFrameBufferOGL1_3(unsigned int width, unsigned int height)
 CFrameBufferOGL1_3::~CFrameBufferOGL1_3()
 {
 #if GL_ARB_framebuffer_object
-    unsigned int i = 0;
-    std::for_each(m_ColorBuffers.begin(), m_ColorBuffers.end(), [&](unsigned int colorBuffer)
+    uint32_t i = 0;
+    std::for_each(m_ColorBuffers.begin(), m_ColorBuffers.end(), [&](uint32_t colorBuffer)
     {
         if (colorBuffer != -1u && (i != 0 || !m_IsColor0BufferExt))
         {
@@ -71,8 +71,8 @@ CFrameBufferOGL1_3::~CFrameBufferOGL1_3()
     }
 }
 
-void CFrameBufferOGL1_3::Initialize(unsigned int externalFrameBuffer, unsigned int externalColorBuffer,
-                                          unsigned int externalDepthBuffer, unsigned int externalStencilBuffer)
+void CFrameBufferOGL1_3::Initialize(uint32_t externalFrameBuffer, uint32_t externalColorBuffer,
+                                          uint32_t externalDepthBuffer, uint32_t externalStencilBuffer)
 {
     if (m_FrameBuffer == -1u && externalFrameBuffer != -1u)
     {
@@ -217,22 +217,22 @@ const CColor& CFrameBufferOGL1_3::ClearColor() const
     return m_ClearColor;
 }
 
-unsigned int CFrameBufferOGL1_3::Width() const
+uint32_t CFrameBufferOGL1_3::Width() const
 {
     return m_Width;
 }
 
-unsigned int CFrameBufferOGL1_3::Height() const
+uint32_t CFrameBufferOGL1_3::Height() const
 {
     return m_Height;
 }
 
-std::vector<unsigned char> CFrameBufferOGL1_3::RawData()
+IRenderTarget::TRawData CFrameBufferOGL1_3::RawData()
 {
     Bind();
     
-    unsigned int rawdataSize = Width() * Height() * 4;
-    std::vector<unsigned char> data(rawdataSize, 0);
+    uint32_t rawdataSize = Width() * Height() * 4;
+    IRenderTarget::TRawData data(rawdataSize, 0);
     
 #ifdef GL3_PROTOTYPES // TODO
     glReadPixels(0, 0, Width(), Height(), GL_RGBA, GL_UNSIGNED_BYTE, &data[0]);

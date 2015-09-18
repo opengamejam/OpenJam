@@ -21,10 +21,10 @@ public:
     CShaderOGL1_3();
     virtual ~CShaderOGL1_3();
     
-    virtual unsigned int Id();
-    virtual bool Compile(const std::string& source, ShaderType shaderType);
-    virtual bool IsCompiled() const;
-    virtual ShaderType Type() const;
+    virtual uint32_t Id() override;
+    virtual bool Compile(const std::string& source, ShaderType shaderType) override;
+    virtual bool IsCompiled() const override;
+    virtual ShaderType Type() const override;
 };
 
 }; // namespace jam

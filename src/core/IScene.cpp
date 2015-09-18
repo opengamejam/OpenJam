@@ -45,11 +45,13 @@ void IScene::AddCamera(ICameraPtr camera)
 void IScene::RemoveCamera(ICameraPtr camera)
 {
     // TODO:
+    assert(false);
 }
 
-void IScene::RemoveCameraById(unsigned int cameraId)
+void IScene::RemoveCameraById(uint32_t cameraId)
 {
     // TODO:
+    assert(false);
 }
 
 void IScene::RemoveAllCameras()

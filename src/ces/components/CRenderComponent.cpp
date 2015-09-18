@@ -24,7 +24,7 @@ CRenderComponent::CRenderComponent()
 : IComponent(ComponentId<CRenderComponent>())
 , m_IsVisible(true)
 , m_IsBatchable(false)
-, m_BatchIndex(std::numeric_limits<unsigned int>::max())
+, m_BatchIndex(std::numeric_limits<uint32_t>::max())
 , m_DrawOrder(0)
 {
 
@@ -106,17 +106,17 @@ const std::set<std::string>& CRenderComponent::Groups() const
     return m_Groups;
 }
 
-void CRenderComponent::AddCameraId(unsigned int cameraId)
+void CRenderComponent::AddCameraId(uint32_t cameraId)
 {
     m_CameraIds.insert(cameraId);
 }
 
-void CRenderComponent::RemoveCameraId(unsigned int cameraId)
+void CRenderComponent::RemoveCameraId(uint32_t cameraId)
 {
     m_CameraIds.erase(cameraId);
 }
 
-bool CRenderComponent::HasCameraId(unsigned int cameraId)
+bool CRenderComponent::HasCameraId(uint32_t cameraId)
 {
     if (m_CameraIds.empty())
     {
@@ -126,7 +126,7 @@ bool CRenderComponent::HasCameraId(unsigned int cameraId)
     return (m_CameraIds.find(cameraId) != m_CameraIds.end());
 }
 
-const std::set<unsigned int>& CRenderComponent::CameraIds() const
+const std::set<uint32_t>& CRenderComponent::CameraIds() const
 {
     return m_CameraIds;
 }
@@ -146,7 +146,7 @@ void CRenderComponent::Visible(bool isVisible)
 
 bool CRenderComponent::Batchable() const
 {
-    return (m_BatchIndex != std::numeric_limits<unsigned int>::max());
+    return (m_BatchIndex != std::numeric_limits<uint32_t>::max());
 }
 
 void CRenderComponent::Batchable(bool isBatchable)
@@ -157,12 +157,12 @@ void CRenderComponent::Batchable(bool isBatchable)
     }
 }
 
-unsigned int CRenderComponent::BatchIndex() const
+uint32_t CRenderComponent::BatchIndex() const
 {
     return m_BatchIndex;
 }
 
-void CRenderComponent::BatchIndex(unsigned int batchIndex)
+void CRenderComponent::BatchIndex(uint32_t batchIndex)
 {
     if (m_BatchIndex != batchIndex)
     {
@@ -172,7 +172,7 @@ void CRenderComponent::BatchIndex(unsigned int batchIndex)
 
 bool CRenderComponent::IsBatchIndexValid() const
 {
-    return (m_BatchIndex != std::numeric_limits<unsigned int>::max());
+    return (m_BatchIndex != std::numeric_limits<uint32_t>::max());
 }
 
 bool CRenderComponent::IsValid() const

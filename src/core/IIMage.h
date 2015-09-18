@@ -17,23 +17,21 @@ namespace jam
 class IImage : public IResource
 {
 public:
-    virtual unsigned int Width() const = 0;
-    virtual unsigned int Height() const = 0;
-    virtual unsigned int Bpp() const = 0;
-    virtual unsigned int MipsCount() const = 0;
-	virtual unsigned int IsCompressed() const = 0;
+    IImage(const std::string& filename, const std::string& loader)
+    : IResource(filename, loader)
+    {}
+    IImage(const std::string& name, const IResource::TResourceData& data)
+    : IResource(name, data)
+    {}
+    virtual ~IImage() = default;
+    
+    virtual uint32_t Width() const = 0;
+    virtual uint32_t Height() const = 0;
+    virtual uint32_t Bpp() const = 0;
+    virtual uint32_t MipsCount() const = 0;
+	virtual bool IsCompressed() const = 0;
     virtual TexelFormats TexelFormat() const = 0;
     virtual TexelTypes   TexelType() const = 0;
-    
-    IImage(const std::string& filename, const std::string& loader)
-        : IResource(filename, loader)
-    {}
-    
-    IImage(const std::string& name, const IResource::TResourceData& data)
-        : IResource(name, data)
-    {}
-    
-    virtual ~IImage() = default;
 };
 
 }; // namespace jam

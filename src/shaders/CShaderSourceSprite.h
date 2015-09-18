@@ -17,11 +17,11 @@ namespace jam
 class CShaderSourceSprite : public IShaderSource
 {
 public:
-    virtual const std::string& Vertex() const;
-    virtual const std::string& Fragment() const;
-    virtual const std::string& Geometry() const;
+    virtual const std::string& Vertex() const override;
+    virtual const std::string& Fragment() const override;
+    virtual const std::string& Geometry() const override;
     
-    virtual bool Load(const std::string& filename);
+    virtual bool Load(const std::string& filename) override;
     
 private:
     static const std::string s_VertexShader;

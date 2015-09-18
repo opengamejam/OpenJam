@@ -89,7 +89,7 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, unsigned int came
         material->DepthEnable(true);
         
         // Vertex buffer
-        size_t elementSize = 0;
+        uint32_t elementSize = 0;
         if (model3D->Vertices(group).size() > 0)
         {
             elementSize += sizeof(CVector3Df);
@@ -110,7 +110,7 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, unsigned int came
             material->CullFace(false); // TODO: temp
             assert(vertexBuffer && vertexBuffer->IsValid());
             
-            size_t offset = 0;
+            uint32_t offset = 0;
             if (model3D->Vertices(group).size() > 0)
             {
                 vertexBuffer->Resize(model3D->Vertices(group).size());
@@ -159,17 +159,13 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, unsigned int came
             assert(indexBuffer && indexBuffer->IsValid());
             
             indexBuffer->Resize(model3D->Indices(group).size());
-            unsigned short* lockedIndex = indexBuffer->Lock<unsigned short>();
-            if (lockedIndex)
+            IIndexBuffer::SIndexStream& streamIndex = indexBuffer->Lock();
+            
+            const std::vector<unsigned int>& indices = model3D->Indices(group);
+            std::for_each(indices.begin(), indices.end(), [&](unsigned int face)
             {
-                const std::vector<unsigned int>& indices = model3D->Indices(group);
-                std::for_each(indices.begin(), indices.end(), [&](unsigned int face)
-                {
-                    *lockedIndex++ = face;
-                });
-                
-                //memcpy(lockedIndex, model3D->Indices(group).data(), model3D->Indices(group).size() * sizeof(unsigned short));
-            }
+                streamIndex.Set<unsigned short>(0, face);
+            });
             indexBuffer->Unlock();
         }
 

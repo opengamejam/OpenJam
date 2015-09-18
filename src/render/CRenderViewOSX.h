@@ -25,15 +25,15 @@ public:
     };
     
 public:
-	CRenderViewOSX(unsigned int width, unsigned int height, void* glkView, RenderApi renderApi);
+	CRenderViewOSX(uint32_t width, uint32_t height, void* glkView, RenderApi renderApi);
 	virtual ~CRenderViewOSX();
 
-	virtual void CreateView();
-    virtual void Begin() const;
-    virtual void End() const;
-    virtual void UpdateEvents() const;
+	virtual void CreateView() override;
+    virtual void Begin() const override;
+    virtual void End() const override;
+    virtual void UpdateEvents() const override;
     
-    virtual IRenderTargetPtr DefaultRenderTarget() const;
+    virtual IRenderTargetPtr DefaultRenderTarget() const override;
 
 private:
 #if defined(__OBJC__)

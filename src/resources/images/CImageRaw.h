@@ -18,29 +18,27 @@ namespace jam
 class CImageRaw : public IImage
 {
 public:
-    virtual ~CImageRaw();
-    
-    virtual bool            Load();
-    virtual unsigned int    Width() const;
-    virtual unsigned int    Height() const;
-    virtual unsigned int    Bpp() const;
-    virtual unsigned int    MipsCount() const;
-    virtual unsigned int    IsCompressed() const;
-    virtual TexelFormats    TexelFormat() const;
-    virtual TexelTypes      TexelType() const;
-    
     CImageRaw(const std::string& filename,
               const IResource::TResourceData& data,
-              unsigned int width,
-              unsigned int height,
+              uint32_t width,
+              uint32_t height,
               const TexelProps& texelProps);
+    virtual ~CImageRaw();
     
+    virtual bool Load();
+    virtual uint32_t Width() const override;
+    virtual uint32_t Height() const override;
+    virtual uint32_t Bpp() const override;
+    virtual uint32_t MipsCount() const override;
+    virtual bool IsCompressed() const override;
+    virtual TexelFormats TexelFormat() const override;
+    virtual TexelTypes TexelType() const override;
     
 private:
-    unsigned int            m_Width;
-    unsigned int            m_Height;
-    TResourceData          m_Data;
-    TexelProps              m_TexelProps;
+    uint32_t m_Width;
+    uint32_t m_Height;
+    TResourceData m_Data;
+    TexelProps m_TexelProps;
 };
 
 }; // namespace jam

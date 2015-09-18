@@ -111,7 +111,7 @@ bool IEntity::HasComponent(const std::type_index& id)
     return !components.empty();
 }
 
-size_t IEntity::ComponentsNum(const std::type_index& id)
+uint32_t IEntity::ComponentsNum(const std::type_index& id)
 {
     TComponentsList& components = m_Components[id];
     return components.size();

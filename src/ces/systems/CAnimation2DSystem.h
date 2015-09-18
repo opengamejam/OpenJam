@@ -21,7 +21,7 @@ public:
     CAnimation2DSystem();
     virtual ~CAnimation2DSystem();
     
-    void Update(unsigned long dt);
+    void Update(unsigned long dt) override;
 };
     
 } // namespace jam

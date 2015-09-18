@@ -24,7 +24,7 @@ public:
     CTransfromationSystem();
     virtual ~CTransfromationSystem();
     
-    void Update(unsigned long dt);
+    virtual void Update(unsigned long dt) override;
     
 private:
     void UpdateTransformsRecursively(IEntityPtr entity, const CTransform3Df& parentTransform);

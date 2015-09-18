@@ -18,36 +18,36 @@ namespace jam
 class CFrameBufferOGL2_0 : public IRenderTarget
 {
 public:
-    CFrameBufferOGL2_0(unsigned int width, unsigned int height);
+    CFrameBufferOGL2_0(uint32_t width, uint32_t height);
     virtual ~CFrameBufferOGL2_0();
     
-    void Initialize(unsigned int externalFrameBuffer, unsigned int externalColorBuffer = -1,
-                    unsigned int externalDepthBuffer = -1, unsigned int externalStencilBuffer = -1);
-    virtual void Initialize();
+    void Initialize(uint32_t externalFrameBuffer, uint32_t externalColorBuffer = -1,
+                    uint32_t externalDepthBuffer = -1, uint32_t externalStencilBuffer = -1);
+    virtual void Initialize() override;
     
-    virtual bool CreateColorAttachment(int index);
-    virtual bool CreateDepthAttachment();
-    virtual bool CreateStencilAttachment();
-    virtual bool CreateTextureAttachment();
+    virtual bool CreateColorAttachment(int index) override;
+    virtual bool CreateDepthAttachment() override;
+    virtual bool CreateStencilAttachment() override;
+    virtual bool CreateTextureAttachment() override;
     
-    virtual void Bind() const;
-    virtual void Unbind() const;
-    virtual void Clear() const;
+    virtual void Bind() const override;
+    virtual void Unbind() const override;
+    virtual void Clear() const override;
     
-    virtual void ClearColor(const CColor& color);
-    virtual const CColor& ClearColor() const;
+    virtual void ClearColor(const CColor& color) override;
+    virtual const CColor& ClearColor() const override;
     
-    virtual unsigned int Width() const;
-    virtual unsigned int Height() const;
+    virtual uint32_t Width() const override;
+    virtual uint32_t Height() const override;
     
-    virtual std::vector<unsigned char> RawData();
+    virtual TRawData RawData() override;
     
 private:
-    unsigned int m_FrameBuffer;
+    uint32_t m_FrameBuffer;
     
-    std::vector<unsigned int> m_ColorBuffers;
-    unsigned int m_DepthBuffer;
-    unsigned int m_StencilBuffer;
+    std::vector<uint32_t> m_ColorBuffers;
+    uint32_t m_DepthBuffer;
+    uint32_t m_StencilBuffer;
     int m_NumColorAtachments;
     
     bool m_IsFrameBufferExt;
@@ -55,8 +55,8 @@ private:
     bool m_IsDepthBufferExt;
     bool m_IsStencilBufferExt;
     
-    unsigned int m_Width;
-    unsigned int m_Height;
+    uint32_t m_Width;
+    uint32_t m_Height;
     
     CColor m_ClearColor;
 };

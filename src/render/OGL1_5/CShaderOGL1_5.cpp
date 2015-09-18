@@ -28,7 +28,7 @@ CShaderOGL1_5::~CShaderOGL1_5()
 {
 }
 
-unsigned int CShaderOGL1_5::Id()
+uint32_t CShaderOGL1_5::Id()
 {
     return 0;
 }

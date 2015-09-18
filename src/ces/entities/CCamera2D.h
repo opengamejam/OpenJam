@@ -23,7 +23,7 @@ public:
     CCamera2D(float width, float height, float near = -10000.0f, float far = 10000.0f);
     virtual ~CCamera2D();
     
-    virtual uint64_t Id() const override;
+    virtual uint32_t Id() const override;
     
     virtual CMatrix4x4f ProjectionMatrix() override;
     virtual IRenderTargetPtr RenderTarget() const override;
@@ -43,7 +43,7 @@ private:
     bool m_IsFlippedX;
     bool m_IsFlippedY;
     
-    uint64_t m_Id;
+    uint32_t m_Id;
 };
 
 }; // namespace jam

@@ -40,10 +40,10 @@ public:
     
     const std::set<std::string>& Groups() const;
     
-    void AddCameraId(unsigned int cameraId);
-    void RemoveCameraId(unsigned int cameraId);
-    bool HasCameraId(unsigned int cameraId);
-    const std::set<unsigned int>& CameraIds() const;
+    void AddCameraId(uint32_t cameraId);
+    void RemoveCameraId(uint32_t cameraId);
+    bool HasCameraId(uint32_t cameraId);
+    const std::set<uint32_t>& CameraIds() const;
     
     bool Visible() const;
     void Visible(bool isVisible);
@@ -51,8 +51,8 @@ public:
     bool Batchable() const;
     void Batchable(bool isBatchable);
     
-    unsigned int BatchIndex() const;
-    void BatchIndex(unsigned int batchIndex);
+    uint32_t BatchIndex() const;
+    void BatchIndex(uint32_t batchIndex);
     bool IsBatchIndexValid() const;
     
     bool IsValid() const;
@@ -67,8 +67,8 @@ private:
     std::set<std::string> m_Groups;
     bool m_IsVisible;
     bool m_IsBatchable;
-    unsigned int m_BatchIndex;
-    std::set<unsigned int> m_CameraIds;
+    uint32_t m_BatchIndex;
+    std::set<uint32_t> m_CameraIds;
     uint32_t m_DrawOrder;
 };
     

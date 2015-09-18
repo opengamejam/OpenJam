@@ -53,8 +53,8 @@ public:
     const std::string& AnimationName() const;
     void AnimationName(const std::string& name);
     
-    unsigned int AnimationIndex() const;
-    void AnimationIndex(unsigned index);
+    uint32_t AnimationIndex() const;
+    void AnimationIndex(uint32_t index);
     
     unsigned long Time() const;
     bool Time(unsigned long ms);
@@ -62,8 +62,8 @@ public:
     float Percentage() const;
     void Percentage(float percent);
     
-    unsigned int FrameId();
-    bool FrameId(unsigned int frameIndex);
+    uint32_t FrameId();
+    bool FrameId(uint32_t frameIndex);
     
     unsigned long FullTime() const;
     void FullTime(unsigned long ms);

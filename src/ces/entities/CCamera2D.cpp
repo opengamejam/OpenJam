@@ -53,7 +53,7 @@ CCamera2D::~CCamera2D()
 
 }
 
-uint64_t CCamera2D::Id() const
+uint32_t CCamera2D::Id() const
 {
     return m_Id;
 }

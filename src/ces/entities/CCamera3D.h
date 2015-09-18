@@ -23,7 +23,7 @@ public:
     CCamera3D(float fov, float width, float height, float near = 0.3f, float far = 1000.0f);
     virtual ~CCamera3D();
     
-    virtual uint64_t Id() const override;
+    virtual uint32_t Id() const override;
     
     virtual CMatrix4x4f ProjectionMatrix() override;
     virtual IRenderTargetPtr RenderTarget() const override;
@@ -40,7 +40,7 @@ private:
     CMatrix4x4f m_ProjectionMatrix;
     IRenderTargetPtr m_RenderTarget;
     
-    uint64_t m_Id;
+    uint32_t m_Id;
 };
 
 }; // namespace jam

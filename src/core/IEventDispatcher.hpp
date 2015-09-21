@@ -58,8 +58,9 @@ public:
     }
     
     void DispatchEvent(IEventPtr event)
-    {        
-        std::type_index eventType = std::type_index(typeid(*event.get()));
+    {
+        IEvent& e = *event.get();
+        std::type_index eventType = std::type_index(typeid(e));
         
         TEventHandlersList handlers = m_HandlersMap[eventType];
         std::all_of(handlers.begin(), handlers.end(), [&event](TEventHandler handler)

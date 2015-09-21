@@ -17,7 +17,7 @@
 
 using namespace jam;
 
-const uint64_t k_MaxVertexBufferSize = 10000;
+const uint64_t CBatch::k_MaxVertexBufferSize = 10000;
 
 CBatch::CBatch()
 : m_IsDirty(true)

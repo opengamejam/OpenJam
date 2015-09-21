@@ -157,13 +157,15 @@ IScenePtr CGame::GetScene() const
 
 void CGame::AddSystem(ISystemPtr system)
 {
-    std::type_index key = std::type_index(typeid(*system.get()));
+    ISystem& s = *system.get();
+    std::type_index key = std::type_index(typeid(s));
     m_System[key] = system;
 }
 
 void CGame::RemoveSystem(ISystemPtr system)
 {
-    std::type_index key = std::type_index(typeid(*system.get()));
+    ISystem& s = *system.get();
+    std::type_index key = std::type_index(typeid(s));
     TSystemMap::const_iterator it = m_System.find(key);
     if (it != m_System.end())
     {

@@ -25,7 +25,7 @@ public:
               const TexelProps& texelProps);
     virtual ~CImageRaw();
     
-    virtual bool Load();
+    virtual bool Load() override;
     virtual uint32_t Width() const override;
     virtual uint32_t Height() const override;
     virtual uint32_t Bpp() const override;

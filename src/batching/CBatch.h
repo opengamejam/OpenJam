@@ -62,6 +62,9 @@ private:
     
     typedef std::map<uint64_t, SGeometry> TGeometries;
     TGeometries m_Geometries;
+    
+    uint64_t m_VertexOffset;
+    uint64_t m_IndexOffset;
 };
     
 }; // namespace jam

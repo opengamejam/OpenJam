@@ -112,12 +112,11 @@ CSprite2DPtr CSprite2D::Create(const std::string& filename, unsigned int cameraI
     
     // Index buffer
     indexBuffer = GRenderer->CreateIndexBuffer();
-    indexBuffer->Initialize(sizeof(unsigned short)); // TODO: 
+    indexBuffer->Initialize(IIndexBuffer::UShort);
     assert(indexBuffer && indexBuffer->IsValid());
     
     indexBuffer->Resize(6);
     IIndexBuffer::SIndexStream& indices = indexBuffer->Lock();
-    indices.dataType = IIndexBuffer::UShort;
     indices.Set<unsigned short>(0, {0, 1, 3, 0, 2, 3});
     indexBuffer->Unlock();
 

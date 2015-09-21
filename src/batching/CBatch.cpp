@@ -24,6 +24,8 @@ CBatch::CBatch()
 , m_BatchedMesh(nullptr)
 , m_Material(nullptr)
 , m_ShaderProgram(nullptr)
+, m_VertexOffset(0)
+, m_IndexOffset(0)
 {
 
 }
@@ -43,7 +45,7 @@ bool CBatch::Initialize(IMaterialPtr material, IShaderProgramPtr shader, const s
     m_BatchedMesh = GRenderer->CreateMesh();
     IVertexBufferPtr vertexBuffer = GRenderer->CreatVertexBuffer();
     IIndexBufferPtr indexBuffer = GRenderer->CreateIndexBuffer();
-    indexBuffer->Initialize(sizeof(unsigned short));
+    indexBuffer->Initialize(IIndexBuffer::UShort);
     
     m_BatchedMesh->VertexBuffer(vertexBuffer);
     m_BatchedMesh->IndexBuffer(indexBuffer);
@@ -74,6 +76,8 @@ void CBatch::Shutdown()
     m_ShaderProgram = nullptr;
     m_Textures.clear();
     m_Geometries.clear();
+    m_VertexOffset = 0;
+    m_IndexOffset = 0;
 }
 
 const IMeshPtr CBatch::Mesh() const
@@ -98,13 +102,12 @@ const std::list<ITexturePtr> CBatch::Textures() const
 
 bool CBatch::AddGeometry(IMeshPtr mesh, const CTransform3Df& transform)
 {
-    if (!IsInitialized() || !mesh->VertexBuffer() || !mesh->VertexBuffer()->IsValid())
+    IVertexBufferPtr srcVertexBuffer = mesh->VertexBuffer();
+    IVertexBufferPtr dstVertexBuffer = m_BatchedMesh->VertexBuffer();
+    if (!IsInitialized() || !srcVertexBuffer || !srcVertexBuffer->IsValid())
     {
         return false;
     }
-    
-    IVertexBufferPtr srcVertexBuffer = mesh->VertexBuffer();
-    IVertexBufferPtr dstVertexBuffer = m_BatchedMesh->VertexBuffer();
     
     if (!dstVertexBuffer->IsValid())
     {
@@ -146,7 +149,6 @@ void CBatch::Update()
         return;
     }
     
-    
     IVertexBufferPtr dstVertexBuffer = m_BatchedMesh->VertexBuffer();
     std::for_each(m_Geometries.begin(), m_Geometries.end(), [&](const TGeometries::value_type& value)
     {
@@ -156,11 +158,17 @@ void CBatch::Update()
             return;
         }
         IVertexBufferPtr srcVertexBuffer = mesh->VertexBuffer();
-        
-        
+        const IVertexBuffer::TVertexStreamMap& srcStreams = srcVertexBuffer->VertexStreams();
+        std::for_each(srcStreams.begin(), srcStreams.end(),
+                      [&](const IVertexBuffer::TVertexStreamMap::value_type& stream)
+        {
+            if (stream.first == IVertexBuffer::Position)
+            {
+                // Apply transform
+            }
+            
+        });
     });
-    
-    
 }
 
 bool CBatch::ValidateStreams(IVertexBufferPtr vb1, IVertexBufferPtr vb2) const

@@ -32,14 +32,15 @@ CIndexBufferOGL1_5::~CIndexBufferOGL1_5()
     Shutdown();
 }
 
-void CIndexBufferOGL1_5::Initialize(uint64_t elementSize)
+void CIndexBufferOGL1_5::Initialize(DataTypes dataType)
 {
     if (!IsValid())
     {
         glGenBuffers(1, &m_Id);
         m_Stream = IIndexBuffer::SIndexStream(shared_from_this());
+        m_Stream.dataType = dataType;
     }
-    ElementSize(elementSize);
+    ElementSize(IIndexBuffer::SIndexStream::sizeForType(dataType));
 }
 
 void CIndexBufferOGL1_5::Shutdown()

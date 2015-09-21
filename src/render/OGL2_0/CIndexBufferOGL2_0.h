@@ -21,7 +21,7 @@ public:
     CIndexBufferOGL2_0();
     virtual ~CIndexBufferOGL2_0();
     
-    virtual void Initialize(uint64_t elementSize) override;
+    virtual void Initialize(DataTypes dataType) override;
     virtual void Shutdown() override;
     virtual bool IsValid() const override;
     

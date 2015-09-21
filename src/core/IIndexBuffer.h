@@ -38,7 +38,7 @@ public:
     IIndexBuffer() = default;
     virtual ~IIndexBuffer() = default;
     
-    virtual void Initialize(uint64_t elementSize) = 0;
+    virtual void Initialize(DataTypes dataType) = 0;
     virtual void Shutdown() = 0;
     virtual bool IsValid() const = 0;
     

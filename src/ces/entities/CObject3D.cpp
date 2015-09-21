@@ -155,7 +155,7 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, unsigned int came
         if (model3D->Indices(group).size() > 0)
         {
             indexBuffer = GRenderer->CreateIndexBuffer();
-            indexBuffer->Initialize(sizeof(unsigned short));
+            indexBuffer->Initialize(IIndexBuffer::UShort);
             assert(indexBuffer && indexBuffer->IsValid());
             
             indexBuffer->Resize(model3D->Indices(group).size());

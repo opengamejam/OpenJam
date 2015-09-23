@@ -52,7 +52,7 @@ CFrameBufferOGLES2_0::~CFrameBufferOGLES2_0()
             glDeleteRenderbuffers(1, &colorBuffer);
         }
     });
-    
+
     if (m_DepthBuffer != -1)
     {
 #if GL_OES_packed_depth_stencil

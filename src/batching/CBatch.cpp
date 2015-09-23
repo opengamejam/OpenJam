@@ -45,7 +45,6 @@ bool CBatch::Initialize(IMaterialPtr material, IShaderProgramPtr shader, const s
     m_BatchedMesh = GRenderer->CreateMesh();
     IVertexBufferPtr vertexBuffer = GRenderer->CreatVertexBuffer();
     IIndexBufferPtr indexBuffer = GRenderer->CreateIndexBuffer();
-    indexBuffer->Initialize(IIndexBuffer::UShort);
     
     m_BatchedMesh->VertexBuffer(vertexBuffer);
     m_BatchedMesh->IndexBuffer(indexBuffer);
@@ -95,7 +94,7 @@ const IShaderProgramPtr CBatch::Shader() const
     return m_ShaderProgram;
 }
 
-const std::list<ITexturePtr> CBatch::Textures() const
+const std::list<ITexturePtr>& CBatch::Textures() const
 {
     return m_Textures;
 }
@@ -103,7 +102,9 @@ const std::list<ITexturePtr> CBatch::Textures() const
 bool CBatch::AddGeometry(IMeshPtr mesh, const CTransform3Df& transform)
 {
     IVertexBufferPtr srcVertexBuffer = mesh->VertexBuffer();
+    IIndexBufferPtr srcIndexBuffer = mesh->IndexBuffer();
     IVertexBufferPtr dstVertexBuffer = m_BatchedMesh->VertexBuffer();
+    IIndexBufferPtr dstIndexBuffer = m_BatchedMesh->IndexBuffer();
     if (!IsInitialized() || !srcVertexBuffer || !srcVertexBuffer->IsValid())
     {
         return false;
@@ -113,6 +114,7 @@ bool CBatch::AddGeometry(IMeshPtr mesh, const CTransform3Df& transform)
     {
         dstVertexBuffer->Initialize(srcVertexBuffer->ElementSize());
         dstVertexBuffer->Resize(k_MaxVertexBufferSize);
+        //dstIndexBuffer->Initialize(srcIndexBuffer->);
     }
     else if (!ValidateStreams(srcVertexBuffer, dstVertexBuffer))
     {

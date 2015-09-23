@@ -35,7 +35,7 @@ public:
     const IMeshPtr Mesh() const;
     const IMaterialPtr Material() const;
     const IShaderProgramPtr Shader() const;
-    const std::list<ITexturePtr> Textures() const;
+    const std::list<ITexturePtr>& Textures() const;
     
     bool AddGeometry(IMeshPtr mesh, const CTransform3Df& transform);
     void RemoveGeometry(IMeshPtr mesh);

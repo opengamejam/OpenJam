@@ -24,19 +24,6 @@ public:
     virtual void Bind() override;
     virtual void Unbind() override;
     
-    virtual bool BindUniform1i(int uniform, int value) override;
-    virtual bool BindUniform1f(int uniform, float value) override;
-    virtual bool BindUniform2i(int uniform, int value1, int value2) override;
-    virtual bool BindUniform2f(int uniform, float value1, float value2) override;
-    virtual bool BindUniformfv(int uniform, const std::vector<float>& value) override;
-    virtual bool BindUniformMatrix4x4f(int uniform, const CMatrix4x4f& value) override;
-    
-    virtual const TUniInt& Uniformsi() const override;
-    virtual const TUniFloat& Uniformsf() const override;
-    virtual const TUniFloat& Uniformsfv() const override;
-    virtual const TUniMatrix4Float& UniformsMatrix4x4f() const override;
-    virtual void UpdateUniforms() const override;
-    
     virtual void Color(const CColor& color) override;
     virtual const CColor& Color() const override;
     
@@ -74,12 +61,6 @@ private:
 private:
     IMaterial::MaterialState m_State;
     static std::stack<IMaterial::MaterialState> s_States;
-    
-    TUniInt m_UniInt;
-    TUniFloat m_UniFloat;
-    TUniInt m_UniIntVec;
-    TUniFloat m_UniFloatVec;
-    TUniMatrix4Float m_UniMatrixFloat;
     
     bool m_IsDirty;
     std::string m_Hash;

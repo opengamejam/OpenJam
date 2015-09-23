@@ -118,7 +118,7 @@ CSprite2DPtr CSprite2D::Create(const std::string& filename, unsigned int cameraI
     indexBuffer->Resize(6);
     IIndexBuffer::SIndexStream& indices = indexBuffer->Lock();
     indices.Set<unsigned short>(0, {0, 1, 3, 0, 2, 3});
-    indexBuffer->Unlock();
+    indexBuffer->Unlock(true);
 
     // Mesh
     mesh = GRenderer->CreateMesh();

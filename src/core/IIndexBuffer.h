@@ -60,7 +60,7 @@ public:
     virtual void* LockRaw() = 0;
     virtual SIndexStream& Lock() = 0;
     virtual bool IsLocked() const = 0;
-    virtual void Unlock() = 0;
+    virtual void Unlock(bool isNeedCommit = false) = 0;
     
     virtual void Bind() = 0;
     virtual void Unbind() = 0;

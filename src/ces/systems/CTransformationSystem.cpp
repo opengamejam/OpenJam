@@ -102,11 +102,10 @@ void CTransfromationSystem::UpdateTransformsRecursively(IEntityPtr entity,
         entity->Get<CRenderComponent>([&](CRenderComponentPtr renderComponent)
         {
             IShaderProgramPtr shader = renderComponent->Shader();
-            IMaterialPtr material = renderComponent->Material();
-            if (material && shader)
+            if (shader)
             {
-                material->BindUniformMatrix4x4f(shader->ModelMatrix(), resultTransform());
-                renderComponent->Material(material);
+                shader->BindUniformMatrix4x4f("MainModelMatrix", resultTransform());
+                renderComponent->Shader(shader);
             }
         });
         

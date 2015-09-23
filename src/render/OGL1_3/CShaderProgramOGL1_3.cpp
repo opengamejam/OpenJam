@@ -209,6 +209,73 @@ uint32_t CShaderProgramOGL1_3::EnvironmentTexture()
     return m_TextureDataHadle[3];
 }
 
+bool CShaderProgramOGL1_3::BindUniform1i(const std::string& uniform, int value)
+{
+    m_UniInt[Uniform(uniform)] = {value};
+    
+    return true;
+}
+
+bool CShaderProgramOGL1_3::BindUniform1f(const std::string& uniform, float value)
+{
+    m_UniFloat[Uniform(uniform)] = {value};
+    
+    return true;
+}
+
+bool CShaderProgramOGL1_3::BindUniform2i(const std::string& uniform, int value1, int value2)
+{
+    m_UniInt[Uniform(uniform)] = {value1, value2};
+    
+    return true;
+}
+
+bool CShaderProgramOGL1_3::BindUniform2f(const std::string& uniform, float value1, float value2)
+{
+    m_UniFloat[Uniform(uniform)] = {value1, value2};
+    
+    return true;
+}
+
+bool CShaderProgramOGL1_3::BindUniformfv(const std::string& uniform, const std::vector<float>& value)
+{
+    m_UniFloatVec[Uniform(uniform)] = value;
+    
+    return true;
+}
+
+bool CShaderProgramOGL1_3::BindUniformMatrix4x4f(const std::string& uniform, const CMatrix4x4f& value)
+{
+    m_UniMatrixFloat[Uniform(uniform)] = value;
+    
+    return true;
+}
+
+const IShaderProgram::TUniInt& CShaderProgramOGL1_3::Uniformsi() const
+{
+    return m_UniInt;
+}
+
+const IShaderProgram::TUniFloat& CShaderProgramOGL1_3::Uniformsf() const
+{
+    return m_UniFloat;
+}
+
+const IShaderProgram::TUniFloat& CShaderProgramOGL1_3::Uniformsfv() const
+{
+    return m_UniFloatVec;
+}
+
+const IShaderProgram::TUniMatrix4Float& CShaderProgramOGL1_3::UniformsMatrix4x4f() const
+{
+    return m_UniMatrixFloat;
+}
+
+void CShaderProgramOGL1_3::UpdateUniforms() const
+{
+    
+}
+
 // *****************************************************************************
 // Protected Methods
 // *****************************************************************************

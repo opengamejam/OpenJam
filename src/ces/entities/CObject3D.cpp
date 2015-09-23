@@ -166,7 +166,7 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, unsigned int came
             {
                 streamIndex.Set<unsigned short>(0, face);
             });
-            indexBuffer->Unlock();
+            indexBuffer->Unlock(true);
         }
 
         // Mesh

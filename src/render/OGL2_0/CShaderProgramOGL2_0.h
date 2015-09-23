@@ -49,19 +49,33 @@ public:
     virtual uint32_t SpecularTexture() override;
     virtual uint32_t EnvironmentTexture() override;
     
+    virtual bool BindUniform1i(const std::string& uniform, int value) override;
+    virtual bool BindUniform1f(const std::string& uniform, float value) override;
+    virtual bool BindUniform2i(const std::string& uniform, int value1, int value2) override;
+    virtual bool BindUniform2f(const std::string& uniform, float value1, float value2) override;
+    virtual bool BindUniformfv(const std::string& uniform, const std::vector<float>& value) override;
+    virtual bool BindUniformMatrix4x4f(const std::string& uniform, const CMatrix4x4f& value) override;
+    
+    virtual const TUniInt& Uniformsi() const override;
+    virtual const TUniFloat& Uniformsf() const override;
+    virtual const TUniFloat& Uniformsfv() const override;
+    virtual const TUniMatrix4Float& UniformsMatrix4x4f() const override;
+    virtual void UpdateUniforms() const override;
+    
 private:
     uint32_t m_ProgramObject;
     
-    uint32_t m_ProectionMatrixHadle;
-    uint32_t m_ModelMatrixHadle;
-    uint32_t m_VertexCoordHandle;
-    uint32_t m_TextureCoordHandle;
-    uint32_t m_VertexColorHandle;
-    uint32_t m_ColorHandle;
-    std::vector<uint32_t> m_TextureDataHadle;
+    std::unordered_map<std::string, uint32_t> m_CachedAttributes;
+    std::unordered_map<std::string, uint32_t> m_CachedUniforms;
     
     bool m_IsLinked;
     std::map<IShader::ShaderType, IShaderPtr> m_AttachedShaders;
+    
+    TUniInt m_UniInt;
+    TUniFloat m_UniFloat;
+    TUniInt m_UniIntVec;
+    TUniFloat m_UniFloatVec;
+    TUniMatrix4Float m_UniMatrixFloat;
 };
 
 }; // namespace jam

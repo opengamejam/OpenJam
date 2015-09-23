@@ -33,7 +33,7 @@ public:
     virtual void* LockRaw() override;
     virtual SIndexStream& Lock() override;
     virtual bool IsLocked() const override;
-    virtual void Unlock() override;
+    virtual void Unlock(bool isNeedCommit = false) override;
     
     virtual void Bind() override;
     virtual void Unbind() override;

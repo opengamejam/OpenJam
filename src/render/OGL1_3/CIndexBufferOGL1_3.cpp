@@ -94,12 +94,15 @@ bool CIndexBufferOGL1_3::IsLocked() const
     return m_IsLocked;
 }
 
-void CIndexBufferOGL1_3::Unlock()
+void CIndexBufferOGL1_3::Unlock(bool isNeedCommit)
 {
 #ifdef GL_ELEMENT_ARRAY_BUFFER
-    Bind();
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_Buffer.size(), m_Buffer.data(), GL_DYNAMIC_DRAW);
-    Unbind();
+    if (isNeedCommit)
+    {
+        Bind();
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_Buffer.size(), m_Buffer.data(), GL_DYNAMIC_DRAW);
+        Unbind();
+    }
     m_IsLocked = false;
 #endif
 }

@@ -9,6 +9,7 @@
 #define ISHADERPROGRAM_H
 
 #include "IShader.h"
+#include "CMatrix4x4.h"
 
 namespace jam
 {
@@ -17,6 +18,13 @@ CLASS_PTR(IShader);
     
 class IShaderProgram
 {
+public:
+    typedef std::map< int, std::vector<int> > TUniInt;
+    typedef std::map< int, std::vector<float> > TUniFloat;
+    typedef std::map< int, CMatrix4x4f > TUniMatrix4Float;
+    typedef std::list<TUniInt> TUniIntList;
+    typedef std::list<TUniFloat> TUniFloatList;
+    
 public:
     IShaderProgram() = default;
     virtual ~IShaderProgram() = default;
@@ -47,6 +55,19 @@ public:
     virtual uint32_t NormalTexture() = 0;
     virtual uint32_t SpecularTexture() = 0;
     virtual uint32_t EnvironmentTexture() = 0;
+    
+    virtual bool BindUniform1i(const std::string& uniform, int value) = 0;
+    virtual bool BindUniform1f(const std::string& uniform, float value) = 0;
+    virtual bool BindUniform2i(const std::string& uniform, int value1, int value2) = 0;
+    virtual bool BindUniform2f(const std::string& uniform, float value1, float value2) = 0;
+    virtual bool BindUniformfv(const std::string& uniform, const std::vector<float>& value) = 0;
+    virtual bool BindUniformMatrix4x4f(const std::string& uniform, const CMatrix4x4f& value) = 0;
+    
+    virtual const TUniInt& Uniformsi() const = 0;
+    virtual const TUniFloat& Uniformsf() const = 0;
+    virtual const TUniFloat& Uniformsfv() const = 0;
+    virtual const TUniMatrix4Float& UniformsMatrix4x4f() const = 0;
+    virtual void UpdateUniforms() const = 0;
 };
     
 }; // namespace jam

@@ -34,7 +34,7 @@ CLASS_PTR(IModel3D);
 // Public Methods
 // *****************************************************************************
 
-CObject3DPtr CObject3D::CreateObj(const std::string& filename, unsigned int cameraId)
+CObject3DPtr CObject3D::CreateObj(const std::string& filename, uint32_t cameraId)
 {
     CResourceCache<IModel3D> resourceCache;
     IModel3DPtr model3D = resourceCache.AcquireResource(filename, false,
@@ -211,7 +211,7 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, unsigned int came
         renderComponent->Material(material, group);
         renderComponent->Mesh(mesh, group);
         renderComponent->Texture(texture, group);
-        if (cameraId != -1u)
+        if (cameraId != std::numeric_limits<uint32_t>::max())
         {
             renderComponent->AddCameraId(cameraId);
         }

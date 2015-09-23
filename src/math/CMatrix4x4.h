@@ -27,8 +27,8 @@ public:
     
     static const CMatrix4x4<T>  Identity();
     static const CMatrix4x4<T>  Zero();
-    static const CMatrix4x4<T>  Perspective(T fov, T aspect, T zNear, T zFar);
-    static const CMatrix4x4<T>  Orthographic(T left, T right, T top, T bottom, T _near, T _far);
+    static const CMatrix4x4<T>  Perspective(float fov, float aspect, float zNear, float zFar);
+    static const CMatrix4x4<T>  Orthographic(float left, float right, float top, float bottom, float _near, float _far);
     
     CMatrix4x4<T>               Clone() const;
     CMatrix4x4<T>&              Transpose();

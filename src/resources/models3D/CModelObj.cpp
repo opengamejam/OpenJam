@@ -141,7 +141,7 @@ bool CModelObj::ParseLine(const std::string& line,
     }
     else if (components[0] == "f")
     {
-        long size = components.size();
+        int64_t size = components.size();
         
         std::vector<std::string> faces;
         if (size == 4)

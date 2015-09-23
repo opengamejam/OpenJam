@@ -297,9 +297,9 @@ struct IVertexBuffer::SVertexStream
         return sizeForType(dataType);
     }
     
-    static uint64_t sizeForType(DataTypes type)
+    static uint32_t sizeForType(DataTypes type)
     {
-        static std::map<DataTypes, uint64_t> types =
+        static std::map<DataTypes, uint32_t> types =
         {
             {Unknown, 0},
             {Byte, sizeof(char)},

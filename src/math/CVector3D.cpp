@@ -62,22 +62,40 @@ template <class T>
 CVector3D<T>::~CVector3D() {}
 
 template <class T>
-void  CVector3D<T>::X(T _x) { x = _x; }
+void  CVector3D<T>::X(T _x)
+{ 
+	x = _x;
+}
 
 template <class T>
-T CVector3D<T>::X() const   { return x; }
+T CVector3D<T>::X() const   
+{
+	return x;
+}
 
 template <class T>
-void  CVector3D<T>::Y(T _y) { y = _y; }
+void  CVector3D<T>::Y(T _y) 
+{ 
+	y = _y; 
+}
 
 template <class T>
-T CVector3D<T>::Y() const   { return y; }
+T CVector3D<T>::Y() const  
+{ 
+	return y; 
+}
 
 template <class T>
-void  CVector3D<T>::Z(T _z) { z = _z; }
+void  CVector3D<T>::Z(T _z) 
+{
+	z = _z; 
+}
 
 template <class T>
-T CVector3D<T>::Z() const   { return z; }
+T CVector3D<T>::Z() const   
+{
+	return z; 
+}
 
 template <class T>
 void CVector3D<T>::Set(T _x, T _y, T _z) { x = _x; y = _y; z = _z; }
@@ -85,13 +103,13 @@ void CVector3D<T>::Set(T _x, T _y, T _z) { x = _x; y = _y; z = _z; }
 template <class T>
 T CVector3D<T>::Angle(const CVector3D<T>& other)
 {
-    return atan2(x * other.Y() - other.X() * y, x * other.X() + y * other.Y());
+    return static_cast<T>(atan2(x * other.Y() - other.X() * y, x * other.X() + y * other.Y()));
 }
 
 template <class T>
 T CVector3D<T>::Length() const
 {
-    return sqrt(x * x + y * y + z * z);
+    return static_cast<T>(sqrt(x * x + y * y + z * z));
 }
 
 template <class T>
@@ -185,7 +203,7 @@ CVector3D<T>& CVector3D<T>::operator/= (const CVector3D<T>& other)
 template <class T>
 const CVector3D<T>& CVector3D<T>::Normalize()
 {
-    T l = 1.0f / Length();
+    T l = static_cast<T>(1.0f / Length());
     
     x *= l;
     y *= l;

@@ -25,13 +25,13 @@ public:
     CVector2D(const std::string& str, char delimeter = ',', const CVector2D<T>& defaultValue = CVector2D<T>());
     ~CVector2D();
     
-    void         X(T _x);
-    float        X() const;
-    void         Y(T _y);
-    float        Y() const;
-    void         Set(float _x, float _y);
-    double       Angle(const CVector2D<T>& other);
-    double       Length() const;
+    void X(T _x);
+    T X() const;
+    void Y(T _y);
+    T Y() const;
+    void Set(T _x, T _y);
+    T Angle(const CVector2D<T>& other);
+    T Length() const;
     const CVector2D<T>& operator+= (const CVector2D<T>& other);
     CVector2D<T> operator+ (const CVector2D<T>& other);
     const CVector2D<T>& operator-= (const CVector2D<T>& other);

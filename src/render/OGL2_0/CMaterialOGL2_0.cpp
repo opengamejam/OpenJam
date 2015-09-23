@@ -256,7 +256,8 @@ void CMaterialOGL2_0::ApplyState(IMaterial::MaterialState state, IMaterial::Mate
     if (state.depthTest.rangeNear != prevState.depthTest.rangeNear ||
         state.depthTest.rangeFar != prevState.depthTest.rangeFar)
     {
-        glDepthRangef(state.depthTest.rangeNear, state.depthTest.rangeFar);
+        glDepthRangef(static_cast<GLfloat>(state.depthTest.rangeNear), 
+					  static_cast<GLfloat>(state.depthTest.rangeFar));
     }
     
     // Stencil

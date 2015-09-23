@@ -95,7 +95,7 @@ CRect2D<T>::CRect2D(const CVector2D<T>& position, const CVector2D<T>& size)
 }
 
 template <class T>
-CRect2D<T>::~CRect2D<T>()
+CRect2D<T>::~CRect2D()
 {
 }
 

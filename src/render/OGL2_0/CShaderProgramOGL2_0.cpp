@@ -124,7 +124,7 @@ bool CShaderProgramOGL2_0::IsLinked() const
 
 uint32_t CShaderProgramOGL2_0::Attribute(const std::string& name)
 {
-    uint32_t location = -1u;
+    uint32_t location = std::numeric_limits<uint32_t>::max();
     std::unordered_map<std::string, uint32_t>::const_iterator it = m_CachedAttributes.find(name);
     if (it == m_CachedAttributes.end())
     {
@@ -141,7 +141,7 @@ uint32_t CShaderProgramOGL2_0::Attribute(const std::string& name)
 
 uint32_t CShaderProgramOGL2_0::Uniform(const std::string& name)
 {
-    uint32_t location = -1u;
+    uint32_t location = std::numeric_limits<uint32_t>::max();
     std::unordered_map<std::string, uint32_t>::const_iterator it = m_CachedUniforms.find(name);
     if (it == m_CachedUniforms.end())
     {
@@ -201,7 +201,7 @@ uint32_t CShaderProgramOGL2_0::Texture(uint32_t index)
     {
         return it->second;
     }
-    return -1u;
+    return std::numeric_limits<uint32_t>::max();
 }
 
 uint32_t CShaderProgramOGL2_0::DiffuseTexture()
@@ -227,7 +227,7 @@ uint32_t CShaderProgramOGL2_0::EnvironmentTexture()
 bool CShaderProgramOGL2_0::BindUniform1i(const std::string& uniform, int value)
 {
     uint32_t location = Uniform(uniform);
-    if (location != -1u)
+    if (location != std::numeric_limits<uint32_t>::max())
     {
         m_UniInt[location] = {value};
         
@@ -240,7 +240,7 @@ bool CShaderProgramOGL2_0::BindUniform1i(const std::string& uniform, int value)
 bool CShaderProgramOGL2_0::BindUniform1f(const std::string& uniform, float value)
 {
     uint32_t location = Uniform(uniform);
-    if (location != -1u)
+    if (location != std::numeric_limits<uint32_t>::max())
     {
         m_UniFloat[location] = {value};
         
@@ -253,7 +253,7 @@ bool CShaderProgramOGL2_0::BindUniform1f(const std::string& uniform, float value
 bool CShaderProgramOGL2_0::BindUniform2i(const std::string& uniform, int value1, int value2)
 {
     uint32_t location = Uniform(uniform);
-    if (location != -1u)
+    if (location != std::numeric_limits<uint32_t>::max())
     {
         m_UniInt[location] = {value1, value2};
         
@@ -266,7 +266,7 @@ bool CShaderProgramOGL2_0::BindUniform2i(const std::string& uniform, int value1,
 bool CShaderProgramOGL2_0::BindUniform2f(const std::string& uniform, float value1, float value2)
 {
     uint32_t location = Uniform(uniform);
-    if (location != -1u)
+    if (location != std::numeric_limits<uint32_t>::max())
     {
         m_UniFloat[location] = {value1, value2};
         
@@ -279,7 +279,7 @@ bool CShaderProgramOGL2_0::BindUniform2f(const std::string& uniform, float value
 bool CShaderProgramOGL2_0::BindUniformfv(const std::string& uniform, const std::vector<float>& value)
 {
     uint32_t location = Uniform(uniform);
-    if (location != -1u)
+    if (location != std::numeric_limits<uint32_t>::max())
     {
         m_UniFloatVec[location] = value;
         
@@ -292,7 +292,7 @@ bool CShaderProgramOGL2_0::BindUniformfv(const std::string& uniform, const std::
 bool CShaderProgramOGL2_0::BindUniformMatrix4x4f(const std::string& uniform, const CMatrix4x4f& value)
 {
     uint32_t location = Uniform(uniform);
-    if (location != -1u)
+    if (location != std::numeric_limits<uint32_t>::max())
     {
         m_UniMatrixFloat[location] = value;
         

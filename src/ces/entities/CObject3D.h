@@ -23,7 +23,8 @@ class CObject3D : public IEntity
 {
 public:
     // Load mesh from .obj 3D file
-    static CObject3DPtr CreateObj(const std::string& filename, unsigned int cameraId = -1u);
+    static CObject3DPtr CreateObj(const std::string& filename, 
+								  uint32_t cameraId = std::numeric_limits<uint32_t>::max());
     
     CObject3D();
     virtual ~CObject3D();

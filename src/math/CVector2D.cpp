@@ -59,7 +59,7 @@ void CVector2D<T>::X(T _x)
 }
 
 template <class T>
-float CVector2D<T>::X() const
+T CVector2D<T>::X() const
 {
     return x;
 }
@@ -71,28 +71,28 @@ void CVector2D<T>::Y(T _y)
 }
 
 template <class T>
-float CVector2D<T>::Y() const
+T CVector2D<T>::Y() const
 {
     return y;
 }
 
 template <class T>
-void CVector2D<T>::Set(float _x, float _y)
+void CVector2D<T>::Set(T _x, T _y)
 {
     x = _x;
     y = _y;
 }
 
 template <class T>
-double CVector2D<T>::Angle(const CVector2D<T>& other)
+T CVector2D<T>::Angle(const CVector2D<T>& other)
 {
-    return atan2(x * other.Y() - other.X() * y, x * other.X() + y * other.Y());
+    return static_cast<T>(atan2(x * other.Y() - other.X() * y, x * other.X() + y * other.Y()));
 }
 
 template <class T>
-double CVector2D<T>::Length() const
+T CVector2D<T>::Length() const
 {
-    return sqrt(x * x + y * y);
+    return static_cast<T>(sqrt(x * x + y * y));
 }
 
 template <class T>

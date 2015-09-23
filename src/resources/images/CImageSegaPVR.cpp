@@ -145,7 +145,7 @@ INL uint32_t MipMapsCountFromWidth(uint32_t width)
     while( width )
     {
         ++mipMapsCount;
-        width *= 0.5f;
+        width /= 2;
     }
     
     return mipMapsCount;

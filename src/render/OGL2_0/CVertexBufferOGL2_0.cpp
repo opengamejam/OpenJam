@@ -53,12 +53,12 @@ IVertexBuffer::SVertexStream& CVertexBufferOGL2_0::Lock(IVertexBuffer::VertexTyp
     
     if (m_VertexStreamers.find(vertexType) == m_VertexStreamers.end())
     {
-        unsigned int absoluteOffset = 0;
+        uint64_t absoluteOffset = 0;
         std::for_each(m_VertexStreamers.begin(), m_VertexStreamers.end(), [&](const TVertexStreamMap::value_type& value)
-                      {
-                          const IVertexBuffer::SVertexStream& stream = value.second;
-                          absoluteOffset += (stream.DataSize() * stream.stride * Size());
-                      });
+        {
+            const IVertexBuffer::SVertexStream& stream = value.second;
+            absoluteOffset += (stream.DataSize() * stream.stride * Size());
+        });
         
         SVertexStream stream = SVertexStream(shared_from_this());
         stream.streamIndex = (unsigned int)m_VertexStreamers.size();

@@ -22,25 +22,28 @@ using namespace jam;
 CIndexBufferOGL2_0::CIndexBufferOGL2_0()
 : m_Id(0)
 , m_ElementSize(1)
+, m_IsLocked(false)
 {
     
 }
 
 CIndexBufferOGL2_0::~CIndexBufferOGL2_0()
 {
-    Destroy();
+    Shutdown();
 }
 
-void CIndexBufferOGL2_0::Initialize(size_t elementSize)
+void CIndexBufferOGL2_0::Initialize(DataTypes dataType)
 {
     if (!IsValid())
     {
         glGenBuffers(1, &m_Id);
+        m_Stream = IIndexBuffer::SIndexStream(shared_from_this());
+        m_Stream.dataType = dataType;
     }
-    ElementSize(elementSize);
+    ElementSize(IIndexBuffer::SIndexStream::sizeForType(dataType));
 }
 
-void CIndexBufferOGL2_0::Destroy()
+void CIndexBufferOGL2_0::Shutdown()
 {
     if (IsValid())
     {
@@ -54,31 +57,46 @@ bool CIndexBufferOGL2_0::IsValid() const
     return (m_Id != 0);
 }
 
-size_t CIndexBufferOGL2_0::SizeRaw() const
+uint64_t CIndexBufferOGL2_0::SizeRaw() const
 {
     return m_Buffer.size();
 }
 
-void CIndexBufferOGL2_0::ResizeRaw(size_t newSize)
+void CIndexBufferOGL2_0::ResizeRaw(uint64_t newSize)
 {
     m_Buffer.resize(newSize);
 }
 
-size_t CIndexBufferOGL2_0::ElementSize() const
+uint64_t CIndexBufferOGL2_0::ElementSize() const
 {
     return m_ElementSize;
 }
 
 void* CIndexBufferOGL2_0::LockRaw()
 {
+    m_IsLocked = true;
     return m_Buffer.data();
 }
 
-void CIndexBufferOGL2_0::Unlock()
-{    
-    Bind();
-    glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_Buffer.size(), m_Buffer.data(), GL_DYNAMIC_DRAW);
-    Unbind();
+IIndexBuffer::SIndexStream& CIndexBufferOGL2_0::Lock()
+{
+    return m_Stream;
+}
+
+bool CIndexBufferOGL2_0::IsLocked() const
+{
+    return m_IsLocked;
+}
+
+void CIndexBufferOGL2_0::Unlock(bool isNeedCommit)
+{
+    if (isNeedCommit)
+    {
+        Bind();
+        glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_Buffer.size(), m_Buffer.data(), GL_DYNAMIC_DRAW);
+        Unbind();
+    }
+    m_IsLocked = false;
 }
 
 void CIndexBufferOGL2_0::Bind()
@@ -95,9 +113,9 @@ void CIndexBufferOGL2_0::Unbind()
 // Protected Methods
 // *****************************************************************************
 
-void CIndexBufferOGL2_0::ElementSize(size_t elementSize)
+void CIndexBufferOGL2_0::ElementSize(uint64_t elementSize)
 {
-    m_ElementSize = std::max<size_t>(elementSize, 1);
+    m_ElementSize = std::max<uint64_t>(elementSize, 1);
 }
 
 // *****************************************************************************

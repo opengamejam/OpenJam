@@ -34,7 +34,7 @@ public:
     static bool IsMainThread();
     
     void Initialize(uint32_t threadsNum = 1);
-    void Destroy();
+    void Shutdown();
     
     void RunAsync(ThreadType threadType, const CThreadExecutor::TExecuteBlock& block);
     void Update(unsigned long dt);

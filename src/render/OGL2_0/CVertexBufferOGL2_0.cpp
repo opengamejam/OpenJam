@@ -30,10 +30,10 @@ CVertexBufferOGL2_0::CVertexBufferOGL2_0()
 
 CVertexBufferOGL2_0::~CVertexBufferOGL2_0()
 {
-    Destroy();
+    Shutdown();
 }
 
-void CVertexBufferOGL2_0::Initialize(size_t elementSize)
+void CVertexBufferOGL2_0::Initialize(uint64_t elementSize)
 {
     if (!IsValid())
     {
@@ -70,7 +70,7 @@ IVertexBuffer::SVertexStream& CVertexBufferOGL2_0::Lock(IVertexBuffer::VertexTyp
     return m_VertexStreamers[vertexType];
 }
 
-void CVertexBufferOGL2_0::Destroy()
+void CVertexBufferOGL2_0::Shutdown()
 {
     if (IsValid())
     {
@@ -84,17 +84,17 @@ bool CVertexBufferOGL2_0::IsValid() const
     return (m_Id != 0);
 }
 
-size_t CVertexBufferOGL2_0::SizeRaw() const
+uint64_t CVertexBufferOGL2_0::SizeRaw() const
 {
     return m_Buffer.size();
 }
 
-void CVertexBufferOGL2_0::ResizeRaw(size_t newSize)
+void CVertexBufferOGL2_0::ResizeRaw(uint64_t newSize)
 {
     m_Buffer.resize(newSize);
 }
 
-size_t CVertexBufferOGL2_0::ElementSize() const
+uint64_t CVertexBufferOGL2_0::ElementSize() const
 {
     return m_ElementSize;
 }
@@ -110,16 +110,20 @@ bool CVertexBufferOGL2_0::IsLocked() const
     return m_IsLocked;
 }
 
-void CVertexBufferOGL2_0::Unlock()
+void CVertexBufferOGL2_0::Unlock(bool isNeedCommit)
 {
     if (!m_IsLocked)
     {
         return;
     }
     
-    Bind();
-    glBufferData(GL_ARRAY_BUFFER, m_Buffer.size(), m_Buffer.data(), GL_DYNAMIC_DRAW);
-    Unbind();
+    if (isNeedCommit)
+    {
+        Bind();
+        glBufferData(GL_ARRAY_BUFFER, m_Buffer.size(), m_Buffer.data(), GL_DYNAMIC_DRAW);
+        Unbind();
+    }
+    
     m_IsLocked = false;
 }
 
@@ -174,9 +178,9 @@ void CVertexBufferOGL2_0::Unbind()
 // Protected Methods
 // *****************************************************************************
 
-void CVertexBufferOGL2_0::ElementSize(size_t elementSize)
+void CVertexBufferOGL2_0::ElementSize(uint64_t elementSize)
 {
-    m_ElementSize = std::max<size_t>(elementSize, 1);
+    m_ElementSize = std::max<uint64_t>(elementSize, 1);
 }
 
 // *****************************************************************************

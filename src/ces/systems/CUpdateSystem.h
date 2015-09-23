@@ -21,7 +21,7 @@ public:
     CUpdateSystem();
     virtual ~CUpdateSystem();
     
-    void Update(unsigned long dt);
+    virtual void Update(unsigned long dt) override;
 };
     
 } // namespace jam

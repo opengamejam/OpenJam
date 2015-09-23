@@ -8,7 +8,6 @@
 #if defined(RENDER_OGL1_3)
 
 #include "CMaterialOGL1_3.h"
-#include "IStencil.h"
 
 using namespace jam;
 
@@ -171,7 +170,7 @@ void CMaterialOGL1_3::StencilEnable(bool value)
     m_IsDirty = true;
 }
 
-void CMaterialOGL1_3::StencilFunc(TestFuncs func, unsigned int ref, unsigned int mask)
+void CMaterialOGL1_3::StencilFunc(TestFuncs func, uint32_t ref, uint32_t mask)
 {
     m_State.stencilTest.func = func;
     m_State.stencilTest.ref = ref;
@@ -207,73 +206,6 @@ const std::string& CMaterialOGL1_3::Hash()
     }
     
     return m_Hash;
-}
-
-bool CMaterialOGL1_3::BindUniform1i(int uniform, int value)
-{
-    m_UniInt[uniform] = std::vector<int>(value);
-    
-    return true;
-}
-
-bool CMaterialOGL1_3::BindUniform1f(int uniform, float value)
-{
-    m_UniFloat[uniform] = std::vector<float>(value);
-    
-    return true;
-}
-
-bool CMaterialOGL1_3::BindUniform2i(int uniform, int value1, int value2)
-{
-    m_UniInt[uniform] = std::vector<int>(value1, value2);
-    
-    return true;
-}
-
-bool CMaterialOGL1_3::BindUniform2f(int uniform, float value1, float value2)
-{
-    m_UniFloat[uniform] = std::vector<float>(value1, value2);
-    
-    return true;
-}
-
-bool CMaterialOGL1_3::BindUniformfv(int uniform, const std::vector<float>& value)
-{
-    m_UniFloatVec[uniform] = value;
-    
-    return true;
-}
-
-bool CMaterialOGL1_3::BindUniformMatrix4x4f(int uniform, const CMatrix4x4f& value)
-{
-    m_UniMatrixFloat[uniform] = value;
-    
-    return true;
-}
-
-const IMaterial::TUniInt& CMaterialOGL1_3::Uniformsi() const
-{
-    return m_UniInt;
-}
-
-const IMaterial::TUniFloat& CMaterialOGL1_3::Uniformsf() const
-{
-    return m_UniFloat;
-}
-
-const IMaterial::TUniFloat& CMaterialOGL1_3::Uniformsfv() const
-{
-    return m_UniFloatVec;
-}
-
-const IMaterial::TUniMatrix4Float& CMaterialOGL1_3::UniformsMatrix4x4f() const
-{
-    return m_UniMatrixFloat;
-}
-
-void CMaterialOGL1_3::UpdateUniforms() const
-{
-    
 }
 
 // *****************************************************************************

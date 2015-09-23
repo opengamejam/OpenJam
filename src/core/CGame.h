@@ -29,7 +29,7 @@ public:
 
     
     void Initialize();
-    void Destroy();
+    void Shutdown();
     bool IsInitialized() const;
     
     IRenderViewPtr RenderView() const;

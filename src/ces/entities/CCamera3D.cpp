@@ -20,9 +20,9 @@ using namespace jam;
 // Public Methods
 // *****************************************************************************
 
-CCamera3DPtr CCamera3D::Create(float fov, float width, float height, float near, float far)
+CCamera3DPtr CCamera3D::Create(float _fov, float _width, float _height, float _near, float _far)
 {
-    CCamera3DPtr camera(new CCamera3D(fov, width, height, near, far));
+    CCamera3DPtr camera(new CCamera3D(_fov, _width, _height, _near, _far));
     
     CTransformationComponentPtr transformComponent(new CTransformationComponent());
     
@@ -37,13 +37,13 @@ CCamera3DPtr CCamera3D::Create(float fov, float width, float height, float near,
     return camera;
 }
 
-CCamera3D::CCamera3D(float fov, float width, float height, float near, float far)
+CCamera3D::CCamera3D(float _fov, float _width, float _height, float _near, float _far)
 : ICamera()
-, m_Width(width)
-, m_Height(height)
-, m_Near(std::max(0.01f, near))
-, m_Far(far)
-, m_ProjectionMatrix(CMatrix4x4f::Perspective(fov, m_Width / m_Height, m_Near, m_Far))
+, m_Width(_width)
+, m_Height(_height)
+, m_Near(std::max(0.01f, _near))
+, m_Far(_far)
+, m_ProjectionMatrix(CMatrix4x4f::Perspective(_fov, m_Width / m_Height, m_Near, m_Far))
 , m_RenderTarget(nullptr)
 , m_Id(ICamera::NextCameraId())
 {
@@ -55,7 +55,7 @@ CCamera3D::~CCamera3D()
 
 }
 
-unsigned int CCamera3D::Id() const
+uint32_t CCamera3D::Id() const
 {
     return m_Id;
 }

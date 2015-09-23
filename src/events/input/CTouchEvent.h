@@ -32,7 +32,7 @@ public:
     CTouchEvent(const CVector2Df& position, ETouchEventType type);
     virtual ~CTouchEvent();
     
-    virtual const std::string& Id() const;
+    virtual const std::string& Id() const override;
     
     const CVector2Df& GetPosition() const;
     ETouchEventType GetType() const;

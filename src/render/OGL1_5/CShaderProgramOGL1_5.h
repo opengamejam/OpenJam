@@ -21,46 +21,64 @@ public:
     CShaderProgramOGL1_5();
     virtual ~CShaderProgramOGL1_5();
     
-    virtual void Bind();
-    virtual void Unbind();
+    virtual void Bind() override;
+    virtual void Unbind() override;
     
-    virtual void AttachShader(IShaderPtr shader);
-    virtual void DetachShader(IShader::ShaderType shaderType);
-    virtual bool IsShaderAttached(IShader::ShaderType shaderType);
-    virtual bool IsValid();
-    virtual bool Link();
-    virtual bool IsLinked() const;
+    virtual void AttachShader(IShaderPtr shader) override;
+    virtual void DetachShader(IShader::ShaderType shaderType) override;
+    virtual bool IsShaderAttached(IShader::ShaderType shaderType) override;
+    virtual bool IsValid() override;
+    virtual bool Link() override;
+    virtual bool IsLinked() const override;
     
-    virtual unsigned int Attribute(const std::string& name);
-    virtual unsigned int Uniform(const std::string& name);
+    virtual uint32_t Attribute(const std::string& name) override;
+    virtual uint32_t Uniform(const std::string& name) override;
     
     // Default locations
-    virtual unsigned int VertexPosition();
-    virtual unsigned int TextureCoord();
-    virtual unsigned int VertexColor();
-    virtual unsigned int MainTexture();
-    virtual unsigned int MainColor();
-    virtual unsigned int ProjectionMatrix();
-    virtual unsigned int ModelMatrix();
+    virtual uint32_t VertexPosition() override;
+    virtual uint32_t TextureCoord() override;
+    virtual uint32_t VertexColor() override;
+    virtual uint32_t MainTexture() override;
+    virtual uint32_t MainColor() override;
+    virtual uint32_t ProjectionMatrix() override;
+    virtual uint32_t ModelMatrix() override;
     
-    virtual unsigned int Texture(unsigned int index);
-    virtual unsigned int DiffuseTexture();
-    virtual unsigned int NormalTexture();
-    virtual unsigned int SpecularTexture();
-    virtual unsigned int EnvironmentTexture();
+    virtual uint32_t Texture(uint32_t index) override;
+    virtual uint32_t DiffuseTexture() override;
+    virtual uint32_t NormalTexture() override;
+    virtual uint32_t SpecularTexture() override;
+    virtual uint32_t EnvironmentTexture() override;
     
+    virtual bool BindUniform1i(const std::string& uniform, int value) override;
+    virtual bool BindUniform1f(const std::string& uniform, float value) override;
+    virtual bool BindUniform2i(const std::string& uniform, int value1, int value2) override;
+    virtual bool BindUniform2f(const std::string& uniform, float value1, float value2) override;
+    virtual bool BindUniformfv(const std::string& uniform, const std::vector<float>& value) override;
+    virtual bool BindUniformMatrix4x4f(const std::string& uniform, const CMatrix4x4f& value) override;
+    
+    virtual const TUniInt& Uniformsi() const override;
+    virtual const TUniFloat& Uniformsf() const override;
+    virtual const TUniFloat& Uniformsfv() const override;
+    virtual const TUniMatrix4Float& UniformsMatrix4x4f() const override;
+    virtual void UpdateUniforms() const override;
     
 private:
-    int m_ProectionMatrixHadle;
-    int m_ModelMatrixHadle;
-    int m_VertexCoordHandle;
-    int m_TextureCoordHandle;
-    int m_VertexColorHandle;
-    int m_ColorHandle;
-    std::vector<int> m_TextureDataHadle;
+    uint32_t m_ProectionMatrixHadle;
+    uint32_t m_ModelMatrixHadle;
+    uint32_t m_VertexCoordHandle;
+    uint32_t m_TextureCoordHandle;
+    uint32_t m_VertexColorHandle;
+    uint32_t m_ColorHandle;
+    std::vector<uint32_t> m_TextureDataHadle;
     
     bool m_IsLinked;
     std::map<IShader::ShaderType, IShaderPtr> m_AttachedShaders;
+    
+    TUniInt m_UniInt;
+    TUniFloat m_UniFloat;
+    TUniInt m_UniIntVec;
+    TUniFloat m_UniFloatVec;
+    TUniMatrix4Float m_UniMatrixFloat;
 };
 
 }; // namespace jam

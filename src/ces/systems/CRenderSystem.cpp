@@ -147,16 +147,16 @@ void CRenderSystem::Draw(ICameraPtr camera)
 				texture->Bind();
 			}
 			mesh->Bind();
-
-			material->BindUniformMatrix4x4f(shader->ProjectionMatrix(), camera->ProjectionMatrix());
-			material->UpdateUniforms();
+            // TODO: Move it to another place 
+			shader->BindUniformMatrix4x4f("MainProjectionMatrix", camera->ProjectionMatrix());
+			shader->UpdateUniforms();
 
 			GRenderer->Draw(mesh, material, shader);
 
 			mesh->Unbind();
 			if (texture)
 			{
-			texture->Unbind();
+                texture->Unbind();
 			}
 			material->Unbind();
 			shader->Unbind();

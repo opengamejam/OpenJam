@@ -8,7 +8,6 @@
 #if defined(RENDER_OGL2_0) || defined(RENDER_OGLES2_0)
 
 #include "CMaterialOGL2_0.h"
-#include "IStencil.h"
 
 using namespace jam;
 
@@ -140,10 +139,10 @@ void CMaterialOGL2_0::DepthWriteEnable(bool value)
     m_IsDirty = true;
 }
 
-void CMaterialOGL2_0::DepthRange(double near, double far)
+void CMaterialOGL2_0::DepthRange(double _near, double _far)
 {
-    m_State.depthTest.rangeNear = near;
-    m_State.depthTest.rangeFar = far;
+    m_State.depthTest.rangeNear = _near;
+    m_State.depthTest.rangeFar = _far;
     m_IsDirty = true;
 }
 
@@ -169,7 +168,7 @@ void CMaterialOGL2_0::StencilEnable(bool value)
     m_IsDirty = true;
 }
 
-void CMaterialOGL2_0::StencilFunc(TestFuncs func, unsigned int ref, unsigned int mask)
+void CMaterialOGL2_0::StencilFunc(TestFuncs func, uint32_t ref, uint32_t mask)
 {
     m_State.stencilTest.func = func;
     m_State.stencilTest.ref = ref;
@@ -205,231 +204,6 @@ const std::string& CMaterialOGL2_0::Hash()
     }
     
     return m_Hash;
-}
-
-bool CMaterialOGL2_0::BindUniform1i(int uniform, int value)
-{
-    if (uniform >= 0)
-    {
-        m_UniInt[uniform] = std::vector<int>(value);
-        
-        return true;
-    }
-    
-    return false;
-}
-
-bool CMaterialOGL2_0::BindUniform1f(int uniform, float value)
-{
-    if (uniform >= 0)
-    {
-        m_UniFloat[uniform] = std::vector<float>(value);
-        
-        return true;
-    }
-    
-    return false;
-}
-
-bool CMaterialOGL2_0::BindUniform2i(int uniform, int value1, int value2)
-{
-    if (uniform >= 0)
-    {
-        m_UniInt[uniform] = std::vector<int>(value1, value2);
-        
-        return true;
-    }
-    
-    return false;
-}
-
-bool CMaterialOGL2_0::BindUniform2f(int uniform, float value1, float value2)
-{
-    if (uniform >= 0)
-    {
-        m_UniFloat[uniform] = std::vector<float>(value1, value2);
-        
-        return true;
-    }
-    
-    return false;
-}
-
-bool CMaterialOGL2_0::BindUniformfv(int uniform, const std::vector<float>& value)
-{
-    if (uniform >= 0)
-    {
-        m_UniFloatVec[uniform] = value;
-        
-        return true;
-    }
-    
-    return false;
-}
-
-bool CMaterialOGL2_0::BindUniformMatrix4x4f(int uniform, const CMatrix4x4f& value)
-{
-    if (uniform >= 0)
-    {
-        m_UniMatrixFloat[uniform] = value;
-        
-        return true;
-    }
-    
-    return false;
-}
-
-const IMaterial::TUniInt& CMaterialOGL2_0::Uniformsi() const
-{
-    return m_UniInt;
-}
-
-const IMaterial::TUniFloat& CMaterialOGL2_0::Uniformsf() const
-{
-    return m_UniFloat;
-}
-
-const IMaterial::TUniFloat& CMaterialOGL2_0::Uniformsfv() const
-{
-    return m_UniFloatVec;
-}
-
-const IMaterial::TUniMatrix4Float& CMaterialOGL2_0::UniformsMatrix4x4f() const
-{
-    return m_UniMatrixFloat;
-}
-
-INL void AddUniformMatrix4f(unsigned int location, const CMatrix4x4f& value)
-{
-    glUniformMatrix4fv(location, 1, GL_FALSE, value().data());
-}
-
-INL void AddUniformf(unsigned int location, const std::vector<float>& value, bool isVector)
-{
-    if (isVector)
-    {
-        switch (value.size())
-        {
-            case 1:
-                glUniform1fv(location, 1, value.data());
-                break;
-                
-            case 2:
-                glUniform2fv(location, 1, value.data());
-                break;
-                
-            case 3:
-                glUniform3fv(location, 1, value.data());
-                break;
-                
-            case 4:
-                glUniform4fv(location, 1, value.data());
-                break;
-        };
-    }
-    else
-    {
-        switch (value.size())
-        {
-            case 1:
-                glUniform1f(location, value[0]);
-                break;
-                
-            case 2:
-                glUniform2f(location, value[0], value[1]);
-                break;
-                
-            case 3:
-                glUniform3f(location, value[0], value[1], value[2]);
-                break;
-                
-            case 4:
-                glUniform4f(location, value[0], value[1], value[2], value[3]);
-                break;
-        };
-    }
-}
-
-INL void AddUniformi(unsigned int location, const std::vector<int>& value, bool isVector)
-{
-    if (isVector)
-    {
-        switch (value.size())
-        {
-            case 1:
-                glUniform1iv(location, 1, value.data());
-                break;
-                
-            case 2:
-                glUniform2iv(location, 1, value.data());
-                break;
-                
-            case 3:
-                glUniform3iv(location, 1, value.data());
-                break;
-                
-            case 4:
-                glUniform4iv(location, 1, value.data());
-                break;
-        };
-    }
-    else
-    {
-        switch (value.size())
-        {
-            case 1:
-                glUniform1i(location, value[0]);
-                break;
-                
-            case 2:
-                glUniform2i(location, value[0], value[1]);
-                break;
-                
-            case 3:
-                glUniform3i(location, value[0], value[1], value[2]);
-                break;
-            case 4:
-                glUniform4i(location, value[0], value[1], value[2], value[3]);
-                break;
-        };
-    }
-}
-
-INL void AddUniformMatrix4f(const IMaterial::TUniMatrix4Float& uniMatrix)
-{
-    std::for_each(uniMatrix.begin(), uniMatrix.end(), [&](const IMaterial::TUniMatrix4Float::value_type& value)
-                  {
-                      AddUniformMatrix4f(value.first, value.second);
-                  });
-}
-
-INL void AddUniformf(const IMaterial::TUniFloat& uniFloat, bool isVector)
-{
-    std::for_each(uniFloat.begin(), uniFloat.end(), [&](const IMaterial::TUniFloat::value_type& value)
-                  {
-                      AddUniformf(value.first, value.second, isVector);
-                  });
-}
-
-INL void AddUniformi(const IMaterial::TUniInt& uniInt, bool isVector)
-{
-    std::for_each(uniInt.begin(), uniInt.end(), [&](const IMaterial::TUniInt::value_type& value)
-                  {
-                      AddUniformi(value.first, value.second, isVector);
-                  });
-}
-
-void CMaterialOGL2_0::UpdateUniforms() const
-{
-    const IMaterial::TUniFloat& uniFloat = Uniformsf();
-    const IMaterial::TUniInt& uniInt = Uniformsi();
-    const IMaterial::TUniFloat& uniFloatVec = Uniformsfv();
-    const IMaterial::TUniMatrix4Float& uniMatrix4x4f = UniformsMatrix4x4f();
-    
-    AddUniformi(uniInt, false);
-    AddUniformf(uniFloat, false);
-    AddUniformf(uniFloatVec, true);
-    AddUniformMatrix4f(uniMatrix4x4f);
 }
 
 // *****************************************************************************
@@ -518,7 +292,7 @@ void CMaterialOGL2_0::ApplyState(IMaterial::MaterialState state, IMaterial::Mate
         glEnable(GL_BLEND);
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         
-        glShadeModel(GL_SMOOTH);
+        //glShadeModel(GL_SMOOTH);
         
         //glFrontFace(GL_CCW);
     }

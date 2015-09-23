@@ -138,25 +138,25 @@ const CColor::SRGBA& CColor::RGBA() const
     return m_RGBA;
 }
 
-const CColor::SRGBA& CColor::RGB() const
+/*const CColor::SRGBA& CColor::RGB() const
 {
     static CColor::SRGBA rgb;
     rgb = CColor::SRGBA({R(), G(), B(), 1.0f});
     
     return rgb;
-}
+}*/
 
 void CColor::RGBA(const SRGBA& rgba)
 {
     m_RGBA = rgba;
 }
 
-void CColor::RGB(const SRGBA& rgb)
+/*void CColor::RGB(const SRGBA& rgb)
 {
     float a = m_RGBA.a;
     m_RGBA = rgb;
     m_RGBA.a = a;
-}
+}*/
 
 CColor CColor::operator+ (const CColor& other) const
 {

@@ -9,6 +9,7 @@
 #define ISHADERPROGRAM_H
 
 #include "IShader.h"
+#include "CMatrix4x4.h"
 
 namespace jam
 {
@@ -17,6 +18,13 @@ CLASS_PTR(IShader);
     
 class IShaderProgram
 {
+public:
+    typedef std::map< int, std::vector<int> > TUniInt;
+    typedef std::map< int, std::vector<float> > TUniFloat;
+    typedef std::map< int, CMatrix4x4f > TUniMatrix4Float;
+    typedef std::list<TUniInt> TUniIntList;
+    typedef std::list<TUniFloat> TUniFloatList;
+    
 public:
     IShaderProgram() = default;
     virtual ~IShaderProgram() = default;
@@ -31,22 +39,35 @@ public:
     virtual bool Link() = 0;
     virtual bool IsLinked() const = 0;
     
-    virtual unsigned int Attribute(const std::string& name) = 0;
-    virtual unsigned int Uniform(const std::string& name) = 0;
+    virtual uint32_t Attribute(const std::string& name) = 0;
+    virtual uint32_t Uniform(const std::string& name) = 0;
     
-    virtual unsigned int VertexPosition() = 0;
-    virtual unsigned int TextureCoord() = 0;
-    virtual unsigned int VertexColor() = 0;
-    virtual unsigned int MainTexture() = 0;
-    virtual unsigned int MainColor() = 0;
-    virtual unsigned int ProjectionMatrix() = 0;
-    virtual unsigned int ModelMatrix() = 0;
+    virtual uint32_t VertexPosition() = 0;
+    virtual uint32_t TextureCoord() = 0;
+    virtual uint32_t VertexColor() = 0;
+    virtual uint32_t MainTexture() = 0;
+    virtual uint32_t MainColor() = 0;
+    virtual uint32_t ProjectionMatrix() = 0;
+    virtual uint32_t ModelMatrix() = 0;
     
-    virtual unsigned int Texture(unsigned int index) = 0;
-    virtual unsigned int DiffuseTexture() = 0;
-    virtual unsigned int NormalTexture() = 0;
-    virtual unsigned int SpecularTexture() = 0;
-    virtual unsigned int EnvironmentTexture() = 0;
+    virtual uint32_t Texture(uint32_t index) = 0;
+    virtual uint32_t DiffuseTexture() = 0;
+    virtual uint32_t NormalTexture() = 0;
+    virtual uint32_t SpecularTexture() = 0;
+    virtual uint32_t EnvironmentTexture() = 0;
+    
+    virtual bool BindUniform1i(const std::string& uniform, int value) = 0;
+    virtual bool BindUniform1f(const std::string& uniform, float value) = 0;
+    virtual bool BindUniform2i(const std::string& uniform, int value1, int value2) = 0;
+    virtual bool BindUniform2f(const std::string& uniform, float value1, float value2) = 0;
+    virtual bool BindUniformfv(const std::string& uniform, const std::vector<float>& value) = 0;
+    virtual bool BindUniformMatrix4x4f(const std::string& uniform, const CMatrix4x4f& value) = 0;
+    
+    virtual const TUniInt& Uniformsi() const = 0;
+    virtual const TUniFloat& Uniformsf() const = 0;
+    virtual const TUniFloat& Uniformsfv() const = 0;
+    virtual const TUniMatrix4Float& UniformsMatrix4x4f() const = 0;
+    virtual void UpdateUniforms() const = 0;
 };
     
 }; // namespace jam

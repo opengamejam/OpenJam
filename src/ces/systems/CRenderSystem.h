@@ -26,13 +26,13 @@ public:
     CRenderSystem();
     virtual ~CRenderSystem();
     
-    void Update(unsigned long dt);
+    virtual void Update(unsigned long dt) override;
     void Draw(ICameraPtr camera);
     
 protected:
-    virtual void OnAddedEntity(IEntityPtr entity);
-    virtual void OnChangedEntity(IEntityPtr entity);
-    virtual void OnRemovedEntity(IEntityPtr entity);
+    virtual void OnAddedEntity(IEntityPtr entity) override;
+    virtual void OnChangedEntity(IEntityPtr entity) override;
+    virtual void OnRemovedEntity(IEntityPtr entity) override;
     
 private:
     

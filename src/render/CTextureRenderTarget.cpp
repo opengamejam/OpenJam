@@ -64,7 +64,7 @@ ITexturePtr CTextureRenderTarget::Texture() const
 void CTextureRenderTarget::SaveImage(const std::string& filepath)
 {
 #if defined(__OBJC__) && defined(OS_IPHONE)
-    std::vector<unsigned char> rawData = RawData();
+    IRenderTarget::TRawData rawData = RawData();
     
     CGDataProviderRef provider = CGDataProviderCreateWithData(NULL, &rawData[0], rawData.size(), NULL);
     

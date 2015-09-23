@@ -17,7 +17,7 @@ namespace jam
 class IRenderTarget
 {
 public:
-    typedef std::vector<unsigned char> TRawData;
+    typedef std::vector<uint8_t> TRawData;
     
 public:
     virtual void Initialize() = 0;

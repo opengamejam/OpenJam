@@ -95,7 +95,7 @@ CSprite2DPtr CSprite2D::Create(const std::string& filename, unsigned int cameraI
         CColor(1.0f, 1.0f, 1.0f, 1.0f)
     });
     
-    IVertexBuffer::SVertexStream& textureCoord = vertexBuffer->Lock(IVertexBuffer::TextureCoors);
+    IVertexBuffer::SVertexStream& textureCoord = vertexBuffer->Lock(IVertexBuffer::TextureCoords);
     textureCoord.attributeIndex = shaderProgram->TextureCoord();
     textureCoord.dataType = IVertexBuffer::Float;
     textureCoord.stride = 2;
@@ -108,25 +108,17 @@ CSprite2DPtr CSprite2D::Create(const std::string& filename, unsigned int cameraI
         CVector2Df(1.0f, 1.0f)
     });
     
-    vertexBuffer->Unlock();
+    vertexBuffer->Unlock(true);
     
     // Index buffer
     indexBuffer = GRenderer->CreateIndexBuffer();
-    indexBuffer->Initialize(sizeof(unsigned short));
+    indexBuffer->Initialize(IIndexBuffer::UShort);
     assert(indexBuffer && indexBuffer->IsValid());
     
     indexBuffer->Resize(6);
-    unsigned short* lockedIndex = indexBuffer->Lock<unsigned short>();
-    if (lockedIndex)
-    {
-        lockedIndex[0] = 0;
-        lockedIndex[1] = 1;
-        lockedIndex[2] = 3;
-        lockedIndex[3] = 0;
-        lockedIndex[4] = 2;
-        lockedIndex[5] = 3;
-    }
-    indexBuffer->Unlock();
+    IIndexBuffer::SIndexStream& indices = indexBuffer->Lock();
+    indices.Set<unsigned short>(0, {0, 1, 3, 0, 2, 3});
+    indexBuffer->Unlock(true);
 
     // Mesh
     mesh = GRenderer->CreateMesh();

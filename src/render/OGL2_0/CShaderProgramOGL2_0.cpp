@@ -23,20 +23,9 @@ using namespace jam;
 CShaderProgramOGL2_0::CShaderProgramOGL2_0()
 : IShaderProgram()
 , m_ProgramObject(0)
-, m_ProectionMatrixHadle(-1)
-, m_VertexCoordHandle(-1)
-, m_TextureCoordHandle(-1)
-, m_VertexColorHandle(-1)
-, m_ColorHandle(-1)
 , m_IsLinked(false)
 {
     m_ProgramObject = glCreateProgram();
-    
-    m_TextureDataHadle.resize(IMaterial::MaxSamplingTextures);
-    for (size_t i = 0; i < m_TextureDataHadle.size(); ++i)
-    {
-        m_TextureDataHadle[i] = -1;
-    }
 }
 
 CShaderProgramOGL2_0::~CShaderProgramOGL2_0()
@@ -102,21 +91,19 @@ bool CShaderProgramOGL2_0::Link()
     
     if (m_IsLinked)
     {
-        m_VertexCoordHandle    = Attribute("MainPositionVertex");
-        m_TextureCoordHandle   = Attribute("MainTextureCoord");
-        m_VertexColorHandle    = Attribute("MainVertexColor");
+        m_CachedAttributes["MainPositionVertex"] = Attribute("MainPositionVertex");
+        m_CachedAttributes["MainTextureCoord"] = Attribute("MainTextureCoord");
+        m_CachedAttributes["MainVertexColor"] = Attribute("MainVertexColor");
         
-        m_TextureDataHadle[0]  = Uniform("MainTexture0");
-        m_TextureDataHadle[1]  = Uniform("MainTexture1");
-        m_TextureDataHadle[2]  = Uniform("MainTexture2");
-        m_TextureDataHadle[3]  = Uniform("MainTexture3");
-        m_TextureDataHadle[4]  = Uniform("MainTexture4");
-        m_TextureDataHadle[5]  = Uniform("MainTexture5");
-        
-        m_ColorHandle          = Uniform("MainColor");
-        
-        m_ProectionMatrixHadle = Uniform("MainProjectionMatrix");
-        m_ModelMatrixHadle     = Uniform("MainModelMatrix");
+        m_CachedUniforms["MainTexture0"] = Uniform("MainTexture0");
+        m_CachedUniforms["MainTexture1"] = Uniform("MainTexture1");
+        m_CachedUniforms["MainTexture2"] = Uniform("MainTexture2");
+        m_CachedUniforms["MainTexture3"] = Uniform("MainTexture3");
+        m_CachedUniforms["MainTexture4"] = Uniform("MainTexture4");
+        m_CachedUniforms["MainTexture5"] = Uniform("MainTexture5");
+        m_CachedUniforms["MainColor"] = Uniform("MainColor");
+        m_CachedUniforms["MainProjectionMatrix"] = Uniform("MainProjectionMatrix");
+        m_CachedUniforms["MainModelMatrix"] = Uniform("MainModelMatrix");
     }
     else
     {
@@ -135,78 +122,337 @@ bool CShaderProgramOGL2_0::IsLinked() const
     return m_IsLinked;
 }
 
-unsigned int CShaderProgramOGL2_0::Attribute(const std::string& name)
+uint32_t CShaderProgramOGL2_0::Attribute(const std::string& name)
 {
-    return glGetAttribLocation(m_ProgramObject, name.c_str());
-}
-
-unsigned int CShaderProgramOGL2_0::Uniform(const std::string& name)
-{
-    return glGetUniformLocation(m_ProgramObject, name.c_str());
-}
-
-unsigned int CShaderProgramOGL2_0::VertexPosition()
-{
-    return m_VertexCoordHandle;
-}
-
-unsigned int CShaderProgramOGL2_0::TextureCoord()
-{
-    return m_TextureCoordHandle;
-}
-
-unsigned int CShaderProgramOGL2_0::VertexColor()
-{
-    return m_VertexColorHandle;
-}
-
-unsigned int CShaderProgramOGL2_0::MainTexture()
-{
-    return m_TextureDataHadle[0];
-}
-
-unsigned int CShaderProgramOGL2_0::MainColor()
-{
-    return m_ColorHandle;
-}
-
-unsigned int CShaderProgramOGL2_0::ProjectionMatrix()
-{
-    return m_ProectionMatrixHadle;
-}
-
-unsigned int CShaderProgramOGL2_0::ModelMatrix()
-{
-    return m_ModelMatrixHadle;
-}
-
-unsigned int CShaderProgramOGL2_0::Texture(unsigned int index)
-{
-    if (index < IMaterial::MaxSamplingTextures)
+    uint32_t location = -1u;
+    std::unordered_map<std::string, uint32_t>::const_iterator it = m_CachedAttributes.find(name);
+    if (it == m_CachedAttributes.end())
     {
-        return m_TextureDataHadle[index];
+        location = glGetAttribLocation(m_ProgramObject, name.c_str());
+        m_CachedAttributes[name] = location;
     }
-    return -1;
+    else
+    {
+        location = it->second;
+    }
+    
+    return location;
 }
 
-unsigned int CShaderProgramOGL2_0::DiffuseTexture()
+uint32_t CShaderProgramOGL2_0::Uniform(const std::string& name)
 {
-    return m_TextureDataHadle[0];
+    uint32_t location = -1u;
+    std::unordered_map<std::string, uint32_t>::const_iterator it = m_CachedUniforms.find(name);
+    if (it == m_CachedUniforms.end())
+    {
+        location = glGetUniformLocation(m_ProgramObject, name.c_str());
+        m_CachedUniforms[name] = location;
+    }
+    else
+    {
+        location = it->second;
+    }
+    
+    return location;
 }
 
-unsigned int CShaderProgramOGL2_0::NormalTexture()
+uint32_t CShaderProgramOGL2_0::VertexPosition()
 {
-    return m_TextureDataHadle[1];
+    return m_CachedAttributes["MainPositionVertex"];
 }
 
-unsigned int CShaderProgramOGL2_0::SpecularTexture()
+uint32_t CShaderProgramOGL2_0::TextureCoord()
 {
-    return m_TextureDataHadle[2];
+    return m_CachedAttributes["MainTextureCoord"];
 }
 
-unsigned int CShaderProgramOGL2_0::EnvironmentTexture()
+uint32_t CShaderProgramOGL2_0::VertexColor()
 {
-    return m_TextureDataHadle[3];
+    return m_CachedAttributes["MainVertexColor"];
+}
+
+uint32_t CShaderProgramOGL2_0::MainTexture()
+{
+    return m_CachedUniforms["MainTexture0"];
+}
+
+uint32_t CShaderProgramOGL2_0::MainColor()
+{
+    return m_CachedUniforms["MainColor"];
+}
+
+uint32_t CShaderProgramOGL2_0::ProjectionMatrix()
+{
+    return m_CachedUniforms["MainProjectionMatrix"];
+}
+
+uint32_t CShaderProgramOGL2_0::ModelMatrix()
+{
+    return m_CachedUniforms["MainModelMatrix"];
+}
+
+uint32_t CShaderProgramOGL2_0::Texture(uint32_t index)
+{
+    std::stringstream ss;
+    ss << "MainTexture" << index;
+    
+    std::unordered_map<std::string, uint32_t>::const_iterator it = m_CachedUniforms.find(ss.str());
+    if (it == m_CachedUniforms.end())
+    {
+        return it->second;
+    }
+    return -1u;
+}
+
+uint32_t CShaderProgramOGL2_0::DiffuseTexture()
+{
+    return m_CachedUniforms["MainTexture0"];
+}
+
+uint32_t CShaderProgramOGL2_0::NormalTexture()
+{
+    return m_CachedUniforms["MainTexture1"];
+}
+
+uint32_t CShaderProgramOGL2_0::SpecularTexture()
+{
+    return m_CachedUniforms["MainTexture2"];
+}
+
+uint32_t CShaderProgramOGL2_0::EnvironmentTexture()
+{
+    return m_CachedUniforms["MainTexture3"];
+}
+
+bool CShaderProgramOGL2_0::BindUniform1i(const std::string& uniform, int value)
+{
+    uint32_t location = Uniform(uniform);
+    if (location != -1u)
+    {
+        m_UniInt[location] = {value};
+        
+        return true;
+    }
+    
+    return false;
+}
+
+bool CShaderProgramOGL2_0::BindUniform1f(const std::string& uniform, float value)
+{
+    uint32_t location = Uniform(uniform);
+    if (location != -1u)
+    {
+        m_UniFloat[location] = {value};
+        
+        return true;
+    }
+    
+    return false;
+}
+
+bool CShaderProgramOGL2_0::BindUniform2i(const std::string& uniform, int value1, int value2)
+{
+    uint32_t location = Uniform(uniform);
+    if (location != -1u)
+    {
+        m_UniInt[location] = {value1, value2};
+        
+        return true;
+    }
+    
+    return false;
+}
+
+bool CShaderProgramOGL2_0::BindUniform2f(const std::string& uniform, float value1, float value2)
+{
+    uint32_t location = Uniform(uniform);
+    if (location != -1u)
+    {
+        m_UniFloat[location] = {value1, value2};
+        
+        return true;
+    }
+    
+    return false;
+}
+
+bool CShaderProgramOGL2_0::BindUniformfv(const std::string& uniform, const std::vector<float>& value)
+{
+    uint32_t location = Uniform(uniform);
+    if (location != -1u)
+    {
+        m_UniFloatVec[location] = value;
+        
+        return true;
+    }
+    
+    return false;
+}
+
+bool CShaderProgramOGL2_0::BindUniformMatrix4x4f(const std::string& uniform, const CMatrix4x4f& value)
+{
+    uint32_t location = Uniform(uniform);
+    if (location != -1u)
+    {
+        m_UniMatrixFloat[location] = value;
+        
+        return true;
+    }
+    
+    return false;
+}
+
+const IShaderProgram::TUniInt& CShaderProgramOGL2_0::Uniformsi() const
+{
+    return m_UniInt;
+}
+
+const IShaderProgram::TUniFloat& CShaderProgramOGL2_0::Uniformsf() const
+{
+    return m_UniFloat;
+}
+
+const IShaderProgram::TUniFloat& CShaderProgramOGL2_0::Uniformsfv() const
+{
+    return m_UniFloatVec;
+}
+
+const IShaderProgram::TUniMatrix4Float& CShaderProgramOGL2_0::UniformsMatrix4x4f() const
+{
+    return m_UniMatrixFloat;
+}
+
+INL void AddUniformMatrix4f(unsigned int location, const CMatrix4x4f& value)
+{
+    glUniformMatrix4fv(location, 1, GL_FALSE, value().data());
+}
+
+INL void AddUniformf(unsigned int location, const std::vector<float>& value, bool isVector)
+{
+    if (isVector)
+    {
+        switch (value.size())
+        {
+            case 1:
+                glUniform1fv(location, 1, value.data());
+                break;
+                
+            case 2:
+                glUniform2fv(location, 1, value.data());
+                break;
+                
+            case 3:
+                glUniform3fv(location, 1, value.data());
+                break;
+                
+            case 4:
+                glUniform4fv(location, 1, value.data());
+                break;
+        };
+    }
+    else
+    {
+        switch (value.size())
+        {
+            case 1:
+                glUniform1f(location, value[0]);
+                break;
+                
+            case 2:
+                glUniform2f(location, value[0], value[1]);
+                break;
+                
+            case 3:
+                glUniform3f(location, value[0], value[1], value[2]);
+                break;
+                
+            case 4:
+                glUniform4f(location, value[0], value[1], value[2], value[3]);
+                break;
+        };
+    }
+}
+
+INL void AddUniformi(unsigned int location, const std::vector<int>& value, bool isVector)
+{
+    if (isVector)
+    {
+        switch (value.size())
+        {
+            case 1:
+                glUniform1iv(location, 1, value.data());
+                break;
+                
+            case 2:
+                glUniform2iv(location, 1, value.data());
+                break;
+                
+            case 3:
+                glUniform3iv(location, 1, value.data());
+                break;
+                
+            case 4:
+                glUniform4iv(location, 1, value.data());
+                break;
+        };
+    }
+    else
+    {
+        switch (value.size())
+        {
+            case 1:
+                glUniform1i(location, value[0]);
+                break;
+                
+            case 2:
+                glUniform2i(location, value[0], value[1]);
+                break;
+                
+            case 3:
+                glUniform3i(location, value[0], value[1], value[2]);
+                break;
+            case 4:
+                glUniform4i(location, value[0], value[1], value[2], value[3]);
+                break;
+        };
+    }
+}
+
+INL void AddUniformMatrix4f(const IShaderProgram::TUniMatrix4Float& uniMatrix)
+{
+    std::for_each(uniMatrix.begin(), uniMatrix.end(), [&](const IShaderProgram::TUniMatrix4Float::value_type& value)
+    {
+        AddUniformMatrix4f(value.first, value.second);
+    });
+}
+
+INL void AddUniformf(const IShaderProgram::TUniFloat& uniFloat, bool isVector)
+{
+    std::for_each(uniFloat.begin(), uniFloat.end(), [&](const IShaderProgram::TUniFloat::value_type& value)
+    {
+        AddUniformf(value.first, value.second, isVector);
+    });
+}
+
+INL void AddUniformi(const IShaderProgram::TUniInt& uniInt, bool isVector)
+{
+    std::for_each(uniInt.begin(), uniInt.end(), [&](const IShaderProgram::TUniInt::value_type& value)
+    {
+        AddUniformi(value.first, value.second, isVector);
+    });
+}
+
+void CShaderProgramOGL2_0::UpdateUniforms() const
+{
+    const IShaderProgram::TUniFloat& uniFloat = Uniformsf();
+    const IShaderProgram::TUniInt& uniInt = Uniformsi();
+    const IShaderProgram::TUniFloat& uniFloatVec = Uniformsfv();
+    const IShaderProgram::TUniMatrix4Float& uniMatrix4x4f = UniformsMatrix4x4f();
+    
+    AddUniformi(uniInt, false);
+    AddUniformf(uniFloat, false);
+    AddUniformf(uniFloatVec, true);
+    AddUniformMatrix4f(uniMatrix4x4f);
 }
 
 // *****************************************************************************

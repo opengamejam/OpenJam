@@ -21,9 +21,12 @@ public:
 	CRenderViewWindows(unsigned int width, unsigned int height, HINSTANCE hInstance);
 	virtual ~CRenderViewWindows();
 
-	virtual void CreateView();
-	virtual void SwapBuffer() const;
-    virtual void UpdateEvents() const;
+	virtual void        CreateView();
+	virtual void        Begin() const;
+	virtual void        End() const;
+	virtual void        UpdateEvents() const;
+
+	virtual IRenderTargetPtr DefaultRenderTarget() const;
     
 private:
     LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
@@ -36,6 +39,7 @@ private:
 	HWND				m_Window;
 	HDC					m_DeviceContext;
 	HINSTANCE           m_Instance;
+	IRenderTargetPtr m_DefaultRenderTarget;
 };
 
 }; // namespace jam

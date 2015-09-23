@@ -58,11 +58,11 @@ void CAnimation2DSystem::Update(unsigned long dt)
                     renderComponent->Texture(anim2DComponent->Texture());
                     
                     IVertexBufferPtr vertexBuffer = renderComponent->Mesh()->VertexBuffer();
-                    if (vertexBuffer->HasStream(IVertexBuffer::TextureCoors))
+                    if (vertexBuffer->HasStream(IVertexBuffer::TextureCoords))
                     {
-                        IVertexBuffer::SVertexStream& textureCoord = vertexBuffer->Lock(IVertexBuffer::TextureCoors);
+                        IVertexBuffer::SVertexStream& textureCoord = vertexBuffer->Lock(IVertexBuffer::TextureCoords);
                         textureCoord.Set<CVector2Df>(0, anim2DComponent->TextureFrame());
-                        vertexBuffer->Unlock();
+                        vertexBuffer->Unlock(true);
                     }
                     
                     renderComponent->Dirty();

@@ -8,7 +8,11 @@
 #if defined(OS_WINDOWS)
 
 #include "CRenderViewWindows.h"
-#include "CInputManager.h"
+#include "IEventable.h"
+#include "IEventDispatcher.hpp"
+#include "RenderGlobal.h"
+#include "CRendererOGLES2_0.h"
+#include "CFrameBufferOGLES2_0.h"
 
 using namespace jam;
 
@@ -29,7 +33,10 @@ CRenderViewWindows::CRenderViewWindows(unsigned int width, unsigned int height, 
     , m_DeviceContext(0)
     , m_Window(0)
     , m_Instance(hInstance)
-{}
+	, m_DefaultRenderTarget(nullptr)
+{
+	IEventable::RegisterDispatcher(std::make_shared<IEventDispatcher>(IEventDispatcher()));
+}
 
 CRenderViewWindows::~CRenderViewWindows() 
 {
@@ -89,12 +96,11 @@ void CRenderViewWindows::CreateView()
     m_eglDisplay = eglGetDisplay(m_DeviceContext);
     if (m_eglDisplay == EGL_NO_DISPLAY)
     {
-            m_eglDisplay = eglGetDisplay((EGLNativeDisplayType)EGL_DEFAULT_DISPLAY);
+		m_eglDisplay = eglGetDisplay((EGLNativeDisplayType)EGL_DEFAULT_DISPLAY);
     }
 
     EGLBoolean result = false;
-    EGLint iMajorVersion, iMinorVersion;
-    result = eglInitialize(m_eglDisplay, &iMajorVersion, &iMinorVersion);
+    result = eglInitialize(m_eglDisplay, 0, 0);
     assert(result);
 
     eglBindAPI(EGL_OPENGL_ES_API);
@@ -105,7 +111,13 @@ void CRenderViewWindows::CreateView()
         EGL_SURFACE_TYPE, EGL_WINDOW_BIT,
         EGL_RENDERABLE_TYPE, EGL_OPENGL_ES2_BIT,
         EGL_NATIVE_RENDERABLE, EGL_FALSE,
-        EGL_DEPTH_SIZE, EGL_DONT_CARE,
+		EGL_RED_SIZE, 8,
+		EGL_GREEN_SIZE, 8,
+		EGL_BLUE_SIZE, 8,
+		EGL_ALPHA_SIZE, 8,
+        EGL_DEPTH_SIZE, 24,
+		EGL_STENCIL_SIZE, 8,
+		EGL_LUMINANCE_SIZE, 0,
         EGL_NONE
     };
 
@@ -123,12 +135,24 @@ void CRenderViewWindows::CreateView()
     }
 
     EGLint ai32ContextAttribs[] = { EGL_CONTEXT_CLIENT_VERSION, 2, EGL_NONE };
-    m_eglContext = eglCreateContext(m_eglDisplay, eglConfig, 0, ai32ContextAttribs);
+    m_eglContext = eglCreateContext(m_eglDisplay, eglConfig, EGL_NO_CONTEXT, ai32ContextAttribs);
+	assert(m_eglContext != EGL_NO_SURFACE);
 
     eglMakeCurrent(m_eglDisplay, m_eglSurface, m_eglSurface, m_eglContext);
+
+	GRenderer.reset(new CRendererOGLES2_0(shared_from_this()));
+
+	std::shared_ptr<CFrameBufferOGLES2_0> renderTarget(new CFrameBufferOGLES2_0(Width(), Height()));
+	renderTarget->Initialize(0);
+	m_DefaultRenderTarget = renderTarget;
 }
 
-void CRenderViewWindows::SwapBuffer() const
+void CRenderViewWindows::Begin() const
+{
+
+}
+
+void CRenderViewWindows::End() const
 {
     eglSwapBuffers(m_eglDisplay, m_eglSurface);
 }
@@ -141,6 +165,11 @@ void CRenderViewWindows::UpdateEvents() const
         TranslateMessage( &msg );
         DispatchMessage( &msg );
     }
+}
+
+IRenderTargetPtr CRenderViewWindows::DefaultRenderTarget() const
+{
+	return m_DefaultRenderTarget;
 }
 
 LRESULT CALLBACK CRenderViewWindows::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)

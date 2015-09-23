@@ -20,9 +20,9 @@ using namespace jam;
 // Public Methods
 // *****************************************************************************
 
-CCamera2DPtr CCamera2D::Create(float width, float height, float near, float far)
+CCamera2DPtr CCamera2D::Create(float _width, float _height, float _near, float _far)
 {
-    CCamera2DPtr camera(new CCamera2D(width, height, near, far));
+    CCamera2DPtr camera(new CCamera2D(_width, _height, _near, _far));
     
     CTransformationComponentPtr transformComponent(new CTransformationComponent());
     
@@ -34,12 +34,12 @@ CCamera2DPtr CCamera2D::Create(float width, float height, float near, float far)
     return camera;
 }
 
-CCamera2D::CCamera2D(float width, float height, float near, float far)
+CCamera2D::CCamera2D(float _width, float _height, float _near, float _far)
 : ICamera()
-, m_Width(width)
-, m_Height(height)
-, m_Near(near)
-, m_Far(far)
+, m_Width(_width)
+, m_Height(_height)
+, m_Near(_near)
+, m_Far(_far)
 , m_ProjectionMatrix(CMatrix4x4f::Orthographic(0, m_Width, 0, m_Height, m_Near, m_Far))
 , m_RenderTarget(nullptr)
 , m_IsFlippedX(false)
@@ -53,7 +53,7 @@ CCamera2D::~CCamera2D()
 
 }
 
-unsigned int CCamera2D::Id() const
+uint32_t CCamera2D::Id() const
 {
     return m_Id;
 }

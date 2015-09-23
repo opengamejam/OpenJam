@@ -52,7 +52,7 @@ void CThreadPool::Initialize(uint32_t threadsNum)
     }
 }
 
-void CThreadPool::Destroy()
+void CThreadPool::Shutdown()
 {
     std::unique_lock<std::mutex> locker(m_Mutex);
     m_ThreadExecutors.clear();

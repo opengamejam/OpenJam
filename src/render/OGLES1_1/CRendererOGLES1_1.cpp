@@ -102,8 +102,8 @@ void CRendererOGLES1_1::Draw(IMeshPtr mesh, IMaterialPtr material, IShaderProgra
         return;
     }
     
-    const IMaterial::TUniMatrix4Float& uniforms = material->UniformsMatrix4x4f();
-    IMaterial::TUniMatrix4Float::const_iterator it = uniforms.find(shader->ProjectionMatrix());
+    const IShaderProgram::TUniMatrix4Float& uniforms = shader->UniformsMatrix4x4f();
+	IShaderProgram::TUniMatrix4Float::const_iterator it = uniforms.find(shader->ProjectionMatrix());
     if (it != uniforms.end())
     {
         CMatrix4x4f matrix = it->second;

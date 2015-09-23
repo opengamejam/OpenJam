@@ -15,17 +15,9 @@
 namespace jam
 {
     
-CLASS_PTR(IStencil);
-    
 class IMaterial
 {
-public:
-    typedef std::map< int, std::vector<int> > TUniInt;
-    typedef std::map< int, std::vector<float> > TUniFloat;
-    typedef std::map< int, CMatrix4x4f > TUniMatrix4Float;
-    typedef std::list<TUniInt> TUniIntList;
-    typedef std::list<TUniFloat> TUniFloatList;
-    
+public:    
     enum TextureSamples
     {
         DiffuseTexture = 0,
@@ -102,8 +94,8 @@ public:
             bool isEnabled;
             
             TestFuncs func;
-            unsigned int ref;
-            unsigned int mask;
+            uint32_t ref;
+            uint32_t mask;
             
             Operations failOp;
             Operations zFailOp;
@@ -140,19 +132,6 @@ public:
     virtual void Bind() = 0;
     virtual void Unbind() = 0;
     
-    virtual bool BindUniform1i(int uniform, int value) = 0;
-    virtual bool BindUniform1f(int uniform, float value) = 0;
-    virtual bool BindUniform2i(int uniform, int value1, int value2) = 0;
-    virtual bool BindUniform2f(int uniform, float value1, float value2) = 0;
-    virtual bool BindUniformfv(int uniform, const std::vector<float>& value) = 0;
-    virtual bool BindUniformMatrix4x4f(int uniform, const CMatrix4x4f& value) = 0;
-    
-    virtual const TUniInt& Uniformsi() const = 0;
-    virtual const TUniFloat& Uniformsf() const = 0;
-    virtual const TUniFloat& Uniformsfv() const = 0;
-    virtual const TUniMatrix4Float& UniformsMatrix4x4f() const = 0;
-    virtual void UpdateUniforms() const = 0;
-    
     virtual PrimitiveTypes PrimitiveType() const = 0;
     virtual void PrimitiveType(PrimitiveTypes primitiveType) = 0;
     
@@ -175,11 +154,13 @@ public:
     
     virtual bool StencilEnable() const = 0;
     virtual void StencilEnable(bool value) = 0;
-    virtual void StencilFunc(TestFuncs func, unsigned int ref, unsigned int mask) = 0;
+    virtual void StencilFunc(TestFuncs func, uint32_t ref, uint32_t mask) = 0;
     virtual void StencilOperations(Operations failOp, Operations zFailOp, Operations zPassOp) = 0;
     
     virtual bool Opacity() const = 0;
     virtual void Opacity(bool value) = 0;
+    
+    virtual const std::string& Hash() = 0;
 };
 
 }; // namespace jam

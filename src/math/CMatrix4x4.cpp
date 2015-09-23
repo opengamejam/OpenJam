@@ -347,11 +347,11 @@ const CMatrix4x4<T> CMatrix4x4<T>::Perspective(T fov, T aspect, T zNear, T zFar)
 }
 
 template <class T>
-const CMatrix4x4<T> CMatrix4x4<T>::Orthographic(T left, T right, T top, T bottom, T near, T far)
+const CMatrix4x4<T> CMatrix4x4<T>::Orthographic(T left, T right, T top, T bottom, T _near, T _far)
 {
     T tx = -((right + left) / (right - left));
 	T ty = -((top + bottom) / (top - bottom));
-	T tz = -((far + near) / (far - near));
+	T tz = -((_far + _near) / (_far - _near));
     
 	CMatrix4x4<T> out = CMatrix4x4<T>::Zero();
     
@@ -359,7 +359,7 @@ const CMatrix4x4<T> CMatrix4x4<T>::Orthographic(T left, T right, T top, T bottom
     out.Element(3, 0, tx);
     out.Element(1, 1, static_cast<T>(2.0) / (top - bottom));
     out.Element(3, 1, ty);
-    out.Element(2, 2, static_cast<T>(-2.0) / (far - near));
+    out.Element(2, 2, static_cast<T>(-2.0) / (_far - _near));
     out.Element(3, 2, tz);
     out.Element(3, 3, static_cast<T>(1.0));
     

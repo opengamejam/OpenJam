@@ -19,7 +19,7 @@ using namespace jam;
 // Public Methods
 // *****************************************************************************
 
-CFrameBufferOGLES2_0::CFrameBufferOGLES2_0(unsigned int width, unsigned int height)
+CFrameBufferOGLES2_0::CFrameBufferOGLES2_0(uint32_t width, uint32_t height)
 : m_FrameBuffer(-1)
 , m_DepthBuffer(-1)
 , m_StencilBuffer(-1)
@@ -36,44 +36,44 @@ CFrameBufferOGLES2_0::CFrameBufferOGLES2_0(unsigned int width, unsigned int heig
     glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS, &m_NumColorAtachments);
 #endif
     m_ColorBuffers.resize(m_NumColorAtachments);
-    std::for_each(m_ColorBuffers.begin(), m_ColorBuffers.end(), [&](unsigned int& colorBuffer)
-                  {
-                      colorBuffer = -1;
-                  });
+    std::for_each(m_ColorBuffers.begin(), m_ColorBuffers.end(), [&](uint32_t& colorBuffer)
+    {
+        colorBuffer = -1;
+    });
 }
 
 CFrameBufferOGLES2_0::~CFrameBufferOGLES2_0()
 {
-    unsigned int i = 0;
-    std::for_each(m_ColorBuffers.begin(), m_ColorBuffers.end(), [&](unsigned int colorBuffer)
-                  {
-                      if (colorBuffer != -1 && (i != 0 || !m_IsColor0BufferExt))
-                      {
-                          glDeleteRenderbuffers(1, &colorBuffer);
-                      }
-                  });
+	uint32_t i = 0;
+    std::for_each(m_ColorBuffers.begin(), m_ColorBuffers.end(), [&](uint32_t colorBuffer)
+    {
+        if (colorBuffer != -1 && (i != 0 || !m_IsColor0BufferExt))
+        {
+            glDeleteRenderbuffers(1, &colorBuffer);
+        }
+    });
     
     if (m_DepthBuffer != -1)
     {
 #if GL_OES_packed_depth_stencil
         m_StencilBuffer = -1;
 #endif
-        glDeleteRenderbuffersOES(1, &m_DepthBuffer);
+        glDeleteRenderbuffers(1, &m_DepthBuffer);
     }
     
     if (m_StencilBuffer != -1)
     {
-        glDeleteRenderbuffersOES(1, &m_StencilBuffer);
+        glDeleteRenderbuffers(1, &m_StencilBuffer);
     }
     
     if (m_FrameBuffer != -1 && !m_IsDepthBufferExt)
     {
-        glDeleteFramebuffersOES(1, &m_FrameBuffer);
+        glDeleteFramebuffers(1, &m_FrameBuffer);
     }
 }
 
-void CFrameBufferOGLES2_0::Initialize(unsigned int externalFrameBuffer, unsigned int externalColorBuffer,
-                                            unsigned int externalDepthBuffer, unsigned int externalStencilBuffer)
+void CFrameBufferOGLES2_0::Initialize(uint32_t externalFrameBuffer, uint32_t externalColorBuffer,
+                                            uint32_t externalDepthBuffer, uint32_t externalStencilBuffer)
 {
     if (m_FrameBuffer == -1 && externalFrameBuffer != -1)
     {
@@ -106,9 +106,9 @@ void CFrameBufferOGLES2_0::Initialize()
 {
     if (m_FrameBuffer == -1)
     {
-        glGenFramebuffersOES(1, &m_FrameBuffer);
+        glGenFramebuffers(1, &m_FrameBuffer);
     }
-    glBindFramebufferOES(GL_FRAMEBUFFER, m_FrameBuffer);
+    glBindFramebuffer(GL_FRAMEBUFFER, m_FrameBuffer);
 }
 
 bool CFrameBufferOGLES2_0::CreateColorAttachment(int index)
@@ -195,7 +195,7 @@ void CFrameBufferOGLES2_0::Clear() const
     glClearColor(m_ClearColor.R(), m_ClearColor.G(), m_ClearColor.B(), m_ClearColor.A());
     
     GLbitfield clearBits = 0;
-    if (true) // TODO: checks for s, that has only depth or stencil render buffers
+    if (true) // TODO: 
     {
         clearBits |= GL_COLOR_BUFFER_BIT;
     }
@@ -223,22 +223,22 @@ const CColor& CFrameBufferOGLES2_0::ClearColor() const
     return m_ClearColor;
 }
 
-unsigned int CFrameBufferOGLES2_0::Width() const
+uint32_t CFrameBufferOGLES2_0::Width() const
 {
     return m_Width;
 }
 
-unsigned int CFrameBufferOGLES2_0::Height() const
+uint32_t CFrameBufferOGLES2_0::Height() const
 {
     return m_Height;
 }
 
-std::vector<unsigned char> CFrameBufferOGLES2_0::RawData()
+IRenderTarget::TRawData CFrameBufferOGLES2_0::RawData()
 {
     Bind();
     
-    unsigned int rawdataSize = Width() * Height() * 4;
-    std::vector<unsigned char> data(rawdataSize, 0);
+    uint32_t rawdataSize = Width() * Height() * 4;
+    IRenderTarget::TRawData data(rawdataSize, 0);
     glReadPixels(0, 0, Width(), Height(), GL_RGBA, GL_UNSIGNED_BYTE, &data[0]);
     
     Unbind();

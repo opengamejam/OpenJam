@@ -31,10 +31,10 @@ CVertexBufferOGL1_3::CVertexBufferOGL1_3()
 
 CVertexBufferOGL1_3::~CVertexBufferOGL1_3()
 {
-    Destroy();
+    Shutdown();
 }
 
-void CVertexBufferOGL1_3::Initialize(size_t elementSize)
+void CVertexBufferOGL1_3::Initialize(uint64_t elementSize)
 {
     if (!IsValid())
     {
@@ -58,7 +58,7 @@ IVertexBuffer::SVertexStream& CVertexBufferOGL1_3::Lock(IVertexBuffer::VertexTyp
     
     if (m_VertexStreamers.find(vertexType) == m_VertexStreamers.end())
     {
-        size_t absoluteOffset = 0;
+        uint64_t absoluteOffset = 0;
         std::for_each(m_VertexStreamers.begin(), m_VertexStreamers.end(), [&](const TVertexStreamMap::value_type& value)
         {
             const IVertexBuffer::SVertexStream& stream = value.second;
@@ -75,7 +75,7 @@ IVertexBuffer::SVertexStream& CVertexBufferOGL1_3::Lock(IVertexBuffer::VertexTyp
     return m_VertexStreamers[vertexType];
 }
 
-void CVertexBufferOGL1_3::Destroy()
+void CVertexBufferOGL1_3::Shutdown()
 {
     if (IsValid())
     {
@@ -91,17 +91,17 @@ bool CVertexBufferOGL1_3::IsValid() const
     return (m_Id != 0);
 }
 
-size_t CVertexBufferOGL1_3::SizeRaw() const
+uint64_t CVertexBufferOGL1_3::SizeRaw() const
 {
     return m_Buffer.size();
 }
 
-void CVertexBufferOGL1_3::ResizeRaw(size_t newSize)
+void CVertexBufferOGL1_3::ResizeRaw(uint64_t newSize)
 {
     m_Buffer.resize(newSize);
 }
 
-size_t CVertexBufferOGL1_3::ElementSize() const
+uint64_t CVertexBufferOGL1_3::ElementSize() const
 {
     return m_ElementSize;
 }
@@ -117,7 +117,7 @@ bool CVertexBufferOGL1_3::IsLocked() const
     return m_IsLocked;
 }
 
-void CVertexBufferOGL1_3::Unlock()
+void CVertexBufferOGL1_3::Unlock(bool isNeedCommit)
 {
     if (!m_IsLocked)
     {
@@ -125,9 +125,12 @@ void CVertexBufferOGL1_3::Unlock()
     }
     
 #ifdef GL_ARRAY_BUFFER
-    glBindBuffer(GL_ARRAY_BUFFER, m_Id);
-    glBufferData(GL_ARRAY_BUFFER, m_Buffer.size(), m_Buffer.data(), GL_DYNAMIC_DRAW);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    if (isNeedCommit)
+    {
+        glBindBuffer(GL_ARRAY_BUFFER, m_Id);
+        glBufferData(GL_ARRAY_BUFFER, m_Buffer.size(), m_Buffer.data(), GL_DYNAMIC_DRAW);
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+    }
 #endif
     
     m_IsLocked = false;
@@ -174,7 +177,7 @@ void CVertexBufferOGL1_3::Bind()
                 glEnableClientState(GL_VERTEX_ARRAY);
                 glVertexPointer(stream.stride, type, elementSize, (GLvoid*)offset);
             }
-            else if (value.first == IVertexBuffer::TextureCoors)
+            else if (value.first == IVertexBuffer::TextureCoords)
             {
                 glEnableClientState(GL_TEXTURE_COORD_ARRAY);
                 glTexCoordPointer(stream.stride, type, elementSize, (GLvoid*)offset);
@@ -215,7 +218,7 @@ void CVertexBufferOGL1_3::Unbind()
             {
                 glDisableClientState(GL_VERTEX_ARRAY);
             }
-            else if (value.first == IVertexBuffer::TextureCoors)
+            else if (value.first == IVertexBuffer::TextureCoords)
             {
                 glDisableClientState(GL_TEXTURE_COORD_ARRAY);
             }
@@ -238,9 +241,9 @@ void CVertexBufferOGL1_3::Unbind()
 // Protected Methods
 // *****************************************************************************
 
-void CVertexBufferOGL1_3::ElementSize(size_t elementSize)
+void CVertexBufferOGL1_3::ElementSize(uint64_t elementSize)
 {
-    m_ElementSize = std::max<size_t>(elementSize, 1);
+    m_ElementSize = std::max<uint64_t>(elementSize, 1);
 }
 
 // *****************************************************************************

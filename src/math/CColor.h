@@ -49,10 +49,10 @@ public:
     void B(unsigned char b);
     
     const SRGBA& RGBA() const;
-    const SRGBA& RGB() const;
+    //const SRGBA& RGB() const;
     
     void RGBA(const SRGBA& rgba);
-    void RGB(const SRGBA& rgb);
+    //void RGB(const SRGBA& rgb);
     
     CColor operator+ (const CColor& other) const;
     CColor& operator+= (const CColor& other);

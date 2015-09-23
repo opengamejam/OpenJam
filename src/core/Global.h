@@ -19,6 +19,7 @@
 #include <string>
 #include <sstream>
 #include <algorithm>
+#include <iterator>
 #include <future>
 #include <thread>
 #include <mutex>
@@ -36,9 +37,12 @@
 #define LOGI(...)
 // WINDOWS
 #elif defined(OS_WINDOWS)
+#	define NOMINMAX
 #	include <windows.h>
 #	include <EGL/egl.h>
 #	include <GLES2/gl2.h>
+#	include <GLES2/gl2ext.h>
+#	include <GLES2/gl2platform.h>
 #define LOGI(...)
 // MACOS
 #elif defined(OS_MAC)
@@ -85,7 +89,11 @@
 #define CLASS_TEMPL_PTR(_class, _out) typedef std::shared_ptr<class _class> _out##Ptr
 #define CLASS_WEAK(_class) typedef std::weak_ptr<class _class> _class##Weak
 
+#if defined(OS_WINDOWS) // TODO
+#define INL
+#else
 #define INL inline __attribute__ ((always_inline))
+#endif
 
 #define MULTI_LINE_STRING(a) #a
 

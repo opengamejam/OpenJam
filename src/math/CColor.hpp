@@ -15,6 +15,10 @@
 namespace jam
 {
 
+// *****************************************************************************
+// Predeclarations
+// *****************************************************************************
+    
 template<class T, int N>
 class CColor;
     
@@ -34,16 +38,26 @@ typedef CColor<float, 4> CColor4f;
 typedef CColor<double, 4> CColor4d;
 typedef CColor<uint8_t, 4> CColor4b;
     
+// *****************************************************************************
+// CColor is a class-wrapper around primitive T[N] array,
+// where T - type, N - components num. There are methods for manipulate with
+// RGBA representation. If components num less than 4 then appropriate methods
+// will do nothing
+// *****************************************************************************
+    
 template<class T, int N>
 class CColor
 {
+public:
+    typedef T TRGBA[N];
+    
 public:
     CColor()
     {
         memset(m_RGBA, static_cast<T>(1.0), sizeof(T) * N);
     }
     
-    CColor(T rgba[N])
+    CColor(const TRGBA rgba)
     {
         memcpy(m_RGBA, rgba, sizeof(T) * N);
     }
@@ -88,82 +102,72 @@ public:
         }
     }
     
-    INL T A() const
-    {
-        if (N < 0)
-        {
-            return static_cast<T>(0.0);
-        }
-        return m_RGBA[0];
-    }
-    
     INL T R() const
     {
-        if (N < 1)
+        if (N > 0)
         {
-            return static_cast<T>(0.0);
+            return m_RGBA[0];
         }
-        return m_RGBA[1];
+        return static_cast<T>(0.0);
     }
     
     INL T G() const
     {
-        if (N < 1)
+        if (N > 1)
         {
-            return static_cast<T>(0.0);
+            return m_RGBA[1];
         }
-        return m_RGBA[2];
+        return static_cast<T>(0.0);
     }
     
     INL T B() const
     {
-        if (N < 3)
+        if (N > 2)
         {
-            return static_cast<T>(0.0);
+            return m_RGBA[2];
         }
-        return m_RGBA[3];
+        return static_cast<T>(0.0);
     }
     
-    INL void A(T a)
+    INL T A() const
     {
-        if (N > 0)
+        if (N > 3)
         {
-            m_RGBA[0] = a;
+            return m_RGBA[3];
         }
+        return static_cast<T>(0.0);
     }
     
     INL void R(T r)
     {
-        if (N > 1)
+        if (N > 0)
         {
-            m_RGBA[1] = r;
+            m_RGBA[0] = r;
         }
     }
     
     INL void G(T g)
     {
-        if (N > 2)
+        if (N > 1)
         {
-            m_RGBA[2] = g;
+            m_RGBA[1] = g;
         }
     }
     
     INL void B(T b)
     {
-        if (N > 3)
+        if (N > 2)
         {
-            m_RGBA[3] = b;
+            m_RGBA[2] = b;
         }
     }
     
-    INL const T* RGBA() const
+    INL void A(T a)
     {
-        return m_RGBA;
-    }
-    
-    INL void RGBA(T rgba[N])
-    {
-        memcpy(m_RGBA, rgba, sizeof(T) * N);
+        if (N > 3)
+        {
+            m_RGBA[3] = a;
+        }
     }
     
     INL CColor operator+ (const CColor<T, N>& other) const
@@ -207,9 +211,14 @@ public:
     }
     
 private:
-    T m_RGBA[N];
+    static_assert(N > 0, "CColor cannot be zero-dimensioned");
+    TRGBA m_RGBA;
 };
 
+// *****************************************************************************
+// Color converter functions
+// *****************************************************************************
+    
 template<class T1, class T2, int N>
 INL CColor<T1, N> ConvertColor(const CColor<T2, N>& color)
 {

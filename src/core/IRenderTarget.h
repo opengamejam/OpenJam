@@ -9,7 +9,7 @@
 #define IRENDERTARGET_H
 
 #include "Global.h"
-#include "CColor.h"
+#include "CColor.hpp"
 
 namespace jam
 {
@@ -31,11 +31,11 @@ public:
     virtual void Unbind() const = 0;
     virtual void Clear() const = 0;
     
-    virtual unsigned int Width() const = 0;
-    virtual unsigned int Height() const = 0;
+    virtual uint32_t Width() const = 0;
+    virtual uint32_t Height() const = 0;
     
-    virtual void ClearColor(const CColor& color) = 0;
-    virtual const CColor& ClearColor() const = 0;
+    virtual void ClearColor(const CColor4f& color) = 0;
+    virtual const CColor4f& ClearColor() const = 0;
     
     virtual TRawData RawData() = 0;
 };

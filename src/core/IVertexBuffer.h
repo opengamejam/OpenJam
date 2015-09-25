@@ -89,8 +89,11 @@ protected:
 };
     
     
-    
-    
+/*
+ 
+ Vertex streams allow to work with discrete elements as one whole
+ 
+ */
 struct IVertexBuffer::SVertexStream
 {
     IVertexBufferWeak vertexBuffer;

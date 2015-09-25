@@ -122,7 +122,7 @@ CTextureOGL1_3::CTextureOGL1_3()
 
 CTextureOGL1_3::~CTextureOGL1_3()
 {
-    glDeleteTextures(1, &m_Id);
+    glDeleteTextures(1, (GLuint*)(&m_Id));
 }
 
 void CTextureOGL1_3::Bind()
@@ -182,7 +182,7 @@ bool CTextureOGL1_3::AssignImage(IImagePtr image)
 {
     if (!IsValid())
     {
-        glGenTextures(1, &m_Id);
+        glGenTextures(1, (GLuint*)(&m_Id));
         //glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     }
     

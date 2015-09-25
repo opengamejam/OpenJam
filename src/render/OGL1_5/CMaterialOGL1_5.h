@@ -24,8 +24,8 @@ public:
     virtual void Bind() override;
     virtual void Unbind() override;
     
-    virtual void Color(const CColor& color) override;
-    virtual const CColor& Color() const override;
+    virtual void Color(const CColor4f& color) override;
+    virtual const CColor4f& Color() const override;
     
     virtual PrimitiveTypes PrimitiveType() const override;
     virtual void PrimitiveType(PrimitiveTypes primitiveType) override;

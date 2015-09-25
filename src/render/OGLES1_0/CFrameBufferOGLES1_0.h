@@ -34,8 +34,8 @@ public:
     virtual void Unbind() const override;
     virtual void Clear() const override;
     
-    virtual void ClearColor(const CColor& color) override;
-    virtual const CColor& ClearColor() const override;
+    virtual void ClearColor(const CColor4f& color) override;
+    virtual const CColor4f& ClearColor() const override;
     
     virtual uint32_t Width() const override;
     virtual uint32_t Height() const override;
@@ -58,7 +58,7 @@ private:
     uint32_t m_Width;
     uint32_t m_Height;
     
-    CColor m_ClearColor;
+    CColor4f m_ClearColor;
 };
 
 }; // namespace jam

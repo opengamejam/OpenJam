@@ -89,7 +89,7 @@ IShaderProgramPtr CRendererOGL1_3::CreateShaderProgram()
     return shaderProgram;
 }
 
-IRenderTargetPtr CRendererOGL1_3::CreateRenderTarget(unsigned int width, unsigned int height)
+IRenderTargetPtr CRendererOGL1_3::CreateRenderTarget(uint32_t width, uint32_t height)
 {
     IRenderTargetPtr renderTarget(new CFrameBufferOGL1_3(width, height));
     return renderTarget;

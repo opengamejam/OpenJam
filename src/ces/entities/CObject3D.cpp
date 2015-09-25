@@ -12,7 +12,6 @@
 #include "CRenderComponent.h"
 #include "CTransform.h"
 #include "CVertex.h"
-#include "CColor.h"
 #include "CShaderSourceSprite.h"
 #include "CImagePVR.h"
 #include "CImageSegaPVR.h"

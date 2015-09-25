@@ -12,7 +12,7 @@
 #include "CRenderComponent.h"
 #include "CTransform.h"
 #include "CVertex.h"
-#include "CColor.h"
+#include "CColor.hpp"
 #include "CShaderSourceSprite.h"
 #include "CSpriteXML.h"
 #include "CAnimation2DComponent.h"
@@ -65,7 +65,7 @@ CSprite2DPtr CSprite2D::Create(const std::string& filename, uint32_t cameraId)
     
     // Vertex buffer
     vertexBuffer = GRenderer->CreatVertexBuffer();
-    vertexBuffer->Initialize(sizeof(CVector3Df) + sizeof(CColor) + sizeof(CVector2Df));
+    vertexBuffer->Initialize(sizeof(CVector3Df) + sizeof(CColor4f) + sizeof(CVector2Df));
     assert(vertexBuffer && vertexBuffer->IsValid());
     
     vertexBuffer->Resize(4);
@@ -87,19 +87,19 @@ CSprite2DPtr CSprite2D::Create(const std::string& filename, uint32_t cameraId)
     color.dataType = IVertexBuffer::Float;
     color.stride = 4;
     color.offset = sizeof(CVector3Df);
-    color.Set<CColor>(0,
+    color.Set<CColor4f>(0,
     {
-        CColor(1.0f, 1.0f, 1.0f, 1.0f),
-        CColor(1.0f, 1.0f, 1.0f, 1.0f),
-        CColor(1.0f, 1.0f, 1.0f, 1.0f),
-        CColor(1.0f, 1.0f, 1.0f, 1.0f)
+        CColor4f(1.0f, 1.0f, 1.0f, 1.0f),
+        CColor4f(1.0f, 1.0f, 1.0f, 1.0f),
+        CColor4f(1.0f, 1.0f, 1.0f, 1.0f),
+        CColor4f(1.0f, 1.0f, 1.0f, 1.0f)
     });
     
     IVertexBuffer::SVertexStream& textureCoord = vertexBuffer->Lock(IVertexBuffer::TextureCoords);
     textureCoord.attributeIndex = shaderProgram->TextureCoord();
     textureCoord.dataType = IVertexBuffer::Float;
     textureCoord.stride = 2;
-    textureCoord.offset = sizeof(CVector3Df) + sizeof(CColor);
+    textureCoord.offset = sizeof(CVector3Df) + sizeof(CColor4f);
     textureCoord.Set<CVector2Df>(0,
     {
         CVector2Df(0.0f, 0.0f),

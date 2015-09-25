@@ -73,12 +73,12 @@ void CMaterialOGL2_0::Unbind()
     m_IsBound = false;
 }
 
-const CColor& CMaterialOGL2_0::Color() const
+const CColor4f& CMaterialOGL2_0::Color() const
 {
     return m_State.color;
 }
 
-void CMaterialOGL2_0::Color(const CColor& color)
+void CMaterialOGL2_0::Color(const CColor4f& color)
 {
     m_State.color = color;
     m_IsDirty = true;

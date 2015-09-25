@@ -9,7 +9,7 @@
 #define	IMATERIAL_H
 
 #include "Global.h"
-#include "CColor.h"
+#include "CColor.hpp"
 #include "CMatrix4x4.h"
 
 namespace jam
@@ -65,7 +65,7 @@ public:
     
     struct MaterialState
     {
-        CColor color;
+        CColor4f color;
         float lineWidth;
         bool cullFace;
         PrimitiveTypes primitiveType;
@@ -114,7 +114,7 @@ public:
         } stencilTest;
         
         MaterialState()
-        : color(CColor(1.0f, 1.0f, 1.0f, 1.0f))
+        : color(CColor4f(1.0f, 1.0f, 1.0f, 1.0f))
         , lineWidth(1.0f)
         , cullFace(true)
         , primitiveType(TrianglesStrip)
@@ -135,8 +135,8 @@ public:
     virtual PrimitiveTypes PrimitiveType() const = 0;
     virtual void PrimitiveType(PrimitiveTypes primitiveType) = 0;
     
-    virtual void Color(const CColor& color) = 0;
-    virtual const CColor& Color() const = 0;
+    virtual void Color(const CColor4f& color) = 0;
+    virtual const CColor4f& Color() const = 0;
     
     virtual float LineWidth() const = 0;
     virtual void LineWidth(float lineWidth) = 0;

@@ -30,7 +30,7 @@ CFrameBufferOGL1_3::CFrameBufferOGL1_3(uint32_t width, uint32_t height)
 , m_IsStencilBufferExt(false)
 , m_Width(width)
 , m_Height(height)
-, m_ClearColor(CColor(0.0f, 0.0f, 1.0f, 1.0f))
+, m_ClearColor(CColor4f(0.0f, 0.0f, 1.0f, 1.0f))
 {
 #if GL_MAX_COLOR_ATTACHMENTS
     glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS, &m_NumColorAtachments);
@@ -67,7 +67,7 @@ CFrameBufferOGL1_3::~CFrameBufferOGL1_3()
     
     if (m_FrameBuffer != -1u && !m_IsDepthBufferExt)
     {
-        glDeleteFramebuffers(1, &m_FrameBuffer);
+        glDeleteFramebuffers(1, (GLuint *)(&m_FrameBuffer));
     }
 }
 
@@ -105,7 +105,7 @@ void CFrameBufferOGL1_3::Initialize()
 {
     if (m_FrameBuffer == -1u)
     {
-        glGenFramebuffers(1, &m_FrameBuffer);
+        glGenFramebuffers(1, (GLuint *)(&m_FrameBuffer));
     }
     glBindFramebuffer(GL_FRAMEBUFFER, m_FrameBuffer);
 }
@@ -207,12 +207,12 @@ void CFrameBufferOGL1_3::Clear() const
     }
 }
 
-void CFrameBufferOGL1_3::ClearColor(const CColor& color)
+void CFrameBufferOGL1_3::ClearColor(const CColor4f& color)
 {
     m_ClearColor = color;
 }
 
-const CColor& CFrameBufferOGL1_3::ClearColor() const
+const CColor4f& CFrameBufferOGL1_3::ClearColor() const
 {
     return m_ClearColor;
 }

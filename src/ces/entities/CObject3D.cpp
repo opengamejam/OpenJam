@@ -11,7 +11,6 @@
 #include "RenderGlobal.h"
 #include "CRenderComponent.h"
 #include "CTransform.h"
-#include "CVertex.h"
 #include "CShaderSourceSprite.h"
 #include "CImagePVR.h"
 #include "CImageSegaPVR.h"
@@ -144,7 +143,7 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, uint32_t cameraId
                 normals.offset = offset;
                 normals.Set<CVector3Df>(0, model3D->Normals());
                 
-                offset += sizeof(CVertex3Df);
+                offset += sizeof(CVector3Df);
             }
             
             vertexBuffer->Unlock(true);

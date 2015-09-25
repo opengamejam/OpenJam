@@ -11,7 +11,6 @@
 #include "RenderGlobal.h"
 #include "CRenderComponent.h"
 #include "CTransform.h"
-#include "CVertex.h"
 #include "CColor.hpp"
 #include "CShaderSourceSprite.h"
 #include "CSpriteXML.h"

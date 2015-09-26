@@ -10,7 +10,7 @@
 #define CSPRITE2D_H
 
 #include "IEntity.h"
-#include "CVector3D.h"
+#include "CVector.hpp"
 
 namespace jam
 {

@@ -10,7 +10,7 @@
 #define CTRANSFORMAFFECTOR_H
 
 #include "Global.h"
-#include "CVector3D.h"
+#include "CVector.hpp"
 
 namespace jam
 {

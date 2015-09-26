@@ -10,7 +10,7 @@
 #define RECT2D_H
 
 #include "Global.h"
-#include "CVector2D.h"
+#include "CVector.hpp"
 
 namespace jam
 {
@@ -25,7 +25,7 @@ public:
     public:
         CIntersection(R left, R top, R right, R bottom);
         
-        const CVector2D<R>& Delta() const;
+        const CVector<R, 2>& Delta() const;
         bool HasIntersection() const;
         bool IsContain() const;
         bool IsTop() const;
@@ -39,13 +39,13 @@ public:
         R m_Right;
         R m_Bottom;
         
-        CVector2D<R> m_Delta;
+        CVector<R, 2> m_Delta;
     };
     
 public:
     CRect2D();
     CRect2D(T left, T top, T right, T bottom);
-    CRect2D(const CVector2D<T>& position, const CVector2D<T>& size);
+    CRect2D(const CVector<T, 2>& position, const CVector<T, 2>& size);
     ~CRect2D();
     
     // Getters
@@ -59,8 +59,8 @@ public:
     T Width() const;
     T Height() const;
     
-    const CVector2D<T>& Position() const;
-    const CVector2D<T>& Size() const;
+    const CVector<T, 2>& Position() const;
+    const CVector<T, 2>& Size() const;
     
     // Setters
     void Left(T left);
@@ -73,15 +73,15 @@ public:
     void Width(T width);
     void Height(T height);
     
-    void Position(const CVector2D<T>& position);
-    void Size(const CVector2D<T>& size);
+    void Position(const CVector<T, 2>& position);
+    void Size(const CVector<T, 2>& size);
     
 private:
     void Validate();
     
 private:
-    CVector2D<T> m_Position;
-    CVector2D<T> m_Size;
+    CVector<T, 2> m_Position;
+    CVector<T, 2> m_Size;
 };
 
 typedef CRect2D<float> CRect2Df;

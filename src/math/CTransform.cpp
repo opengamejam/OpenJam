@@ -10,115 +10,115 @@
 
 using namespace jam;
 
-template <class T, template <class X> class Vec, template <class Y> class Mat>
-CTransform<T, Vec, Mat>::CTransform(const Vec<T>& position,
-                                    const Vec<T>& rotation,
-                                    const Vec<T>& scale)
+template <class T, class Vec, template <class Y> class Mat>
+CTransform<T, Vec, Mat>::CTransform(const Vec& position,
+                                    const Vec& rotation,
+                                    const Vec& scale)
 : m_Position(position)
 , m_Rotation(rotation)
 , m_Scale(scale)
-, m_Size(Vec<T>(static_cast<T>(1.0), static_cast<T>(1.0), static_cast<T>(1.0)))
+, m_Size(Vec(static_cast<T>(1.0), static_cast<T>(1.0), static_cast<T>(1.0)))
 {
     
 }
 
-template <class T, template <class X> class Vec, template <class Y> class Mat>
+template <class T, class Vec, template <class Y> class Mat>
 CTransform<T, Vec, Mat>::~CTransform()
 {
     
 }
 
-template <class T, template <class X> class Vec, template <class Y> class Mat>
-Vec<T>& CTransform<T, Vec, Mat>::Position()
+template <class T, class Vec, template <class Y> class Mat>
+Vec& CTransform<T, Vec, Mat>::Position()
 {
     return m_Position;
 }
 
-template <class T, template <class X> class Vec, template <class Y> class Mat>
-const Vec<T>& CTransform<T, Vec, Mat>::Position() const
+template <class T, class Vec, template <class Y> class Mat>
+const Vec& CTransform<T, Vec, Mat>::Position() const
 {
     return m_Position;
 }
 
-template <class T, template <class X> class Vec, template <class Y> class Mat>
-void CTransform<T, Vec, Mat>::Position(const Vec<T>& position)
+template <class T, class Vec, template <class Y> class Mat>
+void CTransform<T, Vec, Mat>::Position(const Vec& position)
 {
     m_Position = position;
 }
 
-template <class T, template <class X> class Vec, template <class Y> class Mat>
-Vec<T>& CTransform<T, Vec, Mat>::Rotation()
+template <class T, class Vec, template <class Y> class Mat>
+Vec& CTransform<T, Vec, Mat>::Rotation()
 {
     return m_Rotation;
 }
 
-template <class T, template <class X> class Vec, template <class Y> class Mat>
-const Vec<T>& CTransform<T, Vec, Mat>::Rotation() const
+template <class T, class Vec, template <class Y> class Mat>
+const Vec& CTransform<T, Vec, Mat>::Rotation() const
 {
     return m_Rotation;
 }
 
-template <class T, template <class X> class Vec, template <class Y> class Mat>
-void CTransform<T, Vec, Mat>::Rotation(const Vec<T>& rotation)
+template <class T, class Vec, template <class Y> class Mat>
+void CTransform<T, Vec, Mat>::Rotation(const Vec& rotation)
 {
     m_Rotation = rotation;
 }
 
-template <class T, template <class X> class Vec, template <class Y> class Mat>
-Vec<T>& CTransform<T, Vec, Mat>::Scale()
+template <class T, class Vec, template <class Y> class Mat>
+Vec& CTransform<T, Vec, Mat>::Scale()
 {
     return m_Scale;
 }
 
-template <class T, template <class X> class Vec, template <class Y> class Mat>
-const Vec<T>& CTransform<T, Vec, Mat>::Scale() const
+template <class T, class Vec, template <class Y> class Mat>
+const Vec& CTransform<T, Vec, Mat>::Scale() const
 {
     return m_Scale;
 }
 
-template <class T, template <class X> class Vec, template <class Y> class Mat>
-void CTransform<T, Vec, Mat>::Scale(const Vec<T>& scale)
+template <class T, class Vec, template <class Y> class Mat>
+void CTransform<T, Vec, Mat>::Scale(const Vec& scale)
 {
     m_Scale = scale;
 }
 
-template <class T, template <class X> class Vec, template <class Y> class Mat>
-Vec<T>& CTransform<T, Vec, Mat>::Offset()
+template <class T, class Vec, template <class Y> class Mat>
+Vec& CTransform<T, Vec, Mat>::Offset()
 {
     return m_Offset;
 }
 
-template <class T, template <class X> class Vec, template <class Y> class Mat>
-const Vec<T>& CTransform<T, Vec, Mat>::Offset() const
+template <class T, class Vec, template <class Y> class Mat>
+const Vec& CTransform<T, Vec, Mat>::Offset() const
 {
     return m_Offset;
 }
 
-template <class T, template <class X> class Vec, template <class Y> class Mat>
-void CTransform<T, Vec, Mat>::Offset(const Vec<T>& offset)
+template <class T, class Vec, template <class Y> class Mat>
+void CTransform<T, Vec, Mat>::Offset(const Vec& offset)
 {
     m_Offset = offset;
 }
 
-template <class T, template <class X> class Vec, template <class Y> class Mat>
-Vec<T>& CTransform<T, Vec, Mat>::Size()
+template <class T, class Vec, template <class Y> class Mat>
+Vec& CTransform<T, Vec, Mat>::Size()
 {
     return m_Size;
 }
 
-template <class T, template <class X> class Vec, template <class Y> class Mat>
-const Vec<T>& CTransform<T, Vec, Mat>::Size() const
+template <class T, class Vec, template <class Y> class Mat>
+const Vec& CTransform<T, Vec, Mat>::Size() const
 {
     return m_Size;
 }
 
-template <class T, template <class X> class Vec, template <class Y> class Mat>
-void CTransform<T, Vec, Mat>::Size(const Vec<T>& size)
+template <class T, class Vec, template <class Y> class Mat>
+void CTransform<T, Vec, Mat>::Size(const Vec& size)
 {
     m_Size = size;
 }
 
-template <class T, template <class X> class Vec, template <class Y> class Mat>
+template <class T, class Vec, template <class Y> class Mat>
 CTransform<T, Vec, Mat>& CTransform<T, Vec, Mat>::operator+=(const CTransform<T, Vec, Mat>& other)
 {
     Position() += const_cast<CTransform&>(other).Position();
@@ -128,7 +128,7 @@ CTransform<T, Vec, Mat>& CTransform<T, Vec, Mat>::operator+=(const CTransform<T,
     return *this;
 }
 
-template <class T, template <class X> class Vec, template <class Y> class Mat>
+template <class T, class Vec, template <class Y> class Mat>
 Mat<T> CTransform<T, Vec, Mat>::operator()()
 {
     Mat<T> transform = Mat<T>::Identity();
@@ -151,6 +151,6 @@ Mat<T> CTransform<T, Vec, Mat>::operator()()
     return transform;
 }
 
-template class jam::CTransform<float, CVector3D, CMatrix4x4>;
-template class jam::CTransform<double, CVector3D, CMatrix4x4>;
-template class jam::CTransform<int, CVector3D, CMatrix4x4>;
+template class jam::CTransform<float, CVector3Df, CMatrix4x4>;
+template class jam::CTransform<double, CVector3Dd, CMatrix4x4>;
+template class jam::CTransform<int32_t, CVector3Di, CMatrix4x4>;

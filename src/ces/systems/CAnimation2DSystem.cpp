@@ -14,7 +14,7 @@
 #include "IMaterial.h"
 #include "IShaderProgram.h"
 #include "IVertexBuffer.h"
-#include "CVector2D.h"
+#include "CVector.hpp"
 #include "IMesh.h"
 
 using namespace jam;

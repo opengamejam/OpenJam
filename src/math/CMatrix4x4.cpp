@@ -131,7 +131,7 @@ bool CMatrix4x4<T>::IsEqual(const CMatrix4x4<T>& matrix)
 }
 
 template <class T>
-CMatrix4x4<T>& CMatrix4x4<T>::Rotate(const CVector3D<T>& rotation)
+CMatrix4x4<T>& CMatrix4x4<T>::Rotate(const CVector<T, 3>& rotation)
 {
     T A      = static_cast<T>(cos(static_cast<double>(rotation.X())));
     T B      = static_cast<T>(sin(static_cast<double>(rotation.X())));
@@ -157,7 +157,7 @@ CMatrix4x4<T>& CMatrix4x4<T>::Rotate(const CVector3D<T>& rotation)
 }
 
 template <class T>
-CMatrix4x4<T>& CMatrix4x4<T>::Scale(const CVector3D<T>& scale)
+CMatrix4x4<T>& CMatrix4x4<T>::Scale(const CVector<T, 3>& scale)
 {
     m_Matrix[0] = scale.X();
     m_Matrix[5] = scale.Y();
@@ -167,7 +167,7 @@ CMatrix4x4<T>& CMatrix4x4<T>::Scale(const CVector3D<T>& scale)
 }
 
 template <class T>
-CMatrix4x4<T>& CMatrix4x4<T>::Translate(const CVector3D<T>& translation)
+CMatrix4x4<T>& CMatrix4x4<T>::Translate(const CVector<T, 3>& translation)
 {
     m_Matrix[3] = translation.X();
     m_Matrix[7] = translation.Y();
@@ -177,9 +177,9 @@ CMatrix4x4<T>& CMatrix4x4<T>::Translate(const CVector3D<T>& translation)
 }
 
 template <class T>
-CVector3D<T> CMatrix4x4<T>::Up() const
+CVector<T, 3> CMatrix4x4<T>::Up() const
 {
-    CVector3D<T> upVector;
+    CVector<T, 3> upVector;
     
     upVector.X(m_Matrix[1]);
 	upVector.X(m_Matrix[5]);
@@ -191,9 +191,9 @@ CVector3D<T> CMatrix4x4<T>::Up() const
 }
 
 template <class T>
-CVector3D<T> CMatrix4x4<T>::Forward() const
+CVector<T, 3> CMatrix4x4<T>::Forward() const
 {
-    CVector3D<T> upVector;
+    CVector<T, 3> upVector;
     
     upVector.X(m_Matrix[2]);
 	upVector.X(m_Matrix[6]);
@@ -205,9 +205,9 @@ CVector3D<T> CMatrix4x4<T>::Forward() const
 }
 
 template <class T>
-CVector3D<T> CMatrix4x4<T>::Right() const
+CVector<T, 3> CMatrix4x4<T>::Right() const
 {
-    CVector3D<T> upVector;
+    CVector<T, 3> upVector;
     
     upVector.X(m_Matrix[0]);
 	upVector.X(m_Matrix[4]);

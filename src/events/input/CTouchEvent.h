@@ -10,7 +10,7 @@
 #define CTOUCHEVENT_H
 
 #include "IEvent.h"
-#include "CVector2D.h"
+#include "CVector.hpp"
 
 
 namespace jam

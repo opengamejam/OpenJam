@@ -1,13 +1,13 @@
 //
-//  CColor.h
+//  CColor.hpp
 //  OpenJam
 //
 //  Created by Yevgeniy Logachev on 5/28/14.
 //  Copyright (c) 2014 yev. All rights reserved.
 //
 
-#ifndef CCOLOR_H
-#define CCOLOR_H
+#ifndef CCOLOR_HPP
+#define CCOLOR_HPP
 
 #include "Global.h"
 #include <regex>
@@ -52,22 +52,17 @@ public:
     typedef T TRGBA[N];
     
 public:
-    CColor()
-    {
-        memset(m_RGBA, static_cast<T>(1.0), sizeof(T) * N);
-    }
-    
-    CColor(const TRGBA rgba)
-    {
-        memcpy(m_RGBA, rgba, sizeof(T) * N);
-    }
-
-    CColor(T r, T g, T b, T a)
+    CColor(T r = static_cast<T>(1.0), T g = static_cast<T>(1.0), T b = static_cast<T>(1.0), T a = static_cast<T>(1.0))
     {
         R(r);
         G(g);
         B(b);
         A(a);
+    }
+    
+    CColor(const TRGBA rgba)
+    {
+        memcpy(m_RGBA, rgba, sizeof(m_RGBA));
     }
     
     CColor(const std::string& stringHex)
@@ -286,4 +281,4 @@ INL CColor<uint8_t, N> ConvertColor(const CColor<double, N>& color)
 
 }; // namespace jam
 
-#endif /* defined(CCOLOR_H) */
+#endif /* defined(CCOLOR_HPP) */

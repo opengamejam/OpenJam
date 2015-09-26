@@ -26,7 +26,7 @@ CRect2D<T>::CIntersection<R>::CIntersection(R left, R top, R right, R bottom)
     , m_Right(right)
     , m_Bottom(bottom)
 {
-    m_Delta = CVector2D<R>(std::max(m_Left, m_Right), std::max(m_Top, m_Bottom));
+    m_Delta = CVector<R, 2>(std::max(m_Left, m_Right), std::max(m_Top, m_Bottom));
 };
 
 template <class T>
@@ -73,21 +73,21 @@ bool CRect2D<T>::CIntersection<R>::IsBottom() const
 
 template <class T>
 CRect2D<T>::CRect2D()
-    : m_Position(CVector2D<T>(static_cast<T>(0.0), static_cast<T>(0.0)))
-    , m_Size(CVector2D<T>(static_cast<T>(0.0), static_cast<T>(0.0)))
+    : m_Position(CVector<T, 2>(static_cast<T>(0.0), static_cast<T>(0.0)))
+    , m_Size(CVector<T, 2>(static_cast<T>(0.0), static_cast<T>(0.0)))
 {
 }
 
 template <class T>
 CRect2D<T>::CRect2D(T left, T top, T right, T bottom)
-    : m_Position(CVector2D<T>(left, top))
-    , m_Size(CVector2D<T>(right - left, bottom - top))
+    : m_Position(CVector<T, 2>(left, top))
+    , m_Size(CVector<T, 2>(right - left, bottom - top))
 {
     Validate();
 }
 
 template <class T>
-CRect2D<T>::CRect2D(const CVector2D<T>& position, const CVector2D<T>& size)
+CRect2D<T>::CRect2D(const CVector<T, 2>& position, const CVector<T, 2>& size)
     : m_Position(position)
     , m_Size(size)
 {
@@ -149,13 +149,13 @@ T CRect2D<T>::Height() const
 }
 
 template <class T>
-const CVector2D<T>& CRect2D<T>::Position() const
+const CVector<T, 2>& CRect2D<T>::Position() const
 {
     return m_Position;
 }
 
 template <class T>
-const CVector2D<T>& CRect2D<T>::Size() const
+const CVector<T, 2>& CRect2D<T>::Size() const
 {
     return m_Size;
 }
@@ -218,14 +218,14 @@ void CRect2D<T>::Height(T height)
 }
 
 template <class T>
-void CRect2D<T>::Position(const CVector2D<T>& position)
+void CRect2D<T>::Position(const CVector<T, 2>& position)
 {
     m_Position = position;
     Validate();
 }
 
 template <class T>
-void CRect2D<T>::Size(const CVector2D<T>& size)
+void CRect2D<T>::Size(const CVector<T, 2>& size)
 {
     m_Size = size;
     Validate();

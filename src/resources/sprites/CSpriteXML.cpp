@@ -7,7 +7,7 @@
 #include "Global.h"
 #include "ILoader.h"
 #include "tinyxml.h"
-#include "CVector2D.h"
+#include "CVector.hpp"
 
 using namespace jam;
 

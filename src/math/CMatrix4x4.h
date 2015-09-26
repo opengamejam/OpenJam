@@ -10,7 +10,7 @@
 #define CMATRIX4X4_H
 
 #include "Global.h"
-#include "CVector3D.h"
+#include "CVector.hpp"
 
 namespace jam
 {
@@ -25,36 +25,36 @@ public:
     
     const std::vector<T>& operator()() const;
     
-    static const CMatrix4x4<T>  Identity();
-    static const CMatrix4x4<T>  Zero();
-    static const CMatrix4x4<T>  Perspective(float fov, float aspect, float zNear, float zFar);
-    static const CMatrix4x4<T>  Orthographic(float left, float right, float top, float bottom, float _near, float _far);
+    static const CMatrix4x4<T> Identity();
+    static const CMatrix4x4<T> Zero();
+    static const CMatrix4x4<T> Perspective(float fov, float aspect, float zNear, float zFar);
+    static const CMatrix4x4<T> Orthographic(float left, float right, float top, float bottom, float _near, float _far);
     
-    CMatrix4x4<T>               Clone() const;
-    CMatrix4x4<T>&              Transpose();
-    bool                        IsEqual(const CMatrix4x4<T>& matrix);
+    CMatrix4x4<T> Clone() const;
+    CMatrix4x4<T>& Transpose();
+    bool IsEqual(const CMatrix4x4<T>& matrix);
     
-    CMatrix4x4<T>&              Translate(const CVector3D<T>& translation);
-    CMatrix4x4<T>&              Rotate(const CVector3D<T>& rotation);
-    CMatrix4x4<T>&              Scale(const CVector3D<T>& scale);
+    CMatrix4x4<T>& Translate(const CVector<T, 3>& translation);
+    CMatrix4x4<T>& Rotate(const CVector<T, 3>& rotation);
+    CMatrix4x4<T>& Scale(const CVector<T, 3>& scale);
     
-    CMatrix4x4<T>&              Translate();
-    CMatrix4x4<T>&              Rotate();
-    CMatrix4x4<T>&              Scale();
+    CMatrix4x4<T>& Translate();
+    CMatrix4x4<T>& Rotate();
+    CMatrix4x4<T>& Scale();
     
-    CVector3D<T>                Up() const;
-    CVector3D<T>                Forward() const;
-    CVector3D<T>                Right() const;
+    CVector<T, 3> Up() const;
+    CVector<T, 3> Forward() const;
+    CVector<T, 3> Right() const;
     
-    void                        Element(unsigned short x, unsigned short y, T element);
-    const T&                    Element(unsigned short x, unsigned short y) const;
-    void                        SwapElement(unsigned short x1, unsigned short y1, unsigned short x2, unsigned short y2);
+    void Element(unsigned short x, unsigned short y, T element);
+    const T& Element(unsigned short x, unsigned short y) const;
+    void SwapElement(unsigned short x1, unsigned short y1, unsigned short x2, unsigned short y2);
     
-    CMatrix4x4<T>               operator*(const CMatrix4x4<T>& matrix);
-    CMatrix4x4<T>&              operator*=(const CMatrix4x4<T>& matrix);
-    CMatrix4x4<T>               operator+(const CMatrix4x4<T>& matrix);
-    CMatrix4x4<T>&              operator+=(const CMatrix4x4<T>& matrix);
-    CMatrix4x4<T>&              operator=(const std::vector<T>& other);
+    CMatrix4x4<T> operator*(const CMatrix4x4<T>& matrix);
+    CMatrix4x4<T>& operator*=(const CMatrix4x4<T>& matrix);
+    CMatrix4x4<T> operator+(const CMatrix4x4<T>& matrix);
+    CMatrix4x4<T>& operator+=(const CMatrix4x4<T>& matrix);
+    CMatrix4x4<T>& operator=(const std::vector<T>& other);
     
     void                        Dump() const;
     

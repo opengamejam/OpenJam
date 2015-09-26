@@ -113,7 +113,7 @@ void CThreadPool::Update(unsigned long dt)
 CThreadExecutorPtr CThreadPool::FindLeisureExecutor()
 {
     CThreadExecutorPtr executor = nullptr;
-    uint32_t minTasks = UINT32_MAX;
+    uint32_t minTasks = std::numeric_limits<uint32_t>::max();
     
     std::all_of(m_ThreadExecutors.begin(), m_ThreadExecutors.end(), [&](CThreadExecutorPtr ex)
     {

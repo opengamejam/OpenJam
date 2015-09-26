@@ -11,7 +11,7 @@
 
 #include "Global.h"
 #include "IModel3D.h"
-#include "CVector3D.h"
+#include "CVector.hpp"
 
 namespace jam
 {

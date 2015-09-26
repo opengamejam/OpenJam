@@ -19,7 +19,7 @@ CLASS_PTR(ICamera);
 CLASS_PTR(IEntity);
 CLASS_WEAK(CGame);
     
-class IScene : public IEventable
+class IScene : public IEventable, public std::enable_shared_from_this<IScene>
 {
 public:
     typedef std::vector<ICameraPtr> TCamerasList;

@@ -10,7 +10,7 @@
 
 #include "Global.h"
 #include "IResource.h"
-#include "CVector2D.h"
+#include "CVector.hpp"
 
 namespace jam
 {

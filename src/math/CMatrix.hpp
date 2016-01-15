@@ -138,7 +138,7 @@ public:
         {
             // TODO: 2d rotation matrix
         }
-        else if (N == 3 && ROWS == 4 && COLS == 4)
+        else if (N == 3 && ROWS >= 3 && COLS >= 3)
         {
             T A      = static_cast<T>(cos(static_cast<double>(rotation.X())));
             T B      = static_cast<T>(sin(static_cast<double>(rotation.X())));
@@ -150,16 +150,15 @@ public:
             T AD     =   A * D;
             T BD     =   B * D;
             
-            T* ptr = *m_Matrix;            
-            *(ptr + 0) =   C * E;
-            *(ptr + 4) =  -C * F;
-            *(ptr + 8) =  -D;
-            *(ptr + 1) = -BD * E + A * F;
-            *(ptr + 5) =  BD * F + A * E;
-            *(ptr + 9) =  -B * C;
-            *(ptr + 2) =  AD * E + B * F;
-            *(ptr + 6) = -AD * F + B * E;
-            *(ptr + 10)=   A * C;
+            m_Matrix[0][0] =   C * E;
+            m_Matrix[1][0] =  -C * F;
+            m_Matrix[2][0] =  -D;
+            m_Matrix[0][1] = -BD * E + A * F;
+            m_Matrix[1][1] =  BD * F + A * E;
+            m_Matrix[2][1] =  -B * C;
+            m_Matrix[0][2] =  AD * E + B * F;
+            m_Matrix[1][2] = -AD * F + B * E;
+            m_Matrix[2][2] =   A * C;
         }
         else
         {

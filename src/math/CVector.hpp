@@ -19,7 +19,7 @@ namespace jam
 // Predeclarations
 // *****************************************************************************
 
-template<class T, int N>
+template<class T, uint32_t N>
 class CVector;
 
 typedef CVector<float, 1> CVector1Df;
@@ -58,7 +58,7 @@ typedef CVector<int64_t, 4> CVector4Dl;
 // will do nothing
 // *****************************************************************************
     
-template <class T, int N>
+template <class T, uint32_t N>
 class CVector
 {
 public:
@@ -105,7 +105,7 @@ public:
         Set(z, 2);
     }
     
-    INL void Set(T value, int index)
+    INL void Set(T value, uint32_t index)
     {
         if (index < N)
         {

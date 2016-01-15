@@ -116,7 +116,7 @@ bool CBatch::AddGeometry(IMeshPtr mesh, const CTransform3Df& transform)
         dstVertexBuffer->Resize(k_MaxVertexBufferSize);
         //dstIndexBuffer->Initialize(srcIndexBuffer->);
     }
-    else if (!ValidateStreams(srcVertexBuffer, dstVertexBuffer))
+    else if (!jam::CompareCapability(srcVertexBuffer, dstVertexBuffer))
     {
         // Incompatible buffer
         m_Geometries.erase(mesh->UniqueId());
@@ -171,25 +171,5 @@ void CBatch::Update()
             
         });
     });
-}
-
-bool CBatch::ValidateStreams(IVertexBufferPtr vb1, IVertexBufferPtr vb2) const
-{
-    bool isVertexBufferValid = true;
-    
-    const IVertexBuffer::TVertexStreamMap& vertexStreams = vb1->VertexStreams();
-    std::all_of(vertexStreams.begin(), vertexStreams.end(),
-                [&](const IVertexBuffer::TVertexStreamMap::value_type& stream)
-    {
-        if (!vb2->HasStream(stream.first))
-        {
-            isVertexBufferValid = false;
-            return false;
-        }
-        
-        return true;
-    });
-    
-    return isVertexBufferValid;
 }
 

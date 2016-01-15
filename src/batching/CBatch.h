@@ -41,9 +41,6 @@ public:
     void RemoveGeometry(IMeshPtr mesh);
     void Update();
     
-private:
-    bool ValidateStreams(IVertexBufferPtr vb1, IVertexBufferPtr vb2) const;
-    
 public:
     static const uint64_t k_MaxVertexBufferSize;
     

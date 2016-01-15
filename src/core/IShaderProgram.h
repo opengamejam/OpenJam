@@ -9,7 +9,7 @@
 #define ISHADERPROGRAM_H
 
 #include "IShader.h"
-#include "CMatrix4x4.h"
+#include "CMatrix.hpp"
 
 namespace jam
 {

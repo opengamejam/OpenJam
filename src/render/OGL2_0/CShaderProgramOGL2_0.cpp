@@ -324,7 +324,7 @@ const IShaderProgram::TUniMatrix4Float& CShaderProgramOGL2_0::UniformsMatrix4x4f
 
 INL void AddUniformMatrix4f(unsigned int location, const CMatrix4x4f& value)
 {
-    glUniformMatrix4fv(location, 1, GL_FALSE, value().data());
+    glUniformMatrix4fv(location, 1, GL_FALSE, value());
 }
 
 INL void AddUniformf(unsigned int location, const std::vector<float>& value, bool isVector)

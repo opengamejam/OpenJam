@@ -9,7 +9,7 @@
 #define ICAMERA_H
 
 #include "IEntity.h"
-#include "CMatrix4x4.h"
+#include "CMatrix.hpp"
 
 namespace jam
 {

@@ -19,10 +19,10 @@ namespace jam
 // Predeclarations
 // *****************************************************************************
     
-template<class T, int N>
+template<class T, uint32_t N>
 class CColor;
     
-template<class T1, class T2, int N>
+template<class T1, class T2, uint32_t N>
 CColor<T1, N> ConvertColor(const CColor<T2, N>& color);
     
 typedef CColor<float, 1> CColor1f;
@@ -45,7 +45,7 @@ typedef CColor<uint8_t, 4> CColor4b;
 // will do nothing
 // *****************************************************************************
     
-template<class T, int N>
+template<class T, uint32_t N>
 class CColor
 {
 public:
@@ -214,7 +214,7 @@ private:
 // Color converter functions
 // *****************************************************************************
     
-template<class T1, class T2, int N>
+template<class T1, class T2, uint32_t N>
 INL CColor<T1, N> ConvertColor(const CColor<T2, N>& color)
 {
     CColor<T1, N> out;
@@ -227,7 +227,7 @@ INL CColor<T1, N> ConvertColor(const CColor<T2, N>& color)
     return out;
 }
     
-template<int N>
+template<uint32_t N>
 INL CColor<float, N> ConvertColor(const CColor<uint8_t, N>& color)
 {
     CColor<float, N> out;
@@ -240,7 +240,7 @@ INL CColor<float, N> ConvertColor(const CColor<uint8_t, N>& color)
     return out;
 }
     
-template<int N>
+template<uint32_t N>
 INL CColor<double, N> ConvertColor(const CColor<uint8_t, N>& color)
 {
     CColor<double, N> out;
@@ -253,7 +253,7 @@ INL CColor<double, N> ConvertColor(const CColor<uint8_t, N>& color)
     return out;
 }
     
-template<int N>
+template<uint32_t N>
 INL CColor<uint8_t, N> ConvertColor(const CColor<float, N>& color)
 {
     CColor<uint8_t, N> out;
@@ -266,7 +266,7 @@ INL CColor<uint8_t, N> ConvertColor(const CColor<float, N>& color)
     return out;
 }
     
-template<int N>
+template<uint32_t N>
 INL CColor<uint8_t, N> ConvertColor(const CColor<double, N>& color)
 {
     CColor<uint8_t, N> out;

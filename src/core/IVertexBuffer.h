@@ -318,6 +318,26 @@ struct IVertexBuffer::SVertexStream
         return types[type];
     }
 };
+
+INL bool CompareCapability(IVertexBufferPtr vb1, IVertexBufferPtr vb2)
+{
+    if (!vb1 || !vb2)
+    {
+        return false;
+    }
+    
+    const IVertexBuffer::TVertexStreamMap& stream1 = vb1->VertexStreams();
+    const IVertexBuffer::TVertexStreamMap& stream2 = vb2->VertexStreams();
+    
+    auto pred = [](const IVertexBuffer::TVertexStreamMap::value_type& s1,
+                   const IVertexBuffer::TVertexStreamMap::value_type& s2) -> bool
+    {
+        return s1.first == s2.first;
+    };
+    
+    return (stream1.size() == stream2.size() &&
+            std::equal(stream1.begin(), stream1.end(), stream2.begin(), pred));
+}
     
 }; // namespace jam;
 

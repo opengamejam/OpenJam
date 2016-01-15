@@ -10,18 +10,18 @@
 #define __OpenJam__CTransform3D__
 
 #include "Global.h"
-#include "CMatrix4x4.h"
+#include "CMatrix.hpp"
 
 namespace jam
 {
 
-template <class T, class Vec, template <class Y> class Mat>
+template <class T, class Vec, class Mat>
 class CTransform
 {
 public:
     CTransform(const Vec& position = Vec(),
                const Vec& rotation = Vec(),
-               const Vec& scale = Vec(static_cast<T>(1.0), static_cast<T>(1.0), static_cast<T>(1.0)));
+               const Vec& scale = Vec(1.0, 1.0, 1.0));
     virtual ~CTransform();
     
     Vec& Position();
@@ -46,7 +46,7 @@ public:
     void Size(const Vec& size);
     
     CTransform<T, Vec, Mat>& operator+=(const CTransform<T, Vec, Mat>& other);
-    Mat<T> operator()();
+    Mat operator()();
     
 private:
     Vec m_Position;
@@ -56,9 +56,9 @@ private:
     Vec m_Size;
 };
 
-typedef CTransform<float, CVector3Df, CMatrix4x4> CTransform3Df;
-typedef CTransform<double, CVector3Dd, CMatrix4x4> CTransform3Dd;
-typedef CTransform<int32_t, CVector3Di, CMatrix4x4> CTransform3Di;
+typedef CTransform<float, CVector3Df, CMatrix4x4f> CTransform3Df;
+typedef CTransform<double, CVector3Dd, CMatrix4x4d> CTransform3Dd;
+typedef CTransform<int32_t, CVector3Di, CMatrix4x4i> CTransform3Di;
 
 }; // namespace jam
 

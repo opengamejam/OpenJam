@@ -10,7 +10,7 @@
 #define __TestApp__CBatch__
 
 #include "Global.h"
-#include "CTransform.h"
+#include "CTransform.hpp"
 
 namespace jam
 {

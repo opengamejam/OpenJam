@@ -10,8 +10,6 @@
 
 #include "RenderGlobal.h"
 #include "CRenderComponent.h"
-#include "CTransform.h"
-#include "CColor.hpp"
 #include "CShaderSourceSprite.h"
 #include "CSpriteXML.h"
 #include "CAnimation2DComponent.h"
@@ -237,17 +235,17 @@ const CVector3Df& CSprite2D::Scale()
 void CSprite2D::AnchorPoint(const CVector3Df& anchorPoint)
 {
     CTransformationComponentPtr component = TransformComponent();
-    CTransform3Df transform = component->Transform(CTransformationComponent::Local);
-    transform.Offset(anchorPoint);
-    component->AddTransform(CTransformationComponent::Local, transform);
+    CTransform3Df transform = component->Transform(CTransformationComponent::Animation);
+    transform.Position(anchorPoint);
+    component->AddTransform(CTransformationComponent::Animation, transform);
     component->Dirty();
 }
 
 const CVector3Df& CSprite2D::AnchorPoint()
 {
     CTransformationComponentPtr component = TransformComponent();
-    const CTransform3Df& transform = component->Transform(CTransformationComponent::Local);
-    return transform.Offset();
+    const CTransform3Df& transform = component->Transform(CTransformationComponent::Animation);
+    return transform.Position();
 }
 
 // *****************************************************************************

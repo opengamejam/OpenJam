@@ -7,7 +7,7 @@
 //
 
 #include "CAnimation2DComponent.h"
-#include "CMathFunc.h"
+#include "CMathFunc.hpp"
 #include "ISprite.h"
 #include "CImagePVR.h"
 #include "CImageSegaPVR.h"

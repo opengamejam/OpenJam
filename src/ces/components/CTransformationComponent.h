@@ -10,7 +10,7 @@
 #define __Arkanoid__CTransformationComponent__
 
 #include "IComponent.h"
-#include "CTransform.h"
+#include "CTransform.hpp"
 
 namespace jam
 {

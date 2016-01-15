@@ -108,7 +108,7 @@ void CRendererOGLES1_1::Draw(IMeshPtr mesh, IMaterialPtr material, IShaderProgra
     {
         CMatrix4x4f matrix = it->second;
         glMatrixMode(GL_PROJECTION);
-        glLoadMatrixf(matrix.Transpose()().data());
+        glLoadMatrixf(matrix.Transpose()());
     }   // TODO: load identity for other case
     
     it = uniforms.find(shader->ModelMatrix());
@@ -116,7 +116,7 @@ void CRendererOGLES1_1::Draw(IMeshPtr mesh, IMaterialPtr material, IShaderProgra
     {
         CMatrix4x4f matrix = it->second;
         glMatrixMode(GL_MODELVIEW);
-        glLoadMatrixf(matrix.Transpose()().data());
+        glLoadMatrixf(matrix.Transpose()());
     }   // TODO: load identity for other case
     
     if (mesh->IndexBuffer())

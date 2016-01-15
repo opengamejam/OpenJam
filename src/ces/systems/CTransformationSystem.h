@@ -11,7 +11,7 @@
 
 #include "ISystem.h"
 #include "IEntity.h"
-#include "CTransform.h"
+#include "CTransform.hpp"
 
 namespace jam
 {

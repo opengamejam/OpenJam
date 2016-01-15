@@ -14,6 +14,33 @@
 
 namespace jam
 {
+// *****************************************************************************
+// Predeclarations
+// *****************************************************************************
+
+template<class T, uint32_t COLS, uint32_t ROWS>
+class CMatrix;
+
+typedef CMatrix<float, 2, 2> CMatrix2x2f;
+typedef CMatrix<double, 2, 2> CMatrix2x2d;
+typedef CMatrix<int32_t, 2, 2> CMatrix2x2i;
+typedef CMatrix<uint32_t, 2, 2> CMatrix2x2u;
+
+typedef CMatrix<float, 3, 3> CMatrix3x3f;
+typedef CMatrix<double, 3, 3> CMatrix3x3d;
+typedef CMatrix<int32_t, 3, 3> CMatrix3x3i;
+typedef CMatrix<uint32_t, 3, 3> CMatrix3x3u;
+
+typedef CMatrix<float, 4, 4> CMatrix4x4f;
+typedef CMatrix<double, 4, 4> CMatrix4x4d;
+typedef CMatrix<int32_t, 4, 4> CMatrix4x4i;
+typedef CMatrix<uint32_t, 4, 4> CMatrix4x4u;
+
+// *****************************************************************************
+// CMatrix is a class-wrapper around primitive T[ROWS][COLS] 2d array,
+// where T - type, ROWS & COLS - matrix dimensions. There are methods for
+// manipulate with matrix operations (multiply, normalize, etc...)
+// *****************************************************************************
 
 template<class T, uint32_t COLS, uint32_t ROWS>
 class CMatrix
@@ -23,8 +50,8 @@ public:
     
 public:
     CMatrix()
+    : m_Matrix()
     {
-        memset(m_Matrix, 0, sizeof(m_Matrix));
     }
     
     CMatrix(const TMatrix matrix)
@@ -104,9 +131,9 @@ public:
     
     INL CMatrix<T, COLS, ROWS>& Transpose()
     {
-        for (uint64_t i = 0; i < ROWS; ++i)
+        for (uint32_t i = 0; i < ROWS; ++i)
         {
-            for (uint64_t j = i + 1; j < COLS; ++j)
+            for (uint32_t j = i + 1; j < COLS; ++j)
             {
                 std::swap(m_Matrix[i][j], m_Matrix[j][i]);
             }
@@ -265,11 +292,11 @@ public:
         
         TMatrix result = {{0}, };
         
-        for (uint64_t i = 0; i < ROWS; ++i)
+        for (uint32_t i = 0; i < ROWS; ++i)
         {
-            for (uint64_t j = 0; j < COLS; ++j)
+            for (uint32_t j = 0; j < COLS; ++j)
             {
-                for (uint64_t k = 0; k < COLS; ++k)
+                for (uint32_t k = 0; k < COLS; ++k)
                 {
                     result[i][j] += m_Matrix[i][k] * matrix.Get(k, j);
                 }
@@ -293,9 +320,9 @@ public:
     template<uint32_t COLS2, uint32_t ROWS2>
     INL CMatrix<T, COLS, ROWS>& operator+=(const CMatrix<T, COLS2, ROWS2>& matrix)
     {
-        for (uint64_t i = 0; i < ROWS; ++i)
+        for (uint32_t i = 0; i < ROWS; ++i)
         {
-            for (uint64_t j = 0; j < COLS; ++j)
+            for (uint32_t j = 0; j < COLS; ++j)
             {
                 m_Matrix[i][j] += matrix.Get(i, j);
             }
@@ -316,9 +343,9 @@ public:
     template<uint32_t COLS2, uint32_t ROWS2>
     INL CMatrix<T, COLS, ROWS>& operator-=(const CMatrix<T, COLS2, ROWS2>& matrix)
     {
-        for (uint64_t i = 0; i < ROWS; ++i)
+        for (uint32_t i = 0; i < ROWS; ++i)
         {
-            for (uint64_t j = 0; j < COLS; ++j)
+            for (uint32_t j = 0; j < COLS; ++j)
             {
                 m_Matrix[i][j] -= matrix.Get(i, j);
             }
@@ -332,40 +359,10 @@ public:
         memcpy(m_Matrix, matrix, sizeof(m_Matrix));
     }
     
-    void Dump() const
-    {
-        printf("{\n");
-        for (uint64_t i = 0; i < ROWS; ++i)
-        {
-            for (uint64_t j = 0; j < COLS; ++j)
-            {
-                printf("\t%f\t", m_Matrix[i][j]);
-            }
-            printf("\n");
-        }
-        printf("}\n");
-    }
-    
 private:
     static_assert(COLS > 0 && ROWS > 0, "CMatrix cannot be zero-dimensioned");
     TMatrix m_Matrix;
 };
-
-typedef CMatrix<float, 2, 2> CMatrix2x2f;
-typedef CMatrix<double, 2, 2> CMatrix2x2d;
-typedef CMatrix<int32_t, 2, 2> CMatrix2x2i;
-typedef CMatrix<uint32_t, 2, 2> CMatrix2x2u;
-    
-typedef CMatrix<float, 3, 3> CMatrix3x3f;
-typedef CMatrix<double, 3, 3> CMatrix3x3d;
-typedef CMatrix<int32_t, 3, 3> CMatrix3x3i;
-typedef CMatrix<uint32_t, 3, 3> CMatrix3x3u;
-    
-typedef CMatrix<float, 4, 4> CMatrix4x4f;
-typedef CMatrix<double, 4, 4> CMatrix4x4d;
-typedef CMatrix<int32_t, 4, 4> CMatrix4x4i;
-typedef CMatrix<uint32_t, 4, 4> CMatrix4x4u;
-    
 
 }; // namespace jam
 

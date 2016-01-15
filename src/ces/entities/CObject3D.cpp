@@ -10,7 +10,7 @@
 
 #include "RenderGlobal.h"
 #include "CRenderComponent.h"
-#include "CTransform.h"
+#include "CTransform.hpp"
 #include "CShaderSourceSprite.h"
 #include "CImagePVR.h"
 #include "CImageSegaPVR.h"
@@ -294,17 +294,17 @@ const CVector3Df& CObject3D::Scale()
 void CObject3D::AnchorPoint(const CVector3Df& anchorPoint)
 {
     CTransformationComponentPtr component = TransformComponent();
-    CTransform3Df transform = component->Transform(CTransformationComponent::Local);
-    transform.Offset(anchorPoint);
-    component->AddTransform(CTransformationComponent::Local, transform);
+    CTransform3Df transform = component->Transform(CTransformationComponent::Animation);
+    transform.Position(anchorPoint);
+    component->AddTransform(CTransformationComponent::Animation, transform);
     component->Dirty();
 }
 
 const CVector3Df& CObject3D::AnchorPoint()
 {
     CTransformationComponentPtr component = TransformComponent();
-    const CTransform3Df& transform = component->Transform(CTransformationComponent::Local);
-    return transform.Offset();
+    const CTransform3Df& transform = component->Transform(CTransformationComponent::Animation);
+    return transform.Position();
 }
 
 void CObject3D::Update(unsigned long dt)

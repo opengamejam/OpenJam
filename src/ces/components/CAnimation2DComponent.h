@@ -10,7 +10,7 @@
 #define __Arkanoid__CAnimation2DComponent__
 
 #include "IComponent.h"
-#include "CTransform.h"
+#include "CTransform.hpp"
 #include "CMatrix.hpp"
 
 namespace jam

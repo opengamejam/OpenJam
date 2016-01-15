@@ -41,7 +41,7 @@ public:
         return *m_Matrix;
     }
     
-    static const CMatrix<T, COLS, ROWS> Identity()
+    INL static const CMatrix<T, COLS, ROWS> Identity()
     {
         static_assert(COLS == ROWS, "Identity matrix must be square");
         
@@ -54,7 +54,7 @@ public:
         return out;
     }
     
-    static const CMatrix<T, COLS, ROWS> Perspective(float fov, float aspect, float zNear, float zFar)
+    INL static const CMatrix<T, COLS, ROWS> Perspective(float fov, float aspect, float zNear, float zFar)
     {
         static_assert(COLS >= 3 && ROWS >= 3, "Works only with 3D matrix");
         
@@ -65,6 +65,7 @@ public:
         float s = sin(r);
         if (deltaZ == 0.0 || s == 0.0 || aspect == 0.0)
         {
+            // TODO: fire log
             return out;
         }
         
@@ -80,7 +81,7 @@ public:
         return out;
     }
     
-    static const CMatrix<T, COLS, ROWS> Orthographic(float left, float right, float top, float bottom, float _near, float _far)
+    INL static const CMatrix<T, COLS, ROWS> Orthographic(float left, float right, float top, float bottom, float _near, float _far)
     {
         static_assert(COLS >= 3 && ROWS >= 3, "Works only with 3D matrix");
         
@@ -140,15 +141,14 @@ public:
         }
         else if (N == 3 && ROWS >= 3 && COLS >= 3)
         {
-            T A      = static_cast<T>(cos(static_cast<double>(rotation.X())));
-            T B      = static_cast<T>(sin(static_cast<double>(rotation.X())));
-            T C      = static_cast<T>(cos(static_cast<double>(rotation.Y())));
-            T D      = static_cast<T>(sin(static_cast<double>(rotation.Y())));
-            T E      = static_cast<T>(cos(static_cast<double>(rotation.Z())));
-            T F      = static_cast<T>(sin(static_cast<double>(rotation.Z())));
-            
-            T AD     =   A * D;
-            T BD     =   B * D;
+            T A = static_cast<T>(cos(static_cast<double>(rotation.X())));
+            T B = static_cast<T>(sin(static_cast<double>(rotation.X())));
+            T C = static_cast<T>(cos(static_cast<double>(rotation.Y())));
+            T D = static_cast<T>(sin(static_cast<double>(rotation.Y())));
+            T E = static_cast<T>(cos(static_cast<double>(rotation.Z())));
+            T F = static_cast<T>(sin(static_cast<double>(rotation.Z())));
+            T AD = A * D;
+            T BD = B * D;
             
             m_Matrix[0][0] =   C * E;
             m_Matrix[1][0] =  -C * F;
@@ -182,41 +182,42 @@ public:
         return *this;
     }
     
-    INL CVector<T, 3> Up() const
+    template<uint32_t N>
+    INL CVector<T, N> Up() const
     {
-        // TODO:
-        CVector<T, 3> upVector;
+        CVector<T, N> upVector;
         
-        /*upVector.X(m_Matrix[1]);
-        upVector.Y(m_Matrix[5]);
-        upVector.Z(m_Matrix[9]);*/
+        upVector.X(Get(0, 1));
+        upVector.Y(Get(1, 1));
+        upVector.Z(Get(2, 1));
         
         upVector.Normalize();
         
         return upVector;
     }
     
-    INL CVector<T, 3> Forward() const
+    template<uint32_t N>
+    INL CVector<T, N> Forward() const
     {
-        // TODO:
-        CVector<T, 3> upVector;
+        CVector<T, N> upVector;
         
-        /*upVector.X(m_Matrix[2]);
-        upVector.Y(m_Matrix[6]);
-        upVector.Z(m_Matrix[10]);*/
+        upVector.X(Get(0, 2));
+        upVector.Y(Get(1, 2));
+        upVector.Z(Get(2, 2));
         
         upVector.Normalize();
         
         return upVector;
     }
     
-    INL CVector<T, 3> Right() const
+    template<uint32_t N>
+    INL CVector<T, N> Right() const
     {
-        CVector<T, 3> upVector;
+        CVector<T, N> upVector;
         
-        /*upVector.X(m_Matrix[0]);
-        upVector.Y(m_Matrix[4]);
-        upVector.Z(m_Matrix[8]);*/
+        upVector.X(Get(0, 0));
+        upVector.Y(Get(1, 0));
+        upVector.Z(Get(2, 0));
         
         upVector.Normalize();
         
@@ -248,18 +249,20 @@ public:
         }
     }
     
-    INL CMatrix<T, COLS, ROWS> operator*(const CMatrix<T, COLS, ROWS>& matrix)
+    template<uint32_t COLS2, uint32_t ROWS2>
+    INL CMatrix<T, COLS, ROWS> operator*(const CMatrix<T, COLS2, ROWS2>& matrix)
     {
-        CMatrix<T, COLS, ROWS> result = *this;
-        
+        CMatrix<T, COLS, ROWS> result(*this);
         result *= matrix;
         
         return result;
     }
     
-    INL CMatrix<T, COLS, ROWS>& operator*=(const CMatrix<T, COLS, ROWS>& matrix)
+    template<uint32_t COLS2, uint32_t ROWS2>
+    INL CMatrix<T, COLS, ROWS>& operator*=(const CMatrix<T, COLS2, ROWS2>& matrix)
     {
-        // TODO: try constexpr
+        static_assert(COLS == ROWS2, "Matrix must be consistent");
+        
         TMatrix result = {{0}, };
         
         for (uint64_t i = 0; i < ROWS; ++i)
@@ -278,16 +281,17 @@ public:
         return *this;
     }
     
-    INL CMatrix<T, COLS, ROWS> operator+(const CMatrix<T, COLS, ROWS>& matrix)
+    template<uint32_t COLS2, uint32_t ROWS2>
+    INL CMatrix<T, COLS, ROWS> operator+(const CMatrix<T, COLS2, ROWS2>& matrix)
     {
-        CMatrix<T, COLS, ROWS> result = *this;
-        
+        CMatrix<T, COLS, ROWS> result(*this);
         result += matrix;
         
         return result;
     }
     
-    INL CMatrix<T, COLS, ROWS>& operator+=(const CMatrix<T, COLS, ROWS>& matrix)
+    template<uint32_t COLS2, uint32_t ROWS2>
+    INL CMatrix<T, COLS, ROWS>& operator+=(const CMatrix<T, COLS2, ROWS2>& matrix)
     {
         for (uint64_t i = 0; i < ROWS; ++i)
         {
@@ -300,16 +304,17 @@ public:
         return *this;
     }
     
-    INL CMatrix<T, COLS, ROWS> operator-(const CMatrix<T, COLS, ROWS>& matrix)
+    template<uint32_t COLS2, uint32_t ROWS2>
+    INL CMatrix<T, COLS, ROWS> operator-(const CMatrix<T, COLS2, ROWS2>& matrix)
     {
-        CMatrix<T, COLS, ROWS> result = *this;
-        
+        CMatrix<T, COLS, ROWS> result(*this);
         result -= matrix;
         
         return result;
     }
     
-    INL CMatrix<T, COLS, ROWS>& operator-=(const CMatrix<T, COLS, ROWS>& matrix)
+    template<uint32_t COLS2, uint32_t ROWS2>
+    INL CMatrix<T, COLS, ROWS>& operator-=(const CMatrix<T, COLS2, ROWS2>& matrix)
     {
         for (uint64_t i = 0; i < ROWS; ++i)
         {
@@ -346,9 +351,21 @@ private:
     TMatrix m_Matrix;
 };
 
+typedef CMatrix<float, 2, 2> CMatrix2x2f;
+typedef CMatrix<double, 2, 2> CMatrix2x2d;
+typedef CMatrix<int32_t, 2, 2> CMatrix2x2i;
+typedef CMatrix<uint32_t, 2, 2> CMatrix2x2u;
+    
+typedef CMatrix<float, 3, 3> CMatrix3x3f;
+typedef CMatrix<double, 3, 3> CMatrix3x3d;
+typedef CMatrix<int32_t, 3, 3> CMatrix3x3i;
+typedef CMatrix<uint32_t, 3, 3> CMatrix3x3u;
+    
 typedef CMatrix<float, 4, 4> CMatrix4x4f;
 typedef CMatrix<double, 4, 4> CMatrix4x4d;
 typedef CMatrix<int32_t, 4, 4> CMatrix4x4i;
+typedef CMatrix<uint32_t, 4, 4> CMatrix4x4u;
+    
 
 }; // namespace jam
 

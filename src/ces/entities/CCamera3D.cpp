@@ -44,7 +44,7 @@ CCamera3D::CCamera3D(float _fov, float _width, float _height, float _near, float
 , m_Height(_height)
 , m_Near(std::max(0.01f, _near))
 , m_Far(_far)
-, m_ProjectionMatrix(glm::perspective(_fov, m_Width / m_Height, m_Near, m_Far))
+, m_ProjectionMatrix(glm::perspective(glm::radians(_fov), m_Width / m_Height, m_Near, m_Far))
 , m_RenderTarget(nullptr)
 , m_Id(ICamera::NextCameraId())
 {

@@ -23,6 +23,7 @@ template <class T, class Vec, class Mat>
 class CTransform;
     
 typedef CTransform<float, glm::vec3, glm::mat4x4> CTransform3Df;
+typedef CTransform<float, glm::vec2, glm::mat3x3> CTransform2Df;
 
     
 // *****************************************************************************
@@ -106,13 +107,14 @@ public:
     {
         Mat transform(1.0);
         
-        Mat p = glm::translate(Mat(1.0), Position());
-        Mat r(1.0); // TODO: glm
-        Mat s = glm::scale(Mat(1.0), Scale());
+        transform = glm::translate(transform, Position());
         
-        transform *= p;
-        transform *= r;
-        transform *= s;
+        const glm::vec3& rot = Rotation();
+        transform = glm::rotate(transform, rot.x, glm::vec3(1.0f, 0.0f, 0.0f));
+        transform = glm::rotate(transform, rot.y, glm::vec3(0.0f, 1.0f, 0.0f));
+        transform = glm::rotate(transform, rot.z, glm::vec3(0.0f, 0.0f, 1.0f));
+        
+        transform = glm::scale(transform, Scale());
         
         return transform;
     }

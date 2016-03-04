@@ -35,6 +35,9 @@ namespace jam
         
         return result;
     }
+    
+    glm::vec2 str2vec2(const std::string& value, char delimeter = ',');
+    glm::vec3 str2vec3(const std::string& value, char delimeter = ',');
 };
 
 #endif /* defined(CSTRINGUTILS_H) */

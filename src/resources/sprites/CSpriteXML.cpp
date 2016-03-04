@@ -159,37 +159,11 @@ bool CSpriteXML::ParseFrames(const TiXmlElement* xmlFrames)
         
         if (xmlFrame->Attribute("u"))
         {
-            std::vector<std::string> components;
-            SplitString(components, xmlFrame->Attribute("u"), ',');
-            float x = 0.0f;
-            if (components.size() > 1)
-            {
-                x = FromString<float>(ReplaceString(components[0], " ", ""));
-            }
-            float y = 0.0f;
-            if (components.size() > 1)
-            {
-                y = FromString<float>(ReplaceString(components[1], " ", ""));
-            }
-            
-            textureFrame.u = glm::vec2(x, y);
+            textureFrame.u = str2vec2(xmlFrame->Attribute("u"));
         }
         if (xmlFrame->Attribute("v"))
         {
-            std::vector<std::string> components;
-            SplitString(components, xmlFrame->Attribute("v"), ',');
-            float x = 0.0f;
-            if (components.size() > 1)
-            {
-                x = FromString<float>(ReplaceString(components[0], " ", ""));
-            }
-            float y = 0.0f;
-            if (components.size() > 1)
-            {
-                y = FromString<float>(ReplaceString(components[1], " ", ""));
-            }
-            
-            textureFrame.v = glm::vec2(x, y);
+            textureFrame.v = str2vec2(xmlFrame->Attribute("v"));
         }
         if (xmlFrame->Attribute("textureIdx", (int *)(&textureFrame.textureIdx)) == NULL)
         {

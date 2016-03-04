@@ -7,6 +7,7 @@
 //
 
 #include "CStringUtils.h"
+#include "CMath.h"
 
 void jam::SplitString(std::vector<std::string>& tokens, const std::string& text, char delimeter)
 {
@@ -29,4 +30,45 @@ std::string jam::ReplaceString(std::string string, const std::string& from, cons
         pos += to.length();
     }
     return string;
+}
+
+glm::vec2 jam::str2vec2(const std::string& value, char delimeter)
+{
+    std::vector<std::string> components;
+    SplitString(components, value, delimeter);
+    float x = 0.0f;
+    if (components.size() > 0)
+    {
+        x = FromString<float>(ReplaceString(components[0], " ", ""));
+    }
+    float y = 0.0f;
+    if (components.size() > 1)
+    {
+        y = FromString<float>(ReplaceString(components[1], " ", ""));
+    }
+    
+    return glm::vec2(x, y);
+}
+
+glm::vec3 jam::str2vec3(const std::string& value, char delimeter)
+{
+    std::vector<std::string> components;
+    SplitString(components, value, delimeter);
+    float x = 0.0f;
+    if (components.size() > 0)
+    {
+        x = FromString<float>(ReplaceString(components[0], " ", ""));
+    }
+    float y = 0.0f;
+    if (components.size() > 1)
+    {
+        y = FromString<float>(ReplaceString(components[1], " ", ""));
+    }
+    float z = 0.0f;
+    if (components.size() > 2)
+    {
+        z = FromString<float>(ReplaceString(components[2], " ", ""));
+    }
+    
+    return glm::vec3(x, y, z);
 }

@@ -10,6 +10,7 @@
 #define __Arkanoid__CMathFunc__
 
 #include "Global.h"
+#include "CStringUtils.h"
 
 namespace jam
 {

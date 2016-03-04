@@ -123,24 +123,21 @@ bool CModelObj::ParseLine(const std::string& line,
     
     if (components[0] == "v")
     {
-        // TODO: glm
-        //glm::vec3 vertex(ReplaceString(line, "v ", ""), ' ');
-        //srcVertices.push_back(vertex);
-        //result = true;
+        glm::vec3 vertex = str2vec3(ReplaceString(line, "v ", ""), ' ');
+        srcVertices.push_back(vertex);
+        result = true;
     }
     else if (components[0] == "vt")
     {
-        // TODO: glm
-        /*glm::vec2 uv(ReplaceString(line, "vt ", ""), ' ');
+        glm::vec2 uv = str2vec2(ReplaceString(line, "vt ", ""), ' ');
         srcUVs.push_back(uv);
-        result = true;*/
+        result = true;
     }
     else if (components[0] == "vn")
     {
-        // TODO: glm
-        /*glm::vec3 normal(ReplaceString(line, "vn ", ""), ' ');
+        glm::vec3 normal = str2vec3(ReplaceString(line, "vn ", ""), ' ');
         srcNormals.push_back(normal);
-        result = true;*/
+        result = true;
     }
     else if (components[0] == "f")
     {

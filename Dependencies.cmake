@@ -4,6 +4,7 @@ macro (define_dependencies_list)
     define_lib (${PROJECT_NAME} ${CMAKE_CURRENT_LIST_DIR}                          "EXELIB")
 
 	define_lib ("TinyXML"      ${${PROJECT_NAME}_LIBS_DIR}/TinyXML    "LIB")
+    define_lib ("glm"          ${${PROJECT_NAME}_LIBS_DIR}/glm        "LIB")
 
     if (OS_IPHONE)
         define_lib ("Foundation"    ""                                             "FRAMEWORK")

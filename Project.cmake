@@ -133,8 +133,8 @@ macro (make_executable)
 		set_property (TARGET ${PROJECT_NAME} PROPERTY XCODE_ATTRIBUTE_TARGETED_DEVICE_FAMILY 		"1,2")
 
 		add_definitions (-DOS_IPHONE)
-		add_definitions (-DRENDER_OGLES1)
-		add_definitions (-DRENDER_OGLES2)
+		add_definitions (-DRENDER_OGLES1_1)
+		add_definitions (-DRENDER_OGLES2_0)
 		add_definitions (-DGL_DO_NOT_WARN_IF_MULTI_GL_VERSION_HEADERS_INCLUDED)
 
 	elseif (OS_MAC)
@@ -156,7 +156,9 @@ macro (make_executable)
 		set (CMAKE_OSX_DEPLOYMENT_TARGET "10.8")
 
 		add_definitions (-DOS_MAC)
-		add_definitions (-DRENDER_OGLES1)
+		add_definitions (-DRENDER_OGL1_3)
+		add_definitions (-DRENDER_OGL1_5)
+		add_definitions (-DRENDER_OGL2_0)
 		add_definitions (-DGL_DO_NOT_WARN_IF_MULTI_GL_VERSION_HEADERS_INCLUDED)
 
 		# TODO
@@ -164,8 +166,8 @@ macro (make_executable)
 
 		# TODO
 	elseif (OS_WINDOWS)
-
-		# TODO
+		add_definitions (-DOS_WINDOWS)
+		add_definitions (-DRENDER_OGLES2_0)
 	elseif (OS_LINUX)
 
 		# TODO

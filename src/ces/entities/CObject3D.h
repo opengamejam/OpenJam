@@ -10,7 +10,6 @@
 #define CObject3D_H
 
 #include "IEntity.h"
-#include "CVector.hpp"
 
 namespace jam
 {
@@ -32,17 +31,17 @@ public:
     CRenderComponentPtr RenderComponent() const;
     CTransformationComponentPtr TransformComponent() const;
     
-    void Position(const CVector3Df& position);
-    const CVector3Df& Position();
+    void Position(const glm::vec3& position);
+    const glm::vec3& Position();
     
-    void Rotation(const CVector3Df& rotation);
-    const CVector3Df& Rotation();
+    void Rotation(const glm::vec3& rotation);
+    const glm::vec3& Rotation();
     
-    void Scale(const CVector3Df& scale);
-    const CVector3Df& Scale();
+    void Scale(const glm::vec3& scale);
+    const glm::vec3& Scale();
     
-    void AnchorPoint(const CVector3Df& anchorPoint);
-    const CVector3Df& AnchorPoint();
+    void AnchorPoint(const glm::vec3& anchorPoint);
+    const glm::vec3& AnchorPoint();
     
     void Update(unsigned long dt);
 

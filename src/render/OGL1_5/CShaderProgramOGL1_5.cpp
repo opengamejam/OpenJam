@@ -243,7 +243,7 @@ bool CShaderProgramOGL1_5::BindUniformfv(const std::string& uniform, const std::
     return true;
 }
 
-bool CShaderProgramOGL1_5::BindUniformMatrix4x4f(const std::string& uniform, const CMatrix4x4f& value)
+bool CShaderProgramOGL1_5::BindUniformMatrix4x4f(const std::string& uniform, const glm::mat4x4& value)
 {
     m_UniMatrixFloat[Uniform(uniform)] = value;
     

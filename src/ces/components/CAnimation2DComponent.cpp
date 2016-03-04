@@ -7,12 +7,12 @@
 //
 
 #include "CAnimation2DComponent.h"
-#include "CMathFunc.hpp"
 #include "ISprite.h"
 #include "CImagePVR.h"
 #include "CImageSegaPVR.h"
 #include "RenderGlobal.h"
 #include "CResourceCache.hpp"
+#include "CMath.h"
 
 using namespace jam;
 
@@ -72,15 +72,15 @@ void CAnimation2DComponent::Sprite(ISpritePtr sprite)
             {
                 SFrame frame;
                 // Object transform
-                frame.transform.Position(CVector3Df(frameDef.offsetX, frameDef.offsetY, 0.0f));
-                frame.transform.Scale(CVector3Df(frameDef.originalWidth, frameDef.originalHeight, 1.0f));
+                frame.transform.Position(glm::vec3(frameDef.offsetX, frameDef.offsetY, 0.0f));
+                frame.transform.Scale(glm::vec3(frameDef.originalWidth, frameDef.originalHeight, 1.0f));
 
                 // Texture frame
                 frame.textureFrame.push_back(frameDef.textureFrame.u); // (0, 0)
-                frame.textureFrame.push_back(CVector2Df(frameDef.textureFrame.v.X(),
-                                                        frameDef.textureFrame.u.Y())); // (1, 0)
-                frame.textureFrame.push_back(CVector2Df(frameDef.textureFrame.u.X(),
-                                                        frameDef.textureFrame.v.Y())); // (0, 1)
+                frame.textureFrame.push_back(glm::vec2(frameDef.textureFrame.v.x,
+                                                       frameDef.textureFrame.u.y)); // (1, 0)
+                frame.textureFrame.push_back(glm::vec2(frameDef.textureFrame.u.x,
+                                                       frameDef.textureFrame.v.y)); // (0, 1)
                 frame.textureFrame.push_back(frameDef.textureFrame.v); // (1, 1)
 
                 frame.textureName = textures[frameDef.textureFrame.textureIdx];
@@ -118,7 +118,7 @@ const CTransform3Df& CAnimation2DComponent::FrameTransform()
     return m_CachedFrameTransform;
 }
 
-const std::vector<CVector2Df>& CAnimation2DComponent::TextureFrame()
+const std::vector<glm::vec2>& CAnimation2DComponent::TextureFrame()
 {
     return m_CachedTextureFrame;
 }

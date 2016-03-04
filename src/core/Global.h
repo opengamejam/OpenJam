@@ -29,6 +29,8 @@
 #include <math.h>
 #include <assert.h>
 
+#include "glm/fwd.hpp"
+
 // LINUX
 #if defined(OS_LINUX)
 #	include <EGL/egl.h>

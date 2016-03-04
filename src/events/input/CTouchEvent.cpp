@@ -10,7 +10,7 @@
 
 using namespace jam;
 
-CTouchEvent::CTouchEvent(const CVector2Df& position, ETouchEventType type)
+CTouchEvent::CTouchEvent(const glm::vec2& position, ETouchEventType type)
     : m_Id("CTouchEvent")
     , m_Position(position)
     , m_Type(type)
@@ -28,7 +28,7 @@ const std::string& CTouchEvent::Id() const
     return m_Id;
 }
 
-const CVector2Df& CTouchEvent::GetPosition() const
+const glm::vec2& CTouchEvent::GetPosition() const
 {
     return m_Position;
 }

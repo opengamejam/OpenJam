@@ -18,6 +18,7 @@
 #include "CShaderOGL1_3.h"
 #include "CShaderProgramOGL1_3.h"
 #include <CFrameBufferOGL1_3.h>
+#include "glm/ext.hpp"
 
 using namespace jam;
 
@@ -108,17 +109,15 @@ void CRendererOGL1_3::Draw(IMeshPtr mesh, IMaterialPtr material, IShaderProgramP
     
     if (it != uniforms.end())
     {
-        CMatrix4x4f matrix = it->second;
         glMatrixMode(GL_PROJECTION);
-        glLoadTransposeMatrixf(matrix());
+        glLoadTransposeMatrixf(glm::value_ptr(it->second));
     }   // TODO: load identity for other case
     
     it = uniforms.find(shader->ModelMatrix());
     if (it != uniforms.end())
     {
-        CMatrix4x4f matrix = it->second;
         glMatrixMode(GL_MODELVIEW);
-        glLoadTransposeMatrixf(matrix());
+        glLoadTransposeMatrixf(glm::value_ptr(it->second));
     }   // TODO: load identity for other case
     
     if (mesh->IndexBuffer())

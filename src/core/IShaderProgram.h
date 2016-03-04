@@ -9,7 +9,7 @@
 #define ISHADERPROGRAM_H
 
 #include "IShader.h"
-#include "CMatrix.hpp"
+#include "CMath.h"
 
 namespace jam
 {
@@ -21,7 +21,7 @@ class IShaderProgram
 public:
     typedef std::map< int, std::vector<int> > TUniInt;
     typedef std::map< int, std::vector<float> > TUniFloat;
-    typedef std::map< int, CMatrix4x4f > TUniMatrix4Float;
+    typedef std::map< int, glm::mat4x4> TUniMatrix4Float;
     typedef std::list<TUniInt> TUniIntList;
     typedef std::list<TUniFloat> TUniFloatList;
     
@@ -61,7 +61,7 @@ public:
     virtual bool BindUniform2i(const std::string& uniform, int value1, int value2) = 0;
     virtual bool BindUniform2f(const std::string& uniform, float value1, float value2) = 0;
     virtual bool BindUniformfv(const std::string& uniform, const std::vector<float>& value) = 0;
-    virtual bool BindUniformMatrix4x4f(const std::string& uniform, const CMatrix4x4f& value) = 0;
+    virtual bool BindUniformMatrix4x4f(const std::string& uniform, const glm::mat4x4& value) = 0;
     
     virtual const TUniInt& Uniformsi() const = 0;
     virtual const TUniFloat& Uniformsf() const = 0;

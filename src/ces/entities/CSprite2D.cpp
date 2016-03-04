@@ -62,7 +62,7 @@ CSprite2DPtr CSprite2D::Create(const std::string& filename, uint32_t cameraId)
     
     // Vertex buffer
     vertexBuffer = GRenderer->CreatVertexBuffer();
-    vertexBuffer->Initialize(sizeof(CVector3Df) + sizeof(CColor4f) + sizeof(CVector2Df));
+    vertexBuffer->Initialize(sizeof(glm::vec3) + sizeof(CColor4f) + sizeof(glm::vec2));
     assert(vertexBuffer && vertexBuffer->IsValid());
     
     vertexBuffer->Resize(4);
@@ -71,19 +71,19 @@ CSprite2DPtr CSprite2D::Create(const std::string& filename, uint32_t cameraId)
     position.dataType = IVertexBuffer::Float;
     position.stride = 3;
     position.offset = 0;
-    position.Set<CVector3Df>(0,
+    position.Set<glm::vec3>(0,
     {
-        CVector3Df(0.0f, 0.0f, 0.0f),
-        CVector3Df(1.0f, 0.0f, 0.0f),
-        CVector3Df(0.0f, 1.0f, 0.0f),
-        CVector3Df(1.0f, 1.0f, 0.0f)
+        glm::vec3(0.0f, 0.0f, 0.0f),
+        glm::vec3(1.0f, 0.0f, 0.0f),
+        glm::vec3(0.0f, 1.0f, 0.0f),
+        glm::vec3(1.0f, 1.0f, 0.0f)
     });
     
     IVertexBuffer::SVertexStream& color = vertexBuffer->Lock(IVertexBuffer::Color);
     color.attributeIndex = shaderProgram->VertexColor();
     color.dataType = IVertexBuffer::Float;
     color.stride = 4;
-    color.offset = sizeof(CVector3Df);
+    color.offset = sizeof(glm::vec3);
     color.Set<CColor4f>(0,
     {
         CColor4f(1.0f, 1.0f, 1.0f, 1.0f),
@@ -96,13 +96,13 @@ CSprite2DPtr CSprite2D::Create(const std::string& filename, uint32_t cameraId)
     textureCoord.attributeIndex = shaderProgram->TextureCoord();
     textureCoord.dataType = IVertexBuffer::Float;
     textureCoord.stride = 2;
-    textureCoord.offset = sizeof(CVector3Df) + sizeof(CColor4f);
-    textureCoord.Set<CVector2Df>(0,
+    textureCoord.offset = sizeof(glm::vec3) + sizeof(CColor4f);
+    textureCoord.Set<glm::vec2>(0,
     {
-        CVector2Df(0.0f, 0.0f),
-        CVector2Df(1.0f, 0.0f),
-        CVector2Df(0.0f, 1.0f),
-        CVector2Df(1.0f, 1.0f)
+        glm::vec2(0.0f, 0.0f),
+        glm::vec2(1.0f, 0.0f),
+        glm::vec2(0.0f, 1.0f),
+        glm::vec2(1.0f, 1.0f)
     });
     
     vertexBuffer->Unlock(true);
@@ -196,43 +196,43 @@ CTransformationComponentPtr CSprite2D::TransformComponent() const
     return m_TransformationComponent;
 }
 
-void CSprite2D::Position(const CVector3Df& position)
+void CSprite2D::Position(const glm::vec3& position)
 {
     CTransformAffector::Position(TransformComponent(), position);
 }
 
-const CVector3Df& CSprite2D::Position()
+const glm::vec3& CSprite2D::Position()
 {
     CTransformationComponentPtr component = TransformComponent();
     const CTransform3Df& transform = component->Transform(CTransformationComponent::Local);
     return transform.Position();
 }
 
-void CSprite2D::Rotation(const CVector3Df& rotation)
+void CSprite2D::Rotation(const glm::vec3& rotation)
 {
     CTransformAffector::Rotation(TransformComponent(), rotation);
 }
 
-const CVector3Df& CSprite2D::Rotation()
+const glm::vec3& CSprite2D::Rotation()
 {
     CTransformationComponentPtr component = TransformComponent();
     const CTransform3Df& transform = component->Transform(CTransformationComponent::Local);
     return transform.Rotation();
 }
 
-void CSprite2D::Scale(const CVector3Df& scale)
+void CSprite2D::Scale(const glm::vec3& scale)
 {
     CTransformAffector::Scale(TransformComponent(), scale);
 }
 
-const CVector3Df& CSprite2D::Scale()
+const glm::vec3& CSprite2D::Scale()
 {
     CTransformationComponentPtr component = TransformComponent();
     const CTransform3Df& transform = component->Transform(CTransformationComponent::Local);
     return transform.Scale();
 }
 
-void CSprite2D::AnchorPoint(const CVector3Df& anchorPoint)
+void CSprite2D::AnchorPoint(const glm::vec3& anchorPoint)
 {
     CTransformationComponentPtr component = TransformComponent();
     CTransform3Df transform = component->Transform(CTransformationComponent::Animation);
@@ -241,7 +241,7 @@ void CSprite2D::AnchorPoint(const CVector3Df& anchorPoint)
     component->Dirty();
 }
 
-const CVector3Df& CSprite2D::AnchorPoint()
+const glm::vec3& CSprite2D::AnchorPoint()
 {
     CTransformationComponentPtr component = TransformComponent();
     const CTransform3Df& transform = component->Transform(CTransformationComponent::Animation);

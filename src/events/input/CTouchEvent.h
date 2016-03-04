@@ -10,8 +10,7 @@
 #define CTOUCHEVENT_H
 
 #include "IEvent.h"
-#include "CVector.hpp"
-
+#include "CMath.h"
 
 namespace jam
 {
@@ -29,17 +28,17 @@ public:
     };
     
 public:
-    CTouchEvent(const CVector2Df& position, ETouchEventType type);
+    CTouchEvent(const glm::vec2& position, ETouchEventType type);
     virtual ~CTouchEvent();
     
     virtual const std::string& Id() const override;
     
-    const CVector2Df& GetPosition() const;
+    const glm::vec2& GetPosition() const;
     ETouchEventType GetType() const;
     
 private:
     std::string m_Id;
-    CVector2Df m_Position;
+    glm::vec2 m_Position;
     ETouchEventType m_Type;
 };
 

@@ -8,6 +8,7 @@
 
 #include "CCamera2D.h"
 #include "CTransformationComponent.h"
+#include "glm/ext.hpp"
 
 using namespace jam;
 
@@ -40,7 +41,7 @@ CCamera2D::CCamera2D(float _width, float _height, float _near, float _far)
 , m_Height(_height)
 , m_Near(_near)
 , m_Far(_far)
-, m_ProjectionMatrix(CMatrix4x4f::Orthographic(0, m_Width, 0, m_Height, m_Near, m_Far))
+, m_ProjectionMatrix(glm::ortho(0.0f, m_Width, m_Height, 0.0f, m_Near, m_Far))
 , m_RenderTarget(nullptr)
 , m_IsFlippedX(false)
 , m_IsFlippedY(false)
@@ -58,7 +59,7 @@ uint32_t CCamera2D::Id() const
     return m_Id;
 }
 
-CMatrix4x4f CCamera2D::ProjectionMatrix()
+glm::mat4x4 CCamera2D::ProjectionMatrix()
 {
     CTransform3Df resultTransform;
     Get<CTransformationComponent>([&](CTransformationComponentPtr transformComponent)
@@ -85,9 +86,7 @@ void CCamera2D::FlipY()
     float top = (m_IsFlippedY) ? m_Height : 0;
     float bottom = (m_IsFlippedY) ? 0 : m_Height;
     
-    m_ProjectionMatrix = CMatrix4x4f::Orthographic(0, m_Width,
-                                                   top, bottom,
-                                                   m_Near, m_Far);
+    m_ProjectionMatrix = glm::ortho(0.0f, m_Width, bottom, top, m_Near, m_Far);
 }
 
 void CCamera2D::FlipX()
@@ -96,9 +95,7 @@ void CCamera2D::FlipX()
     float left = (m_IsFlippedX) ? m_Width : 0;
     float right = (m_IsFlippedX) ? 0 : m_Width;
     
-    m_ProjectionMatrix = CMatrix4x4f::Orthographic(left, right,
-                                                   0, m_Height,
-                                                   m_Near, m_Far);
+    m_ProjectionMatrix = glm::ortho(left, right, 0.0f, m_Height, m_Near, m_Far);
 }
 
 // *****************************************************************************

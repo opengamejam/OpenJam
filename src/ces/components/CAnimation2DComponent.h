@@ -11,7 +11,6 @@
 
 #include "IComponent.h"
 #include "CTransform.hpp"
-#include "CMatrix.hpp"
 
 namespace jam
 {
@@ -25,8 +24,8 @@ public:
     struct SFrame
     {
         std::string textureName;
-        CMatrix4x4f textureMatrix;
-        std::vector<CVector2Df> textureFrame;
+        glm::mat4x4 textureMatrix;
+        std::vector<glm::vec2> textureFrame;
         CTransform3Df transform;
         unsigned long duration;
     };
@@ -45,7 +44,7 @@ public:
     ISpritePtr Sprite() const;
     
     const CTransform3Df& FrameTransform();
-    const std::vector<CVector2Df>& TextureFrame();
+    const std::vector<glm::vec2>& TextureFrame();
     const std::string& TextureName();
     ITexturePtr Texture();
     bool IsStatic();
@@ -85,7 +84,7 @@ private:
     std::unordered_map<std::string, ITexturePtr> m_Textures;
     
     CTransform3Df m_CachedFrameTransform;
-    std::vector<CVector2Df> m_CachedTextureFrame;
+    std::vector<glm::vec2> m_CachedTextureFrame;
     std::string m_CachedTextureName;
     ITexturePtr m_CachedTexture;
     bool m_CachedIsStatic;

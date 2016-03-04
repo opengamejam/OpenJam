@@ -9,7 +9,6 @@
 #define ICAMERA_H
 
 #include "IEntity.h"
-#include "CMatrix.hpp"
 
 namespace jam
 {
@@ -29,7 +28,7 @@ public:
     
     virtual uint32_t Id() const = 0;
     
-    virtual CMatrix4x4f ProjectionMatrix() = 0;
+    virtual glm::mat4x4 ProjectionMatrix() = 0;
     virtual IRenderTargetPtr RenderTarget() const = 0;
     virtual void RenderTarget(IRenderTargetPtr renderTarget) = 0;
     

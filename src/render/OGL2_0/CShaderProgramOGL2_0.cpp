@@ -289,7 +289,7 @@ bool CShaderProgramOGL2_0::BindUniformfv(const std::string& uniform, const std::
     return false;
 }
 
-bool CShaderProgramOGL2_0::BindUniformMatrix4x4f(const std::string& uniform, const CMatrix4x4f& value)
+bool CShaderProgramOGL2_0::BindUniformMatrix4x4f(const std::string& uniform, const glm::mat4x4& value)
 {
     uint32_t location = Uniform(uniform);
     if (location != std::numeric_limits<uint32_t>::max())
@@ -322,9 +322,9 @@ const IShaderProgram::TUniMatrix4Float& CShaderProgramOGL2_0::UniformsMatrix4x4f
     return m_UniMatrixFloat;
 }
 
-INL void AddUniformMatrix4f(unsigned int location, const CMatrix4x4f& value)
+INL void AddUniformMatrix4f(unsigned int location, const glm::mat4x4& value)
 {
-    glUniformMatrix4fv(location, 1, GL_FALSE, value());
+    glUniformMatrix4fv(location, 1, GL_FALSE, glm::value_ptr(value));
 }
 
 INL void AddUniformf(unsigned int location, const std::vector<float>& value, bool isVector)

@@ -10,6 +10,7 @@
 #define CCAMERA3D_H
 
 #include "ICamera.h"
+#include "CMath.h"
 
 namespace jam
 {
@@ -25,7 +26,7 @@ public:
     
     virtual uint32_t Id() const override;
     
-    virtual CMatrix4x4f ProjectionMatrix() override;
+    virtual glm::mat4x4 ProjectionMatrix() override;
     virtual IRenderTargetPtr RenderTarget() const override;
     virtual void RenderTarget(IRenderTargetPtr renderTarget) override;
     
@@ -37,7 +38,7 @@ private:
     float m_Height;
     float m_Near;
     float m_Far;
-    CMatrix4x4f m_ProjectionMatrix;
+    glm::mat4x4 m_ProjectionMatrix;
     IRenderTargetPtr m_RenderTarget;
     
     uint32_t m_Id;

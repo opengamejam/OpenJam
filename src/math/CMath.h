@@ -10,9 +10,10 @@
 #define CMATH_H
 
 #include "CColor.hpp"
-#include "CVector.hpp"
-#include "CMatrix.hpp"
 #include "CTransform.hpp"
 #include "CMathFunc.hpp"
+
+#define GLM_FORCE_CXX11
+#include "glm/glm.hpp"
 
 #endif /* CMATH_H */

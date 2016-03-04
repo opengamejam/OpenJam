@@ -11,7 +11,6 @@
 
 #include "Global.h"
 #include "IModel3D.h"
-#include "CVector.hpp"
 
 namespace jam
 {
@@ -24,28 +23,28 @@ public:
     
     virtual bool Load() override;
     
-    virtual const std::vector<CVector3Df>& Vertices(const std::string& group = "default") override;
-    virtual const std::vector<CVector3Df>& Normals(const std::string& group = "default") override;
-    virtual const std::vector<CVector2Df>& UVs(const std::string& group = "default") override;
+    virtual const std::vector<glm::vec3>& Vertices(const std::string& group = "default") override;
+    virtual const std::vector<glm::vec3>& Normals(const std::string& group = "default") override;
+    virtual const std::vector<glm::vec2>& UVs(const std::string& group = "default") override;
     virtual const std::vector<unsigned int>& Indices(const std::string& group = "default") override;
     virtual const std::string& TextureName(const std::string& group = "default") override;
     virtual const std::set<std::string>& Groups() const override;
     
 private:
     bool ParseLine(const std::string& line,
-                   std::vector<CVector3Df>& srcVertices,
-                   std::vector<CVector3Df>& srcNormals,
-                   std::vector<CVector2Df>& srcUVs,
-                   std::vector<CVector3Df>& dstVertices,
-                   std::vector<CVector3Df>& dstNormals,
-                   std::vector<CVector2Df>& dstUVs,
+                   std::vector<glm::vec3>& srcVertices,
+                   std::vector<glm::vec3>& srcNormals,
+                   std::vector<glm::vec2>& srcUVs,
+                   std::vector<glm::vec3>& dstVertices,
+                   std::vector<glm::vec3>& dstNormals,
+                   std::vector<glm::vec2>& dstUVs,
                    std::string& dstTexture,
                    std::string& group);
     
 private:
-    std::unordered_map<std::string, std::vector<CVector3Df> > m_Vertices;
-    std::unordered_map<std::string, std::vector<CVector3Df> > m_Normals;
-    std::unordered_map<std::string, std::vector<CVector2Df> > m_UVs;
+    std::unordered_map<std::string, std::vector<glm::vec3> > m_Vertices;
+    std::unordered_map<std::string, std::vector<glm::vec3> > m_Normals;
+    std::unordered_map<std::string, std::vector<glm::vec2> > m_UVs;
     std::unordered_map<std::string, std::vector<unsigned int> > m_Indices;
     std::unordered_map<std::string, std::string> m_TextureNames;
     std::set<std::string> m_Groups;

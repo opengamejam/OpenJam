@@ -90,15 +90,15 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, uint32_t cameraId
         uint32_t elementSize = 0;
         if (model3D->Vertices(group).size() > 0)
         {
-            elementSize += sizeof(CVector3Df);
+            elementSize += sizeof(glm::vec3);
         }
         if (model3D->UVs(group).size() > 0)
         {
-            elementSize += sizeof(CVector2Df);
+            elementSize += sizeof(glm::vec2);
         }
         if (model3D->Normals(group).size() > 0)
         {
-            elementSize += sizeof(CVector3Df);
+            elementSize += sizeof(glm::vec3);
         }
         
         if (elementSize > 0)
@@ -117,9 +117,9 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, uint32_t cameraId
                 position.dataType = IVertexBuffer::Float;
                 position.stride = 3;
                 position.offset = offset;
-                position.Set<CVector3Df>(0, model3D->Vertices(group));
+                position.Set<glm::vec3>(0, model3D->Vertices(group));
                 
-                offset += sizeof(CVector3Df);
+                offset += sizeof(glm::vec3);
             }
             
             if (model3D->UVs(group).size() > 0)
@@ -129,9 +129,9 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, uint32_t cameraId
                 textureCoord.dataType = IVertexBuffer::Float;
                 textureCoord.stride = 2;
                 textureCoord.offset = offset;
-                textureCoord.Set<CVector2Df>(0, model3D->UVs(group));
+                textureCoord.Set<glm::vec2>(0, model3D->UVs(group));
                 
-                offset += sizeof(CVector2Df);
+                offset += sizeof(glm::vec2);
             }
             
             if (model3D->Normals(group).size() > 0)
@@ -141,9 +141,9 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, uint32_t cameraId
                 normals.dataType = IVertexBuffer::Float;
                 normals.stride = 3;
                 normals.offset = offset;
-                normals.Set<CVector3Df>(0, model3D->Normals());
+                normals.Set<glm::vec3>(0, model3D->Normals());
                 
-                offset += sizeof(CVector3Df);
+                offset += sizeof(glm::vec3);
             }
             
             vertexBuffer->Unlock(true);
@@ -255,43 +255,43 @@ CTransformationComponentPtr CObject3D::TransformComponent() const
     return m_TransformationComponent;
 }
 
-void CObject3D::Position(const CVector3Df& position)
+void CObject3D::Position(const glm::vec3& position)
 {
     CTransformAffector::Position(TransformComponent(), position);
 }
 
-const CVector3Df& CObject3D::Position()
+const glm::vec3& CObject3D::Position()
 {
     CTransformationComponentPtr component = TransformComponent();
     const CTransform3Df& transform = component->Transform(CTransformationComponent::Local);
     return transform.Position();
 }
 
-void CObject3D::Rotation(const CVector3Df& rotation)
+void CObject3D::Rotation(const glm::vec3& rotation)
 {
     CTransformAffector::Rotation(TransformComponent(), rotation);
 }
 
-const CVector3Df& CObject3D::Rotation()
+const glm::vec3& CObject3D::Rotation()
 {
     CTransformationComponentPtr component = TransformComponent();
     const CTransform3Df& transform = component->Transform(CTransformationComponent::Local);
     return transform.Rotation();
 }
 
-void CObject3D::Scale(const CVector3Df& scale)
+void CObject3D::Scale(const glm::vec3& scale)
 {
     CTransformAffector::Scale(TransformComponent(), scale);
 }
 
-const CVector3Df& CObject3D::Scale()
+const glm::vec3& CObject3D::Scale()
 {
     CTransformationComponentPtr component = TransformComponent();
     const CTransform3Df& transform = component->Transform(CTransformationComponent::Local);
     return transform.Scale();
 }
 
-void CObject3D::AnchorPoint(const CVector3Df& anchorPoint)
+void CObject3D::AnchorPoint(const glm::vec3& anchorPoint)
 {
     CTransformationComponentPtr component = TransformComponent();
     CTransform3Df transform = component->Transform(CTransformationComponent::Animation);
@@ -300,7 +300,7 @@ void CObject3D::AnchorPoint(const CVector3Df& anchorPoint)
     component->Dirty();
 }
 
-const CVector3Df& CObject3D::AnchorPoint()
+const glm::vec3& CObject3D::AnchorPoint()
 {
     CTransformationComponentPtr component = TransformComponent();
     const CTransform3Df& transform = component->Transform(CTransformationComponent::Animation);
@@ -309,7 +309,7 @@ const CVector3Df& CObject3D::AnchorPoint()
 
 void CObject3D::Update(unsigned long dt)
 {
-	CTransformAffector::Rotating(shared_from_this(), CVector3Df(1 * 3.14f / 180.0f,
+	CTransformAffector::Rotating(shared_from_this(), glm::vec3(1 * 3.14f / 180.0f,
 																1 * 3.14f / 180.0f,
 																1 * 3.14f / 180.0f));
 }

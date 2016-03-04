@@ -10,7 +10,6 @@
 
 #include "Global.h"
 #include "CColor.hpp"
-#include "CMatrix.hpp"
 
 namespace jam
 {

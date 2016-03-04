@@ -10,7 +10,6 @@
 #define CTRANSFORMAFFECTOR_H
 
 #include "Global.h"
-#include "CVector.hpp"
 
 namespace jam
 {
@@ -23,25 +22,25 @@ public:
     CTransformAffector() = default;
     ~CTransformAffector() = default;
     
-    static void Translating(IEntityPtr entity, const CVector3Df& translation);
-    static void Rotating(IEntityPtr entity, const CVector3Df& rotation);
-    static void Scaling(IEntityPtr entity, const CVector3Df& scaling);
+    static void Translating(IEntityPtr entity, const glm::vec3& translation);
+    static void Rotating(IEntityPtr entity, const glm::vec3& rotation);
+    static void Scaling(IEntityPtr entity, const glm::vec3& scaling);
     
-    static void Position(IEntityPtr entity, const CVector3Df& position);
-    static void Rotation(IEntityPtr entity, const CVector3Df& rotation);
-    static void Scale(IEntityPtr entity, const CVector3Df& scaling);
+    static void Position(IEntityPtr entity, const glm::vec3& position);
+    static void Rotation(IEntityPtr entity, const glm::vec3& rotation);
+    static void Scale(IEntityPtr entity, const glm::vec3& scaling);
     
-    static CVector3Df Position(IEntityPtr entity);
-    static CVector3Df Rotation(IEntityPtr entity);
-    static CVector3Df Scale(IEntityPtr entity);
+    static glm::vec3 Position(IEntityPtr entity);
+    static glm::vec3 Rotation(IEntityPtr entity);
+    static glm::vec3 Scale(IEntityPtr entity);
     
-    static void Translating(CTransformationComponentPtr component, const CVector3Df& translation);
-    static void Rotating(CTransformationComponentPtr component, const CVector3Df& rotation);
-    static void Scaling(CTransformationComponentPtr component, const CVector3Df& scaling);
+    static void Translating(CTransformationComponentPtr component, const glm::vec3& translation);
+    static void Rotating(CTransformationComponentPtr component, const glm::vec3& rotation);
+    static void Scaling(CTransformationComponentPtr component, const glm::vec3& scaling);
     
-    static void Position(CTransformationComponentPtr component, const CVector3Df& position);
-    static void Rotation(CTransformationComponentPtr component, const CVector3Df& rotation);
-    static void Scale(CTransformationComponentPtr component, const CVector3Df& scaling);
+    static void Position(CTransformationComponentPtr component, const glm::vec3& position);
+    static void Rotation(CTransformationComponentPtr component, const glm::vec3& rotation);
+    static void Scale(CTransformationComponentPtr component, const glm::vec3& scaling);
 };
 
 }; // namespace jam

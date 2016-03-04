@@ -8,7 +8,6 @@
 #if defined(RENDER_OGL1_3)
 
 #include "CVertexBufferOGL1_3.h"
-#include "CVector.hpp"
 
 using namespace jam;
 

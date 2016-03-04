@@ -7,7 +7,7 @@
 #include "Global.h"
 #include "ILoader.h"
 #include "tinyxml.h"
-#include "CVector.hpp"
+#include "CStringUtils.h"
 
 using namespace jam;
 
@@ -159,11 +159,37 @@ bool CSpriteXML::ParseFrames(const TiXmlElement* xmlFrames)
         
         if (xmlFrame->Attribute("u"))
         {
-            textureFrame.u = CVector2Df(xmlFrame->Attribute("u"));
+            std::vector<std::string> components;
+            SplitString(components, xmlFrame->Attribute("u"), ',');
+            float x = 0.0f;
+            if (components.size() > 1)
+            {
+                x = FromString<float>(ReplaceString(components[0], " ", ""));
+            }
+            float y = 0.0f;
+            if (components.size() > 1)
+            {
+                y = FromString<float>(ReplaceString(components[1], " ", ""));
+            }
+            
+            textureFrame.u = glm::vec2(x, y);
         }
         if (xmlFrame->Attribute("v"))
         {
-            textureFrame.v = CVector2Df(xmlFrame->Attribute("v"));
+            std::vector<std::string> components;
+            SplitString(components, xmlFrame->Attribute("v"), ',');
+            float x = 0.0f;
+            if (components.size() > 1)
+            {
+                x = FromString<float>(ReplaceString(components[0], " ", ""));
+            }
+            float y = 0.0f;
+            if (components.size() > 1)
+            {
+                y = FromString<float>(ReplaceString(components[1], " ", ""));
+            }
+            
+            textureFrame.v = glm::vec2(x, y);
         }
         if (xmlFrame->Attribute("textureIdx", (int *)(&textureFrame.textureIdx)) == NULL)
         {

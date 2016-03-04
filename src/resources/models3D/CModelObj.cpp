@@ -37,9 +37,9 @@ bool CModelObj::Load()
 {
     if (IResource::Load())
     {
-        std::vector<CVector3Df> srcVertices;
-        std::vector<CVector3Df> srcNormals;
-        std::vector<CVector2Df> srcUVs;
+        std::vector<glm::vec3> srcVertices;
+        std::vector<glm::vec3> srcNormals;
+        std::vector<glm::vec2> srcUVs;
         std::string currentGroup = "default";
         
         const TResourceData& data = RawData();
@@ -72,17 +72,17 @@ bool CModelObj::Load()
     return false;
 }
 
-const std::vector<CVector3Df>& CModelObj::Vertices(const std::string& group)
+const std::vector<glm::vec3>& CModelObj::Vertices(const std::string& group)
 {
     return m_Vertices[group];
 }
 
-const std::vector<CVector3Df>& CModelObj::Normals(const std::string& group)
+const std::vector<glm::vec3>& CModelObj::Normals(const std::string& group)
 {
     return m_Normals[group];
 }
 
-const std::vector<CVector2Df>& CModelObj::UVs(const std::string& group)
+const std::vector<glm::vec2>& CModelObj::UVs(const std::string& group)
 {
     return m_UVs[group];
 }
@@ -103,12 +103,12 @@ const std::set<std::string>& CModelObj::Groups() const
 }
 
 bool CModelObj::ParseLine(const std::string& line,
-                          std::vector<CVector3Df>& srcVertices,
-                          std::vector<CVector3Df>& srcNormals,
-                          std::vector<CVector2Df>& srcUVs,
-                          std::vector<CVector3Df>& dstVertices,
-                          std::vector<CVector3Df>& dstNormals,
-                          std::vector<CVector2Df>& dstUVs,
+                          std::vector<glm::vec3>& srcVertices,
+                          std::vector<glm::vec3>& srcNormals,
+                          std::vector<glm::vec2>& srcUVs,
+                          std::vector<glm::vec3>& dstVertices,
+                          std::vector<glm::vec3>& dstNormals,
+                          std::vector<glm::vec2>& dstUVs,
                           std::string& dstTexture,
                           std::string& group)
 {
@@ -123,21 +123,24 @@ bool CModelObj::ParseLine(const std::string& line,
     
     if (components[0] == "v")
     {
-        CVector3Df vertex(ReplaceString(line, "v ", ""), ' ');
-        srcVertices.push_back(vertex);
-        result = true;
+        // TODO: glm
+        //glm::vec3 vertex(ReplaceString(line, "v ", ""), ' ');
+        //srcVertices.push_back(vertex);
+        //result = true;
     }
     else if (components[0] == "vt")
     {
-        CVector2Df uv(ReplaceString(line, "vt ", ""), ' ');
+        // TODO: glm
+        /*glm::vec2 uv(ReplaceString(line, "vt ", ""), ' ');
         srcUVs.push_back(uv);
-        result = true;
+        result = true;*/
     }
     else if (components[0] == "vn")
     {
-        CVector3Df normal(ReplaceString(line, "vn ", ""), ' ');
+        // TODO: glm
+        /*glm::vec3 normal(ReplaceString(line, "vn ", ""), ' ');
         srcNormals.push_back(normal);
-        result = true;
+        result = true;*/
     }
     else if (components[0] == "f")
     {

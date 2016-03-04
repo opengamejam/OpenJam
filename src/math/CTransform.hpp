@@ -10,8 +10,7 @@
 #define CTRANSFORM_HPP
 
 #include "Global.h"
-#include "CVector.hpp"
-#include "CMatrix.hpp"
+#include "glm/ext.hpp"
 
 namespace jam
 {
@@ -23,10 +22,7 @@ namespace jam
 template <class T, class Vec, class Mat>
 class CTransform;
     
-typedef CTransform<float, CVector3Df, CMatrix4x4f> CTransform3Df;
-typedef CTransform<double, CVector3Dd, CMatrix4x4d> CTransform3Dd;
-typedef CTransform<int32_t, CVector3Di, CMatrix4x4i> CTransform3Di;
-typedef CTransform<uint32_t, CVector3Du, CMatrix4x4u> CTransform3Du;
+typedef CTransform<float, glm::vec3, glm::mat4x4> CTransform3Df;
 
     
 // *****************************************************************************
@@ -108,15 +104,11 @@ public:
     
     INL Mat operator()()
     {
-        Mat transform = Mat::Identity();
+        Mat transform(1.0);
         
-        Mat p = Mat::Identity();
-        Mat r = Mat::Identity();
-        Mat s = Mat::Identity();
-        
-        p.Translate(Position());
-        r.Rotate(Rotation());
-        s.Scale(Scale());
+        Mat p = glm::translate(Mat(1.0), Position());
+        Mat r(1.0); // TODO: glm
+        Mat s = glm::scale(Mat(1.0), Scale());
         
         transform *= p;
         transform *= r;

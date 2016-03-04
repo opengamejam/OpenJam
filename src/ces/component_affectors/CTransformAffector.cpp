@@ -12,13 +12,13 @@
 
 using namespace jam;
 
-void CTransformAffector::Translating(IEntityPtr entity, const CVector3Df& translation)
+void CTransformAffector::Translating(IEntityPtr entity, const glm::vec3& translation)
 {
     entity->Get<CTransformationComponent>([translation](CTransformationComponentPtr component)
     {
         CTransform3Df transform = component->Transform(CTransformationComponent::Local);
 
-        CVector3Df value = transform.Position();
+        glm::vec3 value = transform.Position();
         value += translation;
         transform.Position(value);
 
@@ -27,13 +27,13 @@ void CTransformAffector::Translating(IEntityPtr entity, const CVector3Df& transl
     });
 }
 
-void CTransformAffector::Rotating(IEntityPtr entity, const CVector3Df& rotation)
+void CTransformAffector::Rotating(IEntityPtr entity, const glm::vec3& rotation)
 {
     entity->Get<CTransformationComponent>([rotation](CTransformationComponentPtr component)
     {
         CTransform3Df transform = component->Transform(CTransformationComponent::Local);
 
-        CVector3Df value = transform.Rotation();
+        glm::vec3 value = transform.Rotation();
         value += rotation;
         transform.Rotation(value);
 
@@ -42,13 +42,13 @@ void CTransformAffector::Rotating(IEntityPtr entity, const CVector3Df& rotation)
     });
 }
 
-void CTransformAffector::Scaling(IEntityPtr entity, const CVector3Df& scaling)
+void CTransformAffector::Scaling(IEntityPtr entity, const glm::vec3& scaling)
 {
     entity->Get<CTransformationComponent>([scaling](CTransformationComponentPtr component)
     {
         CTransform3Df transform = component->Transform(CTransformationComponent::Local);
 
-        CVector3Df value = transform.Scale();
+        glm::vec3 value = transform.Scale();
         value += scaling;
         transform.Scale(value);
 
@@ -57,7 +57,7 @@ void CTransformAffector::Scaling(IEntityPtr entity, const CVector3Df& scaling)
     });
 }
 
-void CTransformAffector::Position(IEntityPtr entity, const CVector3Df& position)
+void CTransformAffector::Position(IEntityPtr entity, const glm::vec3& position)
 {
     entity->Get<CTransformationComponent>([position](CTransformationComponentPtr component)
     {
@@ -70,7 +70,7 @@ void CTransformAffector::Position(IEntityPtr entity, const CVector3Df& position)
     });
 }
 
-void CTransformAffector::Rotation(IEntityPtr entity, const CVector3Df& rotation)
+void CTransformAffector::Rotation(IEntityPtr entity, const glm::vec3& rotation)
 {
     entity->Get<CTransformationComponent>([rotation](CTransformationComponentPtr component)
     {
@@ -83,7 +83,7 @@ void CTransformAffector::Rotation(IEntityPtr entity, const CVector3Df& rotation)
     });
 }
 
-void CTransformAffector::Scale(IEntityPtr entity, const CVector3Df& scaling)
+void CTransformAffector::Scale(IEntityPtr entity, const glm::vec3& scaling)
 {
     entity->Get<CTransformationComponent>([scaling](CTransformationComponentPtr component)
     {
@@ -96,9 +96,9 @@ void CTransformAffector::Scale(IEntityPtr entity, const CVector3Df& scaling)
     });
 }
 
-CVector3Df CTransformAffector::Position(IEntityPtr entity)
+glm::vec3 CTransformAffector::Position(IEntityPtr entity)
 {
-    CVector3Df value;
+    glm::vec3 value;
     entity->Get<CTransformationComponent>([&](CTransformationComponentPtr component)
     {
         CTransform3Df transform = component->Transform(CTransformationComponent::Local);
@@ -108,9 +108,9 @@ CVector3Df CTransformAffector::Position(IEntityPtr entity)
     return value;
 }
 
-CVector3Df CTransformAffector::Rotation(IEntityPtr entity)
+glm::vec3 CTransformAffector::Rotation(IEntityPtr entity)
 {
-    CVector3Df value;
+    glm::vec3 value;
     entity->Get<CTransformationComponent>([&](CTransformationComponentPtr component)
     {
         CTransform3Df transform = component->Transform(CTransformationComponent::Local);
@@ -120,9 +120,9 @@ CVector3Df CTransformAffector::Rotation(IEntityPtr entity)
     return value;
 }
 
-CVector3Df CTransformAffector::Scale(IEntityPtr entity)
+glm::vec3 CTransformAffector::Scale(IEntityPtr entity)
 {
-    CVector3Df value;
+    glm::vec3 value;
     entity->Get<CTransformationComponent>([&](CTransformationComponentPtr component)
     {
         CTransform3Df transform = component->Transform(CTransformationComponent::Local);
@@ -132,7 +132,7 @@ CVector3Df CTransformAffector::Scale(IEntityPtr entity)
     return value;
 }
 
-void CTransformAffector::Translating(CTransformationComponentPtr component, const CVector3Df& translation)
+void CTransformAffector::Translating(CTransformationComponentPtr component, const glm::vec3& translation)
 {
     if (!component)
     {
@@ -141,7 +141,7 @@ void CTransformAffector::Translating(CTransformationComponentPtr component, cons
 
     CTransform3Df transform = component->Transform(CTransformationComponent::Local);
 
-    CVector3Df value = transform.Position();
+    glm::vec3 value = transform.Position();
     value += translation;
     transform.Position(value);
 
@@ -149,7 +149,7 @@ void CTransformAffector::Translating(CTransformationComponentPtr component, cons
     component->Dirty();
 }
 
-void CTransformAffector::Rotating(CTransformationComponentPtr component, const CVector3Df& rotation)
+void CTransformAffector::Rotating(CTransformationComponentPtr component, const glm::vec3& rotation)
 {
     if (!component)
     {
@@ -158,7 +158,7 @@ void CTransformAffector::Rotating(CTransformationComponentPtr component, const C
 
     CTransform3Df transform = component->Transform(CTransformationComponent::Local);
 
-    CVector3Df value = transform.Rotation();
+    glm::vec3 value = transform.Rotation();
     value += rotation;
     transform.Rotation(value);
 
@@ -166,7 +166,7 @@ void CTransformAffector::Rotating(CTransformationComponentPtr component, const C
     component->Dirty();
 }
 
-void CTransformAffector::Scaling(CTransformationComponentPtr component, const CVector3Df& scaling)
+void CTransformAffector::Scaling(CTransformationComponentPtr component, const glm::vec3& scaling)
 {
     if (!component)
     {
@@ -175,7 +175,7 @@ void CTransformAffector::Scaling(CTransformationComponentPtr component, const CV
 
     CTransform3Df transform = component->Transform(CTransformationComponent::Local);
 
-    CVector3Df value = transform.Scale();
+    glm::vec3 value = transform.Scale();
     value += scaling;
     transform.Scale(value);
 
@@ -183,7 +183,7 @@ void CTransformAffector::Scaling(CTransformationComponentPtr component, const CV
     component->Dirty();
 }
 
-void CTransformAffector::Position(CTransformationComponentPtr component, const CVector3Df& position)
+void CTransformAffector::Position(CTransformationComponentPtr component, const glm::vec3& position)
 {
     if (!component)
     {
@@ -198,7 +198,7 @@ void CTransformAffector::Position(CTransformationComponentPtr component, const C
     component->Dirty();
 }
 
-void CTransformAffector::Rotation(CTransformationComponentPtr component, const CVector3Df& rotation)
+void CTransformAffector::Rotation(CTransformationComponentPtr component, const glm::vec3& rotation)
 {
     if (!component)
     {
@@ -213,7 +213,7 @@ void CTransformAffector::Rotation(CTransformationComponentPtr component, const C
     component->Dirty();
 }
 
-void CTransformAffector::Scale(CTransformationComponentPtr component, const CVector3Df& scaling)
+void CTransformAffector::Scale(CTransformationComponentPtr component, const glm::vec3& scaling)
 {
     if (!component)
     {

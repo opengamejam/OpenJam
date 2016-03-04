@@ -10,7 +10,7 @@
 
 #include "Global.h"
 #include "IResource.h"
-#include "CVector.hpp"
+#include "CMath.h"
 
 namespace jam
 {
@@ -20,8 +20,8 @@ class CTextureFrame
 public:
     CTextureFrame(const std::string& _name = "",
                   uint32_t _textureIdx = 0,
-                  const CVector2Df& _u = CVector2Df(),
-                  const CVector2Df& _v = CVector2Df())
+                  const glm::vec2& _u = glm::vec2(),
+                  const glm::vec2& _v = glm::vec2())
         : name(_name)
         , textureIdx(_textureIdx)
         , u(_u)
@@ -30,8 +30,8 @@ public:
     
     std::string name;
     uint32_t textureIdx;
-    CVector2Df u;
-    CVector2Df v;
+    glm::vec2 u;
+    glm::vec2 v;
 };
 
 struct CFrameDef

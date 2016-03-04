@@ -11,7 +11,6 @@
 
 #include "Global.h"
 #include "IResource.h"
-#include "CVector.hpp"
 
 namespace jam
 {
@@ -24,9 +23,9 @@ public:
     {}
     virtual ~IModel3D() = default;
     
-    virtual const std::vector<CVector3Df>& Vertices(const std::string& group = "default") = 0;
-    virtual const std::vector<CVector3Df>& Normals(const std::string& group = "default") = 0;
-    virtual const std::vector<CVector2Df>& UVs(const std::string& group = "default") = 0;
+    virtual const std::vector<glm::vec3>& Vertices(const std::string& group = "default") = 0;
+    virtual const std::vector<glm::vec3>& Normals(const std::string& group = "default") = 0;
+    virtual const std::vector<glm::vec2>& UVs(const std::string& group = "default") = 0;
     virtual const std::vector<unsigned int>& Indices(const std::string& group = "default") = 0;
     virtual const std::string& TextureName(const std::string& group = "default") = 0;
     virtual const std::set<std::string>& Groups() const = 0;

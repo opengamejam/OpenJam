@@ -8,6 +8,7 @@
 
 #include "CCamera3D.h"
 #include "CTransformationComponent.h"
+#include "glm/ext.hpp"
 
 using namespace jam;
 
@@ -27,7 +28,7 @@ CCamera3DPtr CCamera3D::Create(float _fov, float _width, float _height, float _n
     CTransformationComponentPtr transformComponent(new CTransformationComponent());
     
     CTransform3Df transform = transformComponent->Transform(CTransformationComponent::Local);
-    transform.Position(CVector3Df(0.0f, 0.0f, -10.0f));
+    transform.Position(glm::vec3(0.0f, 0.0f, -10.0f));
     transformComponent->AddTransform(CTransformationComponent::Local, transform);
     
     transformComponent->ResultTransform(transform);
@@ -43,7 +44,7 @@ CCamera3D::CCamera3D(float _fov, float _width, float _height, float _near, float
 , m_Height(_height)
 , m_Near(std::max(0.01f, _near))
 , m_Far(_far)
-, m_ProjectionMatrix(CMatrix4x4f::Perspective(_fov, m_Width / m_Height, m_Near, m_Far))
+, m_ProjectionMatrix(glm::perspective(_fov, m_Width / m_Height, m_Near, m_Far))
 , m_RenderTarget(nullptr)
 , m_Id(ICamera::NextCameraId())
 {
@@ -60,7 +61,7 @@ uint32_t CCamera3D::Id() const
     return m_Id;
 }
 
-CMatrix4x4f CCamera3D::ProjectionMatrix()
+glm::mat4x4 CCamera3D::ProjectionMatrix()
 {
     CTransform3Df resultTransform;
     Get<CTransformationComponent>([&](CTransformationComponentPtr transformComponent)

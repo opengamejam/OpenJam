@@ -106,17 +106,15 @@ void CRendererOGLES1_1::Draw(IMeshPtr mesh, IMaterialPtr material, IShaderProgra
 	IShaderProgram::TUniMatrix4Float::const_iterator it = uniforms.find(shader->ProjectionMatrix());
     if (it != uniforms.end())
     {
-        CMatrix4x4f matrix = it->second;
         glMatrixMode(GL_PROJECTION);
-        glLoadMatrixf(matrix.Transpose()());
+        glLoadTransposeMatrixf(glm::value_ptr(it->second));
     }   // TODO: load identity for other case
     
     it = uniforms.find(shader->ModelMatrix());
     if (it != uniforms.end())
     {
-        CMatrix4x4f matrix = it->second;
         glMatrixMode(GL_MODELVIEW);
-        glLoadMatrixf(matrix.Transpose()());
+        glLoadTransposeMatrixf(glm::value_ptr(it->second));
     }   // TODO: load identity for other case
     
     if (mesh->IndexBuffer())

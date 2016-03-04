@@ -14,7 +14,6 @@
 #include "IMaterial.h"
 #include "IShaderProgram.h"
 #include "IVertexBuffer.h"
-#include "CVector.hpp"
 #include "IMesh.h"
 
 using namespace jam;
@@ -61,7 +60,7 @@ void CAnimation2DSystem::Update(unsigned long dt)
                     if (vertexBuffer->HasStream(IVertexBuffer::TextureCoords))
                     {
                         IVertexBuffer::SVertexStream& textureCoord = vertexBuffer->Lock(IVertexBuffer::TextureCoords);
-                        textureCoord.Set<CVector2Df>(0, anim2DComponent->TextureFrame());
+                        textureCoord.Set<glm::vec2>(0, anim2DComponent->TextureFrame());
                         vertexBuffer->Unlock(true);
                     }
                     

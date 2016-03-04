@@ -107,14 +107,14 @@ void CRendererOGL1_5::Draw(IMeshPtr mesh, IMaterialPtr material, IShaderProgramP
     if (it != uniforms.end())
     {
         glMatrixMode(GL_PROJECTION);        
-        glLoadTransposeMatrixf(glm::value_ptr(it->second));
+        glLoadMatrixf(glm::value_ptr(it->second));
     }   // TODO: load identity for other case
     
     it = uniforms.find(shader->ModelMatrix());
     if (it != uniforms.end())
     {
         glMatrixMode(GL_MODELVIEW);
-        glLoadTransposeMatrixf(glm::value_ptr(it->second));
+        glLoadMatrixf(glm::value_ptr(it->second));
     }   // TODO: load identity for other case
     
     if (mesh->IndexBuffer())

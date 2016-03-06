@@ -18,9 +18,10 @@ CLASS_PTR(IRenderTarget);
 class IRenderView : public std::enable_shared_from_this<IRenderView>
 {
 public:
-	IRenderView(uint32_t width, uint32_t height)
+	IRenderView(uint32_t width, uint32_t height, float scaleFactor = 1.0f)
 		: m_Width(width)
 		, m_Height(height)
+        , m_ScaleFactor(scaleFactor)
 	{}
     virtual ~IRenderView() = default;
 
@@ -33,9 +34,13 @@ public:
 	INL uint32_t Width() const { return m_Width; }
 	INL uint32_t Height() const { return m_Height; }
 
+    INL uint32_t RealWidth() const { return m_Width * m_ScaleFactor; }
+    INL uint32_t RealHeight() const { return m_Height * m_ScaleFactor; }
+    
 private:
 	uint32_t m_Width;
 	uint32_t m_Height;
+    float m_ScaleFactor;
 };
 
 }; // namespace jam

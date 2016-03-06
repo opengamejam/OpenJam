@@ -26,9 +26,8 @@ varying highp vec4       VaryingMainColor;
 
 void main(void)
 {
-    gl_Position = MainPositionVertex;
-    gl_Position *= MainModelMatrix;
-    gl_Position *= MainProjectionMatrix;
+    mat4 MVP = MainProjectionMatrix * MainModelMatrix;
+    gl_Position = MVP * MainPositionVertex;
     
     VaryingTextureCoord = MainTextureCoord;
     VaryingMainColor = MainVertexColor;

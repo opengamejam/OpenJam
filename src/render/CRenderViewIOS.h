@@ -25,7 +25,7 @@ public:
     };
     
 public:
-	CRenderViewIOS(uint32_t width, uint32_t height, void* glkView, RenderApi renderApi);
+	CRenderViewIOS(void* glkView, RenderApi renderApi);
 	virtual ~CRenderViewIOS();
 
 	virtual void CreateView() override;

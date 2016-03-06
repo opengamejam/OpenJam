@@ -30,8 +30,10 @@ using namespace jam;
 // Public Methods
 // *****************************************************************************
 
-CRenderViewIOS::CRenderViewIOS(unsigned int width, unsigned int height, void* glkView, RenderApi renderApi)
-	: IRenderView(width, height)
+CRenderViewIOS::CRenderViewIOS(void* glkView, RenderApi renderApi)
+	: IRenderView(((__bridge UIView*)glkView).frame.size.width,
+                  ((__bridge UIView*)glkView).frame.size.height,
+                  ((__bridge UIView*)glkView).contentScaleFactor)
 	, m_GLKView((__bridge UIView*)glkView)
     , m_GLContext(nil)
     , m_RenderApi(renderApi)
@@ -60,10 +62,10 @@ void CRenderViewIOS::CreateView()
             glBindRenderbuffer(GL_RENDERBUFFER, m_ColorBuffer);
             [m_GLContext renderbufferStorage:GL_RENDERBUFFER fromDrawable:(CAEAGLLayer*)(m_GLKView.layer)];
             
-            std::shared_ptr<CFrameBufferOGLES1_1> renderTarget(new CFrameBufferOGLES1_1(Width(), Height()));
+            std::shared_ptr<CFrameBufferOGLES1_1> renderTarget(new CFrameBufferOGLES1_1(RealWidth(), RealHeight()));
             renderTarget->Initialize(-1, m_ColorBuffer);
             glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, m_ColorBuffer);
-            glViewport(0, 0, Width(), Height());
+            glViewport(0, 0, RealWidth(), RealHeight());
             m_DefaultRenderTarget = renderTarget;
         }
         break;
@@ -79,10 +81,10 @@ void CRenderViewIOS::CreateView()
             glBindRenderbuffer(GL_RENDERBUFFER, m_ColorBuffer);
             [m_GLContext renderbufferStorage:GL_RENDERBUFFER fromDrawable:(CAEAGLLayer*)(m_GLKView.layer)];
             
-            std::shared_ptr<CFrameBufferOGLES2_0> renderTarget(new CFrameBufferOGLES2_0(Width(), Height()));
+            std::shared_ptr<CFrameBufferOGLES2_0> renderTarget(new CFrameBufferOGLES2_0(RealWidth(), RealHeight()));
             renderTarget->Initialize(-1, m_ColorBuffer);
             glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, m_ColorBuffer);
-            glViewport(0, 0, Width(), Height());
+            glViewport(0, 0, RealWidth(), RealHeight());
             m_DefaultRenderTarget = renderTarget;
         }
         break;
@@ -98,10 +100,10 @@ void CRenderViewIOS::CreateView()
             glBindRenderbuffer(GL_RENDERBUFFER, m_ColorBuffer);
             [m_GLContext renderbufferStorage:GL_RENDERBUFFER fromDrawable:(CAEAGLLayer*)(m_GLKView.layer)];
             
-            std::shared_ptr<CFrameBufferOGLES1_1> renderTarget(new CFrameBufferOGLES1_1(Width(), Height()));
+            std::shared_ptr<CFrameBufferOGLES1_1> renderTarget(new CFrameBufferOGLES1_1(RealWidth(), RealHeight()));
             renderTarget->Initialize(-1, m_ColorBuffer);
             glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, m_ColorBuffer);
-            glViewport(0, 0, Width(), Height());
+            glViewport(0, 0, RealWidth(), RealHeight());
             m_DefaultRenderTarget = renderTarget;
         }
         break;

@@ -28,6 +28,7 @@ CCamera2DPtr CCamera2D::Create(float _width, float _height, float _near, float _
     CTransformationComponentPtr transformComponent(new CTransformationComponent());
     
     CTransform3Df transform = transformComponent->Transform(CTransformationComponent::Local);
+    transform.Position(glm::vec3(0.0f, 0.0f, 0.0f));
     transformComponent->AddTransform(CTransformationComponent::Local, transform);
     
     camera->Initialize("camera2d", {transformComponent});
@@ -95,7 +96,7 @@ void CCamera2D::FlipX()
     float left = (m_IsFlippedX) ? m_Width : 0;
     float right = (m_IsFlippedX) ? 0 : m_Width;
     
-    m_ProjectionMatrix = glm::ortho(left, right, 0.0f, m_Height, m_Near, m_Far);
+    m_ProjectionMatrix = glm::ortho(left, right, m_Height, 0.0f, m_Near, m_Far);
 }
 
 // *****************************************************************************

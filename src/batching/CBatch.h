@@ -28,7 +28,11 @@ public:
     CBatch();
     virtual ~CBatch();
     
-    bool Initialize(IMaterialPtr material, IShaderProgramPtr shader, const std::list<ITexturePtr> textures);
+    bool Initialize(IMaterialPtr material,
+                    IShaderProgramPtr shader,
+                    const std::list<ITexturePtr>& textures,
+                    uint64_t elementSize,
+                    uint64_t maxVertexBufferSize = k_MaxVertexBufferSize);
     bool IsInitialized() const;
     void Shutdown();
     
@@ -53,8 +57,27 @@ private:
     
     struct SGeometry
     {
-        IMeshWeak mesh;
+        uint64_t offsetVB;
+        uint64_t sizeVB;
+        uint64_t offsetIB;
+        uint64_t sizeIB;
         CTransform3Df transform;
+        IMeshWeak mesh;
+        
+        SGeometry(uint64_t _offsetVB = 0,
+                  uint64_t _sizeVB = 0,
+                  uint64_t _offsetIB = 0,
+                  uint64_t _sizeIB = 0,
+                  const CTransform3Df& _transform = CTransform3Df(),
+                  IMeshPtr _mesh = nullptr)
+        : offsetVB(_offsetVB)
+        , sizeVB(_sizeVB)
+        , offsetIB(_offsetIB)
+        , sizeIB(_sizeIB)
+        , transform(_transform)
+        , mesh(_mesh)
+        {
+        }
     };
     
     typedef std::map<uint64_t, SGeometry> TGeometries;

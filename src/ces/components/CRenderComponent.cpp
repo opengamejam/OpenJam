@@ -24,7 +24,6 @@ CRenderComponent::CRenderComponent()
 : IComponent(ComponentId<CRenderComponent>())
 , m_IsVisible(true)
 , m_IsBatchable(false)
-, m_BatchIndex(std::numeric_limits<uint32_t>::max())
 , m_DrawOrder(0)
 {
 
@@ -146,33 +145,12 @@ void CRenderComponent::Visible(bool isVisible)
 
 bool CRenderComponent::Batchable() const
 {
-    return (m_BatchIndex != std::numeric_limits<uint32_t>::max());
+    return m_IsBatchable;
 }
 
 void CRenderComponent::Batchable(bool isBatchable)
 {
-    if (m_IsBatchable != isBatchable)
-    {
-        m_IsBatchable = isBatchable;
-    }
-}
-
-uint32_t CRenderComponent::BatchIndex() const
-{
-    return m_BatchIndex;
-}
-
-void CRenderComponent::BatchIndex(uint32_t batchIndex)
-{
-    if (m_BatchIndex != batchIndex)
-    {
-        m_BatchIndex = batchIndex;
-    }
-}
-
-bool CRenderComponent::IsBatchIndexValid() const
-{
-    return (m_BatchIndex != std::numeric_limits<uint32_t>::max());
+    m_IsBatchable = isBatchable;
 }
 
 bool CRenderComponent::IsValid() const

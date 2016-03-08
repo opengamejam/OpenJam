@@ -51,10 +51,6 @@ public:
     bool Batchable() const;
     void Batchable(bool isBatchable);
     
-    uint32_t BatchIndex() const;
-    void BatchIndex(uint32_t batchIndex);
-    bool IsBatchIndexValid() const;
-    
     bool IsValid() const;
     
     uint32_t DrawOrder() const;
@@ -67,7 +63,6 @@ private:
     std::set<std::string> m_Groups;
     bool m_IsVisible;
     bool m_IsBatchable;
-    uint32_t m_BatchIndex;
     std::set<uint32_t> m_CameraIds;
     uint32_t m_DrawOrder;
 };

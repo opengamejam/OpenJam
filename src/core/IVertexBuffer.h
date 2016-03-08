@@ -190,11 +190,21 @@ struct IVertexBuffer::SVertexStream
             return;
         }
         
+        bool needRestoreLock = !vb->IsLocked();
+        SetUnsafe<T>(vb, startIndex, srcData);
+        if (needRestoreLock)
+        {
+            vb->Unlock();
+        }
+    }
+    
+    template <class T>
+    INL void SetUnsafe(IVertexBufferPtr vb, uint64_t startIndex, const T& srcData)
+    {
         uint32_t dataSize = sizeForType(dataType);
         uint64_t elemSizeToCopy = dataSize * stride;
         uint64_t sizeToCopy = sizeof(T);
         
-        bool needRestoreLock = !vb->IsLocked();
         char* dst = static_cast<char*>(vb->LockRaw());
         const char* src = reinterpret_cast<const char*>(&srcData);
         
@@ -205,11 +215,6 @@ struct IVertexBuffer::SVertexStream
         else
         {
             memcpy(dst + startIndex * vb->ElementSize() + offset, src, sizeToCopy);
-        }
-        
-        if (needRestoreLock)
-        {
-            vb->Unlock();
         }
     }
     
@@ -270,11 +275,23 @@ struct IVertexBuffer::SVertexStream
             return false;
         }
         
+        bool needRestoreLock = !vb->IsLocked();
+        GetUnsafe<T>(vb, startIndex, dstData);
+        if (needRestoreLock)
+        {
+            vb->Unlock();
+        }
+        
+        return true;
+    }
+    
+    template <class T>
+    INL void GetUnsafe(IVertexBufferPtr vb, uint64_t startIndex, T& dstData)
+    {
         uint32_t dataSize = sizeForType(dataType);
         uint64_t elemSizeToCopy = dataSize * stride;
         uint64_t sizeToCopy = sizeof(T);
         
-        bool needRestoreLock = !vb->IsLocked();
         char* dst = reinterpret_cast<char*>(&dstData);
         const char* src = static_cast<const char*>(vb->LockRaw());
         
@@ -286,13 +303,6 @@ struct IVertexBuffer::SVertexStream
         {
             memcpy(dst, src + startIndex * vb->ElementSize() + offset, sizeToCopy);
         }
-        
-        if (needRestoreLock)
-        {
-            vb->Unlock();
-        }
-        
-        return true;
     }
     
     uint64_t DataSize() const

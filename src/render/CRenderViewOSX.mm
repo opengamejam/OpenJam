@@ -27,7 +27,7 @@ using namespace jam;
 // *****************************************************************************
 
 CRenderViewOSX::CRenderViewOSX(unsigned int width, unsigned int height, void* glkView, RenderApi renderApi)
-	: IRenderView(width, height)
+	: IRenderView(width, height, 1.0f)
 	, m_GLView((__bridge NSOpenGLView*)glkView)
     , m_GLContext(nil)
     , m_RenderApi(renderApi)
@@ -63,7 +63,7 @@ void CRenderViewOSX::CreateView()
             
             GRenderer.reset(new CRendererOGL1_5(shared_from_this()));
             
-            std::shared_ptr<CFrameBufferOGL1_5> renderTarget(new CFrameBufferOGL1_5(Width(), Height()));
+            std::shared_ptr<CFrameBufferOGL1_5> renderTarget(new CFrameBufferOGL1_5(RealWidth(), RealHeight()));
             renderTarget->Initialize(0, 0);
             m_DefaultRenderTarget = renderTarget;
         }

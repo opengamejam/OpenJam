@@ -70,12 +70,12 @@ void CTextureRenderTarget::SaveImage(const std::string& filepath)
     
     unsigned int bitsPerComponent = 8;
     unsigned int bitsPerPixel = 32;
-    unsigned int bytesPerRow = 4 * Width();
+    unsigned int bytesPerRow = 4 * RealWidth();
     CGColorSpaceRef colorSpaceRef = CGColorSpaceCreateDeviceRGB();
     CGBitmapInfo bitmapInfo = kCGImageAlphaPremultipliedLast;
     CGColorRenderingIntent renderingIntent = kCGRenderingIntentDefault;
-    CGImageRef imageRef = CGImageCreate(Width(),
-                                        Height(),
+    CGImageRef imageRef = CGImageCreate(RealWidth(),
+                                        RealHeight(),
                                         bitsPerComponent,
                                         bitsPerPixel,
                                         bytesPerRow,
@@ -85,7 +85,7 @@ void CTextureRenderTarget::SaveImage(const std::string& filepath)
     UIImage *image = [UIImage imageWithCGImage:imageRef];
     
     UIImageView *imageView = [[UIImageView alloc] initWithImage:image];
-    UIGraphicsBeginImageContext(CGSizeMake(Width(), Height()));
+    UIGraphicsBeginImageContext(CGSizeMake(RealWidth(), RealHeight()));
     CGContextRef context = UIGraphicsGetCurrentContext();
     [imageView.layer renderInContext:context];
     image = UIGraphicsGetImageFromCurrentImageContext();

@@ -28,7 +28,7 @@ using namespace jam;
 LRESULT CALLBACK WndProc2(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
 
 CRenderViewWindows::CRenderViewWindows(unsigned int width, unsigned int height, HINSTANCE hInstance)
-    : IRenderView(width, height)
+    : IRenderView(width, height, 1.0f)
     , m_eglDisplay(0)
     , m_DeviceContext(0)
     , m_Window(0)
@@ -78,14 +78,14 @@ void CRenderViewWindows::CreateView()
     int screenHeight = GetSystemMetrics(SM_CYFULLSCREEN);
 
     RECT sRect;
-    SetRect(&sRect, 0, 0, Width(), Height());
+    SetRect(&sRect, 0, 0, RealWidth(), RealHeight());
     AdjustWindowRectEx(&sRect, WS_CAPTION | WS_SYSMENU, false, 0);
     m_Window = CreateWindow(windowName.c_str(),
                             windowName.c_str(),
                             WS_VISIBLE | WS_SYSMENU,
-                            (screenWidth - Width()) / 2,
-                            (screenHeight - Height()) / 2,
-                            Width(), Height(),
+                            (screenWidth - RealWidth()) / 2,
+                            (screenHeight - RealHeight()) / 2,
+                            RealWidth(), RealHeight(),
                             NULL, NULL, m_Instance, NULL );
 
     // Get the associated device context
@@ -142,7 +142,7 @@ void CRenderViewWindows::CreateView()
 
 	GRenderer.reset(new CRendererOGLES2_0(shared_from_this()));
 
-	std::shared_ptr<CFrameBufferOGLES2_0> renderTarget(new CFrameBufferOGLES2_0(Width(), Height()));
+	std::shared_ptr<CFrameBufferOGLES2_0> renderTarget(new CFrameBufferOGLES2_0(RealWidth(), RealHeight()));
 	renderTarget->Initialize(0);
 	m_DefaultRenderTarget = renderTarget;
 }

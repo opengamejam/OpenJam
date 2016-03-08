@@ -23,7 +23,7 @@ using namespace jam;
 
 CRenderViewX11::CRenderViewX11(unsigned int width, unsigned int height,
                                unsigned int targetWidth, unsigned int targetHeight)
-    : IRenderView(width, height, targetWidth, targetHeigh)
+    : IRenderView(width, height, 1.0f)
     , m_EglWindow(0)
     , m_EglDisplay(0)
     , m_EglSurface(0)
@@ -72,8 +72,8 @@ void CRenderViewX11::CreateView()
     sWA.event_mask = StructureNotifyMask | ExposureMask | ButtonPressMask | ButtonReleaseMask | KeyPressMask | KeyReleaseMask;
     ui32Mask = CWBackPixel | CWBorderPixel | CWEventMask | CWColormap;
 
-    i32Width  = (Width()  < XDisplayWidth(m_Display, x11Screen)) ? Width() : XDisplayWidth(m_Display, x11Screen);
-    i32Height = (Height() < XDisplayHeight(m_Display,x11Screen)) ? Height() : XDisplayHeight(m_Display,x11Screen);
+    i32Width  = (RealWidth()  < XDisplayWidth(m_Display, x11Screen)) ? Width() : XDisplayWidth(m_Display, x11Screen);
+    i32Height = (RealHeight() < XDisplayHeight(m_Display,x11Screen)) ? Height() : XDisplayHeight(m_Display,x11Screen);
 
     // Creates the X11 window
     m_Window = XCreateWindow(m_Display, RootWindow(m_Display, x11Screen), 0, 0, i32Width, i32Height,

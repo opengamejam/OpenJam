@@ -17,7 +17,7 @@
 
 using namespace jam;
 
-const uint64_t CBatch::k_MaxVertexBufferSize = 10000;
+const uint64_t CBatch::k_MaxBufferSize = 10000;
 
 CBatch::CBatch()
 : m_IsDirty(true)
@@ -38,14 +38,18 @@ CBatch::~CBatch()
 bool CBatch::Initialize(IMaterialPtr material,
                         IShaderProgramPtr shader,
                         const std::list<ITexturePtr>& textures,
-                        uint64_t elementSize,
-                        uint64_t maxVertexBufferSize)
+                        uint64_t elementVertexSize,
+                        uint64_t elementIndexSize,
+                        uint64_t maxVertexBufferSize,
+                        uint64_t maxIndexBufferSize)
 {
     if (IsInitialized() ||
         !material ||
         !shader ||
-        elementSize == 0 ||
-        maxVertexBufferSize == 0)
+        elementVertexSize == 0 ||
+        maxVertexBufferSize == 0 ||
+        elementIndexSize == 0 || // TODO:
+        maxIndexBufferSize == 0)
     {
         return false;
     }
@@ -54,8 +58,11 @@ bool CBatch::Initialize(IMaterialPtr material,
     IVertexBufferPtr vertexBuffer = GRenderer->CreatVertexBuffer();
     IIndexBufferPtr indexBuffer = GRenderer->CreateIndexBuffer();
     
-    vertexBuffer->Initialize(elementSize);
+    vertexBuffer->Initialize(elementVertexSize);
     vertexBuffer->Resize(maxVertexBufferSize);
+    
+    indexBuffer->Initialize(IIndexBuffer::Short); // TODO:
+    indexBuffer->Resize(maxIndexBufferSize);
     
     m_BatchedMesh->VertexBuffer(vertexBuffer);
     m_BatchedMesh->IndexBuffer(indexBuffer);
@@ -170,6 +177,7 @@ void CBatch::Update()
     char* dstRawIB = static_cast<char *>(dstIndexBuffer->LockRaw());
     
     IVertexBuffer::SVertexStream& dstStreamVB = dstVertexBuffer->Lock(IVertexBuffer::Position);
+    IIndexBuffer::SIndexStream& dstStreamIB = dstIndexBuffer->Lock();
     std::for_each(m_Geometries.begin(), m_Geometries.end(), [&](TGeometries::value_type& value)
     {
         SGeometry& geometry = value.second;
@@ -205,9 +213,12 @@ void CBatch::Update()
         }
         
         // Recalculate indexes in batched buffer
+        short index;
         for (uint64_t i = 0; i < srcIndexBuffer->Size(); ++i)
         {
-            ((short *)srcRawIB)[i] += m_IndexOffset;
+            dstStreamIB.GetUnsafe<short>(dstIndexBuffer, m_IndexOffset + i, index);
+            index += m_IndexOffset;
+            dstStreamIB.SetUnsafe<short>(dstIndexBuffer, m_IndexOffset + i, index);
         }
         
         geometry.offsetVB = m_VertexOffset;

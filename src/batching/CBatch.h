@@ -31,8 +31,10 @@ public:
     bool Initialize(IMaterialPtr material,
                     IShaderProgramPtr shader,
                     const std::list<ITexturePtr>& textures,
-                    uint64_t elementSize,
-                    uint64_t maxVertexBufferSize = k_MaxVertexBufferSize);
+                    uint64_t elementVertexSize,
+                    uint64_t elementIndexSize,
+                    uint64_t maxVertexBufferSize = k_MaxBufferSize,
+                    uint64_t maxIndexBufferSize = k_MaxBufferSize);
     bool IsInitialized() const;
     void Shutdown();
     
@@ -46,7 +48,7 @@ public:
     void Update();
     
 public:
-    static const uint64_t k_MaxVertexBufferSize;
+    static const uint64_t k_MaxBufferSize;
     
 private:
     bool m_IsDirty;

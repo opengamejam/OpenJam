@@ -76,20 +76,13 @@ void CRenderSystem::Update(unsigned long dt)
                 return;
             }
             
-            bool isPartOfBatch = renderComponent->IsBatchIndexValid();
             if (renderComponent->Visible())
             {
-                if (!isPartOfBatch)
-                {
-                    // Add to batch
-                }
+                
             }
             else
             {
-                if (isPartOfBatch)
-                {
-                    // Remove from batch
-                }
+                
             }
         });
     });

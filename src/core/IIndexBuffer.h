@@ -134,20 +134,25 @@ struct IIndexBuffer::SIndexStream
         {
             return;
         }
-        
-        uint32_t dataSize = sizeForType(dataType);
-        uint64_t sizeToCopy = sizeof(T);
-        
+
         bool needRestoreLock = !ib->IsLocked();
-        char* dst = static_cast<char*>(ib->LockRaw());
-        const char* src = reinterpret_cast<const char*>(&srcData);
-        
-        memcpy(dst + startIndex * dataSize, src, sizeToCopy);
-        
+        SetUnsafe<T>(ib, startIndex, srcData);
         if (needRestoreLock)
         {
             ib->Unlock();
         }
+    }
+    
+    template <class T>
+    INL void SetUnsafe(IIndexBufferPtr ib, uint64_t startIndex, const T& srcData)
+    {
+        uint32_t dataSize = sizeForType(dataType);
+        uint64_t sizeToCopy = sizeof(T);
+        
+        char* dst = static_cast<char*>(ib->LockRaw());
+        const char* src = reinterpret_cast<const char*>(&srcData);
+        
+        memcpy(dst + startIndex * dataSize, src, sizeToCopy);
     }
     
     template <class T>
@@ -190,21 +195,26 @@ struct IIndexBuffer::SIndexStream
             return false;
         }
         
-        uint32_t dataSize = sizeForType(dataType);
-        uint64_t sizeToCopy = sizeof(T);
-        
         bool needRestoreLock = !ib->IsLocked();
-        char* dst = reinterpret_cast<char*>(&dstData);
-        const char* src = static_cast<const char*>(ib->LockRaw());
-        
-        memcpy(dst, src + startIndex * dataSize, sizeToCopy);
-        
+        GetUnsafe<T>(ib, startIndex, dstData);
         if (needRestoreLock)
         {
             ib->Unlock();
         }
         
         return true;
+    }
+    
+    template <class T>
+    INL void GetUnsafe(IIndexBufferPtr ib, uint64_t startIndex, T& dstData)
+    {
+        uint32_t dataSize = sizeForType(dataType);
+        uint64_t sizeToCopy = sizeof(T);
+        
+        char* dst = reinterpret_cast<char*>(&dstData);
+        const char* src = static_cast<const char*>(ib->LockRaw());
+        
+        memcpy(dst, src + startIndex * dataSize, sizeToCopy);
     }
     
     uint64_t DataSize() const

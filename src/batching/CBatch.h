@@ -15,7 +15,6 @@
 namespace jam
 {
 CLASS_PTR(IMesh);
-CLASS_WEAK(IMesh);
 CLASS_PTR(IMaterial);
 CLASS_PTR(IShaderProgram);
 CLASS_PTR(ITexture);
@@ -47,6 +46,13 @@ public:
     void RemoveGeometry(IMeshPtr mesh);
     void Update();
     
+private:
+    void CopyToBuffer(IMeshPtr mesh, const CTransform3Df& transform);
+    void ApplyTransform(IVertexBufferPtr vertexBuffer,
+                        uint64_t offset,
+                        uint64_t size,
+                        glm::mat4 transform);
+    
 public:
     static const uint64_t k_MaxBufferSize;
     
@@ -59,27 +65,21 @@ private:
     
     struct SGeometry
     {
+        CTransform3Df transform;
+        CTransform3Df delta;
         uint64_t offsetVB;
         uint64_t sizeVB;
         uint64_t offsetIB;
         uint64_t sizeIB;
-        CTransform3Df transform;
-        IMeshWeak mesh;
         
-        SGeometry(uint64_t _offsetVB = 0,
-                  uint64_t _sizeVB = 0,
-                  uint64_t _offsetIB = 0,
-                  uint64_t _sizeIB = 0,
-                  const CTransform3Df& _transform = CTransform3Df(),
-                  IMeshPtr _mesh = nullptr)
-        : offsetVB(_offsetVB)
-        , sizeVB(_sizeVB)
-        , offsetIB(_offsetIB)
-        , sizeIB(_sizeIB)
-        , transform(_transform)
-        , mesh(_mesh)
-        {
-        }
+        SGeometry()
+        : transform()
+        , delta()
+        , offsetVB(0)
+        , sizeVB(0)
+        , offsetIB(0)
+        , sizeIB(0)
+        {}
     };
     
     typedef std::map<uint64_t, SGeometry> TGeometries;

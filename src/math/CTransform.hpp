@@ -41,6 +41,7 @@ public:
     : m_Position(position)
     , m_Rotation(rotation)
     , m_Scale(scale)
+    , m_IsDirty(true)
     {
         
     }
@@ -51,6 +52,7 @@ public:
     
     INL Vec& Position()
     {
+        m_IsDirty = true;
         return m_Position;
     }
     
@@ -61,11 +63,13 @@ public:
     
     INL void Position(const Vec& position)
     {
+        m_IsDirty = true;
         m_Position = position;
     }
     
     INL Vec& Rotation()
     {
+        m_IsDirty = true;
         return m_Rotation;
     }
     
@@ -76,11 +80,13 @@ public:
     
     INL void Rotation(const Vec& rotation)
     {
+        m_IsDirty = true;
         m_Rotation = rotation;
     }
     
     INL Vec& Scale()
     {
+        m_IsDirty = true;
         return m_Scale;
     }
     
@@ -91,7 +97,16 @@ public:
     
     INL void Scale(const Vec& scale)
     {
+        m_IsDirty = true;
         m_Scale = scale;
+    }
+    
+    INL CTransform<T, Vec, Mat> operator+(const CTransform<T, Vec, Mat>& other) const
+    {
+        CTransform<T, Vec, Mat> result(*this);
+        result += other;
+        
+        return result;
     }
     
     INL CTransform<T, Vec, Mat>& operator+=(const CTransform<T, Vec, Mat>& other)
@@ -103,26 +118,61 @@ public:
         return *this;
     }
     
-    INL Mat operator()()
+    INL CTransform<T, Vec, Mat> operator-(const CTransform<T, Vec, Mat>& other) const
     {
-        Mat transform(1.0);
+        CTransform<T, Vec, Mat> result(*this);
+        result -= other;
         
-        transform = glm::translate(transform, Position());
+        return result;
+    }
+    
+    INL CTransform<T, Vec, Mat>& operator-=(const CTransform<T, Vec, Mat>& other)
+    {
+        Position() -= const_cast<CTransform&>(other).Position();
+        Rotation() -= const_cast<CTransform&>(other).Rotation();
+        Scale() /= const_cast<CTransform&>(other).Scale();
         
-        const glm::vec3& rot = Rotation();
-        transform = glm::rotate(transform, rot.x, glm::vec3(1.0f, 0.0f, 0.0f));
-        transform = glm::rotate(transform, rot.y, glm::vec3(0.0f, 1.0f, 0.0f));
-        transform = glm::rotate(transform, rot.z, glm::vec3(0.0f, 0.0f, 1.0f));
+        return *this;
+    }
+    
+    INL Mat operator()() const
+    {
+        if (m_IsDirty)
+        {
+            m_Transform = glm::translate(Mat(1.0f), Position());
+            
+            const glm::vec3& rot = Rotation();
+            m_Transform = glm::rotate(m_Transform, rot.x, glm::vec3(1.0f, 0.0f, 0.0f));
+            m_Transform = glm::rotate(m_Transform, rot.y, glm::vec3(0.0f, 1.0f, 0.0f));
+            m_Transform = glm::rotate(m_Transform, rot.z, glm::vec3(0.0f, 0.0f, 1.0f));
+            
+            m_Transform = glm::scale(m_Transform, Scale());
+            
+            m_IsDirty = false;
+        }
         
-        transform = glm::scale(transform, Scale());
-        
-        return transform;
+        return m_Transform;
+    }
+    
+    INL bool IsZero() const
+    {
+        return (Position().x == 0.0f &&
+                Position().y == 0.0f &&
+                Position().z == 0.0f &&
+                Rotation().x == 0.0f &&
+                Rotation().y == 0.0f &&
+                Rotation().z == 0.0f &&
+                Scale().x == 0.0f &&
+                Scale().y == 0.0f &&
+                Scale().z == 0.0f);
     }
     
 private:
     Vec m_Position;
     Vec m_Rotation;
     Vec m_Scale;
+    mutable bool m_IsDirty;
+    mutable Mat m_Transform;
 };
 
 }; // namespace jam

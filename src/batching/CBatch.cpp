@@ -47,22 +47,25 @@ bool CBatch::Initialize(IMaterialPtr material,
         !material ||
         !shader ||
         elementVertexSize == 0 ||
-        maxVertexBufferSize == 0 ||
-        elementIndexSize == 0 || // TODO:
-        maxIndexBufferSize == 0)
+        maxVertexBufferSize == 0)
     {
         return false;
     }
     
     m_BatchedMesh = GRenderer->CreateMesh();
     IVertexBufferPtr vertexBuffer = GRenderer->CreatVertexBuffer();
-    IIndexBufferPtr indexBuffer = GRenderer->CreateIndexBuffer();
     
     vertexBuffer->Initialize(elementVertexSize);
     vertexBuffer->Resize(maxVertexBufferSize);
     
-    indexBuffer->Initialize(IIndexBuffer::Short); // TODO:
-    indexBuffer->Resize(maxIndexBufferSize);
+    IIndexBufferPtr indexBuffer = nullptr;
+    if (elementIndexSize > 0 && maxIndexBufferSize > 0)
+    {
+        indexBuffer = GRenderer->CreateIndexBuffer();
+        
+        indexBuffer->Initialize(IIndexBuffer::Short); // TODO:
+        indexBuffer->Resize(maxIndexBufferSize);
+    }
     
     m_BatchedMesh->VertexBuffer(vertexBuffer);
     m_BatchedMesh->IndexBuffer(indexBuffer);
@@ -129,7 +132,11 @@ bool CBatch::AddGeometry(IMeshPtr mesh, const CTransform3Df& transform)
     IIndexBufferPtr srcIndexBuffer = mesh->IndexBuffer();
     IVertexBufferPtr dstVertexBuffer = m_BatchedMesh->VertexBuffer();
     IIndexBufferPtr dstIndexBuffer = m_BatchedMesh->IndexBuffer();
-    if (!IsInitialized() || !srcVertexBuffer || !srcVertexBuffer->IsValid())
+    if (!IsInitialized() ||
+        !srcVertexBuffer ||
+        !srcVertexBuffer->IsValid() ||
+        !CompareCapability(srcVertexBuffer, dstVertexBuffer) ||
+        static_cast<bool>(srcIndexBuffer) != static_cast<bool>(dstIndexBuffer)) // TODO: if (srcIB && !dstIB) || (!srcIB && dstIB)
     {
         return false;
     }
@@ -154,9 +161,37 @@ void CBatch::RemoveGeometry(IMeshPtr mesh)
     TGeometries::iterator it = m_Geometries.find(mesh->UniqueId());
     if (it != m_Geometries.end())
     {
-        m_Geometries.erase(it);
+        const SGeometry& geometry = it->second;
         
-        m_IsDirty = true;
+        // Remove vertices
+        IVertexBufferPtr vertexBuffer = m_BatchedMesh->VertexBuffer();
+        uint64_t sizeToCopyVB = geometry.offsetVB + geometry.sizeVB;
+        
+        char* rawVB = static_cast<char *>(vertexBuffer->LockRaw()) + geometry.offsetVB;
+        memcpy(rawVB, rawVB + geometry.sizeVB, sizeToCopyVB);
+        
+        // Remove indices
+        IIndexBufferPtr indexBuffer = m_BatchedMesh->IndexBuffer();
+        if (indexBuffer)
+        {
+            uint64_t sizeToCopyIB = geometry.offsetIB + geometry.sizeIB;
+            
+            char* rawIB = static_cast<char *>(indexBuffer->LockRaw()) + geometry.offsetIB;
+            memcpy(rawIB, rawIB + geometry.sizeIB, sizeToCopyIB);
+        }
+        
+        // Update offsets
+        std::for_each(m_Geometries.begin(), m_Geometries.end(), [&](TGeometries::value_type& value)
+        {
+            SGeometry& geometry = value.second;
+            geometry.offsetVB -= geometry.sizeVB;
+            geometry.offsetIB -= geometry.sizeIB;
+        });
+        
+        m_VertexOffset -= geometry.sizeVB;
+        m_IndexOffset -= geometry.sizeIB;
+        
+        m_Geometries.erase(it);
     }
 }
 
@@ -168,7 +203,7 @@ void CBatch::CopyToBuffer(IMeshPtr mesh, const CTransform3Df& transform)
 
     char* srcRawVB = static_cast<char *>(srcVertexBuffer->LockRaw());
     char* dstRawVB = static_cast<char *>(dstVertexBuffer->LockRaw());
-    memcpy(srcRawVB, dstRawVB + m_VertexOffset, srcVertexBuffer->SizeRaw());
+    memcpy(dstRawVB + m_VertexOffset, srcRawVB, srcVertexBuffer->SizeRaw());
     
     ApplyTransform(dstVertexBuffer, m_VertexOffset, srcVertexBuffer->SizeRaw(), transform());
 
@@ -176,13 +211,16 @@ void CBatch::CopyToBuffer(IMeshPtr mesh, const CTransform3Df& transform)
     IIndexBufferPtr dstIndexBuffer = m_BatchedMesh->IndexBuffer();
     IIndexBufferPtr srcIndexBuffer = mesh->IndexBuffer();
     
-    short index;
-    IIndexBuffer::SIndexStream& dstStreamIB = dstIndexBuffer->Lock();
-    for (uint64_t i = 0; i < srcIndexBuffer->Size(); ++i)
+    if (srcIndexBuffer)
     {
-        dstStreamIB.GetUnsafe<short>(srcIndexBuffer, i, index);
-        index += m_IndexOffset;
-        dstStreamIB.SetUnsafe<short>(dstIndexBuffer, m_IndexOffset + i, index);
+        short index;
+        IIndexBuffer::SIndexStream& dstStreamIB = dstIndexBuffer->Lock();
+        for (uint64_t i = 0; i < srcIndexBuffer->Size(); ++i)
+        {
+            dstStreamIB.GetUnsafe<short>(srcIndexBuffer, i, index);
+            index += m_IndexOffset;
+            dstStreamIB.SetUnsafe<short>(dstIndexBuffer, m_IndexOffset + i, index);
+        }
     }
 
     SGeometry geometry = SGeometry();
@@ -190,15 +228,18 @@ void CBatch::CopyToBuffer(IMeshPtr mesh, const CTransform3Df& transform)
     geometry.delta = CTransform3Df();
     geometry.offsetVB = m_VertexOffset;
     geometry.sizeVB = srcVertexBuffer->SizeRaw();
-    geometry.offsetIB = m_IndexOffset;
-    geometry.sizeIB = srcIndexBuffer->SizeRaw();
+    geometry.offsetIB = (srcIndexBuffer ? m_IndexOffset : 0);
+    geometry.sizeIB = (srcIndexBuffer ? srcIndexBuffer->SizeRaw() : 0);
     m_Geometries[mesh->UniqueId()] = geometry;
 
     m_VertexOffset += srcVertexBuffer->SizeRaw();
-    m_IndexOffset += srcIndexBuffer->SizeRaw();
+    m_IndexOffset += (srcIndexBuffer ? srcIndexBuffer->SizeRaw() : 0);
     
     dstVertexBuffer->Unlock();
-    dstIndexBuffer->Unlock();
+    if (dstIndexBuffer)
+    {
+        dstIndexBuffer->Unlock();
+    }
 }
 
 void CBatch::ApplyTransform(IVertexBufferPtr vertexBuffer,
@@ -214,7 +255,6 @@ void CBatch::ApplyTransform(IVertexBufferPtr vertexBuffer,
         pos3 = glm::vec3(glm::vec4(pos3, 0) * transform);
         streamVB.SetUnsafe<glm::vec3>(vertexBuffer, offset + i, pos3);
     }
-    
 }
 
 void CBatch::Update()

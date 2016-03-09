@@ -329,7 +329,7 @@ struct IVertexBuffer::SVertexStream
     }
 };
 
-INL bool CompareCapability(IVertexBufferPtr vb1, IVertexBufferPtr vb2)
+bool CompareCapability(IVertexBufferPtr vb1, IVertexBufferPtr vb2)
 {
     if (!vb1 || !vb2)
     {

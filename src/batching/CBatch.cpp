@@ -201,6 +201,15 @@ void CBatch::CopyToBuffer(IMeshPtr mesh, const CTransform3Df& transform)
     IVertexBufferPtr dstVertexBuffer = m_BatchedMesh->VertexBuffer();
     IVertexBufferPtr srcVertexBuffer = mesh->VertexBuffer();
 
+    const IVertexBuffer::TVertexStreamMap& srcStreamsVB = srcVertexBuffer->VertexStreams();
+    std::for_each(srcStreamsVB.begin(), srcStreamsVB.end(), [&](const IVertexBuffer::TVertexStreamMap::value_type& value)
+    {
+        const IVertexBuffer::SVertexStream& srcStreamVB = value.second;
+        IVertexBuffer::SVertexStream& dstStreamVB = dstVertexBuffer->Lock(value.first);
+        
+        dstStreamVB.CopyFrom(srcStreamVB, 0, srcVertexBuffer->Size(), 0);
+    });
+    
     char* srcRawVB = static_cast<char *>(srcVertexBuffer->LockRaw());
     char* dstRawVB = static_cast<char *>(dstVertexBuffer->LockRaw());
     memcpy(dstRawVB + m_VertexOffset, srcRawVB, srcVertexBuffer->SizeRaw());
@@ -217,9 +226,9 @@ void CBatch::CopyToBuffer(IMeshPtr mesh, const CTransform3Df& transform)
         IIndexBuffer::SIndexStream& dstStreamIB = dstIndexBuffer->Lock();
         for (uint64_t i = 0; i < srcIndexBuffer->Size(); ++i)
         {
-            dstStreamIB.GetUnsafe<short>(srcIndexBuffer, i, index);
+            dstStreamIB.GetUnsafe<short>(i, index);
             index += m_IndexOffset;
-            dstStreamIB.SetUnsafe<short>(dstIndexBuffer, m_IndexOffset + i, index);
+            dstStreamIB.SetUnsafe<short>(m_IndexOffset + i, index);
         }
     }
 
@@ -251,9 +260,9 @@ void CBatch::ApplyTransform(IVertexBufferPtr vertexBuffer,
     IVertexBuffer::SVertexStream& streamVB = vertexBuffer->Lock(IVertexBuffer::Position);
     for (uint64_t i = 0; i < size; ++i)
     {
-        streamVB.GetUnsafe<glm::vec3>(vertexBuffer, offset + i, pos3);
+        streamVB.GetUnsafe<glm::vec3>(offset + i, pos3);
         pos3 = glm::vec3(glm::vec4(pos3, 0) * transform);
-        streamVB.SetUnsafe<glm::vec3>(vertexBuffer, offset + i, pos3);
+        streamVB.SetUnsafe<glm::vec3>(offset + i, pos3);
     }
 }
 

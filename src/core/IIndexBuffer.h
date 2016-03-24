@@ -108,15 +108,14 @@ struct IIndexBuffer::SIndexStream
         }
         
         bool needRestoreLock = !ib->IsLocked();
-        char* dst = static_cast<char*>(ib->LockRaw());
-        const char* src = reinterpret_cast<const char*>(srcData.data());
         
-        uint32_t dataSize = sizeForType(dataType);
-        uint64_t srcSize = srcData.size() * sizeof(T);
-        uint64_t dstSize = (ib->Size() - startIndex) * dataSize;
-        uint64_t sizeToCopy = std::min(srcSize, dstSize);
-        
-        memcpy(dst + startIndex * dataSize, src, sizeToCopy);
+        uint64_t size = (ib->Size() - startIndex < srcData.size() ? ib->Size() - startIndex : srcData.size());
+        for (uint64_t i = 0; i < size; ++i)
+        {
+            T* dst = Map<T>(ib, startIndex + i);
+            const T* src = srcData.data() + i;
+            memcpy(dst, src, sizeof(T));
+        }
         
         if (needRestoreLock)
         {
@@ -136,7 +135,11 @@ struct IIndexBuffer::SIndexStream
         }
 
         bool needRestoreLock = !ib->IsLocked();
-        SetUnsafe<T>(ib, startIndex, srcData);
+        
+        T* dst = Map<T>(ib, startIndex);
+        const T* src = &srcData;
+        memcpy(dst, src, sizeof(T));
+        
         if (needRestoreLock)
         {
             ib->Unlock();
@@ -144,15 +147,16 @@ struct IIndexBuffer::SIndexStream
     }
     
     template <class T>
-    INL void SetUnsafe(IIndexBufferPtr ib, uint64_t startIndex, const T& srcData)
+    INL void SetUnsafe(uint64_t startIndex, const T& srcData)
     {
-        uint32_t dataSize = sizeForType(dataType);
-        uint64_t sizeToCopy = sizeof(T);
+        IIndexBufferPtr ib = indexBuffer.lock();
+        if (!ib)
+        {
+            return;
+        }
         
-        char* dst = static_cast<char*>(ib->LockRaw());
-        const char* src = reinterpret_cast<const char*>(&srcData);
-        
-        memcpy(dst + startIndex * dataSize, src, sizeToCopy);
+        T* dst = Map<T>(ib, startIndex);
+        *dst = srcData;
     }
     
     template <class T>
@@ -166,15 +170,15 @@ struct IIndexBuffer::SIndexStream
             return false;
         }
         
-        dstData.resize(ib->Size() - startIndex);
-        uint32_t dataSize = sizeForType(dataType);
-        uint64_t sizeToCopy = (ib->Size() - startIndex) * dataSize;
-        
         bool needRestoreLock = !ib->IsLocked();
-        char* dst = reinterpret_cast<char*>(dstData.data());
-        const char* src = static_cast<const char*>(ib->LockRaw());
         
-        memcpy(dst, src + startIndex * dataSize, sizeToCopy);
+        uint64_t size = (ib->Size() - startIndex < dstData.size() ? ib->Size() - startIndex : dstData.size());
+        for (uint64_t i = 0; i < size; ++i)
+        {
+            T* dst = dstData.data() + i;
+            const T* src = Map<const T>(ib, startIndex + i);
+            memcpy(dst, src, sizeof(T));
+        } 
         
         if (needRestoreLock)
         {
@@ -196,7 +200,11 @@ struct IIndexBuffer::SIndexStream
         }
         
         bool needRestoreLock = !ib->IsLocked();
-        GetUnsafe<T>(ib, startIndex, dstData);
+        
+        T* dst = &dstData;
+        const T* src = Map<const T>(ib, startIndex);
+        memcpy(dst, src, sizeof(T));
+        
         if (needRestoreLock)
         {
             ib->Unlock();
@@ -206,23 +214,24 @@ struct IIndexBuffer::SIndexStream
     }
     
     template <class T>
-    INL void GetUnsafe(IIndexBufferPtr ib, uint64_t startIndex, T& dstData)
+    INL void GetUnsafe(uint64_t startIndex, T& dstData)
     {
-        uint32_t dataSize = sizeForType(dataType);
-        uint64_t sizeToCopy = sizeof(T);
+        IIndexBufferPtr ib = indexBuffer.lock();
+        if (!ib)
+        {
+            return;
+        }
         
-        char* dst = reinterpret_cast<char*>(&dstData);
-        const char* src = static_cast<const char*>(ib->LockRaw());
-        
-        memcpy(dst, src + startIndex * dataSize, sizeToCopy);
+        const T* src = Map<const T>(ib, startIndex);
+        dstData = *src;
     }
     
-    uint64_t DataSize() const
+    INL uint64_t DataSize() const
     {
         return sizeForType(dataType);
     }
     
-    static uint32_t sizeForType(DataTypes type)
+    INL static uint32_t sizeForType(DataTypes type)
     {
         static std::map<DataTypes, uint32_t> types =
         {
@@ -238,6 +247,17 @@ struct IIndexBuffer::SIndexStream
         };
         
         return types[type];
+    }
+    
+private:
+    template <class T>
+    INL T* Map(IIndexBufferPtr ib, uint64_t startIndex)
+    {
+        assert(ib);
+        uint64_t elemSizeToCopy = DataSize();
+        
+        uint8_t* src = static_cast<uint8_t*>(ib->LockRaw());
+        return reinterpret_cast<T*>(src + startIndex * elemSizeToCopy);
     }
 };
     

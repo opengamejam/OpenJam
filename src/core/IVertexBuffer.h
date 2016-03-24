@@ -134,6 +134,38 @@ struct IVertexBuffer::SVertexStream
                 stride != 0);
     }
     
+    void CopyFrom(const SVertexStream& srcStream, uint64_t srcIndex, uint64_t size, uint64_t dstIndex)
+    {
+        IVertexBufferPtr dstVB = vertexBuffer.lock();
+        IVertexBufferPtr srcVB = srcStream.vertexBuffer.lock();
+        if (!IsActive() || !srcStream.IsActive() ||
+            !dstVB || !srcVB ||
+            dstIndex + size >= dstVB->Size() ||
+            srcIndex + size >= srcVB->Size())
+        {
+            return;
+        }
+        
+        bool needRestoreLockSourceVB = !srcVB->IsLocked();
+        bool needRestoreLockDestinationVB = !dstVB->IsLocked();
+        
+        for (uint64_t i = 0; i < size; ++i)
+        {
+            uint8_t* dst = Map<uint8_t>(dstVB, dstIndex + i);
+            const uint8_t* src = Map<const uint8_t>(srcVB, srcIndex + i);
+            memcpy(dst, src, srcStream.DataSize());
+        }
+        
+        if (needRestoreLockSourceVB)
+        {
+            srcVB->Unlock();
+        }
+        if (needRestoreLockDestinationVB)
+        {
+            dstVB->Unlock();
+        }
+    }
+    
     template <class T>
     INL void Set(uint64_t startIndex, const std::vector<T>& srcData)
     {
@@ -146,31 +178,13 @@ struct IVertexBuffer::SVertexStream
         }
         
         bool needRestoreLock = !vb->IsLocked();
-        char* dst = static_cast<char*>(vb->LockRaw());
-        const char* src = reinterpret_cast<const char*>(srcData.data());
         
-        uint32_t dataSize = sizeForType(dataType);
-        uint64_t elemSizeToCopy = dataSize * stride;
-        uint64_t srcSize = srcData.size() * sizeof(T);
-        uint64_t dstSize = (vb->Size() - startIndex) * elemSizeToCopy;
-        uint64_t sizeToCopy = std::min(srcSize, dstSize);
-        
-        if (vb->ZeroStride())
+        uint64_t size = (vb->Size() - startIndex < srcData.size() ? vb->Size() - startIndex : srcData.size());
+        for (uint64_t i = 0; i < size; ++i)
         {
-            memcpy(dst + absoluteOffset + startIndex * elemSizeToCopy, src, sizeToCopy);
-        }
-        else
-        {
-            uint64_t srcIndex = 0;
-            uint64_t dstIndex = 0;
-            uint64_t num = sizeToCopy / elemSizeToCopy;
-            for (uint64_t i = 0; i < num; ++i)
-            {
-                dstIndex = (startIndex + i) * vb->ElementSize() + offset;
-                srcIndex = i * elemSizeToCopy;
-                
-                memcpy(&dst[dstIndex], &src[srcIndex], elemSizeToCopy);
-            }
+            T* dst = Map<T>(vb, startIndex + i);
+            const T* src = srcData.data() + i;
+            memcpy(dst, src, sizeof(T));
         }
         
         if (needRestoreLock)
@@ -191,7 +205,11 @@ struct IVertexBuffer::SVertexStream
         }
         
         bool needRestoreLock = !vb->IsLocked();
-        SetUnsafe<T>(vb, startIndex, srcData);
+        
+        T* dst = Map<T>(vb, startIndex);
+        const T* src = &srcData;
+        memcpy(dst, src, sizeof(T));
+        
         if (needRestoreLock)
         {
             vb->Unlock();
@@ -199,23 +217,16 @@ struct IVertexBuffer::SVertexStream
     }
     
     template <class T>
-    INL void SetUnsafe(IVertexBufferPtr vb, uint64_t startIndex, const T& srcData)
+    INL void SetUnsafe(uint64_t startIndex, const T& srcData)
     {
-        uint32_t dataSize = sizeForType(dataType);
-        uint64_t elemSizeToCopy = dataSize * stride;
-        uint64_t sizeToCopy = sizeof(T);
-        
-        char* dst = static_cast<char*>(vb->LockRaw());
-        const char* src = reinterpret_cast<const char*>(&srcData);
-        
-        if (vb->ZeroStride())
+        IVertexBufferPtr vb = vertexBuffer.lock();
+        if (!vb)
         {
-            memcpy(dst + absoluteOffset + startIndex * elemSizeToCopy, src, sizeToCopy);
+            return;
         }
-        else
-        {
-            memcpy(dst + startIndex * vb->ElementSize() + offset, src, sizeToCopy);
-        }
+        
+        T* dst = Map<T>(vb, startIndex);
+        *dst = srcData;
     }
     
     template <class T>
@@ -229,31 +240,14 @@ struct IVertexBuffer::SVertexStream
             return false;
         }
         
-        dstData.resize(vb->Size() - startIndex);
-        uint32_t dataSize = sizeForType(dataType);
-        uint64_t elemSizeToCopy = dataSize * stride;
-        uint64_t sizeToCopy = (vb->Size() - startIndex) * elemSizeToCopy;
-        
         bool needRestoreLock = !vb->IsLocked();
-        char* dst = reinterpret_cast<char*>(dstData.data());
-        const char* src = static_cast<const char*>(vb->LockRaw());
         
-        if (vb->ZeroStride())
+        uint64_t size = (vb->Size() - startIndex < dstData.size() ? vb->Size() - startIndex : dstData.size());
+        for (uint64_t i = 0; i < size; ++i)
         {
-            memcpy(dst, src + absoluteOffset + startIndex * elemSizeToCopy, sizeToCopy);
-        }
-        else
-        {
-            uint64_t srcIndex = 0;
-            uint64_t dstIndex = 0;
-            uint64_t num = vb->Size() - startIndex;
-            for (uint64_t i = 0; i < num; ++i)
-            {
-                dstIndex = i * elemSizeToCopy;
-                srcIndex = (startIndex + i) * vb->ElementSize() + offset;
-                
-                memcpy(&dst[dstIndex], &src[srcIndex], elemSizeToCopy);
-            }
+            T* dst = dstData.data() + i;
+            const T* src = Map<const T>(vb, startIndex + i);
+            memcpy(dst, src, sizeof(T));
         }
         
         if (needRestoreLock)
@@ -276,7 +270,11 @@ struct IVertexBuffer::SVertexStream
         }
         
         bool needRestoreLock = !vb->IsLocked();
-        GetUnsafe<T>(vb, startIndex, dstData);
+        
+        T* dst = &dstData;
+        const T* src = Map<const T>(vb, startIndex);
+        memcpy(dst, src, sizeof(T));
+        
         if (needRestoreLock)
         {
             vb->Unlock();
@@ -286,31 +284,24 @@ struct IVertexBuffer::SVertexStream
     }
     
     template <class T>
-    INL void GetUnsafe(IVertexBufferPtr vb, uint64_t startIndex, T& dstData)
+    INL void GetUnsafe(uint64_t startIndex, T& dstData)
     {
-        uint32_t dataSize = sizeForType(dataType);
-        uint64_t elemSizeToCopy = dataSize * stride;
-        uint64_t sizeToCopy = sizeof(T);
-        
-        char* dst = reinterpret_cast<char*>(&dstData);
-        const char* src = static_cast<const char*>(vb->LockRaw());
-        
-        if (vb->ZeroStride())
+        IVertexBufferPtr vb = vertexBuffer.lock();
+        if (!vb)
         {
-            memcpy(dst, src + absoluteOffset + startIndex * elemSizeToCopy, sizeToCopy);
+            return;
         }
-        else
-        {
-            memcpy(dst, src + startIndex * vb->ElementSize() + offset, sizeToCopy);
-        }
+        
+        const T* src = Map<const T>(vb, startIndex);
+        dstData = *src;
     }
     
-    uint64_t DataSize() const
+    INL uint64_t DataSize() const
     {
-        return sizeForType(dataType);
+        return SizeForType(dataType) * stride;
     }
     
-    static uint32_t sizeForType(DataTypes type)
+    INL static uint32_t SizeForType(DataTypes type)
     {
         static std::map<DataTypes, uint32_t> types =
         {
@@ -327,9 +318,27 @@ struct IVertexBuffer::SVertexStream
         
         return types[type];
     }
+    
+private:
+    template <class T>
+    INL T* Map(IVertexBufferPtr vb, uint64_t startIndex)
+    {
+        assert(vb);
+        uint64_t elemSizeToCopy = DataSize();
+        
+        uint8_t* src = static_cast<uint8_t*>(vb->LockRaw());
+        if (vb->ZeroStride())
+        {
+            return reinterpret_cast<T*>(src + absoluteOffset + startIndex * elemSizeToCopy);
+        }
+        else
+        {
+            return reinterpret_cast<T*>(src + startIndex * vb->ElementSize() + offset);
+        }
+    }
 };
 
-bool CompareCapability(IVertexBufferPtr vb1, IVertexBufferPtr vb2)
+INL bool CompareCapability(IVertexBufferPtr vb1, IVertexBufferPtr vb2)
 {
     if (!vb1 || !vb2)
     {

@@ -61,7 +61,7 @@ IVertexBuffer::SVertexStream& CVertexBufferOGL1_3::Lock(IVertexBuffer::VertexTyp
         std::for_each(m_VertexStreamers.begin(), m_VertexStreamers.end(), [&](const TVertexStreamMap::value_type& value)
         {
             const IVertexBuffer::SVertexStream& stream = value.second;
-            absoluteOffset += (stream.DataSize() * stream.stride * Size());
+            absoluteOffset += (stream.DataSize() * Size());
         });
         
         IVertexBuffer::SVertexStream stream = IVertexBuffer::SVertexStream(shared_from_this());

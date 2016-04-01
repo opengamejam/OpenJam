@@ -205,6 +205,7 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, uint32_t cameraId
         });
         
         // Render component
+        renderComponent->Batchable(true);
         renderComponent->Shader(shaderProgram, group);
         renderComponent->Material(material, group);
         renderComponent->Mesh(mesh, group);

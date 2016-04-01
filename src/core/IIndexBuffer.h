@@ -228,10 +228,10 @@ struct IIndexBuffer::SIndexStream
     
     INL uint64_t DataSize() const
     {
-        return sizeForType(dataType);
+        return SizeForType(dataType);
     }
     
-    INL static uint32_t sizeForType(DataTypes type)
+    INL static uint32_t SizeForType(DataTypes type)
     {
         static std::map<DataTypes, uint32_t> types =
         {

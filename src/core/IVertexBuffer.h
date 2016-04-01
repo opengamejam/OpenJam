@@ -140,8 +140,8 @@ struct IVertexBuffer::SVertexStream
         IVertexBufferPtr srcVB = srcStream.vertexBuffer.lock();
         if (!IsActive() || !srcStream.IsActive() ||
             !dstVB || !srcVB ||
-            dstIndex + size >= dstVB->Size() ||
-            srcIndex + size >= srcVB->Size())
+            dstIndex + size > dstVB->Size() ||
+            srcIndex + size > srcVB->Size())
         {
             return;
         }
@@ -242,7 +242,11 @@ struct IVertexBuffer::SVertexStream
         
         bool needRestoreLock = !vb->IsLocked();
         
-        uint64_t size = (vb->Size() - startIndex < dstData.size() ? vb->Size() - startIndex : dstData.size());
+        uint64_t size = vb->Size() - startIndex;
+        if (dstData.size() < size)
+        {
+            dstData.resize(size);
+        }
         for (uint64_t i = 0; i < size; ++i)
         {
             T* dst = dstData.data() + i;

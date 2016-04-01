@@ -146,6 +146,7 @@ void CVertexBufferOGL1_5::Bind()
 {
     glBindBuffer(GL_ARRAY_BUFFER, m_Id);
     
+    GLsizei elementSize = (ZeroStride() ? 0 : (GLsizei)ElementSize());
     const IVertexBuffer::TVertexStreamMap& vertexStreams = VertexStreams();
     std::for_each(vertexStreams.begin(), vertexStreams.end(),
                   [&](const IVertexBuffer::TVertexStreamMap::value_type& value)
@@ -156,7 +157,6 @@ void CVertexBufferOGL1_5::Bind()
             GLbyte *offset = nullptr;
             offset += (ZeroStride() ? stream.absoluteOffset : stream.offset);
             int type = ConvertDataType(stream.dataType);
-            GLsizei elementSize = (ZeroStride() ? 0 : (GLsizei)ElementSize());
             
             if (value.first == IVertexBuffer::Position)
             {

@@ -44,7 +44,7 @@ void CIndexBufferOGL1_3::Initialize(DataTypes dataType)
         m_Stream = IIndexBuffer::SIndexStream(shared_from_this());
         m_Stream.dataType = dataType;
     }
-    ElementSize(IIndexBuffer::SIndexStream::sizeForType(dataType));
+    ElementSize(IIndexBuffer::SIndexStream::SizeForType(dataType));
 }
 
 void CIndexBufferOGL1_3::Shutdown()

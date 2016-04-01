@@ -19,6 +19,7 @@ CLASS_PTR(IEntity);
 CLASS_PTR(ICamera);
 CLASS_PTR(IRenderTarget);
 CLASS_PTR(CRenderComponent);
+CLASS_PTR(CBatch);
 
 class CRenderSystem : public ISystem
 {
@@ -40,6 +41,8 @@ private:
     
     std::list<CRenderComponentPtr> m_SortedComponents;
     std::map<CRenderComponentPtr, uint64_t> m_OrderKeys;
+    
+    CBatchPtr batch;
 };
     
 } // namespace jam

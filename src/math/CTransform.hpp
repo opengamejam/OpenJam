@@ -111,9 +111,9 @@ public:
     
     INL CTransform<T, Vec, Mat>& operator+=(const CTransform<T, Vec, Mat>& other)
     {
-        Position() += const_cast<CTransform&>(other).Position();
-        Rotation() += const_cast<CTransform&>(other).Rotation();
-        Scale() *= const_cast<CTransform&>(other).Scale();
+        Position() += other.Position();
+        Rotation() += other.Rotation();
+        Scale() *= other.Scale();
         
         return *this;
     }
@@ -128,9 +128,9 @@ public:
     
     INL CTransform<T, Vec, Mat>& operator-=(const CTransform<T, Vec, Mat>& other)
     {
-        Position() -= const_cast<CTransform&>(other).Position();
-        Rotation() -= const_cast<CTransform&>(other).Rotation();
-        Scale() /= const_cast<CTransform&>(other).Scale();
+        Position() -= other.Position();
+        Rotation() -= other.Rotation();
+        Scale() /= other.Scale();
         
         return *this;
     }
@@ -165,6 +165,24 @@ public:
                 Scale().x == 0.0f &&
                 Scale().y == 0.0f &&
                 Scale().z == 0.0f);
+    }
+    
+    INL bool operator==(const CTransform<T, Vec, Mat>& other) const
+    {
+        return (Position().x == other.Position().x &&
+                Position().y == other.Position().y &&
+                Position().z == other.Position().z &&
+                Rotation().x == other.Rotation().x &&
+                Rotation().y == other.Rotation().y &&
+                Rotation().z == other.Rotation().z &&
+                Scale().x == other.Scale().x &&
+                Scale().y == other.Scale().y &&
+                Scale().z == other.Scale().z);
+    }
+    
+    INL bool operator!=(const CTransform<T, Vec, Mat>& other) const
+    {
+        return !operator==(other);
     }
     
 private:

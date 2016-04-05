@@ -104,9 +104,9 @@ void CRendererOGL1_5::Draw(IMeshPtr mesh, IMaterialPtr material, IShaderProgramP
     
     const IShaderProgram::TUniMatrix4Float& uniforms = shader->UniformsMatrix4x4f();
     IShaderProgram::TUniMatrix4Float::const_iterator it = uniforms.find(shader->ProjectionMatrix());
+    glMatrixMode(GL_PROJECTION);
     if (it != uniforms.end())
     {
-        glMatrixMode(GL_PROJECTION);        
         glLoadMatrixf(glm::value_ptr(it->second));
     }
     else
@@ -114,10 +114,10 @@ void CRendererOGL1_5::Draw(IMeshPtr mesh, IMaterialPtr material, IShaderProgramP
         glLoadMatrixf(glm::value_ptr(glm::mat4(1.0)));
     }
     
+    glMatrixMode(GL_MODELVIEW);
     it = uniforms.find(shader->ModelMatrix());
     if (it != uniforms.end())
     {
-        glMatrixMode(GL_MODELVIEW);
         glLoadMatrixf(glm::value_ptr(it->second));
     }
     else

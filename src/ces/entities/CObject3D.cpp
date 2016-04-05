@@ -11,7 +11,7 @@
 #include "RenderGlobal.h"
 #include "CRenderComponent.h"
 #include "CTransform.hpp"
-#include "CShaderSourceSprite.h"
+#include "CShaderSourceBatch.h"
 #include "CImagePVR.h"
 #include "CImageSegaPVR.h"
 #include "CModelObj.h"
@@ -66,7 +66,7 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, uint32_t cameraId
         IShaderProgramPtr shaderProgram = nullptr;
     
         // Shaders
-        CShaderSourceSprite shaderSource;
+        CShaderSourceBatch shaderSource;
         vertexShader = GRenderer->CreateShader();
         vertexShader->Compile(shaderSource.Vertex(), IShader::Vertex);
         assert(vertexShader);

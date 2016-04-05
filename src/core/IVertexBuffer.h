@@ -158,11 +158,11 @@ struct IVertexBuffer::SVertexStream
         
         if (needRestoreLockSourceVB)
         {
-            srcVB->Unlock();
+            srcVB->Unlock(true);
         }
         if (needRestoreLockDestinationVB)
         {
-            dstVB->Unlock();
+            dstVB->Unlock(true);
         }
     }
     
@@ -189,7 +189,7 @@ struct IVertexBuffer::SVertexStream
         
         if (needRestoreLock)
         {
-            vb->Unlock();
+            vb->Unlock(true);
         }
     }
     

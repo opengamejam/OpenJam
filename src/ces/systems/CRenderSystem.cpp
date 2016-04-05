@@ -180,7 +180,7 @@ void CRenderSystem::Draw(ICameraPtr camera)
 		});
     });
     
-    if (batch->IsInitialized())
+    if (batch->IsInitialized() && camera->Id() == 1)
     {
         IMeshPtr mesh = batch->Mesh();
         IMaterialPtr material = batch->Material();

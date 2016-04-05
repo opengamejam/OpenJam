@@ -51,6 +51,7 @@ private:
     void ApplyTransform(IVertexBufferPtr vertexBuffer,
                         uint64_t offset,
                         uint64_t size,
+                        glm::mat4 oldTransform,
                         glm::mat4 transform);
     
 public:
@@ -66,7 +67,7 @@ private:
     struct SGeometry
     {
         CTransform3Df transform;
-        CTransform3Df delta;
+        CTransform3Df oldTransform;
         uint64_t offsetVB;
         uint64_t sizeVB;
         uint64_t offsetIB;
@@ -74,7 +75,7 @@ private:
         
         SGeometry()
         : transform()
-        , delta()
+        , oldTransform()
         , offsetVB(0)
         , sizeVB(0)
         , offsetIB(0)

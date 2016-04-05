@@ -256,7 +256,7 @@ private:
         assert(ib);
         uint64_t elemSizeToCopy = DataSize();
         
-        uint8_t* src = static_cast<uint8_t*>(ib->LockRaw());
+        int8_t* src = static_cast<int8_t*>(ib->LockRaw());
         return reinterpret_cast<T*>(src + startIndex * elemSizeToCopy);
     }
 };

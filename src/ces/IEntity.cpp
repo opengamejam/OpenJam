@@ -144,8 +144,8 @@ void IEntity::AddChild(IEntityPtr entity)
     CCESEventPtr addedEvent(new CCESEvent(entity, CCESEvent::Added));
     Dispatcher()->DispatchEvent(addedEvent);
     
-    CCESEventPtr changedEvent(new CCESEvent(entity, CCESEvent::Changed));
-    Dispatcher()->DispatchEvent(changedEvent);
+    /*CCESEventPtr changedEvent(new CCESEvent(entity, CCESEvent::Changed));
+    Dispatcher()->DispatchEvent(changedEvent);*/
 }
 
 void IEntity::RemoveChild(IEntityPtr entity)

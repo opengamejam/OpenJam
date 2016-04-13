@@ -56,6 +56,7 @@ void IComponent::Entity(IEntityWeak entityWeak)
     {
         newEntity->AddComponent(thisPtr);
         CCESEventPtr event(new CCESEvent(newEntity, CCESEvent::Changed));
+        event->Component(thisPtr);
         Dispatcher()->DispatchEvent(event);
     }
 }
@@ -67,7 +68,9 @@ IEntityWeak IComponent::Entity() const
 
 void IComponent::Dirty()
 {
+    IComponentPtr thisPtr = shared_from_this();
     CCESEventPtr event(new CCESEvent(Entity(), CCESEvent::Changed));
+    event->Component(thisPtr);
     Dispatcher()->DispatchEvent(event);
 }
 

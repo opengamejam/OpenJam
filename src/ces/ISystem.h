@@ -40,7 +40,7 @@ public:
     
     const TComponentIds& RegisteredComponents();
     bool IsComponentRegistered(const std::type_index& id);
-    bool IsHasSupportedComponents(IEntityPtr entity);
+    bool HaveSupportedComponents(IEntityPtr entity);
     
     virtual void Update(unsigned long dt) = 0;
     

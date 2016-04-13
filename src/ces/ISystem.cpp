@@ -81,7 +81,7 @@ void ISystem::UnregisterComponent(const std::type_index& id)
     m_RegisteredComponents.erase(id);
 }
 
-bool ISystem::IsHasSupportedComponents(IEntityPtr entity)
+bool ISystem::HaveSupportedComponents(IEntityPtr entity)
 {
     if (!entity)
     {
@@ -121,7 +121,8 @@ void ISystem::ClearDirtyEntities()
 
 void ISystem::OnAddedEntity(IEntityPtr entity)
 {
-    if (!IsEntityAdded(entity))
+    if (!IsEntityAdded(entity) &&
+        HaveSupportedComponents(entity))
     {
         AddEntity(entity);
     }
@@ -129,10 +130,7 @@ void ISystem::OnAddedEntity(IEntityPtr entity)
 
 void ISystem::OnChangedEntity(IEntityPtr entity)
 {
-    if (IsHasSupportedComponents(entity))
-    {
-        MarkDirtyEntity(entity);
-    }
+    MarkDirtyEntity(entity);
 }
 
 void ISystem::OnRemovedEntity(IEntityPtr entity)
@@ -168,7 +166,11 @@ bool ISystem::OnComponentChanged(IEventPtr event)
         break;
         case CCESEvent::Changed:
         {
-            OnChangedEntity(entity);
+            IComponentPtr component = componentEvent->Component().lock();
+            if (component && IsComponentRegistered(component->Id()))
+            {
+                OnChangedEntity(entity);
+            }
         }
         break;
         case CCESEvent::Removed:

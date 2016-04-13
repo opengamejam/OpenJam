@@ -31,6 +31,7 @@ using namespace jam;
 CBatchingSystem::CBatchingSystem()
 {
     RegisterComponent(ComponentId<CBatchComponent>());
+    RegisterComponent(ComponentId<CTransformationComponent>());
 }
 
 CBatchingSystem::~CBatchingSystem()
@@ -40,7 +41,7 @@ CBatchingSystem::~CBatchingSystem()
 
 void CBatchingSystem::Update(unsigned long dt)
 {
-    const ISystem::TEntities& entities = Entities();
+    const ISystem::TEntities& entities = DirtyEntities();
     std::for_each(entities.begin(), entities.end(), [&](IEntityPtr entity)
     {
         CTransformationComponentPtr transformComp = entity->Get<CTransformationComponent>();
@@ -118,6 +119,8 @@ void CBatchingSystem::Update(unsigned long dt)
                            batchComp->Transform()());
         });
     });
+    
+    ClearDirtyEntities();
 }
 
 // *****************************************************************************

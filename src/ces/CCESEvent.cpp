@@ -45,6 +45,16 @@ CCESEvent::ActionType CCESEvent::Action() const
     return m_Action;
 }
 
+IComponentWeak CCESEvent::Component() const
+{
+    return m_Component;
+}
+
+void CCESEvent::Component(IComponentWeak component)
+{
+    m_Component = component;
+}
+
 // *****************************************************************************
 // Protected Methods
 // *****************************************************************************

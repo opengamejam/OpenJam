@@ -15,6 +15,7 @@ namespace jam
 {
     
 CLASS_WEAK(IEntity);
+CLASS_WEAK(IComponent);
 CLASS_PTR(CCESEvent);
 
 class CCESEvent : public IEvent
@@ -36,8 +37,12 @@ public:
     IEntityWeak Entity() const;
     ActionType Action() const;
     
+    IComponentWeak Component() const;
+    void Component(IComponentWeak component);
+    
 private:
     IEntityWeak m_Entity;
+    IComponentWeak m_Component;
     ActionType m_Action;
     std::string m_Id;
 };

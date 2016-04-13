@@ -14,6 +14,7 @@
 #include "CAnimation2DSystem.h"
 #include "CTransformationSystem.h"
 #include "CUpdateSystem.h"
+#include "CBatchingSystem.h"
 #include "IRenderTarget.h"
 #include "CThreadPool.h"
 
@@ -54,8 +55,10 @@ void CGame::Initialize()
     CAnimation2DSystemPtr animationSystem(new CAnimation2DSystem());
     CTransfromationSystemPtr transformationSystem(new CTransfromationSystem());
     CUpdateSystemPtr updateSystem(new CUpdateSystem());
+    CBatchingSystemPtr batchingSystem(new CBatchingSystem());
     AddSystem(updateSystem);
     AddSystem(animationSystem);
+    AddSystem(batchingSystem);
     AddSystem(transformationSystem);
     AddSystem(renderSystem);
     

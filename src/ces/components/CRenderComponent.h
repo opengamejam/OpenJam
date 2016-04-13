@@ -23,22 +23,28 @@ CLASS_PTR(IShaderProgram);
 class CRenderComponent final : public IComponent
 {
 public:
+    static const std::string kDefaultGroupName;
+    static const std::string kBatchingGroupName;
+    
+public:
     CRenderComponent();
     virtual ~CRenderComponent();
     
-    IMeshPtr Mesh(const std::string& group = "default");
-    void Mesh(IMeshPtr mesh, const std::string& group = "default");
+    IMeshPtr Mesh(const std::string& group = kDefaultGroupName);
+    void Mesh(IMeshPtr mesh, const std::string& group = kDefaultGroupName);
     
-    IMaterialPtr Material(const std::string& group = "default");
-    void Material(IMaterialPtr material, const std::string& group = "default");
+    IMaterialPtr Material(const std::string& group = kDefaultGroupName);
+    void Material(IMaterialPtr material, const std::string& group = kDefaultGroupName);
     
-    ITexturePtr Texture(const std::string& group = "default");
-    void Texture(ITexturePtr texture, const std::string& group = "default");
+    ITexturePtr Texture(const std::string& group = kDefaultGroupName);
+    void Texture(ITexturePtr texture, const std::string& group = kDefaultGroupName);
     
-    IShaderProgramPtr Shader(const std::string& group = "default");
-    void Shader(IShaderProgramPtr shader, const std::string& group = "default");
+    IShaderProgramPtr Shader(const std::string& group = kDefaultGroupName);
+    void Shader(IShaderProgramPtr shader, const std::string& group = kDefaultGroupName);
     
     const std::set<std::string>& Groups() const;
+    void RemoveGroup(const std::string& group);
+    bool HasGroup(const std::string& group) const;
     
     void AddCameraId(uint32_t cameraId);
     void RemoveCameraId(uint32_t cameraId);

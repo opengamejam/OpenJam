@@ -19,6 +19,7 @@
 #include "CResourceCache.hpp"
 #include "CTransformAffector.h"
 #include "CUpdateComponent.h"
+#include "CBatchComponent.h"
 
 using namespace jam;
 
@@ -219,12 +220,14 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, uint32_t cameraId
     // Transform component
     CTransformationComponentPtr transformComponent(new CTransformationComponent());
     CUpdateComponentPtr updateComponent(new CUpdateComponent());
+    CBatchComponentPtr batchComponent(new CBatchComponent());
      
     CObject3DPtr entity(new CObject3D());
     entity->Initialize(filename, {
                                   renderComponent,
                                   transformComponent,
-								  updateComponent
+								  updateComponent,
+                                  batchComponent
                                  });
     // Store links to components
     entity->m_RenderComponent = renderComponent;
@@ -310,9 +313,7 @@ const glm::vec3& CObject3D::AnchorPoint()
 
 void CObject3D::Update(unsigned long dt)
 {
-	CTransformAffector::Rotating(shared_from_this(), glm::vec3(1 * 3.14f / 180.0f,
-																1 * 3.14f / 180.0f,
-																1 * 3.14f / 180.0f));
+	
 }
 
 // *****************************************************************************

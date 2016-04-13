@@ -12,7 +12,6 @@
 #include "CRenderComponent.h"
 #include "CTransformationComponent.h"
 #include "RenderGlobal.h"
-#include "CBatch.h"
 
 using namespace jam;
 
@@ -38,7 +37,7 @@ struct SOrderComparator
         uint64_t o1 = OrderKey(re1, e1);
         uint64_t o2 = OrderKey(re2, e2);
 
-#if defined(OS_KOS) // TODO: KOS renders transparacy objects in other order
+#if defined(OS_KOS) // TODO: KOS render transparacy objects in other order
         IMaterialPtr m2 = re2->Material();
         if (m2 && !m2->Opacity())
         {
@@ -57,8 +56,6 @@ struct SOrderComparator
 CRenderSystem::CRenderSystem()
 {
     RegisterComponent(ComponentId<CRenderComponent>());
-    
-    batch.reset(new CBatch());
 }
 
 CRenderSystem::~CRenderSystem()
@@ -68,7 +65,7 @@ CRenderSystem::~CRenderSystem()
 
 void CRenderSystem::Update(unsigned long dt)
 {
-    const ISystem::TEntities& entities = Entities();
+    /*const ISystem::TEntities& entities = Entities();
     std::for_each(entities.begin(), entities.end(), [&](IEntityPtr entity)
     {
         CTransformationComponentPtr transformComponent = entity->Get<CTransformationComponent>();
@@ -79,39 +76,12 @@ void CRenderSystem::Update(unsigned long dt)
             {
                 return;
             }
-            
-            if (renderComponent->Batchable())
-            {
-                const std::set<std::string>& groups = renderComponent->Groups();
-                std::for_each(groups.begin(), groups.end(), [&](const std::string& groupName)
-                {
-                    IMeshPtr mesh = renderComponent->Mesh(groupName);
-                    IMaterialPtr material = renderComponent->Material(groupName);
-                    ITexturePtr texture = renderComponent->Texture(groupName);
-                    IShaderProgramPtr shader = renderComponent->Shader(groupName);
-                    
-                    if (!batch->IsInitialized())
-                    {
-                        batch->Initialize(material, shader, {texture},
-                                          mesh->VertexBuffer()->ElementSize(),
-                                          mesh->IndexBuffer() ? mesh->IndexBuffer()->ElementSize() : 0);
-                    }
-                    
-                    CTransform3Df transform = (transformComponent ? transformComponent->ResultTransform() : CTransform3Df());
-                    batch->AddGeometry(mesh, transform);
-                });
-            }
-            else
-            {
-                
-            }
         });
-    });
-    
-    batch->Update();
+    });*/
     
     ClearDirtyEntities();
     m_ProccededRenderTargets.clear();
+    m_ProccededBatches.clear();
 }
 
 void CRenderSystem::Draw(ICameraPtr camera)
@@ -138,83 +108,66 @@ void CRenderSystem::Draw(ICameraPtr camera)
     unsigned int cameraId = camera->Id();
     std::for_each(m_SortedComponents.begin(), m_SortedComponents.end(), [&](CRenderComponentPtr renderComponent)
     {
-        if (!renderComponent->HasCameraId(cameraId) ||
-            renderComponent->Batchable())
+        if (!renderComponent->HasCameraId(cameraId))
         {
             return;
         }
-
+        
 		const std::set<std::string>& groups = renderComponent->Groups();
 		std::for_each(groups.begin(), groups.end(), [&](const std::string& groupName)
 		{
+            if (renderComponent->Batchable() &&
+                groupName != CRenderComponent::kBatchingGroupName)
+            {
+                return;
+            }
+            
 			IMeshPtr mesh = renderComponent->Mesh(groupName);
 			IMaterialPtr material = renderComponent->Material(groupName);
 			ITexturePtr texture = renderComponent->Texture(groupName);
 			IShaderProgramPtr shader = renderComponent->Shader(groupName);
 
-			if (!shader || !material || !mesh)
-			{
-				return;
-			}
-
-			shader->Bind();
-			material->Bind();
-			if (texture)
-			{
-				texture->Bind();
-			}
-			mesh->Bind();
-            // TODO: Move it to another place 
-			shader->BindUniformMatrix4x4f("MainProjectionMatrix", camera->ProjectionMatrix());
-			shader->UpdateUniforms();
-
-			GRenderer->Draw(mesh, material, shader);
-
-			mesh->Unbind();
-			if (texture)
-			{
-                texture->Unbind();
-			}
-			material->Unbind();
-			shader->Unbind();
+            if (m_ProccededBatches.find(mesh->UniqueId()) != m_ProccededBatches.end())
+            {
+                return;
+            }
+            m_ProccededBatches.insert(mesh->UniqueId());
+            
+            shader->BindUniformMatrix4x4f("MainProjectionMatrix", camera->ProjectionMatrix());
+            
+            Draw(mesh, material, texture, shader);
 		});
     });
     
-    if (batch->IsInitialized() && camera->Id() == 1)
+    currentRenderTarget->Unbind();
+}
+
+void CRenderSystem::Draw(IMeshPtr mesh, IMaterialPtr material, ITexturePtr texture, IShaderProgramPtr shader)
+{
+    if (!shader || !material || !mesh)
     {
-        IMeshPtr mesh = batch->Mesh();
-        IMaterialPtr material = batch->Material();
-        ITexturePtr texture = batch->Textures().front();
-        IShaderProgramPtr shader = batch->Shader();
-        
-        if (!shader || !material || !mesh)
-        {
-            return;
-        }
-        
-        shader->Bind();
-        material->Bind();
-        if (texture)
-        {
-            texture->Bind();
-        }
-        mesh->Bind();
-        // TODO: Move it to another place
-        shader->BindUniformMatrix4x4f("MainProjectionMatrix", camera->ProjectionMatrix());
-        shader->UpdateUniforms();
-        
-        GRenderer->Draw(mesh, material, shader);
-        
-        mesh->Unbind();
-        if (texture)
-        {
-            texture->Unbind();
-        }
-        material->Unbind();
-        shader->Unbind();
+        return;
     }
     
-    currentRenderTarget->Unbind();
+    shader->Bind();
+    material->Bind();
+    if (texture)
+    {
+        texture->Bind();
+    }
+    mesh->Bind();
+    // TODO: Move it to another place
+    shader->UpdateUniforms();
+    
+    GRenderer->Draw(mesh, material, shader);
+    
+    mesh->Unbind();
+    if (texture)
+    {
+        texture->Unbind();
+    }
+    material->Unbind();
+    shader->Unbind();
 }
 
 // *****************************************************************************

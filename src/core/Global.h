@@ -26,6 +26,8 @@
 #include <random>
 #include <typeindex>
 #include <memory>
+#include <tuple>
+#include <utility>
 #include <math.h>
 #include <assert.h>
 

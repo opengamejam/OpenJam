@@ -20,6 +20,10 @@ CLASS_PTR(ICamera);
 CLASS_PTR(IRenderTarget);
 CLASS_PTR(CRenderComponent);
 CLASS_PTR(CBatch);
+CLASS_PTR(IMesh);
+CLASS_PTR(IMaterial);
+CLASS_PTR(ITexture);
+CLASS_PTR(IShaderProgram);
 
 class CRenderSystem : public ISystem
 {
@@ -36,13 +40,15 @@ protected:
     virtual void OnRemovedEntity(IEntityPtr entity) override;
     
 private:
+    void Draw(IMeshPtr mesh, IMaterialPtr material, ITexturePtr texture, IShaderProgramPtr shader);
+    
+private:
     
     std::set<IRenderTargetPtr> m_ProccededRenderTargets;
+    std::set<uint64_t> m_ProccededBatches;
     
     std::list<CRenderComponentPtr> m_SortedComponents;
     std::map<CRenderComponentPtr, uint64_t> m_OrderKeys;
-    
-    CBatchPtr batch;
 };
     
 } // namespace jam

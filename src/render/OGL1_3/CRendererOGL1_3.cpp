@@ -107,18 +107,26 @@ void CRendererOGL1_3::Draw(IMeshPtr mesh, IMaterialPtr material, IShaderProgramP
     const IShaderProgram::TUniMatrix4Float& uniforms = shader->UniformsMatrix4x4f();
     IShaderProgram::TUniMatrix4Float::const_iterator it = uniforms.find(shader->ProjectionMatrix());
     
-    if (it != uniforms.end())
-    {
-        glMatrixMode(GL_PROJECTION);
-        glLoadTransposeMatrixf(glm::value_ptr(it->second));
-    }   // TODO: load identity for other case
-    
-    it = uniforms.find(shader->ModelMatrix());
-    if (it != uniforms.end())
-    {
-        glMatrixMode(GL_MODELVIEW);
-        glLoadTransposeMatrixf(glm::value_ptr(it->second));
-    }   // TODO: load identity for other case
+    glMatrixMode(GL_PROJECTION);
+	if (it != uniforms.end())
+	{
+		glLoadMatrixf(glm::value_ptr(it->second));
+	}
+	else
+	{
+		glLoadMatrixf(glm::value_ptr(glm::mat4(1.0)));
+	}
+
+	glMatrixMode(GL_MODELVIEW);
+	it = uniforms.find(shader->ModelMatrix());
+	if (it != uniforms.end())
+	{
+		glLoadMatrixf(glm::value_ptr(it->second));
+	}
+	else
+	{
+		glLoadMatrixf(glm::value_ptr(glm::mat4(1.0)));
+	}
     
     if (mesh->IndexBuffer())
     {

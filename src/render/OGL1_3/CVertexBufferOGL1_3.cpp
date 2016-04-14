@@ -98,9 +98,11 @@ uint64_t CVertexBufferOGL1_3::SizeRaw() const
 void CVertexBufferOGL1_3::ResizeRaw(uint64_t newSize)
 {
     m_Buffer.resize(newSize);
+#ifdef GL_ARRAY_BUFFER
     glBindBuffer(GL_ARRAY_BUFFER, m_Id);
     glBufferData(GL_ARRAY_BUFFER, m_Buffer.size(), m_Buffer.data(), GL_DYNAMIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+#endif
 }
 
 uint64_t CVertexBufferOGL1_3::ElementSize() const

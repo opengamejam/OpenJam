@@ -278,6 +278,8 @@ void CMaterialOGL1_3::ApplyState(IMaterial::MaterialState state, IMaterial::Mate
             glDisable(GL_STENCIL_TEST);
         }
     }
+
+#if !defined(OS_KOS)
     if (state.stencilTest.func != prevState.stencilTest.func ||
         state.stencilTest.ref != prevState.stencilTest.ref ||
         state.stencilTest.mask != prevState.stencilTest.mask)
@@ -292,6 +294,8 @@ void CMaterialOGL1_3::ApplyState(IMaterial::MaterialState state, IMaterial::Mate
                     ConvertOperation(state.stencilTest.zFailOp),
                     ConvertOperation(state.stencilTest.zPassOp));
     }
+#endif // !defined(OS_KOS)
+
 #endif
     
     // Blending
@@ -373,7 +377,8 @@ INL unsigned int ConvertTestFunc(IMaterial::TestFuncs func)
 #ifdef GL_STENCIL_TEST
 INL unsigned int ConvertOperation(IMaterial::Operations op)
 {
-    unsigned int operation = GL_KEEP;
+#if !defined(OS_KOS)
+   unsigned int operation = GL_KEEP;
     switch (op)
     {
         case IMaterial::Keep:
@@ -406,6 +411,9 @@ INL unsigned int ConvertOperation(IMaterial::Operations op)
     };
     
     return operation;
+#else
+	return GL_REPLACE; // TODO: KOS
+#endif
 }
 #endif
 

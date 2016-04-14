@@ -16,7 +16,7 @@
 #include "ITexture.h"
 #include "IShader.h"
 #include "RenderGlobal.h"
-#include "CShaderSourceBatch.h"
+#include "CShaderSourceCommon.h"
 
 using namespace jam;
 
@@ -152,29 +152,11 @@ CBatchingSystem::SGeometry CBatchingSystem::CreateNewGeometry(IMaterialPtr mater
     mesh->VertexBuffer(vertexBuffer);
     mesh->IndexBuffer(indexBuffer);
     
-    IShaderPtr vertexShader = nullptr;
-    IShaderPtr fragmentShader = nullptr;
-    IShaderProgramPtr shaderProgram = nullptr;
-    
-    CShaderSourceBatch shaderSource; // TODO:
-    vertexShader = GRenderer->CreateShader();
-    vertexShader->Compile(shaderSource.Vertex(), IShader::Vertex);
-    assert(vertexShader);
-    
-    fragmentShader = GRenderer->CreateShader();
-    fragmentShader->Compile(shaderSource.Fragment(), IShader::Fragment);
-    assert(fragmentShader);
-    
-    shaderProgram = GRenderer->CreateShaderProgram();
-    shaderProgram->AttachShader(vertexShader);
-    shaderProgram->AttachShader(fragmentShader);
-    shaderProgram->Link();
-    
     SGeometry geometry;
     geometry.mesh = mesh;
     geometry.material = material;
     geometry.texture = texture;
-    geometry.shader = shaderProgram;
+    geometry.shader = shader;
     
     return geometry;
 }

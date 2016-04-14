@@ -11,6 +11,7 @@
 #include "ICamera.h"
 #include "CRenderComponent.h"
 #include "CTransformationComponent.h"
+#include "CBatchComponent.h"
 #include "RenderGlobal.h"
 
 using namespace jam;
@@ -25,20 +26,20 @@ using namespace jam;
 
 struct SOrderComparator
 {
-    bool operator()(CRenderComponentPtr re1, CRenderComponentPtr re2) const
+    bool operator()(CRenderComponentPtr rc1, CRenderComponentPtr rc2) const
     {
-        IEntityPtr e1 = re1->Entity().lock();
-        IEntityPtr e2 = re2->Entity().lock();
+        IEntityPtr e1 = rc1->Entity().lock();
+        IEntityPtr e2 = rc2->Entity().lock();
         if (!e1 || !e2)
         {
             return false;
         }
 
-        uint64_t o1 = OrderKey(re1, e1);
-        uint64_t o2 = OrderKey(re2, e2);
+        uint64_t o1 = OrderKey(rc1, e1);
+        uint64_t o2 = OrderKey(rc2, e2);
 
 #if defined(OS_KOS) // TODO: KOS render transparacy objects in other order
-        IMaterialPtr m2 = re2->Material();
+        IMaterialPtr m2 = rc2->Material();
         if (m2 && !m2->Opacity())
         {
         	return o1 > o2;
@@ -47,9 +48,9 @@ struct SOrderComparator
         return o1 < o2;
     }
     
-    INL static uint64_t OrderKey(CRenderComponentPtr re, IEntityPtr e)
+    INL static uint64_t OrderKey(CRenderComponentPtr rc, IEntityPtr e)
     {
-        return (((uint64_t)e->HierarchyIndex() << 32) | re->DrawOrder());
+        return (((uint64_t)e->HierarchyIndex() << 32) | rc->DrawOrder());
     }
 };
 
@@ -81,7 +82,6 @@ void CRenderSystem::Update(unsigned long dt)
     
     ClearDirtyEntities();
     m_ProccededRenderTargets.clear();
-    m_ProccededBatches.clear();
 }
 
 void CRenderSystem::Draw(ICameraPtr camera)
@@ -113,51 +113,62 @@ void CRenderSystem::Draw(ICameraPtr camera)
             return;
         }
         
-		const std::set<std::string>& groups = renderComponent->Groups();
-		std::for_each(groups.begin(), groups.end(), [&](const std::string& groupName)
-		{
-            if (renderComponent->Batchable() &&
-                groupName != CRenderComponent::kBatchingGroupName)
-            {
-                return;
-            }
-            
-			IMeshPtr mesh = renderComponent->Mesh(groupName);
-			IMaterialPtr material = renderComponent->Material(groupName);
-			ITexturePtr texture = renderComponent->Texture(groupName);
-			IShaderProgramPtr shader = renderComponent->Shader(groupName);
-
+        if (renderComponent->Batchable())
+        {
+            IMeshPtr mesh = renderComponent->Mesh(CRenderComponent::kBatchingGroupName);
             if (m_ProccededBatches.find(mesh->UniqueId()) != m_ProccededBatches.end())
             {
                 return;
             }
+            
+            DrawGroup(renderComponent, CRenderComponent::kBatchingGroupName, camera);
             m_ProccededBatches.insert(mesh->UniqueId());
-            
-            shader->BindUniformMatrix4x4f("MainProjectionMatrix", camera->ProjectionMatrix());
-            
-            Draw(mesh, material, texture, shader);
-		});
+        }
+        else
+        {
+            const std::set<std::string>& groups = renderComponent->Groups();
+            std::for_each(groups.begin(), groups.end(), [&](const std::string& groupName)
+            {
+                if (groupName == CRenderComponent::kBatchingGroupName)
+                {
+                    return;
+                }
+                
+                DrawGroup(renderComponent, groupName, camera);
+            });
+        }
     });
     
     currentRenderTarget->Unbind();
+    m_ProccededBatches.clear();
 }
 
-void CRenderSystem::Draw(IMeshPtr mesh, IMaterialPtr material, ITexturePtr texture, IShaderProgramPtr shader)
+void CRenderSystem::DrawGroup(CRenderComponentPtr renderComponent, const std::string& groupName, ICameraPtr camera) const
 {
+    IMeshPtr mesh = renderComponent->Mesh(groupName);
+    IMaterialPtr material = renderComponent->Material(groupName);
+    ITexturePtr texture = renderComponent->Texture(groupName);
+    IShaderProgramPtr shader = renderComponent->Shader(groupName);
     if (!shader || !material || !mesh)
     {
         return;
     }
     
+    shader->BindUniformMatrix4x4f("MainProjectionMatrix", camera->ProjectionMatrix());
+    
+    Draw(mesh, material, texture, shader);
+}
+
+void CRenderSystem::Draw(IMeshPtr mesh, IMaterialPtr material, ITexturePtr texture, IShaderProgramPtr shader) const
+{
     shader->Bind();
+    shader->UpdateUniforms();
     material->Bind();
     if (texture)
     {
         texture->Bind();
     }
     mesh->Bind();
-    // TODO: Move it to another place
-    shader->UpdateUniforms();
     
     GRenderer->Draw(mesh, material, shader);
     

@@ -104,6 +104,11 @@ void CTransfromationSystem::UpdateTransformsRecursively(IEntityPtr entity,
             IShaderProgramPtr shader = renderComponent->Shader();
             if (shader)
             {
+                if (renderComponent->Batchable())
+                {
+                    resultTransform = CTransform3Df();
+                }
+                
                 shader->BindUniformMatrix4x4f("MainModelMatrix", resultTransform());
                 renderComponent->Shader(shader);
             }

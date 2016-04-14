@@ -71,6 +71,9 @@ uint64_t CIndexBufferOGL1_3::SizeRaw() const
 void CIndexBufferOGL1_3::ResizeRaw(uint64_t newSize)
 {
     m_Buffer.resize(newSize);
+    Bind();
+    glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_Buffer.size(), m_Buffer.data(), GL_DYNAMIC_DRAW);
+    Unbind();
 }
 
 uint64_t CIndexBufferOGL1_3::ElementSize() const
@@ -100,7 +103,7 @@ void CIndexBufferOGL1_3::Unlock(bool isNeedCommit)
     if (isNeedCommit)
     {
         Bind();
-        glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_Buffer.size(), m_Buffer.data(), GL_DYNAMIC_DRAW);
+        glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, m_Buffer.size(), m_Buffer.data());
         Unbind();
     }
     m_IsLocked = false;

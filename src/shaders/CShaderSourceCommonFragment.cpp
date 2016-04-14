@@ -1,11 +1,11 @@
 //
-//  CShaderSourceBatch.h
+//  CShaderSourceCommon.h
 //  OpenJam
 //
 //  Created by Yevgeniy Logachev
 //  Copyright (c) 2014 Yevgeniy Logachev. All rights reserved.
 //
-#include "CShaderSourceBatch.h"
+#include "CShaderSourceCommon.h"
 
 using namespace jam;
 
@@ -13,23 +13,23 @@ using namespace jam;
 // Constants
 // *****************************************************************************
 
-const std::string CShaderSourceBatch::s_GeomentryShader;
-const std::string CShaderSourceBatch::s_VertexShader = MULTI_LINE_STRING(
+const std::string CShaderSourceCommon::s_FragmentShader = MULTI_LINE_STRING(
 \n#ifdef OGL2_0\n
-attribute highp vec4     MainPositionVertex;
-attribute mediump vec2   MainTextureCoord;
-attribute highp vec4     MainVertexColor;
-uniform mediump mat4     MainProjectionMatrix;
-uniform mediump mat4     MainModelMatrix;
-varying mediump vec2     VaryingTextureCoord;
-varying highp vec4       VaryingMainColor;
+precision mediump float;
 
-void main(void)
+uniform sampler2D        MainTexture0;
+uniform sampler2D        MainTexture1;
+uniform sampler2D        MainTexture2;
+uniform sampler2D        MainTexture3;
+uniform sampler2D        MainTexture4;
+uniform sampler2D        MainTexture5;
+varying mediump vec2     VaryingTextureCoord;
+varying mediump vec4     VaryingMainColor;
+
+void main()
 {
-    gl_Position = MainPositionVertex;
-    
-    VaryingTextureCoord = MainTextureCoord;
-    VaryingMainColor = MainVertexColor;
+    vec4 color = texture2D(MainTexture0, VaryingTextureCoord);
+    gl_FragColor = color;
 }
 \n#endif\n
 
@@ -42,19 +42,9 @@ void main(void)
 // Public Methods
 // *****************************************************************************
 
-const std::string& CShaderSourceBatch::Vertex() const
+const std::string& CShaderSourceCommon::Fragment() const
 {
-    return s_VertexShader;
-}
-
-const std::string& CShaderSourceBatch::Geometry() const
-{
-    return s_GeomentryShader;
-}
-
-bool CShaderSourceBatch::Load(const std::string& filename)
-{
-    return true;
+    return s_FragmentShader;
 }
 
 // *****************************************************************************

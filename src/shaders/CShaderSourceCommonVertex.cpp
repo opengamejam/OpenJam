@@ -1,11 +1,11 @@
 //
-//  CShaderSourceBatch.h
+//  CShaderSourceCommon.h
 //  OpenJam
 //
 //  Created by Yevgeniy Logachev
 //  Copyright (c) 2014 Yevgeniy Logachev. All rights reserved.
 //
-#include "CShaderSourceBatch.h"
+#include "CShaderSourceCommon.h"
 
 using namespace jam;
 
@@ -13,23 +13,24 @@ using namespace jam;
 // Constants
 // *****************************************************************************
 
-const std::string CShaderSourceBatch::s_FragmentShader = MULTI_LINE_STRING(
+const std::string CShaderSourceCommon::s_GeomentryShader;
+const std::string CShaderSourceCommon::s_VertexShader = MULTI_LINE_STRING(
 \n#ifdef OGL2_0\n
-precision mediump float;
-
-uniform sampler2D        MainTexture0;
-uniform sampler2D        MainTexture1;
-uniform sampler2D        MainTexture2;
-uniform sampler2D        MainTexture3;
-uniform sampler2D        MainTexture4;
-uniform sampler2D        MainTexture5;
+attribute highp vec4     MainPositionVertex;
+attribute mediump vec2   MainTextureCoord;
+attribute highp vec4     MainVertexColor;
+uniform mediump mat4     MainProjectionMatrix;
+uniform mediump mat4     MainModelMatrix;
 varying mediump vec2     VaryingTextureCoord;
-varying mediump vec4     VaryingMainColor;
+varying highp vec4       VaryingMainColor;
 
-void main()
+void main(void)
 {
-    vec4 color = texture2D(MainTexture0, VaryingTextureCoord);
-    gl_FragColor = color;
+    mat4 MVP = MainProjectionMatrix * MainModelMatrix;
+    gl_Position = MVP * MainPositionVertex;
+    
+    VaryingTextureCoord = MainTextureCoord;
+    VaryingMainColor = MainVertexColor;
 }
 \n#endif\n
 
@@ -42,9 +43,19 @@ void main()
 // Public Methods
 // *****************************************************************************
 
-const std::string& CShaderSourceBatch::Fragment() const
+const std::string& CShaderSourceCommon::Vertex() const
 {
-    return s_FragmentShader;
+    return s_VertexShader;
+}
+
+const std::string& CShaderSourceCommon::Geometry() const
+{
+    return s_GeomentryShader;
+}
+
+bool CShaderSourceCommon::Load(const std::string& filename)
+{
+    return true;
 }
 
 // *****************************************************************************

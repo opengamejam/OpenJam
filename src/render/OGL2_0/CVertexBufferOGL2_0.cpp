@@ -92,6 +92,9 @@ uint64_t CVertexBufferOGL2_0::SizeRaw() const
 void CVertexBufferOGL2_0::ResizeRaw(uint64_t newSize)
 {
     m_Buffer.resize(newSize);
+    Bind();
+    glBufferData(GL_ARRAY_BUFFER, m_Buffer.size(), m_Buffer.data(), GL_DYNAMIC_DRAW);
+    Unbind();
 }
 
 uint64_t CVertexBufferOGL2_0::ElementSize() const
@@ -120,7 +123,7 @@ void CVertexBufferOGL2_0::Unlock(bool isNeedCommit)
     if (isNeedCommit)
     {
         Bind();
-        glBufferData(GL_ARRAY_BUFFER, m_Buffer.size(), m_Buffer.data(), GL_DYNAMIC_DRAW);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, m_Buffer.size(), m_Buffer.data());
         Unbind();
     }
     
@@ -158,13 +161,16 @@ void CVertexBufferOGL2_0::Bind()
             int type = ConvertDataType(stream.dataType);
             GLsizei elementSize = (ZeroStride() ? 0 : (GLsizei)ElementSize());
             
-            glEnableVertexAttribArray(stream.attributeIndex);
-            glVertexAttribPointer(stream.attributeIndex,
-                                  stream.stride,
-                                  type,
-                                  GL_FALSE,
-                                  elementSize,
-                                  (GLvoid*)offset);
+            if (stream.attributeIndex != -1ul)
+            {
+                glEnableVertexAttribArray(stream.attributeIndex);
+                glVertexAttribPointer(stream.attributeIndex,
+                                      stream.stride,
+                                      type,
+                                      GL_FALSE,
+                                      elementSize,
+                                      (GLvoid*)offset);
+            }
         }
     });
 }

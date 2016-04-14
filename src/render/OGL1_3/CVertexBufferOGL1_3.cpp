@@ -98,6 +98,9 @@ uint64_t CVertexBufferOGL1_3::SizeRaw() const
 void CVertexBufferOGL1_3::ResizeRaw(uint64_t newSize)
 {
     m_Buffer.resize(newSize);
+    glBindBuffer(GL_ARRAY_BUFFER, m_Id);
+    glBufferData(GL_ARRAY_BUFFER, m_Buffer.size(), m_Buffer.data(), GL_DYNAMIC_DRAW);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
 
 uint64_t CVertexBufferOGL1_3::ElementSize() const
@@ -127,7 +130,7 @@ void CVertexBufferOGL1_3::Unlock(bool isNeedCommit)
     if (isNeedCommit)
     {
         glBindBuffer(GL_ARRAY_BUFFER, m_Id);
-        glBufferData(GL_ARRAY_BUFFER, m_Buffer.size(), m_Buffer.data(), GL_DYNAMIC_DRAW);
+        glBufferSubData(GL_ARRAY_BUFFER, 0, m_Buffer.size(), m_Buffer.data());
         glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
 #endif

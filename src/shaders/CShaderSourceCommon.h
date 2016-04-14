@@ -1,12 +1,12 @@
 //
-//  CShaderSourceBatch.h
+//  CShaderSourceCommon.h
 //  OpenJam
 //
 //  Created by Yevgeniy Logachev
 //  Copyright (c) 2014 Yevgeniy Logachev. All rights reserved.
 //
-#ifndef CSHADERSOURCEBATCH_H
-#define CSHADERSOURCEBATCH_H
+#ifndef CShaderSourceCommon_H
+#define CShaderSourceCommon_H
 
 #include "Global.h"
 #include "IShaderSource.h"
@@ -14,7 +14,7 @@
 namespace jam
 {
 
-class CShaderSourceBatch : public IShaderSource
+class CShaderSourceCommon : public IShaderSource
 {
 public:
     virtual const std::string& Vertex() const override;
@@ -31,4 +31,4 @@ private:
     
 }; // namespace jam
 
-#endif /* defined(CSHADERSOURCEBATCH_H) */
+#endif /* defined(CShaderSourceCommon_H) */

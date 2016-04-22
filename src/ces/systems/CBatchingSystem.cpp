@@ -224,16 +224,43 @@ void CBatchingSystem::ApplyTransform(IMeshPtr mesh,
 {
     IVertexBufferPtr vertexBuffer = mesh->VertexBuffer();
     
-    glm::vec3 pos3;
-    glm::vec4 pos4;
-    IVertexBuffer::SVertexStream& streamVB = vertexBuffer->Lock(IVertexBuffer::Position);
+    glm::vec3 vec3;
+    glm::vec4 vec4;
+    
+    // Position
+    glm::mat4 inverseOldTransform = glm::inverse(oldTransform);
+    
+    IVertexBuffer::SVertexStream& streamPos = vertexBuffer->Lock(IVertexBuffer::Position);
     for (uint64_t i = 0; i < size; ++i)
     {
-        streamVB.GetUnsafe<glm::vec3>(offset + i, pos3);
-        pos4 = glm::vec4(pos3, 1.0f);
-        pos4 = glm::inverse(oldTransform) * pos4;
-        pos3 = glm::vec3(transform * pos4);
-        streamVB.SetUnsafe<glm::vec3>(offset + i, pos3);
+        streamPos.GetUnsafe<glm::vec3>(offset + i, vec3);
+        vec4 = glm::vec4(vec3, 1.0f);
+        vec4 = inverseOldTransform * vec4;
+        vec3 = glm::vec3(transform * vec4);
+        streamPos.SetUnsafe<glm::vec3>(offset + i, vec3);
     }
+    
+    // Normal
+    glm::mat4 oldNormalTransform(oldTransform);
+    oldNormalTransform[0][0] = 1.0f;
+    oldNormalTransform[1][1] = 1.0f;
+    oldNormalTransform[2][2] = 1.0f;
+    glm::mat4 inverseOldNormalTransform = glm::inverse(oldNormalTransform);
+    
+    glm::mat4 normalTransform(transform);
+    normalTransform[0][0] = 1.0f;
+    normalTransform[1][1] = 1.0f;
+    normalTransform[2][2] = 1.0f;
+    
+    IVertexBuffer::SVertexStream& streamNormal = vertexBuffer->Lock(IVertexBuffer::Normal);
+    for (uint64_t i = 0; i < size; ++i)
+    {
+        streamNormal.GetUnsafe<glm::vec3>(offset + i, vec3);
+        vec4 = glm::vec4(vec3, 1.0f);
+        vec4 = inverseOldNormalTransform * vec4;
+        vec3 = glm::vec3(normalTransform * vec4);
+        streamNormal.SetUnsafe<glm::vec3>(offset + i, vec3);
+    }
+    
     vertexBuffer->Unlock(true);
 }

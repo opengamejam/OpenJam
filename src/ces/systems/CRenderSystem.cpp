@@ -132,7 +132,7 @@ void CRenderSystem::Draw(ICameraPtr camera)
                 if (groupName == CRenderComponent::kBatchingGroupName)
                 {
                     return;
-                }
+                }                
                 
                 DrawGroup(renderComponent, groupName, camera);
             });
@@ -155,6 +155,9 @@ void CRenderSystem::DrawGroup(CRenderComponentPtr renderComponent, const std::st
     }
     
     shader->BindUniformMatrix4x4f("MainProjectionMatrix", camera->ProjectionMatrix());
+    
+    CTransformationComponentPtr transformComponent = camera->Get<CTransformationComponent>();
+    shader->BindUniformMatrix4x4f("MainViewMatrix", transformComponent ? transformComponent->ResultTransform()() : CTransform3Df()());
     
     Draw(mesh, material, texture, shader);
 }

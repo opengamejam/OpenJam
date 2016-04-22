@@ -93,7 +93,7 @@ CSprite2DPtr CSprite2D::Create(const std::string& filename, uint32_t cameraId)
     });
     
     IVertexBuffer::SVertexStream& textureCoord = vertexBuffer->Lock(IVertexBuffer::TextureCoords);
-    textureCoord.attributeIndex = shaderProgram->TextureCoord();
+    textureCoord.attributeIndex = shaderProgram->VertexUV();
     textureCoord.dataType = IVertexBuffer::Float;
     textureCoord.stride = 2;
     textureCoord.offset = sizeof(glm::vec3) + sizeof(CColor4f);

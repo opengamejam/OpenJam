@@ -91,8 +91,9 @@ bool CShaderProgramOGL2_0::Link()
     
     if (m_IsLinked)
     {
-        m_CachedAttributes["MainPositionVertex"] = Attribute("MainPositionVertex");
-        m_CachedAttributes["MainTextureCoord"] = Attribute("MainTextureCoord");
+        m_CachedAttributes["MainVertexPosition"] = Attribute("MainVertexPosition");
+        m_CachedAttributes["MainVertexNormal"] = Attribute("MainVertexNormal");
+        m_CachedAttributes["MainVertexUV"] = Attribute("MainVertexUV");
         m_CachedAttributes["MainVertexColor"] = Attribute("MainVertexColor");
         
         m_CachedUniforms["MainTexture0"] = Uniform("MainTexture0");
@@ -158,12 +159,17 @@ uint32_t CShaderProgramOGL2_0::Uniform(const std::string& name)
 
 uint32_t CShaderProgramOGL2_0::VertexPosition()
 {
-    return m_CachedAttributes["MainPositionVertex"];
+    return m_CachedAttributes["MainVertexPosition"];
 }
 
-uint32_t CShaderProgramOGL2_0::TextureCoord()
+uint32_t CShaderProgramOGL2_0::VertexNormal()
 {
-    return m_CachedAttributes["MainTextureCoord"];
+    return m_CachedAttributes["MainVertexNormal"];
+}
+
+uint32_t CShaderProgramOGL2_0::VertexUV()
+{
+    return m_CachedAttributes["MainVertexUV"];
 }
 
 uint32_t CShaderProgramOGL2_0::VertexColor()

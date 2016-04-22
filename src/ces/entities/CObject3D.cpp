@@ -84,7 +84,7 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, uint32_t cameraId
         // Material
         material = GRenderer->CreateMaterial();
         material->PrimitiveType(IMaterial::Triangles);
-        material->CullFace(false); // TODO: temp
+        material->CullFace(true); // TODO: temp
         material->DepthEnable(true);
         
         // Vertex buffer
@@ -126,7 +126,7 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, uint32_t cameraId
             if (model3D->UVs(group).size() > 0)
             {
                 IVertexBuffer::SVertexStream& textureCoord = vertexBuffer->Lock(IVertexBuffer::TextureCoords);
-                textureCoord.attributeIndex = shaderProgram->TextureCoord();
+                textureCoord.attributeIndex = shaderProgram->VertexUV();
                 textureCoord.dataType = IVertexBuffer::Float;
                 textureCoord.stride = 2;
                 textureCoord.offset = offset;
@@ -138,7 +138,7 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, uint32_t cameraId
             if (model3D->Normals(group).size() > 0)
             {
                 IVertexBuffer::SVertexStream& normals = vertexBuffer->Lock(IVertexBuffer::Normal);
-                normals.attributeIndex = shaderProgram->NormalTexture();
+                normals.attributeIndex = shaderProgram->VertexNormal();
                 normals.dataType = IVertexBuffer::Float;
                 normals.stride = 3;
                 normals.offset = offset;
@@ -206,7 +206,7 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, uint32_t cameraId
         });
         
         // Render component
-        renderComponent->Batchable(true);
+        renderComponent->Batchable(false);
         renderComponent->Shader(shaderProgram, group);
         renderComponent->Material(material, group);
         renderComponent->Mesh(mesh, group);
@@ -227,7 +227,7 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, uint32_t cameraId
                                   renderComponent,
                                   transformComponent,
 								  updateComponent,
-                                  batchComponent
+                                  //batchComponent
                                  });
     // Store links to components
     entity->m_RenderComponent = renderComponent;

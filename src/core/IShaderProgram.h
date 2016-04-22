@@ -43,7 +43,8 @@ public:
     virtual uint32_t Uniform(const std::string& name) = 0;
     
     virtual uint32_t VertexPosition() = 0;
-    virtual uint32_t TextureCoord() = 0;
+    virtual uint32_t VertexNormal() = 0;
+    virtual uint32_t VertexUV() = 0;
     virtual uint32_t VertexColor() = 0;
     virtual uint32_t MainTexture() = 0;
     virtual uint32_t MainColor() = 0;

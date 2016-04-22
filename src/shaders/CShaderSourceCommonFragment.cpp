@@ -15,22 +15,22 @@ using namespace jam;
 
 const std::string CShaderSourceCommon::s_FragmentShader = MULTI_LINE_STRING(
 \n#ifdef OGL2_0\n
-precision mediump float;
 
-uniform sampler2D        MainTexture0;
-uniform sampler2D        MainTexture1;
-uniform sampler2D        MainTexture2;
-uniform sampler2D        MainTexture3;
-uniform sampler2D        MainTexture4;
-uniform sampler2D        MainTexture5;
-varying mediump vec2     VaryingTextureCoord;
-varying mediump vec4     VaryingMainColor;
-
+varying mediump vec3     VaryingLightDir;
+                                                                            
 void main()
 {
-    vec4 color = texture2D(MainTexture0, VaryingTextureCoord);
-    gl_FragColor = color;
+    vec3 n = normalize(VaryingNormal);
+    vec3 l = normalize(VaryingLightDir);
+    
+    float intensity = max(dot(n, l), 0.0);
+
+    vec4 diffuse = texture2D(MainTexture0, VaryingTextureCoord);
+    vec4 colorOut = clamp((diffuse * intensity), 0.0, 1.0);
+    
+    gl_FragColor = colorOut;
 }
+                                                                            
 \n#endif\n
 
 \n#ifdef OGLES3\n

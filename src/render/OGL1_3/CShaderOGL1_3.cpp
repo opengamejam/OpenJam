@@ -48,6 +48,17 @@ IShader::ShaderType CShaderOGL1_3::Type() const
     return IShader::Vertex;
 }
 
+const std::string& CShaderOGL1_5::Source() const
+{
+    static std::string dummySource;
+    return dummySource;
+}
+
+void CShaderOGL1_3::AddDefinition(const std::string& identifier)
+{
+    
+}
+
 // *****************************************************************************
 // Protected Methods
 // *****************************************************************************

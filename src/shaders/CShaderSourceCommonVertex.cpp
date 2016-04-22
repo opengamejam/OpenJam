@@ -16,22 +16,27 @@ using namespace jam;
 const std::string CShaderSourceCommon::s_GeomentryShader;
 const std::string CShaderSourceCommon::s_VertexShader = MULTI_LINE_STRING(
 \n#ifdef OGL2_0\n
-attribute highp vec4     MainPositionVertex;
-attribute mediump vec2   MainTextureCoord;
-attribute highp vec4     MainVertexColor;
-uniform mediump mat4     MainProjectionMatrix;
-uniform mediump mat4     MainModelMatrix;
-varying mediump vec2     VaryingTextureCoord;
-varying highp vec4       VaryingMainColor;
 
+uniform mediump vec3     LightDir;
+                                                                          
+varying mediump vec3     VaryingLightDir;
+                                                                          
 void main(void)
 {
-    mat4 MVP = MainProjectionMatrix * MainModelMatrix;
-    gl_Position = MVP * MainPositionVertex;
+    mat4 MVMatrix = MainViewMatrix * MainModelMatrix;
+    mat4 MVPMatrix = MainProjectionMatrix * MainModelMatrix;
+    gl_Position = MVPMatrix * MainVertexPosition;
     
-    VaryingTextureCoord = MainTextureCoord;
+    VaryingNormal = vec3(MVMatrix * vec4(MainVertexNormal, 1.0));
+    VaryingTextureCoord = MainVertexUV;
     VaryingMainColor = MainVertexColor;
+    
+    vec4 vertexPos = MVMatrix * MainVertexPosition;
+    vec4 lightPos = MVMatrix * vec4(LightDir, 1.0);
+    
+    VaryingLightDir = vec3(lightPos - vertexPos);
 }
+                                                                          
 \n#endif\n
 
 \n#ifdef OGLES3\n

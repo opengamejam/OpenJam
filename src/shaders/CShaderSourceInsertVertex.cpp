@@ -1,11 +1,11 @@
 //
-//  CShaderSourceSprite.h
+//  CShaderSourceInsert.h
 //  OpenJam
 //
 //  Created by Yevgeniy Logachev
 //  Copyright (c) 2014 Yevgeniy Logachev. All rights reserved.
 //
-#include "CShaderSourceSprite.h"
+#include "CShaderSourceInsert.h"
 
 using namespace jam;
 
@@ -13,18 +13,26 @@ using namespace jam;
 // Constants
 // *****************************************************************************
 
-const std::string CShaderSourceSprite::s_GeomentryShader;
-const std::string CShaderSourceSprite::s_VertexShader = MULTI_LINE_STRING(
+const std::string CShaderSourceInsert::s_GeomentryShader;
+const std::string CShaderSourceInsert::s_VertexShader = MULTI_LINE_STRING(
 \n#ifdef OGL2_0\n
 
-void main(void)
-{
-    mat4 MVP = MainProjectionMatrix * MainModelMatrix;
-    gl_Position = MVP * MainVertexPosition;
-    
-    VaryingTextureCoord = MainVertexUV;
-    VaryingMainColor = MainVertexColor;
-}
+// Attributes
+attribute mediump vec4   MainVertexPosition;
+attribute mediump vec3   MainVertexNormal;
+attribute mediump vec2   MainVertexUV;
+attribute mediump vec4   MainVertexColor;
+
+// Uniforms
+uniform mediump mat4     MainProjectionMatrix;
+uniform mediump mat4     MainViewMatrix;
+uniform mediump mat4     MainModelMatrix;
+
+// Varyings
+varying mediump vec3     VaryingNormal;
+varying mediump vec2     VaryingTextureCoord;
+varying mediump vec4     VaryingMainColor;
+                                                                          
 \n#endif\n
 
 \n#ifdef OGLES3\n
@@ -36,17 +44,17 @@ void main(void)
 // Public Methods
 // *****************************************************************************
 
-const std::string& CShaderSourceSprite::Vertex() const
+const std::string& CShaderSourceInsert::Vertex() const
 {
     return s_VertexShader;
 }
 
-const std::string& CShaderSourceSprite::Geometry() const
+const std::string& CShaderSourceInsert::Geometry() const
 {
     return s_GeomentryShader;
 }
 
-bool CShaderSourceSprite::Load(const std::string& filename)
+bool CShaderSourceInsert::Load(const std::string& filename)
 {
     return true;
 }

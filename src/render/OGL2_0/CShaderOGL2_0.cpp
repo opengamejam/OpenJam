@@ -8,6 +8,7 @@
 #if defined(RENDER_OGL2_0) || defined(RENDER_OGLES2_0)
 
 #include "CShaderOGL2_0.h"
+#include "CShaderSourceInsert.h"
 
 using namespace jam;
 
@@ -27,6 +28,7 @@ CShaderOGL2_0::CShaderOGL2_0()
 , m_IsCompiled(false)
 , m_Type(ShaderType::Vertex)
 {
+    AddDefinition("OGL2_0");
 }
 
 CShaderOGL2_0::~CShaderOGL2_0()
@@ -44,12 +46,36 @@ bool CShaderOGL2_0::Compile(const std::string& source, ShaderType shaderType)
     
     uint32_t glType = ShaderTypeToGlType(shaderType);
     
-    std::string sourceDefined = MULTI_LINE_STRING(\n#define OGL2_0\n);
-    sourceDefined.append(source);
+    CShaderSourceInsert insertSource;
+    
+    // Add preproccessor's definitions
+    m_Source = "";
+    std::for_each(m_Preproccessor.begin(), m_Preproccessor.end(), [&](const std::string& identifier)
+    {
+        std::string definition;
+        definition = std::string("\n#define ") + identifier + std::string("\n");
+        
+        m_Source.append(definition);
+    });
+    
+    // Insert common uniforms and attributes
+    if (shaderType == IShader::Vertex)
+    {
+        m_Source.append(insertSource.Vertex());
+    }
+    else if (shaderType == IShader::Fragment)
+    {
+        m_Source.append(insertSource.Fragment());
+    }
+    else if (shaderType == IShader::Geometry)
+    {
+        m_Source.append(insertSource.Geometry());
+    }
+    m_Source.append(source);
     
     m_Id = glCreateShader(glType);
-    const GLchar* glData = reinterpret_cast<const GLchar*>(sourceDefined.data());
-    const GLint size = (GLint)sourceDefined.size();
+    const GLchar* glData = reinterpret_cast<const GLchar*>(m_Source.data());
+    const GLint size = (GLint)m_Source.size();
     glShaderSource(m_Id, 1, &glData, &size);
     glCompileShader(m_Id);
     
@@ -83,6 +109,16 @@ bool CShaderOGL2_0::IsCompiled() const
 IShader::ShaderType CShaderOGL2_0::Type() const
 {
     return m_Type;
+}
+
+const std::string& CShaderOGL2_0::Source() const
+{
+    return m_Source;
+}
+
+void CShaderOGL2_0::AddDefinition(const std::string& identifier)
+{
+    m_Preproccessor.push_back(identifier);
 }
 
 // *****************************************************************************

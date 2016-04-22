@@ -36,7 +36,8 @@ public:
     
     // Default locations
     virtual uint32_t VertexPosition() override;
-    virtual uint32_t TextureCoord() override;
+    virtual uint32_t VertexNormal() override;
+    virtual uint32_t VertexUV() override;
     virtual uint32_t VertexColor() override;
     virtual uint32_t MainTexture() override;
     virtual uint32_t MainColor() override;
@@ -66,6 +67,7 @@ private:
     uint32_t m_ProectionMatrixHadle;
     uint32_t m_ModelMatrixHadle;
     uint32_t m_VertexCoordHandle;
+    uint32_t m_VertexNormalHandle;
     uint32_t m_TextureCoordHandle;
     uint32_t m_VertexColorHandle;
     uint32_t m_ColorHandle;

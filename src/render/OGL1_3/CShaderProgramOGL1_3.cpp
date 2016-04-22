@@ -82,8 +82,8 @@ bool CShaderProgramOGL1_3::IsValid()
 
 bool CShaderProgramOGL1_3::Link()
 {
-    m_VertexCoordHandle    = Attribute("MainPositionVertex");
-    m_TextureCoordHandle   = Attribute("MainTextureCoord");
+    m_VertexCoordHandle    = Attribute("MainVertexPosition");
+    m_TextureCoordHandle   = Attribute("MainVertexUV");
     m_VertexColorHandle    = Attribute("MainVertexColor");
     
     m_TextureDataHadle[0]  = Uniform("MainTexture0");
@@ -110,8 +110,8 @@ bool CShaderProgramOGL1_3::IsLinked() const
 uint32_t CShaderProgramOGL1_3::Attribute(const std::string& name)
 {
     static std::unordered_map<std::string, int> attributes = {
-        {"MainPositionVertex", 0},
-        {"MainTextureCoord", 1},
+        {"MainVertexPosition", 0},
+        {"MainVertexUV", 1},
         {"MainVertexColor", 2}
     };
     
@@ -150,7 +150,12 @@ uint32_t CShaderProgramOGL1_3::VertexPosition()
     return m_VertexCoordHandle;
 }
 
-uint32_t CShaderProgramOGL1_3::TextureCoord()
+uint32_t CShaderProgramOGL1_3::VertexNormal()
+{
+    return m_VertexNormalHandle;
+}
+
+uint32_t CShaderProgramOGL1_3::VertexUV()
 {
     return m_TextureCoordHandle;
 }

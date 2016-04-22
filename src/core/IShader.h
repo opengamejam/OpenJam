@@ -33,6 +33,8 @@ public:
     virtual bool Compile(const std::string& source, ShaderType shaderType) = 0;
     virtual bool IsCompiled() const = 0;
     virtual ShaderType Type() const = 0;
+    virtual const std::string& Source() const = 0;
+    virtual void AddDefinition(const std::string& identifier) = 0;
 };
 
 }; // namespace jam

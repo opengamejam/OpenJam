@@ -1,11 +1,11 @@
 //
-//  CShaderSourceSprite.h
+//  CShaderSourceInsert.h
 //  OpenJam
 //
 //  Created by Yevgeniy Logachev
 //  Copyright (c) 2014 Yevgeniy Logachev. All rights reserved.
 //
-#include "CShaderSourceSprite.h"
+#include "CShaderSourceInsert.h"
 
 using namespace jam;
 
@@ -13,18 +13,24 @@ using namespace jam;
 // Constants
 // *****************************************************************************
 
-const std::string CShaderSourceSprite::s_GeomentryShader;
-const std::string CShaderSourceSprite::s_VertexShader = MULTI_LINE_STRING(
+const std::string CShaderSourceInsert::s_FragmentShader = MULTI_LINE_STRING(
 \n#ifdef OGL2_0\n
+                                                                            
+precision mediump float;
 
-void main(void)
-{
-    mat4 MVP = MainProjectionMatrix * MainModelMatrix;
-    gl_Position = MVP * MainVertexPosition;
-    
-    VaryingTextureCoord = MainVertexUV;
-    VaryingMainColor = MainVertexColor;
-}
+// Uniforms
+uniform sampler2D        MainTexture0;
+uniform sampler2D        MainTexture1;
+uniform sampler2D        MainTexture2;
+uniform sampler2D        MainTexture3;
+uniform sampler2D        MainTexture4;
+uniform sampler2D        MainTexture5;
+
+// Varyings
+varying mediump vec3     VaryingNormal;
+varying mediump vec2     VaryingTextureCoord;
+varying mediump vec4     VaryingMainColor;
+
 \n#endif\n
 
 \n#ifdef OGLES3\n
@@ -36,19 +42,9 @@ void main(void)
 // Public Methods
 // *****************************************************************************
 
-const std::string& CShaderSourceSprite::Vertex() const
+const std::string& CShaderSourceInsert::Fragment() const
 {
-    return s_VertexShader;
-}
-
-const std::string& CShaderSourceSprite::Geometry() const
-{
-    return s_GeomentryShader;
-}
-
-bool CShaderSourceSprite::Load(const std::string& filename)
-{
-    return true;
+    return s_FragmentShader;
 }
 
 // *****************************************************************************

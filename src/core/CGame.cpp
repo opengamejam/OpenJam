@@ -51,7 +51,7 @@ void CGame::Initialize()
 {
     m_RenderView->CreateView();
     
-    CRenderSystemPtr renderSystem(new CRenderSystem(m_RenderView->Renderer()));
+    m_RenderSystem.reset(new CRenderSystem(m_RenderView->Renderer()));
     CAnimation2DSystemPtr animationSystem(new CAnimation2DSystem());
     CTransfromationSystemPtr transformationSystem(new CTransfromationSystem());
     CUpdateSystemPtr updateSystem(new CUpdateSystem());
@@ -60,7 +60,7 @@ void CGame::Initialize()
     AddSystem(animationSystem);
     AddSystem(batchingSystem);
     AddSystem(transformationSystem);
-    AddSystem(renderSystem);
+    AddSystem(m_RenderSystem);
     
     m_IsInitialized = true;
 }
@@ -104,13 +104,13 @@ void CGame::Update(unsigned long dt)
 
 void CGame::Draw()
 {
-    CRenderSystemPtr renderSystem = nullptr;
-    std::type_index key = SystemId<CRenderSystem>();
+    CRenderSystemPtr renderSystem = RenderSystem();
+    /*std::type_index key = SystemId<CRenderSystem>();
     TSystemMap::const_iterator it = m_System.find(key);
     if (it != m_System.end())
     {
         renderSystem = std::static_pointer_cast<CRenderSystem>(it->second);
-    }
+    }*/
 
     if (renderSystem && !m_Scenes.empty())
     {

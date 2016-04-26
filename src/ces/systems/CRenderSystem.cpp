@@ -104,6 +104,13 @@ void CRenderSystem::Draw(ICameraPtr camera)
         m_ProccededRenderTargets.insert(currentRenderTarget);
     }
     
+    glm::mat4 projectionMatrix = camera->ProjectionMatrix();
+    glm::mat4 viewMatrix(1.0);
+    camera->Get<CTransformationComponent>([&](CTransformationComponentPtr viewTransform)
+    {
+        viewMatrix = viewTransform->ResultTransform()();
+    });
+    
     // Draw
     unsigned int cameraId = camera->Id();
     std::for_each(m_SortedComponents.begin(), m_SortedComponents.end(), [&](CRenderComponentPtr renderComponent)
@@ -121,20 +128,30 @@ void CRenderSystem::Draw(ICameraPtr camera)
                 return;
             }
             
-            DrawGroup(renderComponent, CRenderComponent::kBatchingGroupName, camera);
+            DrawGroup(renderComponent, CRenderComponent::kBatchingGroupName, projectionMatrix, viewMatrix, glm::mat4(1.0));
             m_ProccededBatches.insert(mesh->UniqueId());
         }
         else
         {
+            IEntityPtr entity = renderComponent->Entity().lock();
+            glm::mat4 modelMatrix(1.0);
+            if (entity)
+            {
+                entity->Get<CTransformationComponent>([&](CTransformationComponentPtr modelTransform)
+                {
+                    modelMatrix = modelTransform->ResultTransform()();
+                });
+            }
+            
             const std::set<std::string>& groups = renderComponent->Groups();
             std::for_each(groups.begin(), groups.end(), [&](const std::string& groupName)
             {
                 if (groupName == CRenderComponent::kBatchingGroupName)
                 {
                     return;
-                }                
+                }
                 
-                DrawGroup(renderComponent, groupName, camera);
+                DrawGroup(renderComponent, groupName, projectionMatrix, viewMatrix, modelMatrix);
             });
         }
     });
@@ -143,7 +160,11 @@ void CRenderSystem::Draw(ICameraPtr camera)
     m_ProccededBatches.clear();
 }
 
-void CRenderSystem::DrawGroup(CRenderComponentPtr renderComponent, const std::string& groupName, ICameraPtr camera) const
+void CRenderSystem::DrawGroup(CRenderComponentPtr renderComponent,
+                              const std::string& groupName,
+                              const glm::mat4& projectionMatrix,
+                              const glm::mat4& viewMatrix,
+                              const glm::mat4& modelMatrix) const
 {
     IMeshPtr mesh = renderComponent->Mesh(groupName);
     IMaterialPtr material = renderComponent->Material(groupName);
@@ -154,10 +175,10 @@ void CRenderSystem::DrawGroup(CRenderComponentPtr renderComponent, const std::st
         return;
     }
     
-    shader->BindUniformMatrix4x4f("MainProjectionMatrix", camera->ProjectionMatrix());
-    
-    CTransformationComponentPtr transformComponent = camera->Get<CTransformationComponent>();
-    shader->BindUniformMatrix4x4f("MainViewMatrix", transformComponent ? transformComponent->ResultTransform()() : CTransform3Df()());
+    glm::mat4 normalMat = glm::transpose(glm::inverse(viewMatrix * modelMatrix));
+    shader->BindUniformMatrix4x4f("MainNormalMatrix", normalMat);
+    shader->BindUniformMatrix4x4f("MainProjectionMatrix", projectionMatrix);
+    shader->BindUniformMatrix4x4f("MainViewMatrix", viewMatrix);
     
     Draw(mesh, material, texture, shader);
 }

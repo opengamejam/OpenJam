@@ -67,6 +67,8 @@ CFrameBufferOGL1_5::~CFrameBufferOGL1_5()
     {
         glDeleteFramebuffers(1, &m_FrameBuffer);
     }
+    
+    assert(glGetError() == GL_NO_ERROR);
 }
 
 void CFrameBufferOGL1_5::Initialize(uint32_t externalFrameBuffer, uint32_t externalColorBuffer,
@@ -106,6 +108,8 @@ void CFrameBufferOGL1_5::Initialize()
         glGenFramebuffers(1, &m_FrameBuffer);
     }
     glBindFramebuffer(GL_FRAMEBUFFER, m_FrameBuffer);
+    
+    assert(glGetError() == GL_NO_ERROR);
 }
 
 bool CFrameBufferOGL1_5::CreateColorAttachment(int index)
@@ -130,6 +134,8 @@ bool CFrameBufferOGL1_5::CreateColorAttachment(int index)
     {
         glViewport(0, 0, Width(), Height());
     }
+    
+    assert(glGetError() == GL_NO_ERROR);
     return result;
 }
 
@@ -148,6 +154,7 @@ bool CFrameBufferOGL1_5::CreateDepthAttachment()
     glBindFramebuffer(GL_FRAMEBUFFER, m_FrameBuffer);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_DepthBuffer);
     
+    assert(glGetError() == GL_NO_ERROR);
     bool result = (glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
     return result;
 }
@@ -159,6 +166,7 @@ bool CFrameBufferOGL1_5::CreateStencilAttachment()
         return true;
     }
     
+    assert(glGetError() == GL_NO_ERROR);
     bool result = (glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
     return result;
 }

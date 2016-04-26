@@ -16,23 +16,24 @@ using namespace jam;
 const std::string CShaderSourceInsert::s_GeomentryShader;
 const std::string CShaderSourceInsert::s_VertexShader = MULTI_LINE_STRING(
 \n#ifdef OGL2_0\n
-
-// Attributes
-attribute mediump vec4   MainVertexPosition;
-attribute mediump vec3   MainVertexNormal;
-attribute mediump vec2   MainVertexUV;
-attribute mediump vec4   MainVertexColor;
-
-// Uniforms
-uniform mediump mat4     MainProjectionMatrix;
-uniform mediump mat4     MainViewMatrix;
-uniform mediump mat4     MainModelMatrix;
-
-// Varyings
-varying mediump vec3     VaryingNormal;
-varying mediump vec2     VaryingTextureCoord;
-varying mediump vec4     VaryingMainColor;
-                                                                          
+\n
+// Attributes\n
+attribute mediump vec4   MainVertexPosition;\n
+attribute mediump vec3   MainVertexNormal;\n
+attribute mediump vec2   MainVertexUV;\n
+attribute mediump vec4   MainVertexColor;\n
+\n
+// Uniforms\n
+uniform mediump mat4     MainProjectionMatrix;\n
+uniform mediump mat4     MainViewMatrix;\n
+uniform mediump mat4     MainModelMatrix;\n
+uniform mediump mat4     MainNormalMatrix;\n
+\n
+// Varyings\n
+varying mediump vec3     VaryingNormal;\n
+varying mediump vec2     VaryingTextureCoord;\n
+varying mediump vec4     VaryingMainColor;\n
+\n                              
 \n#endif\n
 
 \n#ifdef OGLES3\n

@@ -23,12 +23,12 @@ void main()
     vec3 n = normalize(VaryingNormal);
     vec3 l = normalize(VaryingLightDir);
     
-    float intensity = max(dot(n, l), 0.0);
+    float diffuse = max(dot(n, l), 0.0);
 
-    vec4 diffuse = texture2D(MainTexture0, VaryingTextureCoord);
-    vec4 colorOut = clamp((diffuse * intensity), 0.0, 1.0);
+    vec4 color = texture2D(MainTexture0, VaryingTextureCoord);
+    vec4 colorOut = clamp((diffuse * color), 0.0, 1.0);
     
-    gl_FragColor = colorOut;
+    gl_FragColor = vec4(colorOut.rgb, color.a);
 }
                                                                             
 \n#endif\n

@@ -67,6 +67,8 @@ CFrameBufferOGL2_0::~CFrameBufferOGL2_0()
     {
         glDeleteFramebuffers(1, &m_FrameBuffer);
     }
+    
+    assert(glGetError() == GL_NO_ERROR);
 }
 
 void CFrameBufferOGL2_0::Initialize(uint32_t externalFrameBuffer, uint32_t externalColorBuffer,
@@ -106,6 +108,8 @@ void CFrameBufferOGL2_0::Initialize()
         glGenFramebuffers(1, &m_FrameBuffer);
     }
     glBindFramebuffer(GL_FRAMEBUFFER, m_FrameBuffer);
+    
+    assert(glGetError() == GL_NO_ERROR);
 }
 
 bool CFrameBufferOGL2_0::CreateColorAttachment(int index)
@@ -130,6 +134,8 @@ bool CFrameBufferOGL2_0::CreateColorAttachment(int index)
     {
         glViewport(0, 0, Width(), Height());
     }
+    
+    assert(glGetError() == GL_NO_ERROR);
     return result;
 }
 
@@ -148,6 +154,7 @@ bool CFrameBufferOGL2_0::CreateDepthAttachment()
     glBindFramebuffer(GL_FRAMEBUFFER, m_FrameBuffer);
     glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_DepthBuffer);
     
+    assert(glGetError() == GL_NO_ERROR);
     return m_DepthBuffer != -1;
 }
 

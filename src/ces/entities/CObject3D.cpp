@@ -206,7 +206,7 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, uint32_t cameraId
         });
         
         // Render component
-        renderComponent->Batchable(false);
+        renderComponent->Batchable(true);
         renderComponent->Shader(shaderProgram, group);
         renderComponent->Material(material, group);
         renderComponent->Mesh(mesh, group);
@@ -227,7 +227,7 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, uint32_t cameraId
                                   renderComponent,
                                   transformComponent,
 								  updateComponent,
-                                  //batchComponent
+                                  batchComponent
                                  });
     // Store links to components
     entity->m_RenderComponent = renderComponent;

@@ -27,12 +27,12 @@ void main(void)
     mat4 MVPMatrix = MainProjectionMatrix * MainModelMatrix;
     gl_Position = MVPMatrix * MainVertexPosition;
     
-    VaryingNormal = vec3(MVMatrix * vec4(MainVertexNormal, 1.0));
+    VaryingNormal = vec3(MainNormalMatrix * vec4(MainVertexNormal, 0.0));
     VaryingTextureCoord = MainVertexUV;
     VaryingMainColor = MainVertexColor;
     
     vec4 vertexPos = MVMatrix * MainVertexPosition;
-    vec4 lightPos = MVMatrix * vec4(LightDir, 1.0);
+    vec4 lightPos = MVMatrix * vec4(LightDir, 0.0);
     
     VaryingLightDir = vec3(lightPos - vertexPos);
 }

@@ -40,7 +40,11 @@ protected:
     virtual void OnRemovedEntity(IEntityPtr entity) override;
     
 private:
-    void DrawGroup(CRenderComponentPtr renderComponent, const std::string& groupName, ICameraPtr camera) const;
+    void DrawGroup(CRenderComponentPtr renderComponent,
+                   const std::string& groupName,
+                   const glm::mat4& projectionMatrix,
+                   const glm::mat4& viewMatrix,
+                   const glm::mat4& modelMatrix) const;
     void Draw(IMeshPtr mesh, IMaterialPtr material, ITexturePtr texture, IShaderProgramPtr shader) const;
     
 private:

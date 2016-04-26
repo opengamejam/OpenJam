@@ -144,6 +144,8 @@ void CTextureOGL1_5::Filter(ITexture::TextureFilters filter)
     }
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    
+    assert(glGetError() == GL_NO_ERROR);
 }
 
 ITexture::TextureFilters CTextureOGL1_5::Filter() const
@@ -189,6 +191,8 @@ bool CTextureOGL1_5::AssignImage(IImagePtr image)
             
             mipDataOffset += mipSize;
         }
+        
+        assert(glGetError() == GL_NO_ERROR);
         
         if (image->MipsCount() > 1)
         {

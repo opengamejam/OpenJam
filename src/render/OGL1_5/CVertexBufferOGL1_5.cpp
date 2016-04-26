@@ -95,6 +95,7 @@ void CVertexBufferOGL1_5::ResizeRaw(uint64_t newSize)
     glBindBuffer(GL_ARRAY_BUFFER, m_Id);
     glBufferData(GL_ARRAY_BUFFER, m_Buffer.size(), m_Buffer.data(), GL_DYNAMIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+    assert(glGetError() == GL_NO_ERROR);
 }
 
 uint64_t CVertexBufferOGL1_5::ElementSize() const
@@ -125,33 +126,7 @@ void CVertexBufferOGL1_5::Unlock(bool isNeedCommit)
         glBindBuffer(GL_ARRAY_BUFFER, m_Id);
         glBufferSubData(GL_ARRAY_BUFFER, 0, m_Buffer.size(), m_Buffer.data());
         glBindBuffer(GL_ARRAY_BUFFER, 0);
-        
-        /*uint16_t j = 0;
-        float* data = reinterpret_cast<float*>(m_Buffer.data());
-        for (uint64_t i = 0; i < Size(); ++i)
-        {
-            if (HasStream(IVertexBuffer::Position))
-            {
-                j = i * (ElementSize() / sizeof(float));
-                printf("pos %llu:\t(%f, %f, %f)\n", i, data[j + 0], data[j + 1], data[j + 2]);
-            }
-            if (HasStream(IVertexBuffer::Color))
-            {
-                j = 3 + i * (ElementSize() / sizeof(float));
-                printf("col %llu:\t(%f, %f, %f, %f)\n", i, data[j + 0], data[j + 1], data[j + 2], data[j + 3]);
-            }
-            if (HasStream(IVertexBuffer::TextureCoords))
-            {
-                j = 3 + 4 + i * (ElementSize() / sizeof(float));
-                printf("uv %llu:\t(%f, %f)\n", i, data[j + 0], data[j + 1]);
-            }
-            if (HasStream(IVertexBuffer::Normal))
-            {
-                j = 3 + 2 + i * (ElementSize() / sizeof(float));
-                printf("nor %llu:\t(%f, %f, %f)\n", i, data[j + 0], data[j + 1], data[j + 2]);
-            }
-        }
-        printf("\n");*/
+        assert(glGetError() == GL_NO_ERROR);
     }
     
     m_IsLocked = false;

@@ -67,6 +67,7 @@ private:
     uint32_t m_ProectionMatrixHadle;
     uint32_t m_ModelMatrixHadle;
     uint32_t m_VertexCoordHandle;
+    uint32_t m_VertexNormalHandle;
     uint32_t m_TextureCoordHandle;
     uint32_t m_VertexColorHandle;
     uint32_t m_ColorHandle;

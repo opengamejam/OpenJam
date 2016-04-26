@@ -66,7 +66,8 @@ void CRenderViewDreamcast::UpdateEvents() const
 	if (joy_state->joyx != 0 ||
 		joy_state->joyy != 0)
 	{
-		CTouchEventPtr event = std::make_shared<CTouchEvent>(CTouchEvent(glm::vec2(joy_state->joyx * 0.3f, joy_state->joyy * 0.3f), CTouchEvent::Move));
+		CTouchEventPtr event = std::make_shared<CTouchEvent>(CTouchEvent(glm::vec2(joy_state->joyx, joy_state->joyy),
+                                                             CTouchEvent::Move));
 		Dispatcher()->DispatchEvent(event);
 	}
 }

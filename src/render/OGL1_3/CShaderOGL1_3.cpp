@@ -48,7 +48,7 @@ IShader::ShaderType CShaderOGL1_3::Type() const
     return IShader::Vertex;
 }
 
-const std::string& CShaderOGL1_5::Source() const
+const std::string& CShaderOGL1_3::Source() const
 {
     static std::string dummySource;
     return dummySource;

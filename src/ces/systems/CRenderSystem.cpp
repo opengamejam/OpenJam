@@ -54,8 +54,10 @@ struct SOrderComparator
     }
 };
 
-CRenderSystem::CRenderSystem()
+CRenderSystem::CRenderSystem(IRendererPtr renderer)
+    : m_Renderer(renderer)
 {
+    assert(m_Renderer);
     RegisterComponent(ComponentId<CRenderComponent>());
 }
 
@@ -194,7 +196,7 @@ void CRenderSystem::Draw(IMeshPtr mesh, IMaterialPtr material, ITexturePtr textu
     }
     mesh->Bind();
     
-    GRenderer->Draw(mesh, material, shader);
+    m_Renderer->Draw(mesh, material, shader);
     
     mesh->Unbind();
     if (texture)

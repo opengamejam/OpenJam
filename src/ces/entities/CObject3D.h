@@ -17,12 +17,14 @@ namespace jam
 CLASS_PTR(CObject3D);
 CLASS_PTR(CRenderComponent);
 CLASS_PTR(CTransformationComponent);
+CLASS_PTR(IRenderer);
 
 class CObject3D : public IEntity
 {
 public:
     // Load mesh from .obj 3D file
-    static CObject3DPtr CreateObj(const std::string& filename, 
+    static CObject3DPtr CreateObj(const std::string& filename,
+                                  IRendererPtr renderer,
 								  uint32_t cameraId = std::numeric_limits<uint32_t>::max());
     
     CObject3D();

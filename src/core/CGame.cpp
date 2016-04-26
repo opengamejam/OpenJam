@@ -51,11 +51,11 @@ void CGame::Initialize()
 {
     m_RenderView->CreateView();
     
-    CRenderSystemPtr renderSystem(new CRenderSystem());
+    CRenderSystemPtr renderSystem(new CRenderSystem(m_RenderView->Renderer()));
     CAnimation2DSystemPtr animationSystem(new CAnimation2DSystem());
     CTransfromationSystemPtr transformationSystem(new CTransfromationSystem());
     CUpdateSystemPtr updateSystem(new CUpdateSystem());
-    CBatchingSystemPtr batchingSystem(new CBatchingSystem());
+    CBatchingSystemPtr batchingSystem(new CBatchingSystem(m_RenderView->Renderer()));
     AddSystem(updateSystem);
     AddSystem(animationSystem);
     AddSystem(batchingSystem);
@@ -185,6 +185,11 @@ ISystemPtr CGame::GetSystem(const std::type_index& systemKey)
     }
     
     return nullptr;
+}
+
+CRenderSystemPtr CGame::RenderSystem() const
+{
+    return m_RenderSystem;
 }
 
 // *****************************************************************************

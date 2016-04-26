@@ -21,11 +21,12 @@ CLASS_PTR(IShaderProgram);
 CLASS_PTR(ITexture);
 CLASS_PTR(IVertexBuffer);
 CLASS_PTR(IIndexBuffer);
+CLASS_PTR(IRenderer);
 
 class CBatchingSystem : public ISystem
 {
 public:
-    CBatchingSystem();
+    CBatchingSystem(IRendererPtr renderer);
     virtual ~CBatchingSystem();
     
     virtual void Update(unsigned long dt) override;
@@ -45,6 +46,8 @@ private:
                         glm::mat4 transform);
     
 private:
+    IRendererPtr m_Renderer;
+    
     struct SGeometry
     {
         uint64_t offsetVB;

@@ -12,7 +12,7 @@
 
 using namespace jam;
 
-IScene::IScene(CGameWeak game)
+IScene::IScene(CGamePtr game)
     : m_Game(game)
     , m_Root(new IEntity())
 {
@@ -23,9 +23,9 @@ IScene::~IScene()
 
 }
 
-CGameWeak IScene::Game() const
+CGamePtr IScene::Game() const
 {
-    return m_Game;
+    return m_Game.lock();
 }
 
 const IScene::TCamerasList& IScene::Cameras() const

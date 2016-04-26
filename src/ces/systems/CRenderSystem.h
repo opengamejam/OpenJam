@@ -24,11 +24,12 @@ CLASS_PTR(IMesh);
 CLASS_PTR(IMaterial);
 CLASS_PTR(ITexture);
 CLASS_PTR(IShaderProgram);
+CLASS_PTR(IRenderer);
 
 class CRenderSystem : public ISystem
 {
 public:
-    CRenderSystem();
+    CRenderSystem(IRendererPtr renderer);
     virtual ~CRenderSystem();
     
     virtual void Update(unsigned long dt) override;
@@ -48,6 +49,7 @@ private:
     void Draw(IMeshPtr mesh, IMaterialPtr material, ITexturePtr texture, IShaderProgramPtr shader) const;
     
 private:
+    IRendererPtr m_Renderer;
     
     std::set<IRenderTargetPtr> m_ProccededRenderTargets;
     std::set<uint64_t> m_ProccededBatches;

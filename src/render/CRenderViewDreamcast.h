@@ -28,9 +28,11 @@ public:
     virtual void End() const override;
     virtual void UpdateEvents() const override;
 
+    virtual IRendererPtr Renderer() const override;
     virtual IRenderTargetPtr DefaultRenderTarget() const override;
 
 private:
+    IRendererPtr m_Renderer;
     IRenderTargetPtr m_DefaultRenderTarget;
     maple_device_t* m_Joy;
 };

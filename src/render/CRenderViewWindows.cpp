@@ -33,6 +33,7 @@ CRenderViewWindows::CRenderViewWindows(unsigned int width, unsigned int height, 
     , m_DeviceContext(0)
     , m_Window(0)
     , m_Instance(hInstance)
+    , m_Renderer(nullptr)
 	, m_DefaultRenderTarget(nullptr)
 {
 	IEventable::RegisterDispatcher(std::make_shared<IEventDispatcher>(IEventDispatcher()));
@@ -140,7 +141,7 @@ void CRenderViewWindows::CreateView()
 
     eglMakeCurrent(m_eglDisplay, m_eglSurface, m_eglSurface, m_eglContext);
 
-	GRenderer.reset(new CRendererOGLES2_0(shared_from_this()));
+	m_Renderer.reset(new CRendererOGLES2_0(shared_from_this()));
 
 	std::shared_ptr<CFrameBufferOGLES2_0> renderTarget(new CFrameBufferOGLES2_0(RealWidth(), RealHeight()));
 	renderTarget->Initialize(0);
@@ -165,6 +166,11 @@ void CRenderViewWindows::UpdateEvents() const
         TranslateMessage( &msg );
         DispatchMessage( &msg );
     }
+}
+
+IRendererPtr CRenderViewWindows::Renderer() const
+{
+    return f;
 }
 
 IRenderTargetPtr CRenderViewWindows::DefaultRenderTarget() const

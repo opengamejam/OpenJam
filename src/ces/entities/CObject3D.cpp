@@ -33,8 +33,10 @@ CLASS_PTR(IModel3D);
 // Public Methods
 // *****************************************************************************
 
-CObject3DPtr CObject3D::CreateObj(const std::string& filename, uint32_t cameraId)
+CObject3DPtr CObject3D::CreateObj(const std::string& filename, IRendererPtr renderer, uint32_t cameraId)
 {
+    assert(renderer);
+    
     CResourceCache<IModel3D> resourceCache;
     IModel3DPtr model3D = resourceCache.AcquireResource(filename, false,
                                                         [](const std::string& filename) -> IModel3DPtr
@@ -68,21 +70,21 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, uint32_t cameraId
     
         // Shaders
         CShaderSourceCommon shaderSource;
-        vertexShader = GRenderer->CreateShader();
+        vertexShader = renderer->CreateShader();
         vertexShader->Compile(shaderSource.Vertex(), IShader::Vertex);
         assert(vertexShader);
         
-        fragmentShader = GRenderer->CreateShader();
+        fragmentShader = renderer->CreateShader();
         fragmentShader->Compile(shaderSource.Fragment(), IShader::Fragment);
         assert(fragmentShader);
         
-        shaderProgram = GRenderer->CreateShaderProgram();
+        shaderProgram = renderer->CreateShaderProgram();
         shaderProgram->AttachShader(vertexShader);
         shaderProgram->AttachShader(fragmentShader);
         shaderProgram->Link();
         
         // Material
-        material = GRenderer->CreateMaterial();
+        material = renderer->CreateMaterial();
         material->PrimitiveType(IMaterial::Triangles);
         material->CullFace(true); // TODO: temp
         material->DepthEnable(true);
@@ -104,7 +106,7 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, uint32_t cameraId
         
         if (elementSize > 0)
         {
-            vertexBuffer = GRenderer->CreatVertexBuffer();
+            vertexBuffer = renderer->CreatVertexBuffer();
             vertexBuffer->Initialize(elementSize);
             material->CullFace(false); // TODO: temp
             assert(vertexBuffer && vertexBuffer->IsValid());
@@ -153,7 +155,7 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, uint32_t cameraId
         // Index buffer
         if (model3D->Indices(group).size() > 0)
         {
-            indexBuffer = GRenderer->CreateIndexBuffer();
+            indexBuffer = renderer->CreateIndexBuffer();
             indexBuffer->Initialize(IIndexBuffer::UShort);
             assert(indexBuffer && indexBuffer->IsValid());
             
@@ -169,7 +171,7 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, uint32_t cameraId
         }
 
         // Mesh
-        mesh = GRenderer->CreateMesh();
+        mesh = renderer->CreateMesh();
         assert(mesh && mesh->IsValid());
         mesh->VertexBuffer(vertexBuffer);
         mesh->IndexBuffer(indexBuffer);
@@ -177,11 +179,11 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, uint32_t cameraId
         // Texture
         CResourceCache<ITexture> textureCache;
         ITexturePtr texture = textureCache.AcquireResource(model3D->TextureName(group), false,
-                                                           [](const std::string& filename) -> ITexturePtr
+                                                           [renderer](const std::string& filename) -> ITexturePtr
         {
            CResourceCache<IImage> imageCache;
            IImagePtr image = imageCache.AcquireResource(filename, false,
-                                                        [](const std::string& filename) -> IImagePtr
+                                                        [renderer](const std::string& filename) -> IImagePtr
            {
 #ifdef OS_KOS
                IImagePtr resultImage(new CImageDreamPVR(filename));
@@ -196,7 +198,7 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, uint32_t cameraId
                return resultImage;
            });
            
-           ITexturePtr resultTexture = GRenderer->CreateTexture();
+           ITexturePtr resultTexture = renderer->CreateTexture();
            if (image)
            {
                resultTexture->AssignImage(image);

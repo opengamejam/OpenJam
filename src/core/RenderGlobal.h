@@ -19,6 +19,4 @@
 #include "IRenderTarget.h"
 #include "IRenderView.h"
 
-extern jam::IRendererPtr GRenderer;
-
 #endif /* RENDERGLOBAL_H */

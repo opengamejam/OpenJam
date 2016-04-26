@@ -28,6 +28,7 @@ using namespace jam;
 
 CRenderViewDreamcast::CRenderViewDreamcast()
 	: IRenderView(vid_mode->width, vid_mode->height, 1.0f)
+    , m_Renderer(nullptr)
     , m_DefaultRenderTarget(nullptr)
 	, m_Joy(maple_enum_type(0, MAPLE_FUNC_CONTROLLER))
 {
@@ -42,7 +43,7 @@ void CRenderViewDreamcast::CreateView()
 {
 	glKosInit();
 
-	GRenderer.reset(new CRendererOGL1_3(shared_from_this()));
+	m_Renderer.reset(new CRendererOGL1_3(shared_from_this()));
 	m_DefaultRenderTarget.reset(new CFrameBufferOGL1_3(RealWidth(), RealHeight()));
 }
 
@@ -70,6 +71,11 @@ void CRenderViewDreamcast::UpdateEvents() const
                                                              CTouchEvent::Move));
 		Dispatcher()->DispatchEvent(event);
 	}
+}
+
+IRendererPtr CRenderViewDreamcast::Renderer() const
+{
+    return m_Renderer;
 }
 
 IRenderTargetPtr CRenderViewDreamcast::DefaultRenderTarget() const

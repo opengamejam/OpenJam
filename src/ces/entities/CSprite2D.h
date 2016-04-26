@@ -18,11 +18,13 @@ CLASS_PTR(CSprite2D);
 CLASS_PTR(CRenderComponent);
 CLASS_PTR(CAnimation2DComponent);
 CLASS_PTR(CTransformationComponent);
+CLASS_PTR(IRenderer);
 
 class CSprite2D : public IEntity
 {
 public:
-    static CSprite2DPtr Create(const std::string& filename, 
+    static CSprite2DPtr Create(const std::string& filename,
+                               IRendererPtr renderer,
 							   uint32_t cameraId = std::numeric_limits<uint32_t>::max());
     
     CSprite2D();

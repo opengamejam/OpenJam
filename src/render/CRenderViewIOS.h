@@ -33,6 +33,7 @@ public:
     virtual void End() const override;
     virtual void UpdateEvents() const override;
     
+    virtual IRendererPtr Renderer() const override;
     virtual IRenderTargetPtr DefaultRenderTarget() const override;
 
 private:
@@ -42,6 +43,7 @@ private:
 #endif
     RenderApi m_RenderApi;
     unsigned int m_ColorBuffer;
+    IRendererPtr m_Renderer;
     IRenderTargetPtr m_DefaultRenderTarget;
 };
 

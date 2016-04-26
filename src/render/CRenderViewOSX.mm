@@ -31,6 +31,7 @@ CRenderViewOSX::CRenderViewOSX(unsigned int width, unsigned int height, void* gl
 	, m_GLView((__bridge NSOpenGLView*)glkView)
     , m_GLContext(nil)
     , m_RenderApi(renderApi)
+    , m_Renderer(nullptr)
     , m_DefaultRenderTarget(nullptr)
 {
     IEventable::RegisterDispatcher(std::make_shared<IEventDispatcher>(IEventDispatcher()));
@@ -61,7 +62,7 @@ void CRenderViewOSX::CreateView()
                                                      shareContext:nil];
             [m_GLContext makeCurrentContext];
             
-            GRenderer.reset(new CRendererOGL1_5(shared_from_this()));
+            m_Renderer.reset(new CRendererOGL1_5(shared_from_this()));
             
             std::shared_ptr<CFrameBufferOGL1_5> renderTarget(new CFrameBufferOGL1_5(RealWidth(), RealHeight()));
             renderTarget->Initialize(0, 0);
@@ -72,7 +73,7 @@ void CRenderViewOSX::CreateView()
         case OGL3_2:
         {
             /*m_GLContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
-            GRenderer.reset(new CRendererOGLES2(shared_from_this()));*/
+            m_Renderer.reset(new CRendererOGLES2(shared_from_this()));*/
             CGLEnable([m_GLContext CGLContextObj], kCGLCECrashOnRemovedFunctions);
         }
         break;
@@ -80,7 +81,7 @@ void CRenderViewOSX::CreateView()
         case OGL4_1:
         {
             /*m_GLContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3];
-            GRenderer.reset(new CRendererOGLES1(shared_from_this()));*/
+            m_Renderer.reset(new CRendererOGLES1(shared_from_this()));*/
         }
         break;
             
@@ -110,6 +111,11 @@ void CRenderViewOSX::End() const
 void CRenderViewOSX::UpdateEvents() const
 {
 
+}
+
+IRendererPtr CRenderViewOSX::Renderer() const
+{
+    return m_Renderer;
 }
 
 IRenderTargetPtr CRenderViewOSX::DefaultRenderTarget() const

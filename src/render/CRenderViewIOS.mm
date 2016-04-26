@@ -37,6 +37,7 @@ CRenderViewIOS::CRenderViewIOS(void* glkView, RenderApi renderApi)
 	, m_GLKView((__bridge UIView*)glkView)
     , m_GLContext(nil)
     , m_RenderApi(renderApi)
+    , m_Renderer(nullptr)
     , m_DefaultRenderTarget(nullptr)
 {
     IEventable::RegisterDispatcher(std::make_shared<IEventDispatcher>(IEventDispatcher()));
@@ -56,7 +57,7 @@ void CRenderViewIOS::CreateView()
             m_GLContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1];
             [EAGLContext setCurrentContext:m_GLContext];
             
-            GRenderer.reset(new CRendererOGLES1_1(shared_from_this()));
+            m_Renderer.reset(new CRendererOGLES1_1(shared_from_this()));
             
             glGenRenderbuffers(1, &m_ColorBuffer);
             glBindRenderbuffer(GL_RENDERBUFFER, m_ColorBuffer);
@@ -75,7 +76,7 @@ void CRenderViewIOS::CreateView()
             m_GLContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
             [EAGLContext setCurrentContext:m_GLContext];
             
-            GRenderer.reset(new CRendererOGLES2_0(shared_from_this()));
+            m_Renderer.reset(new CRendererOGLES2_0(shared_from_this()));
             
             glGenRenderbuffers(1, &m_ColorBuffer);
             glBindRenderbuffer(GL_RENDERBUFFER, m_ColorBuffer);
@@ -94,7 +95,7 @@ void CRenderViewIOS::CreateView()
             m_GLContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1];
             [EAGLContext setCurrentContext:m_GLContext];
             
-            GRenderer.reset(new CRendererOGLES1_1(shared_from_this()));
+            m_Renderer.reset(new CRendererOGLES1_1(shared_from_this()));
             
             glGenRenderbuffers(1, &m_ColorBuffer);
             glBindRenderbuffer(GL_RENDERBUFFER, m_ColorBuffer);
@@ -115,7 +116,7 @@ void CRenderViewIOS::CreateView()
     m_DefaultRenderTarget->CreateDepthAttachment();
     m_DefaultRenderTarget->CreateStencilAttachment();
     
-    assert(GRenderer);
+    assert(m_Renderer);
 }
 
 void CRenderViewIOS::Begin() const
@@ -133,6 +134,11 @@ void CRenderViewIOS::End() const
 void CRenderViewIOS::UpdateEvents() const
 {
 
+}
+
+IRendererPtr CRenderViewIOS::Renderer() const
+{
+    return m_Renderer;
 }
 
 IRenderTargetPtr CRenderViewIOS::DefaultRenderTarget() const

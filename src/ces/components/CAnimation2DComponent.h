@@ -17,6 +17,7 @@ namespace jam
 CLASS_PTR(CAnimation2DComponent);
 CLASS_PTR(ISprite);
 CLASS_PTR(ITexture);
+CLASS_PTR(IRenderer);
 
 class CAnimation2DComponent final : public IComponent
 {
@@ -37,7 +38,7 @@ public:
     };
     
 public:
-    CAnimation2DComponent();
+    CAnimation2DComponent(IRendererPtr renderer);
     ~CAnimation2DComponent();
     
     void Sprite(ISpritePtr sprite);
@@ -77,6 +78,7 @@ private:
     
 private:
     ISpritePtr m_Sprite;
+    IRendererPtr m_Renderer;
     
     std::unordered_map<std::string, TSequence> m_Sequences;
     std::vector<std::string> m_SequencesNames;

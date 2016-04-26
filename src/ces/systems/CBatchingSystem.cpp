@@ -28,8 +28,10 @@ using namespace jam;
 // Public Methods
 // *****************************************************************************
 
-CBatchingSystem::CBatchingSystem()
+CBatchingSystem::CBatchingSystem(IRendererPtr renderer)
+    : m_Renderer(renderer)
 {
+    assert(m_Renderer);
     RegisterComponent(ComponentId<CBatchComponent>());
     RegisterComponent(ComponentId<CTransformationComponent>());
 }
@@ -137,15 +139,15 @@ CBatchingSystem::SGeometry CBatchingSystem::CreateNewGeometry(IMaterialPtr mater
                                                                uint64_t elementVertexSize,
                                                                uint64_t elementIndexSize) const
 {
-    IMeshPtr mesh = GRenderer->CreateMesh();
+    IMeshPtr mesh = m_Renderer->CreateMesh();
     assert(mesh);
-    IVertexBufferPtr vertexBuffer = GRenderer->CreatVertexBuffer();
+    IVertexBufferPtr vertexBuffer = m_Renderer->CreatVertexBuffer();
     vertexBuffer->Initialize(elementVertexSize);
     
     IIndexBufferPtr indexBuffer = nullptr;
     if (elementIndexSize > 0)
     {
-        indexBuffer = GRenderer->CreateIndexBuffer();
+        indexBuffer = m_Renderer->CreateIndexBuffer();
         indexBuffer->Initialize(IIndexBuffer::Short); // TODO:
     }
     

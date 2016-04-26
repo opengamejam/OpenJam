@@ -26,7 +26,8 @@ public:
 	virtual void        End() const;
 	virtual void        UpdateEvents() const;
 
-	virtual IRenderTargetPtr DefaultRenderTarget() const;
+    virtual IRendererPtr Renderer() const override;
+	virtual IRenderTargetPtr DefaultRenderTarget() const override;
     
 private:
     LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
@@ -39,6 +40,7 @@ private:
 	HWND				m_Window;
 	HDC					m_DeviceContext;
 	HINSTANCE           m_Instance;
+    IRendererPtr m_Renderer;
 	IRenderTargetPtr m_DefaultRenderTarget;
 };
 

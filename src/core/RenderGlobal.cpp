@@ -8,4 +8,3 @@
 
 #include "RenderGlobal.h"
 
-jam::IRendererPtr GRenderer = nullptr;

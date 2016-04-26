@@ -25,9 +25,10 @@ using namespace jam;
 // Public Methods
 // *****************************************************************************
 
-CAnimation2DComponent::CAnimation2DComponent()
+CAnimation2DComponent::CAnimation2DComponent(IRendererPtr renderer)
 : IComponent(ComponentId<CAnimation2DComponent>())
 , m_Sprite(nullptr)
+, m_Renderer(renderer)
 , m_CachedFrameTransform()
 , m_CachedTexture(nullptr)
 , m_CachedIsStatic(true)
@@ -35,7 +36,7 @@ CAnimation2DComponent::CAnimation2DComponent()
 , m_Time(0)
 , m_IsPlay(true)
 {
-
+    assert(m_Renderer);
 }
 
 CAnimation2DComponent::~CAnimation2DComponent()
@@ -279,15 +280,16 @@ void CAnimation2DComponent::Cache()
 void CAnimation2DComponent::LoadTextures(const std::vector<std::string>& textureNames)
 {
     CResourceCache<ITexture> textureCache;
-
+    IRendererPtr renderer = m_Renderer;
+    
     std::for_each(textureNames.begin(), textureNames.end(), [&](const std::string& textureName)
     {
         ITexturePtr texture = textureCache.AcquireResource(textureName, false,
-                                                       [](const std::string& filename) -> ITexturePtr
+                                                       [renderer](const std::string& filename) -> ITexturePtr
         {
             CResourceCache<IImage> imageCache;
             IImagePtr image = imageCache.AcquireResource(filename, false,
-                                                        [](const std::string& filename) -> IImagePtr
+                                                        [renderer](const std::string& filename) -> IImagePtr
             {
 #ifdef OS_KOS
                 IImagePtr resultImage(new CImageDreamPVR(filename));
@@ -302,7 +304,7 @@ void CAnimation2DComponent::LoadTextures(const std::vector<std::string>& texture
                 return resultImage;
             });
 
-            ITexturePtr resultTexture = GRenderer->CreateTexture();
+            ITexturePtr resultTexture = renderer->CreateTexture();
             if (image)
             {
                resultTexture->AssignImage(image);

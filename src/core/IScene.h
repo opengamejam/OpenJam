@@ -17,6 +17,7 @@ namespace jam
 CLASS_PTR(IEventDispatcher);
 CLASS_PTR(ICamera);
 CLASS_PTR(IEntity);
+CLASS_PTR(CGame);
 CLASS_WEAK(CGame);
     
 class IScene : public IEventable, public std::enable_shared_from_this<IScene>
@@ -25,7 +26,7 @@ public:
     typedef std::vector<ICameraPtr> TCamerasList;
     
 public:
-    IScene(CGameWeak game);
+    IScene(CGamePtr game);
     virtual ~IScene();
     
 	virtual void Start() = 0;
@@ -34,7 +35,7 @@ public:
 	virtual void Stop() = 0;
 	virtual void Update(unsigned long dt);
     
-    virtual CGameWeak Game() const;
+    virtual CGamePtr Game() const;
     virtual const TCamerasList& Cameras() const;
     virtual void AddCamera(ICameraPtr camera);
     virtual void RemoveCamera(ICameraPtr camera);

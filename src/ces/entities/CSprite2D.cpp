@@ -28,7 +28,7 @@ using namespace jam;
 // Public Methods
 // *****************************************************************************
 
-CSprite2DPtr CSprite2D::Create(const std::string& filename, uint32_t cameraId)
+CSprite2DPtr CSprite2D::Create(const std::string& filename, IRendererPtr renderer, uint32_t cameraId)
 {
     IMeshPtr mesh = nullptr;
     IMaterialPtr material = nullptr;
@@ -41,27 +41,27 @@ CSprite2DPtr CSprite2D::Create(const std::string& filename, uint32_t cameraId)
     // Shaders
     CShaderSourceSprite shaderSource;
     
-    vertexShader = GRenderer->CreateShader();
+    vertexShader = renderer->CreateShader();
     vertexShader->Compile(shaderSource.Vertex(), IShader::Vertex);
     assert(vertexShader);
     
-    fragmentShader = GRenderer->CreateShader();
+    fragmentShader = renderer->CreateShader();
     fragmentShader->Compile(shaderSource.Fragment(), IShader::Fragment);
     assert(fragmentShader);
     
-    shaderProgram = GRenderer->CreateShaderProgram();
+    shaderProgram = renderer->CreateShaderProgram();
     shaderProgram->AttachShader(vertexShader);
     shaderProgram->AttachShader(fragmentShader);
     shaderProgram->Link();
     
     // Material
-    material = GRenderer->CreateMaterial();
+    material = renderer->CreateMaterial();
     material->PrimitiveType(IMaterial::TrianglesStrip);
     material->DepthEnable(true);
     material->Opacity(false);
     
     // Vertex buffer
-    vertexBuffer = GRenderer->CreatVertexBuffer();
+    vertexBuffer = renderer->CreatVertexBuffer();
     vertexBuffer->Initialize(sizeof(glm::vec3) + sizeof(CColor4f) + sizeof(glm::vec2));
     assert(vertexBuffer && vertexBuffer->IsValid());
     
@@ -108,7 +108,7 @@ CSprite2DPtr CSprite2D::Create(const std::string& filename, uint32_t cameraId)
     vertexBuffer->Unlock(true);
     
     // Index buffer
-    indexBuffer = GRenderer->CreateIndexBuffer();
+    indexBuffer = renderer->CreateIndexBuffer();
     indexBuffer->Initialize(IIndexBuffer::UShort);
     assert(indexBuffer && indexBuffer->IsValid());
     
@@ -118,7 +118,7 @@ CSprite2DPtr CSprite2D::Create(const std::string& filename, uint32_t cameraId)
     indexBuffer->Unlock(true);
 
     // Mesh
-    mesh = GRenderer->CreateMesh();
+    mesh = renderer->CreateMesh();
     assert(mesh && mesh->IsValid());
     mesh->VertexBuffer(vertexBuffer);
     mesh->IndexBuffer(indexBuffer);
@@ -134,7 +134,7 @@ CSprite2DPtr CSprite2D::Create(const std::string& filename, uint32_t cameraId)
     }
     
     // Sprite component
-    CAnimation2DComponentPtr animationComponent(new CAnimation2DComponent());
+    CAnimation2DComponentPtr animationComponent(new CAnimation2DComponent(renderer));
     
     CResourceCache<ISprite> resourceCache;
     ISpritePtr sprite = resourceCache.AcquireResource(filename, false,

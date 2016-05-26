@@ -20,6 +20,7 @@ CLASS_PTR(CCESEvent);
 
 class CCESEvent : public IEvent
 {
+    JAM_OBJECT
 public:
     enum ActionType
     {

@@ -18,6 +18,7 @@ CLASS_PTR(CTouchEvent);  // TODO:
 
 class CTouchEvent : public IEvent
 {
+    JAM_OBJECT
 public:
     enum ETouchEventType
     {

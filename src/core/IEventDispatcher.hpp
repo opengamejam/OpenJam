@@ -21,7 +21,7 @@ class IEventDispatcher final
 public:
     typedef std::function<bool(IEventPtr event)> TEventHandler;
     typedef std::vector<TEventHandler> TEventHandlersList;
-    typedef std::unordered_map<std::type_index, TEventHandlersList> TEvenetHandlersMap;
+    typedef std::unordered_map<typeid_t, TEventHandlersList> TEvenetHandlersMap;
     
 public:
     IEventDispatcher() = default;
@@ -30,14 +30,14 @@ public:
     template<typename T>
     void RegisterEventHandler(const TEventHandler& eventHandler)
     {
-        std::type_index eventType = std::type_index(typeid(T));
+        typeid_t eventType = CTypeId<T>::Id();
         m_HandlersMap[eventType].push_back(eventHandler);
     }
     
     template <typename T>
     void UnregisterEventHandler(const TEventHandler& eventHandler)
     {
-        std::type_index eventType = std::type_index(typeid(T));
+        typeid_t eventType = CTypeId<T>::Id();
         
         TEventHandlersList::const_iterator beg = m_HandlersMap[eventType].begin();
         TEventHandlersList::const_iterator end = m_HandlersMap[eventType].end();
@@ -52,15 +52,14 @@ public:
     template <typename T>
     void UnregisterEventHandlers()
     {
-        std::type_index eventType = std::type_index(typeid(T));
+        typeid_t eventType = CTypeId<T>::Id();
         
         m_HandlersMap[eventType].clear();
     }
     
     void DispatchEvent(IEventPtr event)
     {
-        IEvent& e = *event.get();
-        std::type_index eventType = std::type_index(typeid(e));
+        typeid_t eventType = event->GetId();
         
         TEventHandlersList handlers = m_HandlersMap[eventType];
         std::all_of(handlers.begin(), handlers.end(), [&event](TEventHandler handler)

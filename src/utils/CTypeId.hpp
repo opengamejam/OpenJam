@@ -23,6 +23,12 @@ public:
         static char const type_id = '\0';
         return reinterpret_cast<typeid_t>(&type_id);
     }
+    
+    static const std::string& Name()
+    {
+        static std::string name = std::to_string(Id());
+        return name;
+    }
 };
 
 /* 
@@ -33,10 +39,15 @@ public:
  */
 #define JAM_OBJECT_BASE                         \
 public:                                         \
-virtual typeid_t GetId() const                  \
+    virtual typeid_t GetId() const              \
     {                                           \
         assert(false);                          \
         return 0;                               \
+    }                                           \
+                                                \
+    const std::string& SuperName() const        \
+    {                                           \
+        return CTypeId<std::remove_const<std::remove_pointer<decltype(this)>::type>::type>::Name(); \
     }
 
 /* 
@@ -50,7 +61,6 @@ public:                                         \
     virtual typeid_t GetId() const override     \
     {                                           \
         return CTypeId<std::remove_const<std::remove_pointer<decltype(this)>::type>::type>::Id(); \
-    }
-
+    }                                           
 
 #endif /* CTYPEID_H */

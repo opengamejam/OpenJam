@@ -45,7 +45,7 @@ public:
     std::shared_ptr<T> FindResource(const std::string& filename)
     {
         std::shared_ptr<T> resource = nullptr;
-        std::string key = filename + typeid(T).name();
+        std::string key = filename + CTypeId<T>::Name();
         if (s_CachedResources.find(key) != s_CachedResources.end())
         {
             resource = std::dynamic_pointer_cast<T>(s_CachedResources[key]);
@@ -61,7 +61,7 @@ public:
             return;
         }
         
-        std::stringstream key(filename + typeid(T).name());
+        std::stringstream key(filename + CTypeId<T>::Name());
         if (isUnique)
         {
             key << "unique" << s_UniqIndex++;

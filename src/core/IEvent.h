@@ -16,6 +16,7 @@ namespace jam
 
 class IEvent
 {
+    JAM_OBJECT_BASE
 public:
     IEvent() = default;
     virtual ~IEvent() = default;

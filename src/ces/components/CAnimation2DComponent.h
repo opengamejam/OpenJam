@@ -21,6 +21,7 @@ CLASS_PTR(IRenderer);
 
 class CAnimation2DComponent final : public IComponent
 {
+    JAM_OBJECT
 public:
     struct SFrame
     {

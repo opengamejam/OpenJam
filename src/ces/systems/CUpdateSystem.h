@@ -17,6 +17,7 @@ CLASS_PTR(CUpdateSystem);
 
 class CUpdateSystem : public ISystem
 {
+    JAM_OBJECT
 public:
     CUpdateSystem();
     virtual ~CUpdateSystem();

@@ -26,8 +26,7 @@ using namespace jam;
 // *****************************************************************************
 
 CAnimation2DComponent::CAnimation2DComponent(IRendererPtr renderer)
-: IComponent(ComponentId<CAnimation2DComponent>())
-, m_Sprite(nullptr)
+: m_Sprite(nullptr)
 , m_Renderer(renderer)
 , m_CachedFrameTransform()
 , m_CachedTexture(nullptr)

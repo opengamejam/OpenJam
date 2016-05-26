@@ -16,20 +16,13 @@ namespace jam
 
 CLASS_PTR(IComponent);
 CLASS_WEAK(IEntity);
-    
-template<class T>
-inline static std::type_index ComponentId()
-{
-    return std::type_index(typeid(T));
-}
 
 class IComponent : public IEventable, public std::enable_shared_from_this<IComponent>
 {
+    JAM_OBJECT_BASE
 public:
-    IComponent(const std::type_index& id);
+    IComponent();
     virtual ~IComponent() = default;
-    
-    const std::type_index& Id() const;
 
     void Entity(IEntityWeak entityWeak);
     IEntityWeak Entity() const;
@@ -37,7 +30,6 @@ public:
     void Dirty();
     
 private:
-    std::type_index m_CachedId;
     IEntityWeak m_Entity;
 };
 

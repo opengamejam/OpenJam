@@ -18,6 +18,7 @@ CLASS_PTR(CTransformationComponent);
 
 class CTransformationComponent final : public IComponent
 {
+    JAM_OBJECT    
 public:
     enum TransformFlags
     {

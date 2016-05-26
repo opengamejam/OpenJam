@@ -20,8 +20,7 @@ using namespace jam;
 // *****************************************************************************
 
 CBatchComponent::CBatchComponent()
-: IComponent(ComponentId<CBatchComponent>())
-, m_BatchId(0)
+: m_BatchId(0)
 , m_Transform()
 , m_OldTransform()
 , m_OffsetVertex(0)

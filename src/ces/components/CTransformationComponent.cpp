@@ -21,7 +21,6 @@ using namespace jam;
 // *****************************************************************************
 
 CTransformationComponent::CTransformationComponent()
-: IComponent(ComponentId<CTransformationComponent>())
 {
 }
 

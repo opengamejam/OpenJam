@@ -58,7 +58,7 @@ CRenderSystem::CRenderSystem(IRendererPtr renderer)
     : m_Renderer(renderer)
 {
     assert(m_Renderer);
-    RegisterComponent(ComponentId<CRenderComponent>());
+    RegisterComponent(CTypeId<CRenderComponent>::Id());
 }
 
 CRenderSystem::~CRenderSystem()

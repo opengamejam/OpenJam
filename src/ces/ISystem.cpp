@@ -62,7 +62,7 @@ const ISystem::TComponentIds& ISystem::RegisteredComponents()
     return m_RegisteredComponents;
 }
 
-bool ISystem::IsComponentRegistered(const std::type_index& id)
+bool ISystem::IsComponentRegistered(typeid_t id)
 {
     return (m_RegisteredComponents.find(id) != m_RegisteredComponents.end());
 }
@@ -71,12 +71,12 @@ bool ISystem::IsComponentRegistered(const std::type_index& id)
 // Protected Methods
 // *****************************************************************************
 
-void ISystem::RegisterComponent(const std::type_index& id)
+void ISystem::RegisterComponent(typeid_t id)
 {
     m_RegisteredComponents.insert(id);
 }
 
-void ISystem::UnregisterComponent(const std::type_index& id)
+void ISystem::UnregisterComponent(typeid_t id)
 {
     m_RegisteredComponents.erase(id);
 }
@@ -90,7 +90,7 @@ bool ISystem::HaveSupportedComponents(IEntityPtr entity)
     
     bool found = false;
     const ISystem::TComponentIds& componentIds = RegisteredComponents();
-    std::all_of(componentIds.begin(), componentIds.end(), [&](const std::type_index& id)
+    std::all_of(componentIds.begin(), componentIds.end(), [&](typeid_t id)
     {
         found = entity->HasComponent(id);
         return !found;
@@ -167,7 +167,7 @@ bool ISystem::OnComponentChanged(IEventPtr event)
         case CCESEvent::Changed:
         {
             IComponentPtr component = componentEvent->Component().lock();
-            if (component && IsComponentRegistered(component->Id()))
+            if (component && IsComponentRegistered(component->GetId()))
             {
                 OnChangedEntity(entity);
             }

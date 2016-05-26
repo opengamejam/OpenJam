@@ -59,7 +59,7 @@ void IEntity::AddComponent(IComponentPtr component)
         return;
     }
     
-    TComponentsList& components = m_Components[component->Id()];
+    TComponentsList& components = m_Components[component->GetId()];
     TComponentsList::const_iterator it = std::find(components.begin(), components.end(), component);
     if (it == components.end())
     {
@@ -68,7 +68,7 @@ void IEntity::AddComponent(IComponentPtr component)
     }
 }
 
-IComponentPtr IEntity::GetComponent(const std::type_index& id)
+IComponentPtr IEntity::GetComponent(typeid_t id)
 {
     TComponentsList& components = m_Components[id];
     if (components.empty())
@@ -86,7 +86,7 @@ void IEntity::RemoveComponent(IComponentPtr component)
         return;
     }
     
-    TComponentsList& components = m_Components[component->Id()];
+    TComponentsList& components = m_Components[component->GetId()];
     TComponentsList::const_iterator it = std::find(components.begin(), components.end(), component);
     if (it != components.end())
     {        
@@ -95,7 +95,7 @@ void IEntity::RemoveComponent(IComponentPtr component)
     }
 }
 
-void IEntity::RemoveAllComponents(const std::type_index& id)
+void IEntity::RemoveAllComponents(typeid_t id)
 {
     TComponentsList& components = m_Components[id];
     std::for_each(components.begin(), components.end(), [&](IComponentPtr component)
@@ -105,13 +105,13 @@ void IEntity::RemoveAllComponents(const std::type_index& id)
     components.clear();
 }
 
-bool IEntity::HasComponent(const std::type_index& id)
+bool IEntity::HasComponent(typeid_t id)
 {
     TComponentsList& components = m_Components[id];
     return !components.empty();
 }
 
-uint32_t IEntity::ComponentsNum(const std::type_index& id)
+uint32_t IEntity::ComponentsNum(typeid_t id)
 {
     TComponentsList& components = m_Components[id];
     return static_cast<uint32_t>(components.size());
@@ -143,9 +143,6 @@ void IEntity::AddChild(IEntityPtr entity)
     
     CCESEventPtr addedEvent(new CCESEvent(entity, CCESEvent::Added));
     Dispatcher()->DispatchEvent(addedEvent);
-    
-    /*CCESEventPtr changedEvent(new CCESEvent(entity, CCESEvent::Changed));
-    Dispatcher()->DispatchEvent(changedEvent);*/
 }
 
 void IEntity::RemoveChild(IEntityPtr entity)

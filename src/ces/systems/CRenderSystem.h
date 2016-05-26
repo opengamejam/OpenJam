@@ -28,6 +28,7 @@ CLASS_PTR(IRenderer);
 
 class CRenderSystem : public ISystem
 {
+    JAM_OBJECT
 public:
     CRenderSystem(IRendererPtr renderer);
     virtual ~CRenderSystem();

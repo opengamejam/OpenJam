@@ -105,13 +105,6 @@ void CGame::Update(unsigned long dt)
 void CGame::Draw()
 {
     CRenderSystemPtr renderSystem = RenderSystem();
-    /*std::type_index key = SystemId<CRenderSystem>();
-    TSystemMap::const_iterator it = m_System.find(key);
-    if (it != m_System.end())
-    {
-        renderSystem = std::static_pointer_cast<CRenderSystem>(it->second);
-    }*/
-
     if (renderSystem && !m_Scenes.empty())
     {
         IScenePtr scene = m_Scenes.top();
@@ -160,15 +153,13 @@ IScenePtr CGame::GetScene() const
 
 void CGame::AddSystem(ISystemPtr system)
 {
-    ISystem& s = *system.get();
-    std::type_index key = std::type_index(typeid(s));
+    typeid_t key = system->GetId();
     m_System[key] = system;
 }
 
 void CGame::RemoveSystem(ISystemPtr system)
 {
-    ISystem& s = *system.get();
-    std::type_index key = std::type_index(typeid(s));
+    typeid_t key = system->GetId();
     TSystemMap::const_iterator it = m_System.find(key);
     if (it != m_System.end())
     {
@@ -176,7 +167,7 @@ void CGame::RemoveSystem(ISystemPtr system)
     }
 }
 
-ISystemPtr CGame::GetSystem(const std::type_index& systemKey)
+ISystemPtr CGame::GetSystem(typeid_t systemKey)
 {
     TSystemMap::const_iterator it = m_System.find(systemKey);
     if (it != m_System.end())

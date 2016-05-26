@@ -31,7 +31,12 @@
 #include <math.h>
 #include <assert.h>
 
+#if defined(GLM_MESSAGES)
+#   undef GLM_MESSAGES
+#endif
 #include "glm/fwd.hpp"
+
+#include "CTypeId.hpp"
 
 // LINUX
 #if defined(OS_LINUX)

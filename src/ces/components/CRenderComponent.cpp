@@ -22,8 +22,7 @@ const std::string CRenderComponent::kBatchingGroupName = "jam_batch_group";
 // *****************************************************************************
 
 CRenderComponent::CRenderComponent()
-: IComponent(ComponentId<CRenderComponent>())
-, m_IsVisible(true)
+: m_IsVisible(true)
 , m_IsBatchable(false)
 , m_DrawOrder(0)
 {

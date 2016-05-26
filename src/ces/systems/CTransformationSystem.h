@@ -20,6 +20,7 @@ CLASS_PTR(CTransformationComponent);
     
 class CTransfromationSystem : public ISystem
 {
+    JAM_OBJECT
 public:
     CTransfromationSystem();
     virtual ~CTransfromationSystem();

@@ -21,15 +21,9 @@ using namespace jam;
 // Public Methods
 // *****************************************************************************
 
-IComponent::IComponent(const std::type_index& id)
-: m_CachedId(id)
+IComponent::IComponent()
 {
 
-}
-
-const std::type_index& IComponent::Id() const
-{
-    return m_CachedId;
 }
 
 void IComponent::Entity(IEntityWeak entityWeak)

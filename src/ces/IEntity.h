@@ -18,9 +18,10 @@ CLASS_PTR(IEntity);
 
 class IEntity : public IEventable, public std::enable_shared_from_this<IEntity>
 {
+    JAM_OBJECT_BASE
 public:
     typedef std::vector<IComponentPtr> TComponentsList;
-    typedef std::unordered_map<std::type_index, TComponentsList> TComponentsMap;
+    typedef std::unordered_map<typeid_t, TComponentsList> TComponentsMap;
     typedef std::vector<IEntityPtr> TEntities;
     
 public:
@@ -33,12 +34,12 @@ public:
     void Name(const std::string& name);
     
     void AddComponent(IComponentPtr component);
-    IComponentPtr GetComponent(const std::type_index& id);
+    IComponentPtr GetComponent(typeid_t id);
 
     template <class T>
     std::shared_ptr<T> Get()
     {
-        std::type_index id = ComponentId<T>();
+        typeid_t id = CTypeId<T>::Id();
         return std::static_pointer_cast<T>(GetComponent(id));
     }
     
@@ -53,9 +54,9 @@ public:
     }
     
     void RemoveComponent(IComponentPtr component);
-    void RemoveAllComponents(const std::type_index& id);
-    bool HasComponent(const std::type_index& id);
-    uint32_t ComponentsNum(const std::type_index& id);
+    void RemoveAllComponents(typeid_t id);
+    bool HasComponent(typeid_t id);
+    uint32_t ComponentsNum(typeid_t id);
     
     void AddChild(IEntityPtr entity);
     void RemoveChild(IEntityPtr entity);

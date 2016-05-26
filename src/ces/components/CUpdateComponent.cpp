@@ -20,8 +20,7 @@ using namespace jam;
 // *****************************************************************************
 
 CUpdateComponent::CUpdateComponent(const TUpdateFunc& updateFunc)
-: IComponent(ComponentId<CUpdateComponent>())
-, m_UpdateFunc(updateFunc)
+: m_UpdateFunc(updateFunc)
 {
 
 }

@@ -17,6 +17,7 @@ CLASS_PTR(CAnimation2DSystem);
     
 class CAnimation2DSystem : public ISystem
 {
+    JAM_OBJECT
 public:
     CAnimation2DSystem();
     virtual ~CAnimation2DSystem();

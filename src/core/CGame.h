@@ -21,7 +21,7 @@ CLASS_PTR(CRenderSystem);
 class CGame : public IEventable
 {
 public:
-    typedef std::unordered_map<std::type_index, ISystemPtr> TSystemMap;
+    typedef std::unordered_map<typeid_t, ISystemPtr> TSystemMap;
     
 public:
     
@@ -44,7 +44,7 @@ public:
     
     void AddSystem(ISystemPtr system);
     void RemoveSystem(ISystemPtr system);
-    ISystemPtr GetSystem(const std::type_index& systemKey);
+    ISystemPtr GetSystem(typeid_t systemKey);
     
     CRenderSystemPtr RenderSystem() const;
 

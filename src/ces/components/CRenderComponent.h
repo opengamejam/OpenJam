@@ -22,6 +22,7 @@ CLASS_PTR(IShaderProgram);
     
 class CRenderComponent final : public IComponent
 {
+    JAM_OBJECT    
 public:
     static const std::string kDefaultGroupName;
     static const std::string kBatchingGroupName;

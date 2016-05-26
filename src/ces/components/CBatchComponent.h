@@ -19,6 +19,8 @@ CLASS_PTR(CBatchComponent);
 
 class CBatchComponent final : public IComponent
 {
+    JAM_OBJECT
+    
     friend class CBatchingSystem;
 public:
     CBatchComponent();

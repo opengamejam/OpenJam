@@ -25,6 +25,7 @@ CLASS_PTR(IRenderer);
 
 class CBatchingSystem : public ISystem
 {
+    JAM_OBJECT
 public:
     CBatchingSystem(IRendererPtr renderer);
     virtual ~CBatchingSystem();

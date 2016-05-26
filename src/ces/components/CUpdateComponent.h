@@ -18,6 +18,7 @@ CLASS_PTR(CUpdateComponent);
     
 class CUpdateComponent final : public IComponent
 {
+    JAM_OBJECT    
 public:
     typedef std::function<void(unsigned long)> TUpdateFunc;
     

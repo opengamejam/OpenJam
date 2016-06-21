@@ -22,7 +22,7 @@ using namespace jam;
 
 CUpdateSystem::CUpdateSystem()
 {
-    RegisterComponent(CTypeId<CUpdateComponent>::Id());
+    RegisterComponent<CUpdateComponent>();
 }
 
 CUpdateSystem::~CUpdateSystem()

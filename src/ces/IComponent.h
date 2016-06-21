@@ -9,17 +9,20 @@
 #ifndef ICOMPONENT_H
 #define ICOMPONENT_H
 
-#include "IEventable.h"
+#include "CSignal.hpp"
 
 namespace jam
 {
 
 CLASS_PTR(IComponent);
+CLASS_PTR(IEntity);
 CLASS_WEAK(IEntity);
 
-class IComponent : public IEventable, public std::enable_shared_from_this<IComponent>
+class IComponent : public std::enable_shared_from_this<IComponent>
 {
     JAM_OBJECT_BASE
+    
+    friend class ISystem;
 public:
     IComponent();
     virtual ~IComponent() = default;
@@ -29,6 +32,11 @@ public:
     
     void Dirty();
     
+signals:
+    static CSignal<void, IEntityPtr> OnAddedSignal;
+    static CSignal<void, IEntityPtr> OnRemovedSignal;
+    static CSignal<void, IComponentPtr> OnChangedSignal;
+
 private:
     IEntityWeak m_Entity;
 };

@@ -9,14 +9,16 @@
 #ifndef IENTITY_H
 #define IENTITY_H
 
-#include "IComponent.h"
+#include "Global.h"
 
 namespace jam
 {
 
 CLASS_PTR(IEntity);
+CLASS_WEAK(IEntity);
+CLASS_PTR(IComponent);
 
-class IEntity : public IEventable, public std::enable_shared_from_this<IEntity>
+class IEntity : public std::enable_shared_from_this<IEntity>
 {
     JAM_OBJECT_BASE
 public:

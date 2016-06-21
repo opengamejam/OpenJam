@@ -7,8 +7,7 @@
 //
 
 #include "IEntity.h"
-#include "CCESEvent.h"
-#include "IEventDispatcher.hpp"
+#include "IComponent.h"
 
 using namespace jam;
 
@@ -141,8 +140,15 @@ void IEntity::AddChild(IEntityPtr entity)
     entity->HierarchyIndex(HierarchyIndex() + 1);
     m_Entities.push_back(entity);
     
-    CCESEventPtr addedEvent(new CCESEvent(entity, CCESEvent::Added));
-    Dispatcher()->DispatchEvent(addedEvent);
+    std::for_each(entity->m_Components.begin(), entity->m_Components.end(),
+                  [entity](const TComponentsMap::value_type& element)
+    {
+        const TComponentsList& components = element.second;
+        std::for_each(components.begin(), components.end(), [entity](const TComponentsList::value_type& component)
+        {
+            emit component->OnAddedSignal(entity);
+        });
+    });
 }
 
 void IEntity::RemoveChild(IEntityPtr entity)
@@ -155,8 +161,14 @@ void IEntity::RemoveChild(IEntityPtr entity)
         m_Entities.erase(it);
     }
     
-    CCESEventPtr event(new CCESEvent(entity, CCESEvent::Removed));
-    Dispatcher()->DispatchEvent(event);
+    std::for_each(m_Components.begin(), m_Components.end(), [entity](const TComponentsMap::value_type& element)
+    {
+        const TComponentsList& components = element.second;
+        std::for_each(components.begin(), components.end(), [entity](const TComponentsList::value_type& component)
+        {
+            emit component->OnRemovedSignal(entity);
+        });
+    });
 }
 
 const IEntity::TEntities& IEntity::Childs() const

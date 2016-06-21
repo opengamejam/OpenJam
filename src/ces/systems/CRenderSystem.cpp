@@ -58,7 +58,7 @@ CRenderSystem::CRenderSystem(IRendererPtr renderer)
     : m_Renderer(renderer)
 {
     assert(m_Renderer);
-    RegisterComponent(CTypeId<CRenderComponent>::Id());
+    RegisterComponent<CRenderComponent>();
 }
 
 CRenderSystem::~CRenderSystem()
@@ -235,25 +235,24 @@ void CRenderSystem::OnAddedEntity(IEntityPtr entity)
     });
 }
 
-void CRenderSystem::OnChangedEntity(IEntityPtr entity)
+void CRenderSystem::OnChangedComponent(IComponentPtr component)
 {
-    ISystem::OnChangedEntity(entity);
+    ISystem::OnChangedComponent(component);
     
-    entity->Get<CRenderComponent>([&](CRenderComponentPtr renderComponent)
+    CRenderComponentPtr renderComponent = std::static_pointer_cast<CRenderComponent>(component);
+    
+    std::map<CRenderComponentPtr, uint64_t>::iterator it = m_OrderKeys.find(renderComponent);
+    if (it == m_OrderKeys.end())
     {
-        std::map<CRenderComponentPtr, uint64_t>::iterator it = m_OrderKeys.find(renderComponent);
-        if (it == m_OrderKeys.end())
-        {
-            return;
-        }
-        
-        uint64_t order_key = SOrderComparator::OrderKey(renderComponent, entity);
-        if (order_key != it->second)
-        {
-            it->second = order_key;
-            m_SortedComponents.sort(SOrderComparator());
-        }
-    });
+        return;
+    }
+    
+    uint64_t order_key = SOrderComparator::OrderKey(renderComponent, renderComponent->Entity().lock());
+    if (order_key != it->second)
+    {
+        it->second = order_key;
+        m_SortedComponents.sort(SOrderComparator());
+    }
 }
 
 void CRenderSystem::OnRemovedEntity(IEntityPtr entity)

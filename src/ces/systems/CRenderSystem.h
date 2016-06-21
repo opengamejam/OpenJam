@@ -38,8 +38,8 @@ public:
     
 protected:
     virtual void OnAddedEntity(IEntityPtr entity) override;
-    virtual void OnChangedEntity(IEntityPtr entity) override;
     virtual void OnRemovedEntity(IEntityPtr entity) override;
+    virtual void OnChangedComponent(IComponentPtr component) override;
     
 private:
     void DrawGroup(CRenderComponentPtr renderComponent,

@@ -24,7 +24,7 @@ using namespace jam;
 
 CTransfromationSystem::CTransfromationSystem()
 {
-    RegisterComponent(CTypeId<CTransformationComponent>::Id());
+    RegisterComponent<CTransformationComponent>();
 }
 
 CTransfromationSystem::~CTransfromationSystem()

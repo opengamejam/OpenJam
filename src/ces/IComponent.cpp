@@ -8,14 +8,16 @@
 
 #include "IComponent.h"
 #include "IEntity.h"
-#include "CCESEvent.h"
-#include "IEventDispatcher.hpp"
 
 using namespace jam;
 
 // *****************************************************************************
 // Constants
 // *****************************************************************************
+
+CSignal<void, IEntityPtr> IComponent::OnAddedSignal;
+CSignal<void, IEntityPtr> IComponent::OnRemovedSignal;
+CSignal<void, IComponentPtr> IComponent::OnChangedSignal;
 
 // *****************************************************************************
 // Public Methods
@@ -40,19 +42,16 @@ void IComponent::Entity(IEntityWeak entityWeak)
     if (prevEntity)
     {
         prevEntity->RemoveComponent(thisPtr);
-        CCESEventPtr event(new CCESEvent(prevEntity, CCESEvent::Changed));
-        Dispatcher()->DispatchEvent(event);
     }
     
-    m_Entity = entityWeak;
+    m_Entity = newEntity;
     
     if (newEntity)
     {
         newEntity->AddComponent(thisPtr);
-        CCESEventPtr event(new CCESEvent(newEntity, CCESEvent::Changed));
-        event->Component(thisPtr);
-        Dispatcher()->DispatchEvent(event);
     }
+    
+    Dirty();
 }
 
 IEntityWeak IComponent::Entity() const
@@ -63,9 +62,7 @@ IEntityWeak IComponent::Entity() const
 void IComponent::Dirty()
 {
     IComponentPtr thisPtr = shared_from_this();
-    CCESEventPtr event(new CCESEvent(Entity(), CCESEvent::Changed));
-    event->Component(thisPtr);
-    Dispatcher()->DispatchEvent(event);
+    emit OnChangedSignal(thisPtr);
 }
 
 // *****************************************************************************

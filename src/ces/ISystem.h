@@ -9,15 +9,15 @@
 #ifndef ISYSTEM_H
 #define ISYSTEM_H
 
-#include "IEventable.h"
+#include "Global.h"
 
 namespace jam
 {
     
 CLASS_PTR(IEntity);
-CLASS_PTR(IEvent);
+CLASS_PTR(IComponent);
 
-class ISystem : public IEventable
+class ISystem
 {
     JAM_OBJECT_BASE
 public:
@@ -40,20 +40,33 @@ public:
     virtual void Update(unsigned long dt) = 0;
     
 protected:
-    void RegisterComponent(typeid_t id);
-    void UnregisterComponent(typeid_t id);
-    
     void MarkDirtyEntity(IEntityPtr entity);
-    void UnmarkDirtyEntity(IEntityPtr entity);
     const TEntities& DirtyEntities() const;
     void ClearDirtyEntities();
     
-    virtual void OnAddedEntity(IEntityPtr entity);
-    virtual void OnChangedEntity(IEntityPtr entity);
-    virtual void OnRemovedEntity(IEntityPtr entity);
+    template <typename T>
+    void RegisterComponent()
+    {
+        T::OnAddedSignal += std::bind(&ISystem::OnAddedEntity, this, std::placeholders::_1);
+        T::OnRemovedSignal += std::bind(&ISystem::OnRemovedEntity, this, std::placeholders::_1);
+        T::OnChangedSignal += std::bind(&ISystem::OnChangedComponent, this, std::placeholders::_1);
+        
+        m_RegisteredComponents.insert(CTypeId<T>::Id());
+    }
     
-private:
-    bool OnComponentChanged(IEventPtr event);
+    template <typename T>
+    void UnregisterComponent()
+    {
+        T::OnAddedSignal -= std::bind(&ISystem::OnAddedEntity, this, std::placeholders::_1);
+        T::OnRemovedSignal -= std::bind(&ISystem::OnRemovedEntity, this, std::placeholders::_1);
+        T::OnChangedSignal -= std::bind(&ISystem::OnChangedComponent, this, std::placeholders::_1);
+        
+        m_RegisteredComponents.erase(CTypeId<T>::Id());
+    }
+    
+    virtual void OnAddedEntity(IEntityPtr entity);
+    virtual void OnRemovedEntity(IEntityPtr entity);
+    virtual void OnChangedComponent(IComponentPtr component);
     
 private:
     TEntities m_Entities;

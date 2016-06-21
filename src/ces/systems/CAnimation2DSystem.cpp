@@ -27,8 +27,8 @@ using namespace jam;
 // *****************************************************************************
 
 CAnimation2DSystem::CAnimation2DSystem()
-{
-    RegisterComponent(CTypeId<CAnimation2DComponent>::Id());
+{    
+    RegisterComponent<CAnimation2DComponent>();
 }
 
 CAnimation2DSystem::~CAnimation2DSystem()

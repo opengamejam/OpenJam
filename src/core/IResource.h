@@ -7,7 +7,6 @@
 #define	IRESOURCE_H
 
 #include "Global.h"
-#include "IEventable.h"
 #include "ILoader.h"
 
 namespace jam

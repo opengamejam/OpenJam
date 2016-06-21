@@ -32,8 +32,8 @@ CBatchingSystem::CBatchingSystem(IRendererPtr renderer)
     : m_Renderer(renderer)
 {
     assert(m_Renderer);
-    RegisterComponent(CTypeId<CBatchComponent>::Id());
-    RegisterComponent(CTypeId<CTransformationComponent>::Id());
+    RegisterComponent<CBatchComponent>();
+    RegisterComponent<CTransformationComponent>();
 }
 
 CBatchingSystem::~CBatchingSystem()

@@ -8,8 +8,7 @@
 
 #include "ISystem.h"
 #include "IEntity.h"
-#include "IEventDispatcher.hpp"
-#include "CCESEvent.h"
+#include "IComponent.h"
 
 using namespace jam;
 
@@ -24,14 +23,10 @@ using namespace jam;
 
 ISystem::ISystem()
 {
-    Dispatcher()->RegisterEventHandler<CCESEvent>(std::bind(&ISystem::OnComponentChanged, this,
-                                                                  std::placeholders::_1));
 }
 
 ISystem::~ISystem()
 {
-    Dispatcher()->UnregisterEventHandler<CCESEvent>(std::bind(&ISystem::OnComponentChanged, this,
-                                                                    std::placeholders::_1));
 }
 
 void ISystem::AddEntity(IEntityPtr entity)
@@ -71,16 +66,6 @@ bool ISystem::IsComponentRegistered(typeid_t id)
 // Protected Methods
 // *****************************************************************************
 
-void ISystem::RegisterComponent(typeid_t id)
-{
-    m_RegisteredComponents.insert(id);
-}
-
-void ISystem::UnregisterComponent(typeid_t id)
-{
-    m_RegisteredComponents.erase(id);
-}
-
 bool ISystem::HaveSupportedComponents(IEntityPtr entity)
 {
     if (!entity)
@@ -104,11 +89,6 @@ void ISystem::MarkDirtyEntity(IEntityPtr entity)
     m_DirtyEntities.insert(entity);
 }
 
-void ISystem::UnmarkDirtyEntity(IEntityPtr entity)
-{
-    m_DirtyEntities.erase(entity);
-}
-
 const ISystem::TEntities& ISystem::DirtyEntities() const
 {
     return m_DirtyEntities;
@@ -128,9 +108,9 @@ void ISystem::OnAddedEntity(IEntityPtr entity)
     }
 }
 
-void ISystem::OnChangedEntity(IEntityPtr entity)
+void ISystem::OnChangedComponent(IComponentPtr component)
 {
-    MarkDirtyEntity(entity);
+    MarkDirtyEntity(component->Entity().lock());
 }
 
 void ISystem::OnRemovedEntity(IEntityPtr entity)
@@ -144,41 +124,3 @@ void ISystem::OnRemovedEntity(IEntityPtr entity)
 // *****************************************************************************
 // Private Methods
 // *****************************************************************************
-
-bool ISystem::OnComponentChanged(IEventPtr event)
-{
-    CCESEventPtr componentEvent = std::static_pointer_cast<CCESEvent>(event);
-    assert(componentEvent);
-    
-    IEntityPtr entity = componentEvent->Entity().lock();
-    if (!entity)
-    {
-        return false; // Stop propagation for non-valid entities
-    }
-    
-    CCESEvent::ActionType action = componentEvent->Action();
-    switch (action)
-    {
-        case CCESEvent::Added:
-        {
-            OnAddedEntity(entity);
-        }
-        break;
-        case CCESEvent::Changed:
-        {
-            IComponentPtr component = componentEvent->Component().lock();
-            if (component && IsComponentRegistered(component->GetId()))
-            {
-                OnChangedEntity(entity);
-            }
-        }
-        break;
-        case CCESEvent::Removed:
-        {
-            OnRemovedEntity(entity);
-        }
-        break;
-    };
-    
-    return true;
-}

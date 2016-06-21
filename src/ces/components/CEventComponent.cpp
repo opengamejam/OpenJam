@@ -7,7 +7,6 @@
 //
 
 #include "CEventComponent.h"
-#include "CFunction.h"
 #include "CMathFunc.hpp"
 #include "IEvent.h"
 
@@ -40,8 +39,6 @@ void CEventComponent::RegisterHandler(typeid_t eventId, const TEventHandler& eve
 
 void CEventComponent::UnregisterHandler(typeid_t eventId, const TEventHandler& eventHandler)
 {
-    static CFunction<bool, IEventPtr> func;
-    
     TEvenetHandlersMap::const_iterator it = m_Handlers.find(eventId);
     if (it == m_Handlers.end())
     {
@@ -49,7 +46,7 @@ void CEventComponent::UnregisterHandler(typeid_t eventId, const TEventHandler& e
     }
     
     const TEventHandler& registeredHandler = it->second;
-    if (func.IsEqual(registeredHandler, eventHandler))
+    if (registeredHandler == eventHandler)
     {
         m_Handlers.erase(eventId);
     }
@@ -110,12 +107,12 @@ IEventPtr CEventComponent::Pop()
 
 bool CEventComponent::DispatchEvent(IEventPtr event)
 {
-    TEvenetHandlersMap::const_iterator it = m_Handlers.find(event->GetId());
+    TEvenetHandlersMap::iterator it = m_Handlers.find(event->GetId());
     if (it == m_Handlers.end())
     {
         return true;
     }
     
-    const TEventHandler& eventHandler = it->second;
+    TEventHandler& eventHandler = it->second;
     return eventHandler(event);
 }

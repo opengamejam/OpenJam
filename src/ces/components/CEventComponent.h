@@ -11,6 +11,7 @@
 
 #include "Global.h"
 #include "IComponent.h"
+#include "CSlot.hpp"
 
 namespace jam
 {
@@ -23,7 +24,7 @@ class CEventComponent final : public IComponent
     
     friend class CEventSystem;
 public:
-    typedef std::function<bool(IEventPtr)> TEventHandler;
+    typedef CSlot<bool, IEventPtr> TEventHandler;
     typedef std::unordered_map<uint64_t, TEventHandler> TEvenetHandlersMap;
     typedef std::list<IEventPtr> TEventsList;
     

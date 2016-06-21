@@ -14,7 +14,7 @@
 
 namespace jam
 {
-CLASS_PTR(IEvent);
+CLASS_PTR(IEvent)
     
 class IEventDispatcher final
 {

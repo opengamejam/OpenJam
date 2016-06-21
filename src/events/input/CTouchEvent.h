@@ -14,7 +14,7 @@
 
 namespace jam
 {
-CLASS_PTR(CTouchEvent);  // TODO:
+CLASS_PTR(CTouchEvent)  // TODO:
 
 class CTouchEvent : public IEvent
 {

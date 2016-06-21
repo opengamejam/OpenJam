@@ -13,7 +13,7 @@
 namespace jam
 {
     
-CLASS_PTR(IImage);
+CLASS_PTR(IImage)
     
 class ITexture
 {

@@ -12,16 +12,16 @@
 
 namespace jam
 {
-CLASS_PTR(IRenderer);
-CLASS_PTR(IRenderView);
-CLASS_PTR(IVertexBuffer);
-CLASS_PTR(IIndexBuffer);
-CLASS_PTR(ITexture);
-CLASS_PTR(IMaterial);
-CLASS_PTR(IMesh);
-CLASS_PTR(IShader);
-CLASS_PTR(IShaderProgram);
-CLASS_PTR(IRenderTarget);
+CLASS_PTR(IRenderer)
+CLASS_PTR(IRenderView)
+CLASS_PTR(IVertexBuffer)
+CLASS_PTR(IIndexBuffer)
+CLASS_PTR(ITexture)
+CLASS_PTR(IMaterial)
+CLASS_PTR(IMesh)
+CLASS_PTR(IShader)
+CLASS_PTR(IShaderProgram)
+CLASS_PTR(IRenderTarget)
     
 class IRenderer
 {

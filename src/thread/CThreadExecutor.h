@@ -13,7 +13,7 @@
 
 namespace jam
 {
-CLASS_PTR(CThreadExecutor);
+CLASS_PTR(CThreadExecutor)
     
 class CThreadExecutor 
 {

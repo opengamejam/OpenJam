@@ -14,8 +14,8 @@
 
 namespace jam
 {
-CLASS_PTR(CThreadPool);
-CLASS_PTR(CThreadExecutor);
+CLASS_PTR(CThreadPool)
+CLASS_PTR(CThreadExecutor)
     
 class CThreadPool final
 {

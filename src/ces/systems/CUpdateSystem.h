@@ -13,7 +13,7 @@
 
 namespace jam
 {
-CLASS_PTR(CUpdateSystem);
+CLASS_PTR(CUpdateSystem)
 
 class CUpdateSystem : public ISystem
 {

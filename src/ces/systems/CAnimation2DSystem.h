@@ -13,7 +13,7 @@
 
 namespace jam
 {
-CLASS_PTR(CAnimation2DSystem);
+CLASS_PTR(CAnimation2DSystem)
     
 class CAnimation2DSystem : public ISystem
 {

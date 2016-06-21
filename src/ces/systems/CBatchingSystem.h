@@ -13,15 +13,14 @@
 
 namespace jam
 {
-CLASS_PTR(CBatchingSystem);
-    
-CLASS_PTR(IMesh);
-CLASS_PTR(IMaterial);
-CLASS_PTR(IShaderProgram);
-CLASS_PTR(ITexture);
-CLASS_PTR(IVertexBuffer);
-CLASS_PTR(IIndexBuffer);
-CLASS_PTR(IRenderer);
+CLASS_PTR(CBatchingSystem)
+CLASS_PTR(IMesh)
+CLASS_PTR(IMaterial)
+CLASS_PTR(IShaderProgram)
+CLASS_PTR(ITexture)
+CLASS_PTR(IVertexBuffer)
+CLASS_PTR(IIndexBuffer)
+CLASS_PTR(IRenderer)
 
 class CBatchingSystem : public ISystem
 {

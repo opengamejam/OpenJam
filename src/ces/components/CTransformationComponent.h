@@ -14,7 +14,7 @@
 
 namespace jam
 {
-CLASS_PTR(CTransformationComponent);
+CLASS_PTR(CTransformationComponent)
 
 class CTransformationComponent final : public IComponent
 {

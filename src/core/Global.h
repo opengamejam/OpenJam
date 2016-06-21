@@ -94,9 +94,8 @@
 #	include <sys/time.h>
 #endif
 
-#define CLASS_PTR(_class) typedef std::shared_ptr<class _class> _class##Ptr
-#define CLASS_TEMPL_PTR(_class, _out) typedef std::shared_ptr<class _class> _out##Ptr
-#define CLASS_WEAK(_class) typedef std::weak_ptr<class _class> _class##Weak
+#define CLASS_PTR(_class) typedef std::shared_ptr<class _class> _class##Ptr;\
+                          typedef std::weak_ptr<class _class> _class##Weak;
 
 #if defined(OS_WINDOWS) // TODO
 #define INL

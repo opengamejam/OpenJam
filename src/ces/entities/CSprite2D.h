@@ -14,11 +14,11 @@
 namespace jam
 {
     
-CLASS_PTR(CSprite2D);
-CLASS_PTR(CRenderComponent);
-CLASS_PTR(CAnimation2DComponent);
-CLASS_PTR(CTransformationComponent);
-CLASS_PTR(IRenderer);
+CLASS_PTR(CSprite2D)
+CLASS_PTR(CRenderComponent)
+CLASS_PTR(CAnimation2DComponent)
+CLASS_PTR(CTransformationComponent)
+CLASS_PTR(IRenderer)
 
 class CSprite2D : public IEntity
 {

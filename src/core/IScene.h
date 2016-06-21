@@ -14,11 +14,10 @@
 namespace jam
 {
     
-CLASS_PTR(IEventDispatcher);
-CLASS_PTR(ICamera);
-CLASS_PTR(IEntity);
-CLASS_PTR(CGame);
-CLASS_WEAK(CGame);
+CLASS_PTR(IEventDispatcher)
+CLASS_PTR(ICamera)
+CLASS_PTR(IEntity)
+CLASS_PTR(CGame)
     
 class IScene : public IEventable, public std::enable_shared_from_this<IScene>
 {

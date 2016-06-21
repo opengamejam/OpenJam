@@ -14,8 +14,8 @@
 namespace jam
 {
     
-CLASS_PTR(IEntity);
-CLASS_PTR(IComponent);
+CLASS_PTR(IEntity)
+CLASS_PTR(IComponent)
 
 class ISystem
 {

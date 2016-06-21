@@ -13,8 +13,8 @@
 namespace jam
 {
 
-CLASS_PTR(IVertexBuffer);
-CLASS_PTR(IIndexBuffer);
+CLASS_PTR(IVertexBuffer)
+CLASS_PTR(IIndexBuffer)
     
 class IMesh : public IUnique
 {

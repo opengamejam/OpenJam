@@ -13,8 +13,7 @@
 namespace jam
 {
     
-CLASS_PTR(IVertexBuffer);
-CLASS_WEAK(IVertexBuffer);
+CLASS_PTR(IVertexBuffer)
     
 class IVertexBuffer : public std::enable_shared_from_this<IVertexBuffer>
 {

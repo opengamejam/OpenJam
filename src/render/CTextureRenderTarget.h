@@ -14,7 +14,7 @@
 
 namespace jam
 {
-CLASS_PTR(ITexture);
+CLASS_PTR(ITexture)
     
 class CTextureRenderTarget : public CFrameBufferRenderTarget
 {

@@ -14,7 +14,7 @@
 
 namespace jam
 {
-CLASS_PTR(CCamera3D);
+CLASS_PTR(CCamera3D)
 
 class CCamera3D : public ICamera
 {

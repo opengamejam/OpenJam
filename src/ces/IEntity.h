@@ -14,9 +14,8 @@
 namespace jam
 {
 
-CLASS_PTR(IEntity);
-CLASS_WEAK(IEntity);
-CLASS_PTR(IComponent);
+CLASS_PTR(IEntity)
+CLASS_PTR(IComponent)
 
 class IEntity : public std::enable_shared_from_this<IEntity>
 {

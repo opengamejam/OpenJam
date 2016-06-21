@@ -14,17 +14,17 @@
 
 namespace jam
 {
-CLASS_PTR(CRenderSystem);
-CLASS_PTR(IEntity);
-CLASS_PTR(ICamera);
-CLASS_PTR(IRenderTarget);
-CLASS_PTR(CRenderComponent);
-CLASS_PTR(CBatch);
-CLASS_PTR(IMesh);
-CLASS_PTR(IMaterial);
-CLASS_PTR(ITexture);
-CLASS_PTR(IShaderProgram);
-CLASS_PTR(IRenderer);
+CLASS_PTR(CRenderSystem)
+CLASS_PTR(IEntity)
+CLASS_PTR(ICamera)
+CLASS_PTR(IRenderTarget)
+CLASS_PTR(CRenderComponent)
+CLASS_PTR(CBatch)
+CLASS_PTR(IMesh)
+CLASS_PTR(IMaterial)
+CLASS_PTR(ITexture)
+CLASS_PTR(IShaderProgram)
+CLASS_PTR(IRenderer)
 
 class CRenderSystem : public ISystem
 {

@@ -12,7 +12,7 @@
 
 namespace jam
 {
-CLASS_PTR(IEventDispatcher);
+CLASS_PTR(IEventDispatcher)
 
 class IEventable
 {

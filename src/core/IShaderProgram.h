@@ -14,7 +14,7 @@
 namespace jam
 {
     
-CLASS_PTR(IShader);
+CLASS_PTR(IShader)
     
 class IShaderProgram
 {

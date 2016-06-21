@@ -14,11 +14,11 @@
 
 namespace jam
 {
-CLASS_PTR(CRenderComponent);
-CLASS_PTR(IMesh);
-CLASS_PTR(IMaterial);
-CLASS_PTR(ITexture);
-CLASS_PTR(IShaderProgram);
+CLASS_PTR(CRenderComponent)
+CLASS_PTR(IMesh)
+CLASS_PTR(IMaterial)
+CLASS_PTR(ITexture)
+CLASS_PTR(IShaderProgram)
     
 class CRenderComponent final : public IComponent
 {

@@ -14,7 +14,7 @@
 
 namespace jam
 {
-CLASS_PTR(IResource);
+CLASS_PTR(IResource)
     
 template <class T>
 class CResourceCache

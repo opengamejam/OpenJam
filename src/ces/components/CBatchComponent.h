@@ -15,7 +15,7 @@
 
 namespace jam
 {
-CLASS_PTR(CBatchComponent);
+CLASS_PTR(CBatchComponent)
 
 class CBatchComponent final : public IComponent
 {

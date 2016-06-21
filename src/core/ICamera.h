@@ -12,7 +12,7 @@
 
 namespace jam
 {
-CLASS_PTR(IRenderTarget);
+CLASS_PTR(IRenderTarget)
     
 class ICamera : public IEntity
 {

@@ -13,8 +13,8 @@
 
 namespace jam
 {
-CLASS_PTR(IEntity);
-CLASS_PTR(CTransformationComponent);
+CLASS_PTR(IEntity)
+CLASS_PTR(CTransformationComponent)
 
 class CTransformAffector
 {

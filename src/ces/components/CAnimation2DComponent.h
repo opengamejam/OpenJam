@@ -14,10 +14,10 @@
 
 namespace jam
 {
-CLASS_PTR(CAnimation2DComponent);
-CLASS_PTR(ISprite);
-CLASS_PTR(ITexture);
-CLASS_PTR(IRenderer);
+CLASS_PTR(CAnimation2DComponent)
+CLASS_PTR(ISprite)
+CLASS_PTR(ITexture)
+CLASS_PTR(IRenderer)
 
 class CAnimation2DComponent final : public IComponent
 {

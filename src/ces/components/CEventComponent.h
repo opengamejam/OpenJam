@@ -15,8 +15,8 @@
 
 namespace jam
 {
-CLASS_PTR(IEvent);
-CLASS_PTR(CEventComponent);
+CLASS_PTR(IEvent)
+CLASS_PTR(CEventComponent)
 
 class CEventComponent final : public IComponent
 {

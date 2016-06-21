@@ -15,8 +15,8 @@
 
 namespace jam
 {
-CLASS_PTR(CTransfromationSystem);
-CLASS_PTR(CTransformationComponent);
+CLASS_PTR(CTransfromationSystem)
+CLASS_PTR(CTransformationComponent)
     
 class CTransfromationSystem : public ISystem
 {

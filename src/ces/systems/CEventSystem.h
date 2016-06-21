@@ -13,8 +13,8 @@
 
 namespace jam
 {
-CLASS_PTR(CEventSystem);
-CLASS_PTR(IEvent);
+CLASS_PTR(CEventSystem)
+CLASS_PTR(IEvent)
 
 class CEventSystem : public ISystem
 {

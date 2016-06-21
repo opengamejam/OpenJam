@@ -14,10 +14,10 @@
 namespace jam
 {
     
-CLASS_PTR(CObject3D);
-CLASS_PTR(CRenderComponent);
-CLASS_PTR(CTransformationComponent);
-CLASS_PTR(IRenderer);
+CLASS_PTR(CObject3D)
+CLASS_PTR(CRenderComponent)
+CLASS_PTR(CTransformationComponent)
+CLASS_PTR(IRenderer)
 
 class CObject3D : public IEntity
 {

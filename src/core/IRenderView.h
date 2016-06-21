@@ -13,8 +13,8 @@
 namespace jam
 {    
     
-CLASS_PTR(IRenderTarget);
-CLASS_PTR(IRenderer);
+CLASS_PTR(IRenderTarget)
+CLASS_PTR(IRenderer)
     
 class IRenderView : public std::enable_shared_from_this<IRenderView>
 {

@@ -11,12 +11,12 @@
 
 namespace jam
 {
-CLASS_PTR(CGame);
-CLASS_PTR(IScene);
-CLASS_PTR(IRenderView);
-CLASS_PTR(ICamera);
-CLASS_PTR(ISystem);
-CLASS_PTR(CRenderSystem);
+CLASS_PTR(CGame)
+CLASS_PTR(IScene)
+CLASS_PTR(IRenderView)
+CLASS_PTR(ICamera)
+CLASS_PTR(ISystem)
+CLASS_PTR(CRenderSystem)
     
 class CGame : public IEventable
 {

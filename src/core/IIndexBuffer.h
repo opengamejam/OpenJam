@@ -13,8 +13,7 @@
 namespace jam
 {
     
-CLASS_PTR(IIndexBuffer);
-CLASS_WEAK(IIndexBuffer);
+CLASS_PTR(IIndexBuffer)
     
 class IIndexBuffer : public std::enable_shared_from_this<IIndexBuffer>
 {

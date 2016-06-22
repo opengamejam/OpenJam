@@ -96,7 +96,7 @@ void CEntityBase::RemoveComponent(IComponentPtr component)
         IEntityPtr entity = shared_from_this();
         emit component->OnAddedSignal(entity);
         
-        component->Entity(IEntityWeak());
+        component->Entity(nullptr);
         components.erase(it);
     }
 }

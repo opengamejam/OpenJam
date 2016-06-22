@@ -23,11 +23,10 @@ CSignal<void, IComponentPtr> IComponent::OnChangedSignal;
 // Public Methods
 // *****************************************************************************
 
-void CComponentBase::Entity(IEntityWeak entityWeak)
+void CComponentBase::Entity(IEntityPtr entity)
 {
-    IEntityPtr prevEntity = m_Entity.lock();
-    IEntityPtr newEntity = entityWeak.lock();
-    if (newEntity == prevEntity)
+    IEntityPtr prevEntity = Entity();
+    if (entity == prevEntity)
     {
         return;
     }
@@ -39,19 +38,19 @@ void CComponentBase::Entity(IEntityWeak entityWeak)
         prevEntity->RemoveComponent(thisPtr);
     }
     
-    m_Entity = newEntity;
+    m_Entity = entity;
     
-    if (newEntity)
+    if (entity)
     {
-        newEntity->AddComponent(thisPtr);
+        entity->AddComponent(thisPtr);
     }
     
     Dirty();
 }
 
-IEntityWeak CComponentBase::Entity() const
+IEntityPtr CComponentBase::Entity() const
 {
-    return m_Entity;
+    return m_Entity.lock();
 }
 
 void CComponentBase::Dirty()

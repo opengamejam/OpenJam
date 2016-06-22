@@ -110,7 +110,7 @@ void CSystemBase::OnAddedEntity(IEntityPtr entity)
 
 void CSystemBase::OnChangedComponent(IComponentPtr component)
 {
-    MarkDirtyEntity(component->Entity().lock());
+    MarkDirtyEntity(component->Entity());
 }
 
 void CSystemBase::OnRemovedEntity(IEntityPtr entity)

@@ -27,8 +27,8 @@ public:
     IComponent() = default;
     virtual ~IComponent() = default;
 
-    virtual void Entity(IEntityWeak entityWeak) = 0;
-    virtual IEntityWeak Entity() const = 0;
+    virtual void Entity(IEntityPtr entityWeak) = 0;
+    virtual IEntityPtr Entity() const = 0;
     
     virtual void Dirty() = 0;
     
@@ -48,8 +48,8 @@ public:
     CComponentBase() = default;
     virtual ~CComponentBase() = default;
     
-    void Entity(IEntityWeak entityWeak) override;
-    IEntityWeak Entity() const override;
+    void Entity(IEntityPtr entityWeak) override;
+    IEntityPtr Entity() const override;
     
     void Dirty() override;
     

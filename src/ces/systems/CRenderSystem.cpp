@@ -28,8 +28,8 @@ struct SOrderComparator
 {
     bool operator()(CRenderComponentPtr rc1, CRenderComponentPtr rc2) const
     {
-        IEntityPtr e1 = rc1->Entity().lock();
-        IEntityPtr e2 = rc2->Entity().lock();
+        IEntityPtr e1 = rc1->Entity();
+        IEntityPtr e2 = rc2->Entity();
         if (!e1 || !e2)
         {
             return false;
@@ -135,7 +135,7 @@ void CRenderSystem::Draw(ICameraPtr camera)
         }
         else
         {
-            IEntityPtr entity = renderComponent->Entity().lock();
+            IEntityPtr entity = renderComponent->Entity();
             glm::mat4 modelMatrix(1.0);
             if (entity)
             {
@@ -247,7 +247,7 @@ void CRenderSystem::OnChangedComponent(IComponentPtr component)
         return;
     }
     
-    uint64_t order_key = SOrderComparator::OrderKey(renderComponent, renderComponent->Entity().lock());
+    uint64_t order_key = SOrderComparator::OrderKey(renderComponent, renderComponent->Entity());
     if (order_key != it->second)
     {
         it->second = order_key;

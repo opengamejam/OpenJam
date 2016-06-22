@@ -62,8 +62,12 @@ void CEntityBase::AddComponent(IComponentPtr component)
     TComponentsList::const_iterator it = std::find(components.begin(), components.end(), component);
     if (it == components.end())
     {
+        IEntityPtr entity = shared_from_this();
+        
         components.push_back(component);
-        component->Entity(shared_from_this());
+        component->Entity(entity);
+        
+        emit component->OnAddedSignal(entity);
     }
 }
 
@@ -88,7 +92,10 @@ void CEntityBase::RemoveComponent(IComponentPtr component)
     TComponentsList& components = m_Components[component->GetId()];
     TComponentsList::const_iterator it = std::find(components.begin(), components.end(), component);
     if (it != components.end())
-    {        
+    {
+        IEntityPtr entity = shared_from_this();
+        emit component->OnAddedSignal(entity);
+        
         component->Entity(IEntityWeak());
         components.erase(it);
     }

@@ -23,13 +23,12 @@ public:
     CEventSystem();
     virtual ~CEventSystem();
     
+    void DispatchEvent(IEventPtr event);
+    
     virtual void Update(unsigned long dt) override;
     
 protected:
     virtual void OnChangedComponent(IComponentPtr component) override;
-    
-private:
-    void DispatchEvent(IEventPtr event);
 };
     
 } // namespace jam

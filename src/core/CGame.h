@@ -17,6 +17,7 @@ CLASS_PTR(IRenderView)
 CLASS_PTR(ICamera)
 CLASS_PTR(ISystem)
 CLASS_PTR(CRenderSystem)
+CLASS_PTR(CEventSystem)
     
 class CGame : public IEventable
 {
@@ -47,6 +48,7 @@ public:
     ISystemPtr GetSystem(typeid_t systemKey);
     
     CRenderSystemPtr RenderSystem() const;
+    CEventSystemPtr EventSystem() const;
 
 private:
     CGame(const CGame& orig) {}
@@ -60,6 +62,7 @@ private:
     std::stack<IScenePtr> m_Scenes;
     TSystemMap m_System;
     CRenderSystemPtr m_RenderSystem;
+    CEventSystemPtr m_EventSystem;
 };
 
 }; // namespace jam

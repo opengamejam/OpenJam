@@ -12,28 +12,28 @@
 
 using namespace jam;
 
-IScene::IScene(CGamePtr game)
+CSceneBase::CSceneBase(CGamePtr game)
     : m_Game(game)
     , m_Root(new CEntityBase())
 {
 }
 
-IScene::~IScene()
+CSceneBase::~CSceneBase()
 {
 
 }
 
-CGamePtr IScene::Game() const
+CGamePtr CSceneBase::Game() const
 {
     return m_Game.lock();
 }
 
-const IScene::TCamerasList& IScene::Cameras() const
+const IScene::TCamerasList& CSceneBase::Cameras() const
 {
     return m_Cameras;
 }
 
-void IScene::AddCamera(ICameraPtr camera)
+void CSceneBase::AddCamera(ICameraPtr camera)
 {
     assert(camera);
     if (camera)
@@ -42,29 +42,29 @@ void IScene::AddCamera(ICameraPtr camera)
     }
 }
 
-void IScene::RemoveCamera(ICameraPtr camera)
+void CSceneBase::RemoveCamera(ICameraPtr camera)
 {
     // TODO:
     assert(false);
 }
 
-void IScene::RemoveCameraById(uint32_t cameraId)
+void CSceneBase::RemoveCameraById(uint32_t cameraId)
 {
     // TODO:
     assert(false);
 }
 
-void IScene::RemoveAllCameras()
+void CSceneBase::RemoveAllCameras()
 {
     m_Cameras.clear();
 }
 
-IEntityPtr IScene::Root()
+IEntityPtr CSceneBase::Root()
 {
     return m_Root;
 }
 
-void IScene::Update(unsigned long dt)
+void CSceneBase::Update(unsigned long dt)
 {    
     
 }

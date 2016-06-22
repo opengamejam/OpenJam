@@ -9,7 +9,6 @@
 #define	ISCENE_H
 
 #include "Global.h"
-#include "IEventable.h"
 
 namespace jam
 {
@@ -19,29 +18,53 @@ CLASS_PTR(ICamera)
 CLASS_PTR(IEntity)
 CLASS_PTR(CGame)
     
-class IScene : public IEventable, public std::enable_shared_from_this<IScene>
+/*
+ * Interface IScene
+ */
+class IScene : public std::enable_shared_from_this<IScene>
 {
 public:
     typedef std::vector<ICameraPtr> TCamerasList;
     
 public:
-    IScene(CGamePtr game);
-    virtual ~IScene();
+    IScene() = default;
+    ~IScene() = default;
     
 	virtual void Start() = 0;
     virtual void Pause() = 0;
     virtual void Resume() = 0;
 	virtual void Stop() = 0;
-	virtual void Update(unsigned long dt);
+	virtual void Update(unsigned long dt) = 0;
     
-    virtual CGamePtr Game() const;
-    virtual const TCamerasList& Cameras() const;
-    virtual void AddCamera(ICameraPtr camera);
-    virtual void RemoveCamera(ICameraPtr camera);
-    virtual void RemoveCameraById(uint32_t cameraId);
-    virtual void RemoveAllCameras();
+    virtual CGamePtr Game() const = 0;
+    virtual const TCamerasList& Cameras() const = 0;
+    virtual void AddCamera(ICameraPtr camera) = 0;
+    virtual void RemoveCamera(ICameraPtr camera) = 0;
+    virtual void RemoveCameraById(uint32_t cameraId) = 0;
+    virtual void RemoveAllCameras() = 0;
 
-    virtual IEntityPtr Root();
+    virtual IEntityPtr Root() = 0;
+};
+
+/*
+ * Base class CSceneBase
+ */
+class CSceneBase : public IScene
+{
+public:
+    CSceneBase(CGamePtr game);
+    virtual ~CSceneBase();
+    
+    virtual void Update(unsigned long dt) override;
+    
+    virtual CGamePtr Game() const override;
+    virtual const TCamerasList& Cameras() const override;
+    virtual void AddCamera(ICameraPtr camera) override;
+    virtual void RemoveCamera(ICameraPtr camera) override;
+    virtual void RemoveCameraById(uint32_t cameraId) override;
+    virtual void RemoveAllCameras() override;
+    
+    virtual IEntityPtr Root() override;
     
 private:
     CGameWeak m_Game;

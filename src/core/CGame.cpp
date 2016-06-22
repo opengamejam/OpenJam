@@ -15,6 +15,7 @@
 #include "CTransformationSystem.h"
 #include "CUpdateSystem.h"
 #include "CBatchingSystem.h"
+#include "CEventSystem.h"
 #include "IRenderTarget.h"
 #include "CThreadPool.h"
 
@@ -52,6 +53,7 @@ void CGame::Initialize()
     m_RenderView->CreateView();
     
     m_RenderSystem.reset(new CRenderSystem(m_RenderView->Renderer()));
+    m_EventSystem.reset(new CEventSystem());
     CAnimation2DSystemPtr animationSystem(new CAnimation2DSystem());
     CTransfromationSystemPtr transformationSystem(new CTransfromationSystem());
     CUpdateSystemPtr updateSystem(new CUpdateSystem());
@@ -181,6 +183,11 @@ ISystemPtr CGame::GetSystem(typeid_t systemKey)
 CRenderSystemPtr CGame::RenderSystem() const
 {
     return m_RenderSystem;
+}
+
+CEventSystemPtr CGame::EventSystem() const
+{
+    return m_EventSystem;
 }
 
 // *****************************************************************************

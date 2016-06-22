@@ -105,6 +105,11 @@ IEventPtr CEventComponent::Pop()
     return event;
 }
 
+uint64_t CEventComponent::DispatchCount() const
+{
+    return m_DispatchCount;
+}
+
 bool CEventComponent::DispatchEvent(IEventPtr event)
 {
     TEvenetHandlersMap::iterator it = m_Handlers.find(event->GetId());

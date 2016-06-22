@@ -19,18 +19,18 @@ using namespace jam;
 // Public Methods
 // *****************************************************************************
 
-IEntity::IEntity()
+CEntityBase::CEntityBase()
 : m_HierarchyIndex(0)
 {
     
 }
 
-IEntity::~IEntity()
+CEntityBase::~CEntityBase()
 {
     
 }
 
-void IEntity::Initialize(const std::string& name, const TComponentsList& components)
+void CEntityBase::Initialize(const std::string& name, const TComponentsList& components)
 {
     Name(name);
     
@@ -41,17 +41,17 @@ void IEntity::Initialize(const std::string& name, const TComponentsList& compone
     });
 }
 
-const std::string& IEntity::Name() const
+const std::string& CEntityBase::Name() const
 {
     return m_Name;
 }
 
-void IEntity::Name(const std::string& name)
+void CEntityBase::Name(const std::string& name)
 {
     m_Name = name;
 }
 
-void IEntity::AddComponent(IComponentPtr component)
+void CEntityBase::AddComponent(IComponentPtr component)
 {
     if (!component)
     {
@@ -67,7 +67,7 @@ void IEntity::AddComponent(IComponentPtr component)
     }
 }
 
-IComponentPtr IEntity::GetComponent(typeid_t id)
+IComponentPtr CEntityBase::GetComponent(typeid_t id)
 {
     TComponentsList& components = m_Components[id];
     if (components.empty())
@@ -78,7 +78,7 @@ IComponentPtr IEntity::GetComponent(typeid_t id)
     return components[0];
 }
 
-void IEntity::RemoveComponent(IComponentPtr component)
+void CEntityBase::RemoveComponent(IComponentPtr component)
 {
     if (!component)
     {
@@ -94,7 +94,7 @@ void IEntity::RemoveComponent(IComponentPtr component)
     }
 }
 
-void IEntity::RemoveAllComponents(typeid_t id)
+void CEntityBase::RemoveAllComponents(typeid_t id)
 {
     TComponentsList& components = m_Components[id];
     std::for_each(components.begin(), components.end(), [&](IComponentPtr component)
@@ -104,19 +104,19 @@ void IEntity::RemoveAllComponents(typeid_t id)
     components.clear();
 }
 
-bool IEntity::HasComponent(typeid_t id)
+bool CEntityBase::HasComponent(typeid_t id)
 {
     TComponentsList& components = m_Components[id];
     return !components.empty();
 }
 
-uint32_t IEntity::ComponentsNum(typeid_t id)
+uint32_t CEntityBase::ComponentsNum(typeid_t id)
 {
     TComponentsList& components = m_Components[id];
     return static_cast<uint32_t>(components.size());
 }
 
-void IEntity::AddChild(IEntityPtr entity)
+void CEntityBase::AddChild(IEntityPtr entity)
 {
     if (!entity)
     {
@@ -136,11 +136,13 @@ void IEntity::AddChild(IEntityPtr entity)
         prevParent->RemoveChild(entity);
     }
     
-    entity->Parent(shared_from_this());
-    entity->HierarchyIndex(HierarchyIndex() + 1);
+    std::shared_ptr<CEntityBase> baseEntity = std::static_pointer_cast<CEntityBase>(entity);
+    
+    baseEntity->Parent(shared_from_this());
+    baseEntity->HierarchyIndex(HierarchyIndex() + 1);
     m_Entities.push_back(entity);
     
-    std::for_each(entity->m_Components.begin(), entity->m_Components.end(),
+    std::for_each(baseEntity->m_Components.begin(), baseEntity->m_Components.end(),
                   [entity](const TComponentsMap::value_type& element)
     {
         const TComponentsList& components = element.second;
@@ -151,13 +153,15 @@ void IEntity::AddChild(IEntityPtr entity)
     });
 }
 
-void IEntity::RemoveChild(IEntityPtr entity)
+void CEntityBase::RemoveChild(IEntityPtr entity)
 {
     IEntity::TEntities::const_iterator it = std::find(m_Entities.begin(), m_Entities.end(), entity);
     if (it != m_Entities.end())
     {
-        (*it)->Parent(IEntityWeak());
-        (*it)->HierarchyIndex(0);
+        std::shared_ptr<CEntityBase> baseEntity = std::static_pointer_cast<CEntityBase>(*it);
+        
+        baseEntity->Parent(IEntityWeak());
+        baseEntity->HierarchyIndex(0);
         m_Entities.erase(it);
     }
     
@@ -171,17 +175,17 @@ void IEntity::RemoveChild(IEntityPtr entity)
     });
 }
 
-const IEntity::TEntities& IEntity::Childs() const
+const IEntity::TEntities& CEntityBase::Childs() const
 {
     return m_Entities;
 }
 
-IEntityWeak IEntity::Parent() const
+IEntityWeak CEntityBase::Parent() const
 {
     return m_Parent;
 }
 
-uint32_t IEntity::HierarchyIndex() const
+uint32_t CEntityBase::HierarchyIndex() const
 {
     return m_HierarchyIndex;
 }
@@ -190,18 +194,19 @@ uint32_t IEntity::HierarchyIndex() const
 // Protected Methods
 // *****************************************************************************
 
-void IEntity::Parent(IEntityWeak parent)
+void CEntityBase::Parent(IEntityWeak parent)
 {
     m_Parent = parent;
 }
 
-void IEntity::HierarchyIndex(uint32_t hierarchyIndex)
+void CEntityBase::HierarchyIndex(uint32_t hierarchyIndex)
 {
     m_HierarchyIndex = hierarchyIndex;
     const TEntities& childs = Childs();
     std::for_each(childs.begin(), childs.end(), [&](IEntityPtr entity)
     {
-        entity->HierarchyIndex(HierarchyIndex() + 1);
+        std::shared_ptr<CEntityBase> baseEntity = std::static_pointer_cast<CEntityBase>(entity);
+        baseEntity->HierarchyIndex(HierarchyIndex() + 1);
     });
 }
 

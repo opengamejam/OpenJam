@@ -23,12 +23,7 @@ CSignal<void, IComponentPtr> IComponent::OnChangedSignal;
 // Public Methods
 // *****************************************************************************
 
-IComponent::IComponent()
-{
-
-}
-
-void IComponent::Entity(IEntityWeak entityWeak)
+void CComponentBase::Entity(IEntityWeak entityWeak)
 {
     IEntityPtr prevEntity = m_Entity.lock();
     IEntityPtr newEntity = entityWeak.lock();
@@ -54,12 +49,12 @@ void IComponent::Entity(IEntityWeak entityWeak)
     Dirty();
 }
 
-IEntityWeak IComponent::Entity() const
+IEntityWeak CComponentBase::Entity() const
 {
     return m_Entity;
 }
 
-void IComponent::Dirty()
+void CComponentBase::Dirty()
 {
     IComponentPtr thisPtr = shared_from_this();
     emit OnChangedSignal(thisPtr);

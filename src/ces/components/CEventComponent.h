@@ -18,7 +18,7 @@ namespace jam
 CLASS_PTR(IEvent)
 CLASS_PTR(CEventComponent)
 
-class CEventComponent final : public IComponent
+class CEventComponent final : public CComponentBase
 {
     JAM_OBJECT
     

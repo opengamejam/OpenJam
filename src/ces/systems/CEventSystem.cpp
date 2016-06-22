@@ -54,7 +54,7 @@ void CEventSystem::Update(unsigned long dt)
 
 void CEventSystem::OnChangedComponent(IComponentPtr component)
 {
-    ISystem::OnChangedComponent(component);
+    CSystemBase::OnChangedComponent(component);
     
     CEventComponentPtr eventComponent = std::static_pointer_cast<CEventComponent>(component);
     while(eventComponent->DispatchCount())

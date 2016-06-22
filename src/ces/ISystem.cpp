@@ -21,30 +21,30 @@ using namespace jam;
 // Public Methods
 // *****************************************************************************
 
-ISystem::ISystem()
+CSystemBase::CSystemBase()
 {
 }
 
-ISystem::~ISystem()
+CSystemBase::~CSystemBase()
 {
 }
 
-void ISystem::AddEntity(IEntityPtr entity)
+void CSystemBase::AddEntity(IEntityPtr entity)
 {
     m_Entities.insert(entity);
 }
 
-void ISystem::RemoveEntity(IEntityPtr entity)
+void CSystemBase::RemoveEntity(IEntityPtr entity)
 {
     m_Entities.erase(entity);
 }
 
-const ISystem::TEntities& ISystem::Entities() const
+const ISystem::TEntities& CSystemBase::Entities() const
 {
     return m_Entities;
 }
 
-bool ISystem::IsEntityAdded(IEntityPtr entity)
+bool CSystemBase::IsEntityAdded(IEntityPtr entity)
 {
     const ISystem::TEntities& entities = Entities();
     ISystem::TEntities::const_iterator it = std::find(entities.begin(), entities.end(), entity);
@@ -52,12 +52,12 @@ bool ISystem::IsEntityAdded(IEntityPtr entity)
     return (it != entities.end());
 }
 
-const ISystem::TComponentIds& ISystem::RegisteredComponents()
+const ISystem::TComponentIds& CSystemBase::RegisteredComponents()
 {
     return m_RegisteredComponents;
 }
 
-bool ISystem::IsComponentRegistered(typeid_t id)
+bool CSystemBase::IsComponentRegistered(typeid_t id)
 {
     return (m_RegisteredComponents.find(id) != m_RegisteredComponents.end());
 }
@@ -66,7 +66,7 @@ bool ISystem::IsComponentRegistered(typeid_t id)
 // Protected Methods
 // *****************************************************************************
 
-bool ISystem::HaveSupportedComponents(IEntityPtr entity)
+bool CSystemBase::HaveSupportedComponents(IEntityPtr entity)
 {
     if (!entity)
     {
@@ -84,22 +84,22 @@ bool ISystem::HaveSupportedComponents(IEntityPtr entity)
     return found;
 }
 
-void ISystem::MarkDirtyEntity(IEntityPtr entity)
+void CSystemBase::MarkDirtyEntity(IEntityPtr entity)
 {
     m_DirtyEntities.insert(entity);
 }
 
-const ISystem::TEntities& ISystem::DirtyEntities() const
+const ISystem::TEntities& CSystemBase::DirtyEntities() const
 {
     return m_DirtyEntities;
 }
 
-void ISystem::ClearDirtyEntities()
+void CSystemBase::ClearDirtyEntities()
 {
     m_DirtyEntities.clear();
 }
 
-void ISystem::OnAddedEntity(IEntityPtr entity)
+void CSystemBase::OnAddedEntity(IEntityPtr entity)
 {
     if (!IsEntityAdded(entity) &&
         HaveSupportedComponents(entity))
@@ -108,12 +108,12 @@ void ISystem::OnAddedEntity(IEntityPtr entity)
     }
 }
 
-void ISystem::OnChangedComponent(IComponentPtr component)
+void CSystemBase::OnChangedComponent(IComponentPtr component)
 {
     MarkDirtyEntity(component->Entity().lock());
 }
 
-void ISystem::OnRemovedEntity(IEntityPtr entity)
+void CSystemBase::OnRemovedEntity(IEntityPtr entity)
 {
     if (IsEntityAdded(entity))
     {

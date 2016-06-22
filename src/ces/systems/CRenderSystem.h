@@ -26,7 +26,7 @@ CLASS_PTR(ITexture)
 CLASS_PTR(IShaderProgram)
 CLASS_PTR(IRenderer)
 
-class CRenderSystem : public ISystem
+class CRenderSystem : public CSystemBase
 {
     JAM_OBJECT
 public:

@@ -16,7 +16,7 @@ namespace jam
 {
 CLASS_PTR(CUpdateComponent)
     
-class CUpdateComponent final : public IComponent
+class CUpdateComponent final : public CComponentBase
 {
     JAM_OBJECT    
 public:

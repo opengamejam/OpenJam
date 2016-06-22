@@ -42,9 +42,11 @@ public:
     CSlot& operator = (const CSlot& other)
     {
         m_Invoker = other.m_Invoker->Clone();
+        
+        return *this;
     }
     
-    R operator ()(Arg... args)
+    R operator ()(Arg... args) const
     {
         return m_Invoker->Invoke(args...);
     }
@@ -71,7 +73,7 @@ private:
         CFunctionHolderBase() = default;
         virtual ~CFunctionHolderBase() = default;
         
-        virtual R Invoke(Arg... args) = 0;
+        virtual R Invoke(Arg... args) const = 0;
         virtual std::auto_ptr<CFunctionHolderBase> Clone() = 0;
         virtual uintptr_t Address() const = 0;
         
@@ -89,14 +91,14 @@ private:
     {
     public:
         
-        CSimpleFunctionHolder(F function)
+        CSimpleFunctionHolder(const F& function)
         : CFunctionHolderBase()
         , m_Function(function)
         {
             
         }
         
-        virtual R Invoke(Arg... args)
+        virtual R Invoke(Arg... args) const
         {
             return m_Function(args...);
         }
@@ -126,11 +128,11 @@ private:
         
         typedef F C::* TMemberSignature;
         
-        CMemberFunctionHolder(TMemberSignature function)
+        CMemberFunctionHolder(const TMemberSignature& function)
         : m_Function(function)
         {}
         
-        virtual R Invoke(C obj, Args... args)
+        virtual R Invoke(C obj, Args... args) const
         {
             return (obj.*m_Function)(args...);
         }

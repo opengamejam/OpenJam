@@ -45,7 +45,7 @@ public:
     
     void operator ()(Args... args)
     {
-        std::for_each(m_Slots.begin(), m_Slots.end(), [&](typename TSlotsList::value_type& slot)
+        std::for_each(m_Slots.begin(), m_Slots.end(), [&](const typename TSlotsList::value_type& slot)
         {
             slot(args...);
         });

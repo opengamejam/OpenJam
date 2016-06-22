@@ -217,7 +217,7 @@ void CRenderSystem::Draw(IMeshPtr mesh, IMaterialPtr material, ITexturePtr textu
 
 void CRenderSystem::OnAddedEntity(IEntityPtr entity)
 {
-    ISystem::OnAddedEntity(entity);
+    CSystemBase::OnAddedEntity(entity);
     
     entity->Get<CRenderComponent>([&](CRenderComponentPtr renderComponent)
     {
@@ -237,7 +237,7 @@ void CRenderSystem::OnAddedEntity(IEntityPtr entity)
 
 void CRenderSystem::OnChangedComponent(IComponentPtr component)
 {
-    ISystem::OnChangedComponent(component);
+    CSystemBase::OnChangedComponent(component);
     
     CRenderComponentPtr renderComponent = std::static_pointer_cast<CRenderComponent>(component);
     
@@ -257,7 +257,7 @@ void CRenderSystem::OnChangedComponent(IComponentPtr component)
 
 void CRenderSystem::OnRemovedEntity(IEntityPtr entity)
 {
-    ISystem::OnRemovedEntity(entity);
+    CSystemBase::OnRemovedEntity(entity);
     
     entity->Get<CRenderComponent>([&](CRenderComponentPtr renderComponent)
     {

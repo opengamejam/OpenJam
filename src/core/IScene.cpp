@@ -14,7 +14,7 @@ using namespace jam;
 
 IScene::IScene(CGamePtr game)
     : m_Game(game)
-    , m_Root(new IEntity())
+    , m_Root(new CEntityBase())
 {
 }
 

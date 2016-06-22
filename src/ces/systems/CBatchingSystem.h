@@ -22,7 +22,7 @@ CLASS_PTR(IVertexBuffer)
 CLASS_PTR(IIndexBuffer)
 CLASS_PTR(IRenderer)
 
-class CBatchingSystem : public ISystem
+class CBatchingSystem : public CSystemBase
 {
     JAM_OBJECT
 public:

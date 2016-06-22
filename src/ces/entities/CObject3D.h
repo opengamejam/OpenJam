@@ -19,7 +19,7 @@ CLASS_PTR(CRenderComponent)
 CLASS_PTR(CTransformationComponent)
 CLASS_PTR(IRenderer)
 
-class CObject3D : public IEntity
+class CObject3D : public CEntityBase
 {
 public:
     // Load mesh from .obj 3D file

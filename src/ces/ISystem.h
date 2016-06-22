@@ -17,6 +17,9 @@ namespace jam
 CLASS_PTR(IEntity)
 CLASS_PTR(IComponent)
 
+/*
+ * Interface ISystem
+ */
 class ISystem
 {
     JAM_OBJECT_BASE
@@ -25,19 +28,41 @@ public:
     typedef std::set<typeid_t> TComponentIds;
     
 public:
-    ISystem();
-    virtual ~ISystem();
+    ISystem() = default;
+    virtual ~ISystem() = default;
     
-    void AddEntity(IEntityPtr entity);
-    void RemoveEntity(IEntityPtr entity);
-    const TEntities& Entities() const;
-    bool IsEntityAdded(IEntityPtr entity);
+    virtual void AddEntity(IEntityPtr entity) = 0;
+    virtual void RemoveEntity(IEntityPtr entity) = 0;
+    virtual const TEntities& Entities() const = 0;
+    virtual bool IsEntityAdded(IEntityPtr entity) = 0;
     
-    const TComponentIds& RegisteredComponents();
-    bool IsComponentRegistered(typeid_t id);
-    bool HaveSupportedComponents(IEntityPtr entity);
+    virtual const TComponentIds& RegisteredComponents() = 0;
+    virtual bool IsComponentRegistered(typeid_t id) = 0;
+    virtual bool HaveSupportedComponents(IEntityPtr entity) = 0;
     
     virtual void Update(unsigned long dt) = 0;
+};
+  
+/*
+ * Base class CSystemBase
+ */
+class CSystemBase : public ISystem
+{
+    JAM_OBJECT
+public:
+    CSystemBase();
+    virtual ~CSystemBase();
+    
+    void AddEntity(IEntityPtr entity) override;
+    void RemoveEntity(IEntityPtr entity) override;
+    const TEntities& Entities() const override;
+    bool IsEntityAdded(IEntityPtr entity) override;
+    
+    const TComponentIds& RegisteredComponents() override;
+    bool IsComponentRegistered(typeid_t id) override;
+    bool HaveSupportedComponents(IEntityPtr entity) override;
+    
+    virtual void Update(unsigned long dt) override = 0;
     
 protected:
     void MarkDirtyEntity(IEntityPtr entity);
@@ -47,9 +72,9 @@ protected:
     template <typename T>
     void RegisterComponent()
     {
-        T::OnAddedSignal += std::bind(&ISystem::OnAddedEntity, this, std::placeholders::_1);
-        T::OnRemovedSignal += std::bind(&ISystem::OnRemovedEntity, this, std::placeholders::_1);
-        T::OnChangedSignal += std::bind(&ISystem::OnChangedComponent, this, std::placeholders::_1);
+        T::OnAddedSignal += std::bind(&CSystemBase::OnAddedEntity, this, std::placeholders::_1);
+        T::OnRemovedSignal += std::bind(&CSystemBase::OnRemovedEntity, this, std::placeholders::_1);
+        T::OnChangedSignal += std::bind(&CSystemBase::OnChangedComponent, this, std::placeholders::_1);
         
         m_RegisteredComponents.insert(CTypeId<T>::Id());
     }
@@ -57,9 +82,9 @@ protected:
     template <typename T>
     void UnregisterComponent()
     {
-        T::OnAddedSignal -= std::bind(&ISystem::OnAddedEntity, this, std::placeholders::_1);
-        T::OnRemovedSignal -= std::bind(&ISystem::OnRemovedEntity, this, std::placeholders::_1);
-        T::OnChangedSignal -= std::bind(&ISystem::OnChangedComponent, this, std::placeholders::_1);
+        T::OnAddedSignal -= std::bind(&CSystemBase::OnAddedEntity, this, std::placeholders::_1);
+        T::OnRemovedSignal -= std::bind(&CSystemBase::OnRemovedEntity, this, std::placeholders::_1);
+        T::OnChangedSignal -= std::bind(&CSystemBase::OnChangedComponent, this, std::placeholders::_1);
         
         m_RegisteredComponents.erase(CTypeId<T>::Id());
     }

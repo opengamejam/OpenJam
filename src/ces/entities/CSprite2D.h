@@ -20,7 +20,7 @@ CLASS_PTR(CAnimation2DComponent)
 CLASS_PTR(CTransformationComponent)
 CLASS_PTR(IRenderer)
 
-class CSprite2D : public IEntity
+class CSprite2D : public CEntityBase
 {
 public:
     static CSprite2DPtr Create(const std::string& filename,

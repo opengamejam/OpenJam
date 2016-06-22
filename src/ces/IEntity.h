@@ -17,6 +17,9 @@ namespace jam
 CLASS_PTR(IEntity)
 CLASS_PTR(IComponent)
 
+/*
+ * Interface IEntity
+ */
 class IEntity : public std::enable_shared_from_this<IEntity>
 {
     JAM_OBJECT_BASE
@@ -26,16 +29,16 @@ public:
     typedef std::vector<IEntityPtr> TEntities;
     
 public:
-    IEntity();
-    virtual ~IEntity();
+    IEntity() = default;
+    virtual ~IEntity() = default;
     
-    void Initialize(const std::string& name, const TComponentsList& components);
+    virtual void Initialize(const std::string& name, const TComponentsList& components) = 0;
     
-    const std::string& Name() const;
-    void Name(const std::string& name);
+    virtual const std::string& Name() const = 0;
+    virtual void Name(const std::string& name) = 0;
     
-    void AddComponent(IComponentPtr component);
-    IComponentPtr GetComponent(typeid_t id);
+    virtual void AddComponent(IComponentPtr component) = 0;
+    virtual IComponentPtr GetComponent(typeid_t id) = 0;
 
     template <class T>
     std::shared_ptr<T> Get()
@@ -54,18 +57,50 @@ public:
         }
     }
     
-    void RemoveComponent(IComponentPtr component);
-    void RemoveAllComponents(typeid_t id);
-    bool HasComponent(typeid_t id);
-    uint32_t ComponentsNum(typeid_t id);
+    virtual void RemoveComponent(IComponentPtr component) = 0;
+    virtual void RemoveAllComponents(typeid_t id) = 0;
+    virtual bool HasComponent(typeid_t id) = 0;
+    virtual uint32_t ComponentsNum(typeid_t id) = 0;
     
-    void AddChild(IEntityPtr entity);
-    void RemoveChild(IEntityPtr entity);
-    const TEntities& Childs() const;
+    virtual void AddChild(IEntityPtr entity) = 0;
+    virtual void RemoveChild(IEntityPtr entity) = 0;
+    virtual const TEntities& Childs() const = 0;
 
-    IEntityWeak Parent() const;
+    virtual IEntityWeak Parent() const = 0;
     
-    uint32_t HierarchyIndex() const;
+    virtual uint32_t HierarchyIndex() const = 0;
+};
+    
+/*
+ * Base class CEntityBase
+ */
+class CEntityBase : public IEntity
+{
+    JAM_OBJECT
+public:
+    CEntityBase();
+    virtual ~CEntityBase();
+    
+    void Initialize(const std::string& name, const TComponentsList& components) override;
+    
+    const std::string& Name() const override;
+    void Name(const std::string& name) override;
+    
+    void AddComponent(IComponentPtr component) override;
+    IComponentPtr GetComponent(typeid_t id) override;
+    
+    void RemoveComponent(IComponentPtr component) override;
+    void RemoveAllComponents(typeid_t id) override;
+    bool HasComponent(typeid_t id) override;
+    uint32_t ComponentsNum(typeid_t id) override;
+    
+    void AddChild(IEntityPtr entity) override;
+    void RemoveChild(IEntityPtr entity) override;
+    const TEntities& Childs() const override;
+    
+    IEntityWeak Parent() const override;
+    
+    uint32_t HierarchyIndex() const override;
     
 protected:
     void Parent(IEntityWeak parent);

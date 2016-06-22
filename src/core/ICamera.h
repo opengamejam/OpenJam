@@ -14,7 +14,7 @@ namespace jam
 {
 CLASS_PTR(IRenderTarget)
     
-class ICamera : public IEntity
+class ICamera : public CEntityBase
 {
 public:
     ICamera() = default;

@@ -15,7 +15,7 @@ namespace jam
 {
 CLASS_PTR(CUpdateSystem)
 
-class CUpdateSystem : public ISystem
+class CUpdateSystem : public CSystemBase
 {
     JAM_OBJECT
 public:

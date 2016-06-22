@@ -19,7 +19,7 @@ CLASS_PTR(ISprite)
 CLASS_PTR(ITexture)
 CLASS_PTR(IRenderer)
 
-class CAnimation2DComponent final : public IComponent
+class CAnimation2DComponent final : public CComponentBase
 {
     JAM_OBJECT
 public:

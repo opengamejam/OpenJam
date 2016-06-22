@@ -15,7 +15,7 @@ namespace jam
 {
 CLASS_PTR(CAnimation2DSystem)
     
-class CAnimation2DSystem : public ISystem
+class CAnimation2DSystem : public CSystemBase
 {
     JAM_OBJECT
 public:

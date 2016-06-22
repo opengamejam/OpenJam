@@ -20,7 +20,7 @@ CLASS_PTR(IMaterial)
 CLASS_PTR(ITexture)
 CLASS_PTR(IShaderProgram)
     
-class CRenderComponent final : public IComponent
+class CRenderComponent final : public CComponentBase
 {
     JAM_OBJECT    
 public:

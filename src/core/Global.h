@@ -30,6 +30,7 @@
 #include <utility>
 #include <math.h>
 #include <assert.h>
+#include <fstream>
 
 #if defined(GLM_MESSAGES)
 #   undef GLM_MESSAGES

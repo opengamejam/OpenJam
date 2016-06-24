@@ -18,6 +18,8 @@
 #include "CEventSystem.h"
 #include "IRenderTarget.h"
 #include "CThreadPool.h"
+#include "CVirtualFileSystem.h"
+#include "CNativeFileSystem.h"
 
 using namespace jam;
 
@@ -34,8 +36,6 @@ CGame::CGame(IRenderViewPtr render)
     : m_IsInitialized(false)
     , m_RenderView(render)
 {
-    CThreadPool::Get()->Initialize(5);
-    
     CLoaderFile* loaderFile = new CLoaderFile();
     loaderFile->RegisterFileSystem(CSystem::GetBundlePath() + "media/");
     loaderFile->RegisterFileSystem(CSystem::GetBundlePath());
@@ -45,11 +45,19 @@ CGame::CGame(IRenderViewPtr render)
 
 CGame::~CGame() 
 {
-    CThreadPool::Get()->Shutdown();
 }
 
 void CGame::Initialize()
 {
+    vfs_initialize();
+    
+    IFileSystemPtr root_fs(new CNativeFileSystem());
+    root_fs->Initialize(CVirtualFileSystem::GetBundlePath() + "media/");
+    
+    CVirtualFileSystemPtr vfs = vfs_get_global();
+    vfs->AddFileSystem("/", root_fs);
+    
+    CThreadPool::Get()->Initialize(5);
     m_RenderView->CreateView();
     
     m_RenderSystem.reset(new CRenderSystem(m_RenderView->Renderer()));
@@ -69,6 +77,8 @@ void CGame::Initialize()
 
 void CGame::Shutdown()
 {
+    vfs_shutdown();
+    CThreadPool::Get()->Shutdown();
     m_IsInitialized = false;
 }
 

@@ -13,6 +13,15 @@
 
 namespace jam
 {
+    
+class CStringUtils
+{
+public:
+    CStringUtils() = default;
+    ~CStringUtils() = default;
+    
+};
+    
     void SplitString(std::vector<std::string>& tokens, const std::string& text, char delimeter);
     std::string ReplaceString(std::string string, const std::string& search, const std::string& replace);
     
@@ -34,6 +43,26 @@ namespace jam
         ss >> result;
         
         return result;
+    }
+    
+    INL bool StringEndsWith(std::string const& fullString, std::string const& ending)
+    {
+        if (fullString.length() >= ending.length())
+        {
+            return (0 == fullString.compare(fullString.length() - ending.length(), ending.length(), ending));
+        }
+        
+        return false;
+    }
+    
+    INL bool StringStartsWith(std::string const& fullString, std::string const& starting)
+    {
+        if (fullString.length() >= starting.length())
+        {
+            return (0 == fullString.compare(0, starting.length(), starting));
+        }
+        
+        return false;
     }
     
     glm::vec2 str2vec2(const std::string& value, char delimeter = ',');

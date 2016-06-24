@@ -10,15 +10,18 @@
 #define IFILESYSTEM_H
 
 #include "Global.h"
+#include "IFile.h"
 
 namespace jam
 {
 CLASS_PTR(IFile)
+CLASS_PTR(IFileInfo)
 
 class IFileSystem
 {
+    JAM_OBJECT_BASE
 public:
-    typedef std::list<std::string> TFileList;
+    typedef std::set<IFileInfoPtr> TFileNamesList;
     
     /*
      * Filelist filtering modes
@@ -27,7 +30,7 @@ public:
     {
         Files = 0x01,
         Dirs = 0x02,
-        AllEntries = Files | Dirs;
+        AllEntries = Files | Dirs
     };
     
 public:
@@ -56,7 +59,7 @@ public:
     /*
      * Retrieve file list according filter
      */
-    virtual const TFileList& FileList(Entries filter = AllEntries) const = 0;
+    virtual const TFileNamesList& FileList(Entries filter = AllEntries) const = 0;
     
     /*
      * Check is readonly filesystem
@@ -66,7 +69,7 @@ public:
     /*
      * Open existing file for reading, if not exists return null
      */
-    virtual IFilePtr OpenFile(const std::string& filePath) = 0;
+    virtual IFilePtr OpenFile(const std::string& filePath, IFile::FileMode mode) = 0;
     
     /*
      * Close file
@@ -81,7 +84,7 @@ public:
     /*
      * Remove existing file on writable filesystem
      */
-    virtual bool RemoveFile(const std::string& filePath, bool isRecursive) = 0;
+    virtual bool RemoveFile(const std::string& filePath) = 0;
     
     /*
      * Copy existing file on writable filesystem

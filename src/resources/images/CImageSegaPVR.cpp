@@ -5,7 +5,6 @@
 
 #include "CImageSegaPVR.h"
 #include "Global.h"
-#include "ILoader.h"
 
 using namespace jam;
 
@@ -26,8 +25,8 @@ INL uint32_t MipMapsCountFromWidth(uint32_t width);
 // Public Methods
 // *****************************************************************************
 
-CImageDreamPVR::CImageDreamPVR(const std::string& filename, const std::string& loader)
-: IImage(filename, loader)
+CImageDreamPVR::CImageDreamPVR(const std::string& filename)
+: IImage(filename)
 , m_Width(1)
 , m_Height(1)
 , m_Mipmaps(0)

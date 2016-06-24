@@ -60,7 +60,7 @@ public:
     void RemoveFileSystem(const std::string& alias);
     
     /*
-     * Check if filesystem with 'name' registered
+     * Check if filesystem with 'alias' registered
      */
     bool IsFileSystemExists(const std::string& alias) const;
     

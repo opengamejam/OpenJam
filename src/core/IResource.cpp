@@ -6,12 +6,12 @@
 //  Copyright (c) 2014 Yevgeniy Logachev. All rights reserved.
 //
 #include "IResource.h"
+#include "CVirtualFileSystem.h"
 
 using namespace jam;
 
-IResource::IResource(const std::string& filename, const std::string& loaderName)
+IResource::IResource(const std::string& filename)
     : m_Filename(filename)
-    , m_LoaderName(loaderName)
     , m_IsExternalData(false)
 {}
 
@@ -27,11 +27,6 @@ IResource::~IResource()
 const std::string& IResource::Filename() const
 {
     return m_Filename;
-}
-
-const std::string& IResource::LoaderName()
-{
-    return m_LoaderName;
 }
 
 const IResource::TResourceData& IResource::RawData()
@@ -53,8 +48,22 @@ bool IResource::Load(const std::string& filename)
     
     if (!m_IsExternalData)
     {
-        ILoader* loader = ILoader::GetLoader(LoaderName());
-        return loader->Map(filename, m_Data);
+        bool result = false;
+        
+        CVirtualFileSystemPtr vfs = vfs_get_global();
+        IFilePtr file = vfs->OpenFile(filename, IFile::In);
+        if (file && file->IsOpened())
+        {
+            uint64_t fileSize = file->Size();
+            m_Data.resize(fileSize + 1);
+            memset(&m_Data[0], 0, fileSize + 1);
+            
+            result = (file->Read(&m_Data[0], fileSize) == fileSize);
+            
+            vfs->CloseFile(file);
+        }
+        
+        return result;
     }
     else
     {

@@ -15,6 +15,7 @@ namespace jam
 class CImageDreamPVR : public IImage
 {    
 public:
+    CImageDreamPVR(const std::string& filename);
     virtual ~CImageDreamPVR();
     
     virtual bool Load();
@@ -26,8 +27,6 @@ public:
 	virtual bool IsCompressed() const;
     virtual TexelFormats TexelFormat() const;
     virtual TexelTypes TexelType() const;
-    
-    CImageDreamPVR(const std::string& filename, const std::string& loader = "");
 
 private:
     uint32_t TextureFormat(unsigned char* header);

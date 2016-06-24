@@ -17,7 +17,7 @@ namespace jam
 class CSpriteXML : public ISprite
 {
 public:
-    CSpriteXML(const std::string& filename, const std::string& loader = "");
+    CSpriteXML(const std::string& filename);
     virtual ~CSpriteXML();
     
     virtual bool Load() override;

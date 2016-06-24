@@ -17,8 +17,8 @@ namespace jam
 class IImage : public IResource
 {
 public:
-    IImage(const std::string& filename, const std::string& loader)
-    : IResource(filename, loader)
+    IImage(const std::string& filename)
+    : IResource(filename)
     {}
     IImage(const std::string& name, const IResource::TResourceData& data)
     : IResource(name, data)

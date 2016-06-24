@@ -5,7 +5,6 @@
 
 #include "CImagePVR.h"
 #include "Global.h"
-#include "ILoader.h"
 
 using namespace jam;
 
@@ -38,8 +37,8 @@ const std::map<uint64_t, TexelProps> CImagePVR::s_TexelProps =
 // Public Methods
 // *****************************************************************************
 
-CImagePVR::CImagePVR(const std::string& filename, const std::string& loader)
-: IImage(filename, loader)
+CImagePVR::CImagePVR(const std::string& filename)
+: IImage(filename)
 , m_Width(1)
 , m_Height(1)
 , m_Mipmaps(0)

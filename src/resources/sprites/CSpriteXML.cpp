@@ -5,7 +5,6 @@
 
 #include "CSpriteXML.h"
 #include "Global.h"
-#include "ILoader.h"
 #include "tinyxml.h"
 #include "CStringUtils.h"
 
@@ -20,8 +19,8 @@ using namespace jam;
 // Public Methods
 // *****************************************************************************
 
-CSpriteXML::CSpriteXML(const std::string& filename, const std::string& loader)
-: ISprite(filename, loader)
+CSpriteXML::CSpriteXML(const std::string& filename)
+: ISprite(filename)
 {
     
 }

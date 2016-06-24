@@ -7,7 +7,6 @@
 #include "IRenderView.h"
 #include "CSystem.h"
 #include "IScene.h"
-#include "CLoaderFile.h"
 #include "IEventDispatcher.hpp"
 
 #include "CRenderSystem.h"
@@ -36,11 +35,6 @@ CGame::CGame(IRenderViewPtr render)
     : m_IsInitialized(false)
     , m_RenderView(render)
 {
-    CLoaderFile* loaderFile = new CLoaderFile();
-    loaderFile->RegisterFileSystem(CSystem::GetBundlePath() + "media/");
-    loaderFile->RegisterFileSystem(CSystem::GetBundlePath());
-    
-    ILoader::RegisterDefaultLoader(loaderFile);
 }
 
 CGame::~CGame() 

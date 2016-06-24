@@ -19,7 +19,7 @@ class IModel3D : public IResource
 {
 public:
     IModel3D(const std::string& filename)
-        : IResource(filename, "")
+        : IResource(filename)
     {}
     virtual ~IModel3D() = default;
     

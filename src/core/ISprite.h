@@ -82,6 +82,12 @@ public:
 class ISprite : public IResource
 {
 public:
+    ISprite(const std::string& filename)
+    : IResource(filename)
+    {}
+    
+    virtual ~ISprite() = default;
+    
 	typedef std::vector<std::string> TTexturesList;
 	typedef std::vector<CFrameDef> TFramesList;
     typedef std::vector<CTextureFrame> TTextureFramesList;
@@ -91,13 +97,6 @@ public:
     virtual const TTexturesList& Textures() const = 0;
 	virtual const TTextureFramesList& Frames() const = 0;
 	virtual const TAnimationsList& Animations() const = 0;
-    
-protected:
-    ISprite(const std::string& filename, const std::string& loader)
-        : IResource(filename, loader)
-    {}
-    
-    virtual ~ISprite() = default;
 };
 
 }; // namespace jam

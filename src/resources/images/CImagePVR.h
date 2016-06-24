@@ -15,7 +15,7 @@ namespace jam
 class CImagePVR : public IImage
 {    
 public:
-    CImagePVR(const std::string& filename, const std::string& loader = "");
+    CImagePVR(const std::string& filename);
     virtual ~CImagePVR();
     
     virtual bool Load() override;

@@ -7,7 +7,6 @@
 #define	IRESOURCE_H
 
 #include "Global.h"
-#include "ILoader.h"
 
 namespace jam
 {
@@ -18,12 +17,11 @@ public:
     typedef std::vector<uint8_t> TResourceData;
     
 public:
-    IResource(const std::string& filename, const std::string& loaderName);
+    IResource(const std::string& filename);
     IResource(const std::string& name, const TResourceData& data);
     virtual ~IResource();
     
 	const std::string& Filename() const;
-	const std::string& LoaderName();
     virtual const TResourceData& RawData();
     virtual bool Load();
     virtual void Unload();
@@ -37,10 +35,7 @@ private:
     
 private:
     TResourceData m_Data;
-    
-    std::string m_Filename;
-	std::string	m_LoaderName;
-    
+    std::string m_Filename;    
     bool m_IsExternalData;
 };
     

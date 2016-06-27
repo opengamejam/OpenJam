@@ -75,6 +75,7 @@ void CMemoryFile::Open(IFileInfoPtr fileInfo, IFile::FileMode mode)
     if (mode & IFile::Append)
     {
         m_IsReadOnly = false;
+        m_SeekPos = Size() > 0 ? Size() - 1 : 0;
     }
     
     m_FileInfo = fileInfo;
@@ -151,7 +152,7 @@ uint64_t CMemoryFile::Read(uint8_t* buffer, uint64_t size)
 
 uint64_t CMemoryFile::Write(const uint8_t* buffer, uint64_t size)
 {
-    if (!IsOpened())
+    if (!IsOpened() || IsReadOnly())
     {
         return 0;
     }

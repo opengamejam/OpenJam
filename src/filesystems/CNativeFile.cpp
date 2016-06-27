@@ -162,7 +162,7 @@ uint64_t CNativeFile::Read(uint8_t* buffer, uint64_t size)
 
 uint64_t CNativeFile::Write(const uint8_t* buffer, uint64_t size)
 {
-    if (!IsOpened())
+    if (!IsOpened() || IsReadOnly())
     {
         return 0;
     }

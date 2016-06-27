@@ -1,32 +1,29 @@
 //
-//  CNativeFileSystem.h
+//  CMemoryFileSystem.h
 //  TestApp
 //
 //  Created by Yevgeniy Logachev on 6/23/16.
 //
 //
 
-#ifndef CNATIVEFILESYSTEM_H
-#define CNATIVEFILESYSTEM_H
+#ifndef CMEMORYFILESYSTEM_H
+#define CMEMORYFILESYSTEM_H
 
 #include "IFileSystem.h"
 
-struct SDir;
-
 namespace jam
 {
+CLASS_PTR(CMemoryFile);
     
-class CNativeFileSystem final : public IFileSystem
+class CMemoryFileSystem final : public IFileSystem
 {
     JAM_OBJECT
 public:
+    CMemoryFileSystem();
+    ~CMemoryFileSystem();
+    
     /*
-     * Constructor, create with a base path
-     */
-    CNativeFileSystem(const std::string& basePath);
-    ~CNativeFileSystem();
-    /*
-     * Initialize filesystem
+     * Initialize filesystem with a base path
      */
     virtual void Initialize() override;
     /*
@@ -100,16 +97,12 @@ public:
     virtual bool IsDir(const std::string& dirPath) const override;
     
 private:
-    typedef std::unordered_map<std::string, IFileInfoPtr> TFileInfoMap;
-    void BuildFilelist(SDir* dir, std::string basePath, TFileNamesList& outFileList, TFileInfoMap& outFileInfoMap);
-    
-private:
-    std::string m_BasePath;
     bool m_IsInitialized;
-    TFileNamesList m_FileList;
+    TFileNamesList m_FileNameList;
+    typedef std::unordered_map<std::string, CMemoryFilePtr> TFileInfoMap;
     TFileInfoMap m_FileInfoMap;
 };
     
 } // namespace jam
 
-#endif /* CNATIVEFILESYSTEM_H */
+#endif /* CMEMORYFILESYSTEM_H */

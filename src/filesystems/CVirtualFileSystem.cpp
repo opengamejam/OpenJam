@@ -27,7 +27,7 @@ struct SAliasComparator
 {
     bool operator()(const CVirtualFileSystem::SSortedAlias& a1, const CVirtualFileSystem::SSortedAlias& a2) const
     {
-        return a1.alias.length() < a2.alias.length();
+        return a1.alias.length() > a2.alias.length();
     }
 };
 

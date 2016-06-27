@@ -1,30 +1,27 @@
 //
-//  CNativeFileInfo.h
+//  CMemoryFileInfo.h
 //  TestApp
 //
 //  Created by Yevgeniy Logachev on 6/23/16.
 //
 //
 
-#ifndef CNATIVEFILEINFO_H
-#define CNATIVEFILEINFO_H
+#ifndef CMEMORYFILEINFO_H
+#define CMEMORYFILEINFO_H
 
 #include "IFileInfo.h"
 
 namespace jam
 {
     
-class CNativeFileInfo final : public IFileInfo
+class CMemoryFileInfo final : public IFileInfo
 {
     JAM_OBJECT
-    friend class CNativeFileSystem;
 public:
-    CNativeFileInfo();
-    ~CNativeFileInfo();
+    CMemoryFileInfo();
+    ~CMemoryFileInfo();
     
-    CNativeFileInfo(const std::string& basePath, const std::string& fileName, bool isDir);
-    CNativeFileInfo(const std::string& filePath, bool isDir);
-    
+    CMemoryFileInfo(const std::string& filePath, bool isDir);
     /*
      * Get file name
      */
@@ -69,4 +66,4 @@ private:
     
 }; // namespace jam
 
-#endif /* CNATIVEFILEINFO_H */
+#endif /* CMEMORYFILEINFO_H */

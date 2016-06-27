@@ -1,12 +1,12 @@
 //
-//  CNativeFileInfo.cpp
+//  CMemoryFileInfo.cpp
 //  TestApp
 //
 //  Created by Yevgeniy Logachev on 6/23/16.
 //
 //
 
-#include "CNativeFileInfo.h"
+#include "CMemoryFileInfo.h"
 #include "CStringUtils.h"
 
 using namespace jam;
@@ -19,22 +19,17 @@ using namespace jam;
 // Public Methods
 // *****************************************************************************
 
-CNativeFileInfo::CNativeFileInfo()
+CMemoryFileInfo::CMemoryFileInfo()
 {
     
 }
 
-CNativeFileInfo::~CNativeFileInfo()
+CMemoryFileInfo::~CMemoryFileInfo()
 {
     
 }
 
-CNativeFileInfo::CNativeFileInfo(const std::string& basePath, const std::string& fileName, bool isDir)
-{
-    Initialize(basePath, fileName, isDir);
-}
-
-CNativeFileInfo::CNativeFileInfo(const std::string& filePath, bool isDir)
+CMemoryFileInfo::CMemoryFileInfo(const std::string& filePath, bool isDir)
 {
     std::size_t found = filePath.rfind("/");
     if (found != std::string::npos)
@@ -50,32 +45,32 @@ CNativeFileInfo::CNativeFileInfo(const std::string& filePath, bool isDir)
     }
 }
 
-const std::string& CNativeFileInfo::Name() const
+const std::string& CMemoryFileInfo::Name() const
 {
     return m_Name;
 }
 
-const std::string& CNativeFileInfo::BaseName() const
+const std::string& CMemoryFileInfo::BaseName() const
 {
     return m_BaseName;
 }
 
-const std::string& CNativeFileInfo::Extension() const
+const std::string& CMemoryFileInfo::Extension() const
 {
     return m_Extension;
 }
 
-const std::string& CNativeFileInfo::AbsolutePath() const
+const std::string& CMemoryFileInfo::AbsolutePath() const
 {
     return m_AbsolutePath;
 }
 
-const std::string& CNativeFileInfo::BasePath() const
+const std::string& CMemoryFileInfo::BasePath() const
 {
     return m_BasePath;
 }
 
-bool CNativeFileInfo::IsDir() const
+bool CMemoryFileInfo::IsDir() const
 {
     return m_IsDir;
 }
@@ -88,7 +83,7 @@ bool CNativeFileInfo::IsDir() const
 // Private Methods
 // *****************************************************************************
 
-void CNativeFileInfo::Initialize(const std::string& basePath, const std::string& fileName, bool isDir)
+void CMemoryFileInfo::Initialize(const std::string& basePath, const std::string& fileName, bool isDir)
 {
     m_BasePath = basePath;
     m_Name = fileName;

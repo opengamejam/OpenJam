@@ -13,6 +13,7 @@
 
 namespace jam
 {
+CLASS_PTR(IFileInfo)
     
 class IFileInfo
 {
@@ -50,17 +51,24 @@ public:
      * Is a directory
      */
     virtual bool IsDir() const = 0;
-    
-    /*
-     * Compare with another file info
-     */
-    virtual bool operator ==(const IFileInfo& other) const = 0;
-    
-    /*
-     * Compare with string file path
-     */
-    virtual bool operator ==(const std::string& filePath) const = 0;
 };
+    
+/*
+ * Compare with another file info
+ */
+inline bool operator ==(const IFileInfo& fi1, const IFileInfo& fi2)
+{
+    return fi1.AbsolutePath() == fi2.AbsolutePath();
+}
+
+inline bool operator ==(IFileInfoPtr fi1, IFileInfoPtr fi2)
+{
+    if (fi1 == nullptr || fi2 == nullptr)
+    {
+        return fi1.get() == fi2.get();
+    }
+    return fi1->AbsolutePath() == fi2->AbsolutePath();
+}
     
 }; // namespace jam
 

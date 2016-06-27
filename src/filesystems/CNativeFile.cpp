@@ -114,6 +114,11 @@ bool CNativeFile::IsOpened() const
 
 uint64_t CNativeFile::Seek(uint64_t offset, Origin origin)
 {
+    if (!IsOpened())
+    {
+        return 0;
+    }
+    
     std::ios_base::seekdir way;
     if (origin == Begin)
     {
@@ -141,6 +146,11 @@ uint64_t CNativeFile::Tell()
 
 uint64_t CNativeFile::Read(uint8_t* buffer, uint64_t size)
 {
+    if (!IsOpened())
+    {
+        return 0;
+    }
+    
     m_Stream.read (reinterpret_cast<char*>(buffer), size);
     if (m_Stream)
     {
@@ -152,6 +162,11 @@ uint64_t CNativeFile::Read(uint8_t* buffer, uint64_t size)
 
 uint64_t CNativeFile::Write(const uint8_t* buffer, uint64_t size)
 {
+    if (!IsOpened())
+    {
+        return 0;
+    }
+    
     m_Stream.write (reinterpret_cast<const char*>(buffer), size);
     if (m_Stream)
     {

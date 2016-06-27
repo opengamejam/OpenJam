@@ -38,9 +38,9 @@ public:
     ~IFileSystem() = default;
     
     /*
-     * Initialize filesystem with a base path
+     * Initialize filesystem, call it first before using
      */
-    virtual void Initialize(const std::string& basePath) = 0;
+    virtual void Initialize() = 0;
     /*
      * Shutdown filesystem
      */

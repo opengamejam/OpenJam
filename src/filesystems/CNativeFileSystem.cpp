@@ -25,10 +25,14 @@ struct SDir : public DIR {};
 // Public Methods
 // *****************************************************************************
 
-CNativeFileSystem::CNativeFileSystem()
-: m_IsInitialized(false)
+CNativeFileSystem::CNativeFileSystem(const std::string& basePath)
+: m_BasePath(basePath)
+, m_IsInitialized(false)
 {
-
+    if (!StringEndsWith(m_BasePath, "/"))
+    {
+        m_BasePath += "/";
+    }
 }
 
 CNativeFileSystem::~CNativeFileSystem()
@@ -36,24 +40,17 @@ CNativeFileSystem::~CNativeFileSystem()
 
 }
 
-void CNativeFileSystem::Initialize(const std::string& basePath)
+void CNativeFileSystem::Initialize()
 {
-    std::string bpath = basePath;
-    if (!StringEndsWith(basePath, "/"))
-    {
-        bpath += "/";
-    }
-    
-    if (m_BasePath == bpath)
+    if (m_IsInitialized)
     {
         return;
     }
-    m_BasePath = bpath;
     
-    SDir *dir = static_cast<SDir*>(opendir(bpath.c_str()));
+    SDir *dir = static_cast<SDir*>(opendir(BasePath().c_str()));
     if (dir)
     {
-        BuildFilelist(dir, bpath, m_FileList, m_FileInfoMap);
+        BuildFilelist(dir, BasePath(), m_FileList, m_FileInfoMap);
         m_IsInitialized = true;
         
         closedir(dir);
@@ -83,7 +80,7 @@ const std::string& CNativeFileSystem::BasePath() const
 
 const IFileSystem::TFileNamesList& CNativeFileSystem::FileList(IFileSystem::Entries filter) const
 {
-    return m_FileList;
+    return m_FileList; // TODO: FileSystem, apply filter
 }
 
 

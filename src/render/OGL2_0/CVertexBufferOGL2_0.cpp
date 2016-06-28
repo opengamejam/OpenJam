@@ -95,7 +95,7 @@ void CVertexBufferOGL2_0::ResizeRaw(uint64_t newSize)
     Bind();
     glBufferData(GL_ARRAY_BUFFER, m_Buffer.size(), m_Buffer.data(), GL_DYNAMIC_DRAW);
     Unbind();
-    //assert(glGetError() == GL_NO_ERROR);
+    assert(glGetError() == GL_NO_ERROR);
 }
 
 uint64_t CVertexBufferOGL2_0::ElementSize() const
@@ -126,7 +126,7 @@ void CVertexBufferOGL2_0::Unlock(bool isNeedCommit)
         Bind();
         glBufferSubData(GL_ARRAY_BUFFER, 0, m_Buffer.size(), m_Buffer.data());
         Unbind();
-        //assert(glGetError() == GL_NO_ERROR);
+        assert(glGetError() == GL_NO_ERROR);
     }
     
     m_IsLocked = false;

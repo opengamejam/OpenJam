@@ -91,15 +91,19 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, IRendererPtr rend
         
         // Vertex buffer
         uint32_t elementSize = 0;
-        if (model3D->Vertices(group).size() > 0)
+        bool hasPosition = (model3D->Vertices(group).size() > 0);
+        bool hasUVs = (model3D->UVs(group).size() > 0);
+        bool hasNormals = (model3D->Normals(group).size() > 0);
+        
+        if (hasPosition)
         {
             elementSize += sizeof(glm::vec3);
         }
-        if (model3D->UVs(group).size() > 0)
+        if (hasUVs)
         {
             elementSize += sizeof(glm::vec2);
         }
-        if (model3D->Normals(group).size() > 0)
+        if (hasNormals)
         {
             elementSize += sizeof(glm::vec3);
         }
@@ -112,7 +116,7 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, IRendererPtr rend
             assert(vertexBuffer && vertexBuffer->IsValid());
             
             uint32_t offset = 0;
-            if (model3D->Vertices(group).size() > 0)
+            if (hasPosition)
             {
                 vertexBuffer->Resize(model3D->Vertices(group).size());
                 IVertexBuffer::SVertexStream& position = vertexBuffer->Lock(IVertexBuffer::Position);
@@ -125,7 +129,7 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, IRendererPtr rend
                 offset += sizeof(glm::vec3);
             }
             
-            if (model3D->UVs(group).size() > 0)
+            if (hasUVs)
             {
                 IVertexBuffer::SVertexStream& textureCoord = vertexBuffer->Lock(IVertexBuffer::TextureCoords);
                 textureCoord.attributeIndex = shaderProgram->VertexUV();
@@ -137,7 +141,7 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, IRendererPtr rend
                 offset += sizeof(glm::vec2);
             }
             
-            if (model3D->Normals(group).size() > 0)
+            if (hasNormals)
             {
                 IVertexBuffer::SVertexStream& normals = vertexBuffer->Lock(IVertexBuffer::Normal);
                 normals.attributeIndex = shaderProgram->VertexNormal();

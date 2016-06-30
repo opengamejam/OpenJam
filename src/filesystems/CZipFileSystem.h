@@ -1,13 +1,13 @@
 //
-//  CNativeFileSystem.h
+//  CZipFileSystem.h
 //  TestApp
 //
 //  Created by Yevgeniy Logachev on 6/23/16.
 //
 //
 
-#ifndef CNATIVEFILESYSTEM_H
-#define CNATIVEFILESYSTEM_H
+#ifndef CZIPFILESYSTEM_H
+#define CZIPFILESYSTEM_H
 
 #include "IFileSystem.h"
 
@@ -15,21 +15,24 @@ struct SDir;
 
 namespace jam
 {
-CLASS_PTR(CNativeFile)
+CLASS_PTR(CZip);
+CLASS_PTR(CZipFile);
     
-class CNativeFileSystem final : public IFileSystem
+class CZipFileSystem final : public IFileSystem
 {
     JAM_OBJECT
 public:
     /*
      * Constructor, create with a base path
      */
-    CNativeFileSystem(const std::string& basePath);
-    ~CNativeFileSystem();
+    CZipFileSystem(const std::string& zipPath);
+    ~CZipFileSystem();
+    
     /*
      * Initialize filesystem
      */
     virtual void Initialize() override;
+    
     /*
      * Shutdown filesystem
      */
@@ -102,14 +105,14 @@ public:
     
 private:
     IFilePtr FindFile(const CFileInfo& fileInfo) const;
-    void BuildFilelist(SDir* dir, std::string basePath, TFileList& outFileList);
     
 private:
-    std::string m_BasePath;
+    std::string m_ZipPath;
+    CZipPtr m_Zip;
     bool m_IsInitialized;
     TFileList m_FileList;
 };
     
 } // namespace jam
 
-#endif /* CNATIVEFILESYSTEM_H */
+#endif /* CZIPFILESYSTEM_H */

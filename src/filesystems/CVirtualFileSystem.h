@@ -72,7 +72,7 @@ public:
     /*
      * Iterate over all registered filesystems and find first ocurrences of file
      */
-    IFilePtr OpenFile(const std::string& filePath, IFile::FileMode mode);
+    IFilePtr OpenFile(const CFileInfo& filePath, IFile::FileMode mode);
     
     /*
      * Close opened file if it was opened via OpenFirstFile(..)

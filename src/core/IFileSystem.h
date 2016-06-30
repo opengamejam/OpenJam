@@ -15,23 +15,12 @@
 namespace jam
 {
 CLASS_PTR(IFile)
-CLASS_PTR(IFileInfo)
 
 class IFileSystem
 {
     JAM_OBJECT_BASE
 public:
-    typedef std::set<IFileInfoPtr> TFileNamesList;
-    
-    /*
-     * Filelist filtering modes
-     */
-    enum Entries
-    {
-        Files = 0x01,
-        Dirs = 0x02,
-        AllEntries = Files | Dirs
-    };
+    typedef std::set<IFilePtr> TFileList;
     
 public:
     IFileSystem() = default;
@@ -59,7 +48,7 @@ public:
     /*
      * Retrieve file list according filter
      */
-    virtual const TFileNamesList& FileList(Entries filter = AllEntries) const = 0;
+    virtual const TFileList& FileList() const = 0;
     
     /*
      * Check is readonly filesystem
@@ -69,7 +58,7 @@ public:
     /*
      * Open existing file for reading, if not exists return null
      */
-    virtual IFilePtr OpenFile(const std::string& filePath, IFile::FileMode mode) = 0;
+    virtual IFilePtr OpenFile(const CFileInfo& filePath, int mode) = 0;
     
     /*
      * Close file
@@ -79,39 +68,41 @@ public:
     /*
      * Create file on writeable filesystem. Return true if file already exists
      */
-    virtual bool CreateFile(const std::string& filePath) = 0;
+    virtual bool CreateFile(const CFileInfo& filePath) = 0;
     
     /*
      * Remove existing file on writable filesystem
      */
-    virtual bool RemoveFile(const std::string& filePath) = 0;
+    virtual bool RemoveFile(const CFileInfo& filePath) = 0;
     
     /*
      * Copy existing file on writable filesystem
      */
-    virtual bool CopyFile(const std::string& from, const std::string& to) = 0;
+    virtual bool CopyFile(const CFileInfo& src, const CFileInfo& dest) = 0;
     
     /*
      * Rename existing file on writable filesystem
      */
-    virtual bool RenameFile(const std::string& from, const std::string& to) = 0;
+    virtual bool RenameFile(const CFileInfo& src, const CFileInfo& dest) = 0;
     
     /*
      * Check if file exists on filesystem
      */
-    virtual bool IsFileExists(const std::string& filePath) const = 0;
+    virtual bool IsFileExists(const CFileInfo& filePath) const = 0;
     
     /*
      * Check is file
      */
-    virtual bool IsFile(const std::string& filePath) const = 0;
+    virtual bool IsFile(const CFileInfo& filePath) const = 0;
     
     /*
      * Check is dir
      */
-    virtual bool IsDir(const std::string& dirPath) const = 0;
+    virtual bool IsDir(const CFileInfo& dirPath) const = 0;
 };
 
+
+    
 }; // namespace jam
 
 #endif /* IFILESYSTEM_H */

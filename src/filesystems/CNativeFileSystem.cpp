@@ -10,7 +10,6 @@
 #include <dirent.h>
 #include <fstream>
 #include "CNativeFile.h"
-#include "CNativeFileInfo.h"
 #include "CStringUtils.h"
 
 using namespace jam;
@@ -19,6 +18,7 @@ using namespace jam;
 // Constants
 // *****************************************************************************
 
+const uint64_t kChunkSize = 1024;
 struct SDir : public DIR {};
 
 // *****************************************************************************
@@ -50,7 +50,7 @@ void CNativeFileSystem::Initialize()
     SDir *dir = static_cast<SDir*>(opendir(BasePath().c_str()));
     if (dir)
     {
-        BuildFilelist(dir, BasePath(), m_FileList, m_FileInfoMap);
+        BuildFilelist(dir, BasePath(), m_FileList);
         m_IsInitialized = true;
         
         closedir(dir);
@@ -59,9 +59,8 @@ void CNativeFileSystem::Initialize()
 
 void CNativeFileSystem::Shutdown()
 {
-    m_FileList.clear();
-    m_FileInfoMap.clear();
     m_BasePath = "";
+    m_FileList.clear();
     m_IsInitialized = false;
 }
 
@@ -78,9 +77,9 @@ const std::string& CNativeFileSystem::BasePath() const
 }
 
 
-const IFileSystem::TFileNamesList& CNativeFileSystem::FileList(IFileSystem::Entries filter) const
+const IFileSystem::TFileList& CNativeFileSystem::FileList() const
 {
-    return m_FileList; // TODO: FileSystem, apply filter
+    return m_FileList;
 }
 
 
@@ -90,17 +89,20 @@ bool CNativeFileSystem::IsReadOnly() const
 }
 
 
-IFilePtr CNativeFileSystem::OpenFile(const std::string& filePath, IFile::FileMode mode)
+IFilePtr CNativeFileSystem::OpenFile(const CFileInfo& filePath, int mode)
 {
-    IFilePtr file(new CNativeFile());
-    
-    std::shared_ptr<CNativeFileInfo> fileInfo(new CNativeFileInfo(BasePath() + filePath, false));
-    file->Open(fileInfo, mode);
-    
-    if (!IsFileExists(filePath) && file->IsOpened())
+    CFileInfo fileInfo(BasePath(), filePath.AbsolutePath(), false);
+    IFilePtr file = FindFile(fileInfo);
+    bool isExists = (file != nullptr);
+    if (!isExists)
     {
-        m_FileList.insert(fileInfo);
-        m_FileInfoMap[fileInfo->AbsolutePath()] = fileInfo;
+        file.reset(new CNativeFile(fileInfo));
+    }
+    file->Open(mode);
+    
+    if (!isExists && file->IsOpened())
+    {
+        m_FileList.insert(file);
     }
     
     return file;
@@ -116,24 +118,18 @@ void CNativeFileSystem::CloseFile(IFilePtr file)
 }
 
 
-bool CNativeFileSystem::CreateFile(const std::string& filePath)
+bool CNativeFileSystem::CreateFile(const CFileInfo& filePath)
 {
     bool result = false;
-    if (!IsFileExists(filePath))
+    if (!IsReadOnly() && !IsFileExists(filePath))
     {
-        std::shared_ptr<CNativeFileInfo> fileInfo(new CNativeFileInfo(BasePath() + filePath, false));
-        
-        std::fstream fs;
-        fs.open(fileInfo->AbsolutePath().c_str(), std::fstream::out | std::fstream::trunc);
-        if (fs.is_open())
+        CFileInfo fileInfo(BasePath(), filePath.AbsolutePath(), false);
+        IFilePtr file = OpenFile(filePath, IFile::Out | IFile::Truncate);
+        if (file)
         {
-            m_FileList.insert(fileInfo);
-            m_FileInfoMap[fileInfo->AbsolutePath()] = fileInfo;
-            
             result = true;
+            file->Close();
         }
-        
-        fs.close();
     }
     else
     {
@@ -144,40 +140,41 @@ bool CNativeFileSystem::CreateFile(const std::string& filePath)
 }
 
 
-bool CNativeFileSystem::RemoveFile(const std::string& filePath)
+bool CNativeFileSystem::RemoveFile(const CFileInfo& filePath)
 {
     bool result = true;
-    if (IsFileExists(filePath))
+    
+    IFilePtr file = FindFile(filePath);
+    if (!IsReadOnly() && file)
     {
-        std::shared_ptr<CNativeFileInfo> fileInfo(new CNativeFileInfo(BasePath() + filePath, false));
-        if (remove(fileInfo->AbsolutePath().c_str()))
+        CFileInfo fileInfo(BasePath(), file->FileInfo().AbsolutePath(), false);
+        if (remove(fileInfo.AbsolutePath().c_str()))
         {
-            m_FileList.erase(fileInfo);
-            m_FileInfoMap.erase(fileInfo->AbsolutePath());
+            m_FileList.erase(file);
         }
     }
     
     return result;
 }
 
-
-bool CNativeFileSystem::CopyFile(const std::string& from, const std::string& to)
+bool CNativeFileSystem::CopyFile(const CFileInfo& src, const CFileInfo& dest)
 {
     bool result = false;
-    if (IsFileExists(from) && !IsFileExists(to))
+    if (!IsReadOnly())
     {
-        std::shared_ptr<CNativeFileInfo> fromInfo(new CNativeFileInfo(BasePath() + from, false));
-        std::shared_ptr<CNativeFileInfo> toInfo(new CNativeFileInfo(BasePath() + to, false));
+        IFilePtr fromFile = FindFile(src);
+        IFilePtr toFile = OpenFile(dest, IFile::Out);
         
-        std::ifstream  src(fromInfo->AbsolutePath().c_str(), std::ios::binary);
-        std::ofstream  dst(toInfo->AbsolutePath().c_str(), std::ios::binary);
-        
-        dst << src.rdbuf();
-        
-        if (dst)
+        if (fromFile && toFile)
         {
-            m_FileList.insert(toInfo);
-            m_FileInfoMap[toInfo->AbsolutePath()] = toInfo;
+            uint64_t size = kChunkSize;
+            std::vector<uint8_t> buff(size);
+            do
+            {
+                fromFile->Read(buff.data(), kChunkSize);
+                toFile->Write(buff.data(), size);
+            }
+            while (size == kChunkSize);
             
             result = true;
         }
@@ -187,21 +184,30 @@ bool CNativeFileSystem::CopyFile(const std::string& from, const std::string& to)
 }
 
 
-bool CNativeFileSystem::RenameFile(const std::string& from, const std::string& to)
+bool CNativeFileSystem::RenameFile(const CFileInfo& src, const CFileInfo& dest)
 {
-    bool result = true;
-    if (IsFileExists(from) && !IsFileExists(to))
+    if (!IsReadOnly())
     {
-        std::shared_ptr<CNativeFileInfo> fromInfo(new CNativeFileInfo(BasePath() + from, false));
-        std::shared_ptr<CNativeFileInfo> toInfo(new CNativeFileInfo(BasePath() + to, false));
+        return false;
+    }
+    
+    bool result = false;
+    
+    IFilePtr fromFile = FindFile(src);
+    IFilePtr toFile = FindFile(dest);
+    if (fromFile && !toFile)
+    {
+        CFileInfo toInfo(BasePath(), dest.AbsolutePath(), false);
         
-        if (rename(fromInfo->AbsolutePath().c_str(), toInfo->AbsolutePath().c_str()))
+        if (rename(fromFile->FileInfo().AbsolutePath().c_str(), toInfo.AbsolutePath().c_str()))
         {
-            m_FileList.erase(fromInfo);
-            m_FileInfoMap.erase(fromInfo->AbsolutePath());
-            
-            m_FileList.insert(toInfo);
-            m_FileInfoMap[toInfo->AbsolutePath()] = toInfo;
+            m_FileList.erase(fromFile);
+            toFile = OpenFile(dest, IFile::In);
+            if (toFile)
+            {
+                result = true;
+                toFile->Close();
+            }
         }
     }
     
@@ -209,37 +215,30 @@ bool CNativeFileSystem::RenameFile(const std::string& from, const std::string& t
 }
 
 
-bool CNativeFileSystem::IsFileExists(const std::string& filePath) const
+bool CNativeFileSystem::IsFileExists(const CFileInfo& filePath) const
 {
-    TFileInfoMap::const_iterator it = m_FileInfoMap.find(BasePath() + filePath);
-    return (it != m_FileInfoMap.end());
+    return (FindFile(BasePath() + filePath.AbsolutePath()) != nullptr);
 }
 
 
-bool CNativeFileSystem::IsFile(const std::string& filePath) const
+bool CNativeFileSystem::IsFile(const CFileInfo& filePath) const
 {
-    TFileInfoMap::const_iterator it = m_FileInfoMap.find(BasePath() + filePath);
-    if (it != m_FileInfoMap.end())
+    IFilePtr file = FindFile(filePath);
+    if (file)
     {
-        return !it->second->IsDir();
+        return !file->FileInfo().IsDir();
     }
     
     return false;
 }
 
 
-bool CNativeFileSystem::IsDir(const std::string& dirPath) const
+bool CNativeFileSystem::IsDir(const CFileInfo& dirPath) const
 {
-    std::string dpath = dirPath;
-    if (!StringEndsWith(dirPath, "/"))
+    IFilePtr file = FindFile(dirPath);
+    if (file)
     {
-        dpath += "/";
-    }
-    
-    TFileInfoMap::const_iterator it = m_FileInfoMap.find(BasePath() + dpath);
-    if (it != m_FileInfoMap.end())
-    {
-        return it->second->IsDir();
+        return file->FileInfo().IsDir();
     }
     
     return false;
@@ -253,8 +252,24 @@ bool CNativeFileSystem::IsDir(const std::string& dirPath) const
 // Private Methods
 // *****************************************************************************
 
-void CNativeFileSystem::BuildFilelist(SDir* dir, std::string basePath,
-                                      TFileNamesList& outFileList, TFileInfoMap& outFileInfoMap)
+IFilePtr CNativeFileSystem::FindFile(const CFileInfo& fileInfo) const
+{
+    TFileList::const_iterator it = std::find_if(m_FileList.begin(), m_FileList.end(), [&](IFilePtr file)
+    {
+        return file->FileInfo() == fileInfo;
+    });
+    
+    if (it != m_FileList.end())
+    {
+        return *it;
+    }
+    
+    return nullptr;
+}
+
+void CNativeFileSystem::BuildFilelist(SDir* dir,
+                                      std::string basePath,
+                                      TFileList& outFileList)
 {
     if (!StringEndsWith(basePath, "/"))
     {
@@ -267,22 +282,24 @@ void CNativeFileSystem::BuildFilelist(SDir* dir, std::string basePath,
         std::string filename = ent->d_name;
         std::string filepath = basePath + filename;
         SDir *childDir = static_cast<SDir*>(opendir(filepath.c_str()));
-        
         bool isDotOrDotDot = StringEndsWith(filename, ".") && childDir;
-        if (childDir)
+        if (childDir && !isDotOrDotDot)
         {
-            filename += (isDotOrDotDot ? "" : "/");
+            filename += "/";
         }
         
-        std::shared_ptr<CNativeFileInfo> fileInfo(new CNativeFileInfo(basePath, filename, childDir != NULL));
-        outFileList.insert(fileInfo);
-        outFileInfoMap[fileInfo->AbsolutePath()] = fileInfo;
+        CFileInfo fileInfo(basePath, filename, childDir != NULL);
+        if (!FindFile(fileInfo))
+        {
+            IFilePtr file(new CNativeFile(fileInfo));
+            outFileList.insert(file);
+        }
         
         if (childDir)
         {
             if (!isDotOrDotDot)
             {
-                BuildFilelist(childDir, (childDir ? filepath : basePath), outFileList, outFileInfoMap);
+                BuildFilelist(childDir, (childDir ? filepath : basePath), outFileList);
             }
             closedir(childDir);
         }

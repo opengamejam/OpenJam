@@ -19,13 +19,13 @@ class CMemoryFile final : public IFile
     JAM_OBJECT
     friend class CMemoryFileSystem;
 public:
-    CMemoryFile();
+    CMemoryFile(const CFileInfo& fileInfo);
     ~CMemoryFile();
     
     /*
      * Get file information
      */
-    virtual IFileInfoPtr FileInfo() const override;
+    virtual const CFileInfo& FileInfo() const override;
     
     /*
      * Returns file size
@@ -38,14 +38,9 @@ public:
     virtual bool IsReadOnly() const override;
     
     /*
-     * Open existing file for reading, if not exists return null
+     * Open file for reading/writing
      */
-    virtual void Open(IFileInfoPtr fileInfo, FileMode mode) override;
-    
-    /*
-     * String alternative to open file
-     */
-    virtual void Open(const std::string& filePath, FileMode mode) override;
+    virtual void Open(int mode) override;
     
     /*
      * Close file
@@ -77,10 +72,11 @@ public:
     
 private:
     std::vector<uint8_t> m_Data;
-    IFileInfoPtr m_FileInfo;
+    CFileInfo m_FileInfo;
     bool m_IsReadOnly;
     bool m_IsOpened;
     uint64_t m_SeekPos;
+    int m_Mode;
 };
     
 } // namespace jam

@@ -20,6 +20,7 @@
 #include "CVirtualFileSystem.h"
 #include "CNativeFileSystem.h"
 #include "CMemoryFileSystem.h"
+#include "CZipFileSystem.h"
 
 using namespace jam;
 
@@ -47,13 +48,16 @@ void CGame::Initialize()
     vfs_initialize();
     
     IFileSystemPtr root_fs(new CNativeFileSystem(CVirtualFileSystem::GetBundlePath() + "media/"));
+    IFileSystemPtr zip_fs(new CZipFileSystem(CVirtualFileSystem::GetBundlePath() + "media/data.zip"));
     IFileSystemPtr mem_fs(new CMemoryFileSystem());
     
     root_fs->Initialize();
+    zip_fs->Initialize();
     mem_fs->Initialize();
     
     CVirtualFileSystemPtr vfs = vfs_get_global();
-    vfs->AddFileSystem("/", root_fs);
+    //vfs->AddFileSystem("/", root_fs);
+    vfs->AddFileSystem("/", zip_fs);
     vfs->AddFileSystem("/memory/", mem_fs);
     
     CThreadPool::Get()->Initialize(5);

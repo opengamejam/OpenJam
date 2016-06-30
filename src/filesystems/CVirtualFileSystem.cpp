@@ -114,17 +114,16 @@ bool CVirtualFileSystem::IsFileSystemExists(const std::string& alias) const
     return (m_FileSystem.find(alias) != m_FileSystem.end());
 }
 
-IFilePtr CVirtualFileSystem::OpenFile(const std::string& filePath, IFile::FileMode mode)
+IFilePtr CVirtualFileSystem::OpenFile(const CFileInfo& filePath, IFile::FileMode mode)
 {
     IFilePtr file = nullptr;
     std::all_of(m_SortedAlias.begin(), m_SortedAlias.end(), [&](const TSortedAliasList::value_type& fs)
     {
         const std::string& alias = fs.alias;
         IFileSystemPtr filesystem = fs.filesystem;
-        if (StringStartsWith(filePath, alias) && filePath.length() != alias.length())
+        if (StringStartsWith(filePath.BasePath(), alias) && filePath.AbsolutePath().length() != alias.length())
         {
-            std::string realFilePath = filePath.substr(alias.length(), filePath.length() - alias.length());
-            file = filesystem->OpenFile(realFilePath, mode);
+            file = filesystem->OpenFile(filePath, mode);
         }
         
         if (file)

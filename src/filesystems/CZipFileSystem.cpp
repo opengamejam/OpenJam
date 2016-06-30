@@ -1,13 +1,15 @@
 //
-//  CMemoryFileSystem.cpp
+//  CZipFileSystem.cpp
 //  TestApp
 //
 //  Created by Yevgeniy Logachev on 6/23/16.
 //
 //
 
-#include "CMemoryFileSystem.h"
-#include "CMemoryFile.h"
+#include "CZipFileSystem.h"
+#include <dirent.h>
+#include <fstream>
+#include "CZipFile.h"
 #include "CStringUtils.h"
 
 using namespace jam;
@@ -20,67 +22,68 @@ using namespace jam;
 // Public Methods
 // *****************************************************************************
 
-CMemoryFileSystem::CMemoryFileSystem()
-: m_IsInitialized(false)
+CZipFileSystem::CZipFileSystem(const std::string& zipPath)
+: m_ZipPath(zipPath)
+, m_IsInitialized(false)
+{
+}
+
+CZipFileSystem::~CZipFileSystem()
 {
 
 }
 
-CMemoryFileSystem::~CMemoryFileSystem()
-{
-
-}
-
-void CMemoryFileSystem::Initialize()
+void CZipFileSystem::Initialize()
 {
     if (m_IsInitialized)
     {
         return;
     }
     
+    m_Zip.reset(new CZip(m_ZipPath));
     m_IsInitialized = true;
 }
 
-void CMemoryFileSystem::Shutdown()
+void CZipFileSystem::Shutdown()
 {
     m_FileList.clear();
     m_IsInitialized = false;
 }
 
 
-bool CMemoryFileSystem::IsInitialized() const
+bool CZipFileSystem::IsInitialized() const
 {
     return m_IsInitialized;
 }
 
 
-const std::string& CMemoryFileSystem::BasePath() const
+const std::string& CZipFileSystem::BasePath() const
 {
     static std::string basePath = "/";
     return basePath;
 }
 
 
-const IFileSystem::TFileList& CMemoryFileSystem::FileList() const
+const IFileSystem::TFileList& CZipFileSystem::FileList() const
 {
     return m_FileList;
 }
 
 
-bool CMemoryFileSystem::IsReadOnly() const
+bool CZipFileSystem::IsReadOnly() const
 {
     return false;
 }
 
 
-IFilePtr CMemoryFileSystem::OpenFile(const CFileInfo& filePath, int mode)
+IFilePtr CZipFileSystem::OpenFile(const CFileInfo& filePath, int mode)
 {
     CFileInfo fileInfo(BasePath(), filePath.AbsolutePath(), false);
     IFilePtr file = FindFile(fileInfo);
     bool isExists = (file != nullptr);
     if (!isExists)
     {
-        file.reset(new CMemoryFile(fileInfo));
+        file.reset(new CZipFile(fileInfo, m_Zip));
     }
     file->Open(mode);
     
@@ -93,7 +96,7 @@ IFilePtr CMemoryFileSystem::OpenFile(const CFileInfo& filePath, int mode)
 }
 
 
-void CMemoryFileSystem::CloseFile(IFilePtr file)
+void CZipFileSystem::CloseFile(IFilePtr file)
 {
     if (file)
     {
@@ -102,18 +105,14 @@ void CMemoryFileSystem::CloseFile(IFilePtr file)
 }
 
 
-bool CMemoryFileSystem::CreateFile(const CFileInfo& filePath)
+bool CZipFileSystem::CreateFile(const CFileInfo& filePath)
 {
     bool result = false;
-    if (!IsReadOnly() && !IsFileExists(filePath))
+    if (!IsFileExists(filePath))
     {
-        CFileInfo fileInfo(BasePath(), filePath.AbsolutePath(), false);
-        IFilePtr file = OpenFile(filePath, IFile::Out | IFile::Truncate);
-        if (file)
-        {
-            result = true;
-            file->Close();
-        }
+        IFilePtr file = OpenFile(filePath, IFile::ReadWrite);
+        result = (file != nullptr);
+        file->Close();
     }
     else
     {
@@ -124,7 +123,7 @@ bool CMemoryFileSystem::CreateFile(const CFileInfo& filePath)
 }
 
 
-bool CMemoryFileSystem::RemoveFile(const CFileInfo& filePath)
+bool CZipFileSystem::RemoveFile(const CFileInfo& filePath)
 {
     bool result = true;
     
@@ -132,20 +131,20 @@ bool CMemoryFileSystem::RemoveFile(const CFileInfo& filePath)
     if (!IsReadOnly() && file)
     {
         CFileInfo fileInfo(BasePath(), file->FileInfo().AbsolutePath(), false);
-        m_FileList.erase(file);
+        m_FileList.erase(file); // TODO: remove from archive
     }
     
     return result;
 }
 
 
-bool CMemoryFileSystem::CopyFile(const CFileInfo& src, const CFileInfo& dest)
+bool CZipFileSystem::CopyFile(const CFileInfo& src, const CFileInfo& dest)
 {
     bool result = false;
     if (!IsReadOnly())
     {
-        CMemoryFilePtr srcFile = std::static_pointer_cast<CMemoryFile>(FindFile(src));
-        CMemoryFilePtr dstFile = std::static_pointer_cast<CMemoryFile>(OpenFile(dest, IFile::Out));
+        CZipFilePtr srcFile = std::static_pointer_cast<CZipFile>(FindFile(src));
+        CZipFilePtr dstFile = std::static_pointer_cast<CZipFile>(OpenFile(dest, IFile::Out));
         
         if (srcFile && dstFile)
         {
@@ -160,7 +159,7 @@ bool CMemoryFileSystem::CopyFile(const CFileInfo& src, const CFileInfo& dest)
 }
 
 
-bool CMemoryFileSystem::RenameFile(const CFileInfo& src, const CFileInfo& dest)
+bool CZipFileSystem::RenameFile(const CFileInfo& src, const CFileInfo& dest)
 {
     bool result = CopyFile(src, dest);
     
@@ -172,13 +171,14 @@ bool CMemoryFileSystem::RenameFile(const CFileInfo& src, const CFileInfo& dest)
     return result;
 }
 
-bool CMemoryFileSystem::IsFileExists(const CFileInfo& filePath) const
+
+bool CZipFileSystem::IsFileExists(const CFileInfo& filePath) const
 {
     return (FindFile(BasePath() + filePath.AbsolutePath()) != nullptr);
 }
 
 
-bool CMemoryFileSystem::IsFile(const CFileInfo& filePath) const
+bool CZipFileSystem::IsFile(const CFileInfo& filePath) const
 {
     IFilePtr file = FindFile(filePath);
     if (file)
@@ -190,7 +190,7 @@ bool CMemoryFileSystem::IsFile(const CFileInfo& filePath) const
 }
 
 
-bool CMemoryFileSystem::IsDir(const CFileInfo& dirPath) const
+bool CZipFileSystem::IsDir(const CFileInfo& dirPath) const
 {
     IFilePtr file = FindFile(dirPath);
     if (file)
@@ -209,7 +209,7 @@ bool CMemoryFileSystem::IsDir(const CFileInfo& dirPath) const
 // Private Methods
 // *****************************************************************************
 
-IFilePtr CMemoryFileSystem::FindFile(const CFileInfo& fileInfo) const
+IFilePtr CZipFileSystem::FindFile(const CFileInfo& fileInfo) const
 {
     TFileList::const_iterator it = std::find_if(m_FileList.begin(), m_FileList.end(), [&](IFilePtr file)
     {

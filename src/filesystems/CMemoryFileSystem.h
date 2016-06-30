@@ -44,7 +44,7 @@ public:
     /*
      * Retrieve file list according filter
      */
-    virtual const TFileNamesList& FileList(Entries filter = AllEntries) const override;
+    virtual const TFileList& FileList() const override;
     
     /*
      * Check is readonly filesystem
@@ -54,7 +54,7 @@ public:
     /*
      * Open existing file for reading, if not exists return null
      */
-    virtual IFilePtr OpenFile(const std::string& filePath, IFile::FileMode mode) override;
+    virtual IFilePtr OpenFile(const CFileInfo& filePath, int mode) override;
     
     /*
      * Close file
@@ -64,43 +64,44 @@ public:
     /*
      * Create file on writeable filesystem. Return true if file already exists
      */
-    virtual bool CreateFile(const std::string& filePath) override;
+    virtual bool CreateFile(const CFileInfo& filePath) override;
     
     /*
      * Remove existing file on writable filesystem
      */
-    virtual bool RemoveFile(const std::string& filePath) override;
+    virtual bool RemoveFile(const CFileInfo& filePath) override;
     
     /*
      * Copy existing file on writable filesystem
      */
-    virtual bool CopyFile(const std::string& from, const std::string& to) override;
+    virtual bool CopyFile(const CFileInfo& src, const CFileInfo& dest) override;
     
     /*
      * Rename existing file on writable filesystem
      */
-    virtual bool RenameFile(const std::string& from, const std::string& to) override;
+    virtual bool RenameFile(const CFileInfo& src, const CFileInfo& dest) override;
     
     /*
      * Check if file exists on filesystem
      */
-    virtual bool IsFileExists(const std::string& filePath) const override;
+    virtual bool IsFileExists(const CFileInfo& filePath) const override;
     
     /*
      * Check is file
      */
-    virtual bool IsFile(const std::string& filePath) const override;
+    virtual bool IsFile(const CFileInfo& filePath) const override;
     
     /*
      * Check is dir
      */
-    virtual bool IsDir(const std::string& dirPath) const override;
+    virtual bool IsDir(const CFileInfo& dirPath) const override;
+    
+private:
+    IFilePtr FindFile(const CFileInfo& fileInfo) const;
     
 private:
     bool m_IsInitialized;
-    TFileNamesList m_FileNameList;
-    typedef std::unordered_map<std::string, CMemoryFilePtr> TFileInfoMap;
-    TFileInfoMap m_FileInfoMap;
+    TFileList m_FileList;
 };
     
 } // namespace jam

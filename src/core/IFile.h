@@ -9,11 +9,10 @@
 #ifndef IFILE_H
 #define IFILE_H
 
-#include "Global.h"
+#include "CFileInfo.h"
 
 namespace jam
 {
-CLASS_PTR(IFileInfo)
     
 class IFile
 {
@@ -48,7 +47,7 @@ public:
     /*
      * Get file information
      */
-    virtual IFileInfoPtr FileInfo() const = 0;
+    virtual const CFileInfo& FileInfo() const = 0;
     
     /*
      * Returns file size
@@ -61,14 +60,9 @@ public:
     virtual bool IsReadOnly() const = 0;
     
     /*
-     * Open existing file for reading, if not exists return null
+     * Open file for reading/writing
      */
-    virtual void Open(IFileInfoPtr fileInfo, FileMode mode) = 0;
-    
-    /*
-     * String alternative to open file
-     */
-    virtual void Open(const std::string& filePath, FileMode mode) = 0;
+    virtual void Open(int mode) = 0;
     
     /*
      * Close file
@@ -116,6 +110,21 @@ public:
         return (Write(&value, sizeof(value)) == sizeof(value));
     }
 };
+    
+inline bool operator ==(const IFile& f1, const IFile& f2)
+{
+    return f1.FileInfo() == f2.FileInfo();
+}
+    
+inline bool operator ==(std::shared_ptr<IFile> f1, std::shared_ptr<IFile> f2)
+{
+    if (!f1 || !f2)
+    {
+        return f1.get() != f2.get();
+    }
+    
+    return f1->FileInfo() == f2->FileInfo();
+}
     
 } // namespace jam
 

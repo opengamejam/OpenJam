@@ -7,7 +7,6 @@
 //
 
 #include "CMemoryFile.h"
-#include "CMemoryFileInfo.h"
 
 using namespace jam;
 
@@ -19,11 +18,14 @@ using namespace jam;
 // Public Methods
 // *****************************************************************************
 
-CMemoryFile::CMemoryFile()
-: m_IsReadOnly(true)
+CMemoryFile::CMemoryFile(const CFileInfo& fileInfo)
+: m_FileInfo(fileInfo)
+, m_IsReadOnly(true)
 , m_IsOpened(false)
 , m_SeekPos(0)
+, m_Mode(0)
 {
+    
 }
 
 CMemoryFile::~CMemoryFile()
@@ -31,7 +33,7 @@ CMemoryFile::~CMemoryFile()
     Close();
 }
 
-IFileInfoPtr CMemoryFile::FileInfo() const
+const CFileInfo& CMemoryFile::FileInfo() const
 {
     return m_FileInfo;
 }
@@ -51,23 +53,18 @@ bool CMemoryFile::IsReadOnly() const
     return m_IsReadOnly;
 }
 
-void CMemoryFile::Open(IFileInfoPtr fileInfo, IFile::FileMode mode)
+void CMemoryFile::Open(int mode)
 {
-    if (!fileInfo)
+    if (IsOpened() && m_Mode == mode)
     {
+        Seek(0, IFile::Begin);
         return;
     }
     
-    if (FileInfo() == fileInfo && IsOpened())
-    {
-        return;
-    }
-    else if (FileInfo() != fileInfo)
-    {
-        Close();
-    }
-    
+    m_Mode = mode;
+    m_SeekPos = 0;
     m_IsReadOnly = true;
+    
     if (mode & IFile::Out)
     {
         m_IsReadOnly = false;
@@ -77,15 +74,12 @@ void CMemoryFile::Open(IFileInfoPtr fileInfo, IFile::FileMode mode)
         m_IsReadOnly = false;
         m_SeekPos = Size() > 0 ? Size() - 1 : 0;
     }
+    if (mode & IFile::Truncate)
+    {
+        m_Data.clear();
+    }
     
-    m_FileInfo = fileInfo;
     m_IsOpened = true;
-}
-
-void CMemoryFile::Open(const std::string& filePath, IFile::FileMode mode)
-{
-    IFileInfoPtr fileInfo(new CMemoryFileInfo(filePath, false));
-    Open(fileInfo, mode);
 }
 
 void CMemoryFile::Close()

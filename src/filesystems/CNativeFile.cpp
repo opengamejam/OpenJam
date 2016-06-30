@@ -7,7 +7,6 @@
 //
 
 #include "CNativeFile.h"
-#include "CNativeFileInfo.h"
 
 using namespace jam;
 
@@ -19,8 +18,10 @@ using namespace jam;
 // Public Methods
 // *****************************************************************************
 
-CNativeFile::CNativeFile()
-: m_IsReadOnly(true)
+CNativeFile::CNativeFile(const CFileInfo& fileInfo)
+: m_FileInfo(fileInfo)
+, m_IsReadOnly(true)
+, m_Mode(0)
 {
 }
 
@@ -29,7 +30,7 @@ CNativeFile::~CNativeFile()
     Close();
 }
 
-IFileInfoPtr CNativeFile::FileInfo() const
+const CFileInfo& CNativeFile::FileInfo() const
 {
     return m_FileInfo;
 }
@@ -54,22 +55,15 @@ bool CNativeFile::IsReadOnly() const
     return m_IsReadOnly;
 }
 
-void CNativeFile::Open(IFileInfoPtr fileInfo, IFile::FileMode mode)
+void CNativeFile::Open(int mode)
 {
-    if (!fileInfo)
+    if (IsOpened() && m_Mode == mode)
     {
+        Seek(0, IFile::Begin);
         return;
     }
     
-    if (FileInfo() == fileInfo && IsOpened())
-    {
-        return;
-    }
-    else if (FileInfo() != fileInfo)
-    {
-        Close();
-    }
-    
+    m_Mode = mode;
     m_IsReadOnly = true;
     
     std::ios_base::open_mode open_mode = 0x00;
@@ -92,14 +86,7 @@ void CNativeFile::Open(IFileInfoPtr fileInfo, IFile::FileMode mode)
         open_mode |= std::fstream::trunc;
     }
     
-    m_FileInfo = fileInfo;
-    m_Stream.open(fileInfo->AbsolutePath().c_str(), open_mode);
-}
-
-void CNativeFile::Open(const std::string& filePath, IFile::FileMode mode)
-{
-    IFileInfoPtr fileInfo(new CNativeFileInfo(filePath, false));
-    Open(fileInfo, mode);
+    m_Stream.open(FileInfo().AbsolutePath().c_str(), open_mode);
 }
 
 void CNativeFile::Close()

@@ -25,7 +25,7 @@ public:
     /*
      * Constructor, create with a base path
      */
-    CZipFileSystem(const std::string& zipPath);
+    CZipFileSystem(const std::string& zipPath, bool createIfNotExist = false, const std::string& password = "");
     ~CZipFileSystem();
     
     /*
@@ -110,6 +110,8 @@ private:
     std::string m_ZipPath;
     CZipPtr m_Zip;
     bool m_IsInitialized;
+    bool m_IsNeedCreate;
+    std::string m_Password;
     TFileList m_FileList;
 };
     

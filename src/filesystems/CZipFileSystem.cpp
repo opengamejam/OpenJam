@@ -22,9 +22,11 @@ using namespace jam;
 // Public Methods
 // *****************************************************************************
 
-CZipFileSystem::CZipFileSystem(const std::string& zipPath)
+CZipFileSystem::CZipFileSystem(const std::string& zipPath, bool createIfNotExist, const std::string& password)
 : m_ZipPath(zipPath)
 , m_IsInitialized(false)
+, m_IsNeedCreate(createIfNotExist)
+, m_Password(password)
 {
 }
 
@@ -40,7 +42,7 @@ void CZipFileSystem::Initialize()
         return;
     }
     
-    m_Zip.reset(new CZip(m_ZipPath));
+    m_Zip.reset(new CZip(m_ZipPath, m_IsNeedCreate, m_Password));
     m_IsInitialized = true;
 }
 
@@ -72,7 +74,12 @@ const IFileSystem::TFileList& CZipFileSystem::FileList() const
 
 bool CZipFileSystem::IsReadOnly() const
 {
-    return false;
+    if (!IsInitialized())
+    {
+        return true;
+    }
+    
+    return m_Zip->IsReadOnly();
 }
 
 
@@ -82,7 +89,7 @@ IFilePtr CZipFileSystem::OpenFile(const CFileInfo& filePath, int mode)
     IFilePtr file = FindFile(fileInfo);
     bool isExists = (file != nullptr);
     if (!isExists)
-    {
+    {        
         file.reset(new CZipFile(fileInfo, m_Zip));
     }
     file->Open(mode);
@@ -111,8 +118,11 @@ bool CZipFileSystem::CreateFile(const CFileInfo& filePath)
     if (!IsFileExists(filePath))
     {
         IFilePtr file = OpenFile(filePath, IFile::ReadWrite);
-        result = (file != nullptr);
-        file->Close();
+        if (file)
+        {
+            result = true;
+            file->Close();
+        }
     }
     else
     {
@@ -125,16 +135,7 @@ bool CZipFileSystem::CreateFile(const CFileInfo& filePath)
 
 bool CZipFileSystem::RemoveFile(const CFileInfo& filePath)
 {
-    bool result = true;
-    
-    IFilePtr file = FindFile(filePath);
-    if (!IsReadOnly() && file)
-    {
-        CFileInfo fileInfo(BasePath(), file->FileInfo().AbsolutePath(), false);
-        m_FileList.erase(file); // TODO: remove from archive
-    }
-    
-    return result;
+    return false; // TODO: Filesystem, temporally not suppoted
 }
 
 
@@ -161,14 +162,7 @@ bool CZipFileSystem::CopyFile(const CFileInfo& src, const CFileInfo& dest)
 
 bool CZipFileSystem::RenameFile(const CFileInfo& src, const CFileInfo& dest)
 {
-    bool result = CopyFile(src, dest);
-    
-    if (result)
-    {
-        result = RemoveFile(src);
-    }
-    
-    return result;
+    return false; // TODO: Filesystem, temporally not suppoted
 }
 
 

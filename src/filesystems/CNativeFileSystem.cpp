@@ -85,7 +85,12 @@ const IFileSystem::TFileList& CNativeFileSystem::FileList() const
 
 bool CNativeFileSystem::IsReadOnly() const
 {
-    return false;
+    if (!IsInitialized())
+    {
+        return true;
+    }
+    
+    return access(BasePath().c_str(), W_OK);
 }
 
 

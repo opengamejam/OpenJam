@@ -70,8 +70,8 @@ public:
     virtual uint64_t Write(const uint8_t* buffer, uint64_t size) override;
     
 private:
+    CFileInfo m_FileInfo;
     std::fstream m_Stream;
-    const CFileInfo& m_FileInfo;
     bool m_IsReadOnly;
     int m_Mode;
 };

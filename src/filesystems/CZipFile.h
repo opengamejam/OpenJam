@@ -18,11 +18,13 @@ CLASS_PTR(CZip);
 class CZip
 {
 public:
-    CZip(const std::string& zipPath, const std::string& password = "");
+    CZip(const std::string& zipPath, bool needCreate = false, const std::string& password = "");
     ~CZip();
     
-    void* ZipFile();
-    void* UnzFile();
+    void* ZipOpen();
+    void* UnzOpen();
+    void ZipClose();
+    void UnzClose();
     
     const std::string& FileName() const;
     const std::string& Password() const;
@@ -30,10 +32,12 @@ public:
     void Lock();
     void Unlock();
     
+    bool IsReadOnly() const;
+    
 private:
     std::string m_FileName;
     std::string m_Password;
-    void* m_ZipFile;
+    void* m_ZipArchive;
     void* m_UnzFile;    
     std::mutex m_Mutex;
 };
@@ -98,13 +102,14 @@ public:
     virtual uint64_t Write(const uint8_t* buffer, uint64_t size) override;
     
 private:
-    CZipPtr m_ZipFile;
-    int m_Mode;
-    const CFileInfo& m_FileInfo;
-    bool m_IsReadOnly;
+    CZipPtr m_ZipArchive;
     std::vector<uint8_t> m_Data;
-    uint64_t m_SeekPos;
+    CFileInfo m_FileInfo;
+    bool m_IsReadOnly;
     bool m_IsOpened;
+    bool m_HasChanges;
+    uint64_t m_SeekPos;
+    int m_Mode;
 };
     
 } // namespace jam

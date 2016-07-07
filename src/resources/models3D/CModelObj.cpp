@@ -187,7 +187,7 @@ bool CModelObj::ParseLine(const std::string& line,
     {
         if (components.size() > 1)
         {
-            dstTexture = components[1] + ".pvr"; // TODO: remove test extansion
+            dstTexture = components[1];
             textures.insert(dstTexture);
         }
         result = true;

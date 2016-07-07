@@ -16,6 +16,7 @@
 #include "CTransformationComponent.h"
 #include "CTransformAffector.h"
 #include "CResourceCache.hpp"
+#include "CTextureCache.h"
 
 using namespace jam;
 
@@ -30,6 +31,13 @@ using namespace jam;
 
 CSprite2DPtr CSprite2D::Create(const std::string& filename, IRendererPtr renderer, uint32_t cameraId)
 {
+    std::string assetName = "";
+    std::size_t found = filename.rfind("/");
+    if (found != std::string::npos)
+    {
+        assetName = filename.substr(0, found);
+    }
+    
     IMeshPtr mesh = nullptr;
     IMaterialPtr material = nullptr;
     IVertexBufferPtr vertexBuffer = nullptr;
@@ -134,7 +142,7 @@ CSprite2DPtr CSprite2D::Create(const std::string& filename, IRendererPtr rendere
     }
     
     // Sprite component
-    CAnimation2DComponentPtr animationComponent(new CAnimation2DComponent(renderer));
+    CAnimation2DComponentPtr animationComponent(new CAnimation2DComponent());
     
     CResourceCache<ISprite> resourceCache;
     ISpritePtr sprite = resourceCache.AcquireResource(filename, false,
@@ -152,6 +160,18 @@ CSprite2DPtr CSprite2D::Create(const std::string& filename, IRendererPtr rendere
     if (sprite)
     {
         animationComponent->Sprite(sprite);
+        
+        CTextureCache textureCache(renderer);
+        const std::vector<std::string>& textureNames = sprite->Textures();
+        std::for_each(textureNames.begin(), textureNames.end(), [&](const std::string& textureName)
+        {
+            ITexturePtr texture = textureCache.Load(assetName + textureName);
+            if (texture)
+            {
+                renderComponent->Texture(texture, textureName);
+                renderComponent->Visible(false, textureName);
+            }
+        });
     }
     
     // Transform component

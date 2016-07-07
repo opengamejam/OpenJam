@@ -22,8 +22,10 @@ using namespace jam;
 // Public Methods
 // *****************************************************************************
 
-CZipFileSystem::CZipFileSystem(const std::string& zipPath, bool createIfNotExist, const std::string& password)
+CZipFileSystem::CZipFileSystem(const std::string& zipPath, const std::string& basePath,
+                               bool createIfNotExist, const std::string& password)
 : m_ZipPath(zipPath)
+, m_BasePath(basePath)
 , m_IsInitialized(false)
 , m_IsNeedCreate(createIfNotExist)
 , m_Password(password)
@@ -61,8 +63,7 @@ bool CZipFileSystem::IsInitialized() const
 
 const std::string& CZipFileSystem::BasePath() const
 {
-    static std::string basePath = "/";
-    return basePath;
+    return m_BasePath;
 }
 
 

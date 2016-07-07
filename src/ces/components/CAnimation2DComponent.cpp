@@ -25,17 +25,14 @@ using namespace jam;
 // Public Methods
 // *****************************************************************************
 
-CAnimation2DComponent::CAnimation2DComponent(IRendererPtr renderer)
+CAnimation2DComponent::CAnimation2DComponent()
 : m_Sprite(nullptr)
-, m_Renderer(renderer)
 , m_CachedFrameTransform()
-, m_CachedTexture(nullptr)
 , m_CachedIsStatic(true)
 , m_FullTime(0)
 , m_Time(0)
 , m_IsPlay(true)
 {
-    assert(m_Renderer);
 }
 
 CAnimation2DComponent::~CAnimation2DComponent()
@@ -92,7 +89,7 @@ void CAnimation2DComponent::Sprite(ISpritePtr sprite)
         });
 
         // Load texture atlases
-        LoadTextures(textures);
+        //LoadTextures(textures);
     }
     else
     {
@@ -126,11 +123,6 @@ const std::vector<glm::vec2>& CAnimation2DComponent::TextureFrame()
 const std::string& CAnimation2DComponent::TextureName()
 {
     return m_CachedTextureName;
-}
-
-ITexturePtr CAnimation2DComponent::Texture()
-{
-    return m_CachedTexture;
 }
 
 bool CAnimation2DComponent::IsStatic()
@@ -272,46 +264,5 @@ void CAnimation2DComponent::Cache()
     m_CachedFrameTransform  = sequence[frameId].transform;
     m_CachedTextureFrame    = sequence[frameId].textureFrame;
     m_CachedTextureName     = sequence[frameId].textureName;
-    m_CachedTexture         = m_Textures[m_CachedTextureName];
     m_CachedIsStatic        = (sequence.size() <= 1);
-}
-
-void CAnimation2DComponent::LoadTextures(const std::vector<std::string>& textureNames)
-{
-    CResourceCache<ITexture> textureCache;
-    IRendererPtr renderer = m_Renderer;
-    
-    std::for_each(textureNames.begin(), textureNames.end(), [&](const std::string& textureName)
-    {
-        ITexturePtr texture = textureCache.AcquireResource(textureName, false,
-                                                       [renderer](const std::string& filename) -> ITexturePtr
-        {
-            CResourceCache<IImage> imageCache;
-            IImagePtr image = imageCache.AcquireResource(filename, false,
-                                                        [renderer](const std::string& filename) -> IImagePtr
-            {
-#ifdef OS_KOS
-                IImagePtr resultImage(new CImageDreamPVR(filename));
-#else
-                IImagePtr resultImage(new CImagePVR(filename));
-#endif
-                if (!resultImage->Load())
-                {
-                    resultImage = nullptr;
-                }
-
-                return resultImage;
-            });
-
-            ITexturePtr resultTexture = renderer->CreateTexture();
-            if (image)
-            {
-               resultTexture->AssignImage(image);
-            }
-
-            return resultTexture;
-        });
-
-        m_Textures[textureName] = texture;
-    });
 }

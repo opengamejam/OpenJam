@@ -17,6 +17,7 @@
 #include "CModelObj.h"
 #include "CTransformationComponent.h"
 #include "CResourceCache.hpp"
+#include "CTextureCache.h"
 #include "CTransformAffector.h"
 #include "CUpdateComponent.h"
 #include "CBatchComponent.h"
@@ -37,6 +38,14 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, IRendererPtr rend
 {
     assert(renderer);
     
+    std::string assetName = "";
+    std::size_t found = filename.rfind("/");
+    if (found != std::string::npos)
+    {
+        assetName = filename.substr(0, found);
+    }
+    
+    CTextureCache textureCache(renderer);
     CResourceCache<IModel3D> resourceCache;
     IModel3DPtr model3D = resourceCache.AcquireResource(filename, false,
                                                         [](const std::string& filename) -> IModel3DPtr
@@ -181,35 +190,7 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, IRendererPtr rend
         mesh->IndexBuffer(indexBuffer);
         
         // Texture
-        CResourceCache<ITexture> textureCache;
-        ITexturePtr texture = textureCache.AcquireResource(model3D->TextureName(group), false,
-                                                           [renderer](const std::string& filename) -> ITexturePtr
-        {
-           CResourceCache<IImage> imageCache;
-           IImagePtr image = imageCache.AcquireResource(filename, false,
-                                                        [renderer](const std::string& filename) -> IImagePtr
-           {
-#ifdef OS_KOS
-               IImagePtr resultImage(new CImageDreamPVR(filename));
-#else
-               IImagePtr resultImage(new CImagePVR(filename));
-#endif
-               if (!resultImage->Load())
-               {
-                   resultImage = nullptr;
-               }
-                
-               return resultImage;
-           });
-           
-           ITexturePtr resultTexture = renderer->CreateTexture();
-           if (image)
-           {
-               resultTexture->AssignImage(image);
-           }
-           
-           return resultTexture;
-        });
+        ITexturePtr texture = textureCache.Load(assetName + model3D->TextureName(group));
         
         // Render component
         renderComponent->Batchable(true);

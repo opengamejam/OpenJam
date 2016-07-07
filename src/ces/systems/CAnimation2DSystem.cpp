@@ -54,7 +54,11 @@ void CAnimation2DSystem::Update(unsigned long dt)
                 // Update texture coords
                 entity->Get<CRenderComponent>([&](CRenderComponentPtr renderComponent)
                 {
-                    renderComponent->Texture(anim2DComponent->Texture());
+                    ITexturePtr currentTexture = renderComponent->Texture(anim2DComponent->TextureName());
+                    if (currentTexture != renderComponent->Texture())
+                    {
+                        renderComponent->Texture(currentTexture);
+                    }
                     
                     IVertexBufferPtr vertexBuffer = renderComponent->Mesh()->VertexBuffer();
                     if (vertexBuffer->HasStream(IVertexBuffer::TextureCoords))

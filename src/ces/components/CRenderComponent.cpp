@@ -22,8 +22,7 @@ const std::string CRenderComponent::kBatchingGroupName = "jam_batch_group";
 // *****************************************************************************
 
 CRenderComponent::CRenderComponent()
-: m_IsVisible(true)
-, m_IsBatchable(false)
+: m_IsBatchable(false)
 , m_DrawOrder(0)
 {
 
@@ -43,6 +42,7 @@ void CRenderComponent::Mesh(IMeshPtr mesh, const std::string& group)
 {
     m_Mesh[group] = mesh;
     m_Groups.insert(group);
+    m_GroupsVisibility[group] = true;
 }
 
 IMaterialPtr CRenderComponent::Material(const std::string& group)
@@ -54,6 +54,7 @@ void CRenderComponent::Material(IMaterialPtr material, const std::string& group)
 {
     m_Material[group] = material;
     m_Groups.insert(group);
+    m_GroupsVisibility[group] = true;
     
     m_DrawOrder = 0;
     std::for_each(m_Material.begin(), m_Material.end(), [&](const std::pair<std::string, IMaterialPtr>& element)
@@ -85,6 +86,7 @@ void CRenderComponent::Texture(ITexturePtr texture, const std::string& group)
 {
     m_Texture[group] = texture;
     m_Groups.insert(group);
+    m_GroupsVisibility[group] = true;
 }
 
 IShaderProgramPtr CRenderComponent::Shader(const std::string& group)
@@ -96,6 +98,17 @@ void CRenderComponent::Shader(IShaderProgramPtr shader, const std::string& group
 {
     m_Shader[group] = shader;
     m_Groups.insert(group);
+    m_GroupsVisibility[group] = true;
+}
+
+bool CRenderComponent::Visible(const std::string& group)
+{
+    return m_GroupsVisibility[group];
+}
+
+void CRenderComponent::Visible(bool isVisible, const std::string& group)
+{
+    m_GroupsVisibility[group] = isVisible;
 }
 
 const std::set<std::string>& CRenderComponent::Groups() const
@@ -140,19 +153,6 @@ bool CRenderComponent::HasCameraId(uint32_t cameraId)
 const std::set<uint32_t>& CRenderComponent::CameraIds() const
 {
     return m_CameraIds;
-}
-
-bool CRenderComponent::Visible() const
-{
-    return m_IsVisible;
-}
-
-void CRenderComponent::Visible(bool isVisible)
-{
-    if (m_IsVisible != isVisible)
-    {
-        m_IsVisible = isVisible;
-    }
 }
 
 template <class T>

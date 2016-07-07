@@ -63,7 +63,8 @@ void CBatchingSystem::Update(unsigned long dt)
                 const std::set<std::string>& groups = renderComp->Groups();
                 std::for_each(groups.begin(), groups.end(), [&](const std::string& groupName)
                 {
-                    if (groupName == CRenderComponent::kBatchingGroupName)
+                    if (groupName == CRenderComponent::kBatchingGroupName ||
+                        !renderComp->Visible(groupName))
                     {
                         return;
                     }
@@ -73,7 +74,9 @@ void CBatchingSystem::Update(unsigned long dt)
                     ITexturePtr texture = renderComp->Texture(groupName);
                     IShaderProgramPtr shader = renderComp->Shader(groupName);
                     
-                    std::tuple<std::string, std::string> container(material->Hash(), texture->Hash()); // TODO: shaderId, cameraId
+                    const std::string& matId = (material ? material->Hash() : "");
+                    const std::string& texId = (texture ? texture->Hash() : "");
+                    std::tuple<std::string, std::string> container(matId, texId); // TODO: shaderId, cameraId
                     uint64_t batchId = hash_tuple(container);
                     
                     TBatchCache::iterator it = m_Batches.find(batchId);

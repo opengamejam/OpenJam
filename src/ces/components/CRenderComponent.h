@@ -43,6 +43,9 @@ public:
     IShaderProgramPtr Shader(const std::string& group = kDefaultGroupName);
     void Shader(IShaderProgramPtr shader, const std::string& group = kDefaultGroupName);
     
+    bool Visible(const std::string& group = kDefaultGroupName);
+    void Visible(bool isVisible, const std::string& group = kDefaultGroupName);
+    
     const std::set<std::string>& Groups() const;
     void RemoveGroup(const std::string& group);
     bool HasGroup(const std::string& group) const;
@@ -51,9 +54,6 @@ public:
     void RemoveCameraId(uint32_t cameraId);
     bool HasCameraId(uint32_t cameraId);
     const std::set<uint32_t>& CameraIds() const;
-    
-    bool Visible() const;
-    void Visible(bool isVisible);
     
     bool Batchable() const;
     void Batchable(bool isBatchable);
@@ -68,7 +68,7 @@ private:
     std::unordered_map<std::string, ITexturePtr> m_Texture;
     std::unordered_map<std::string, IShaderProgramPtr> m_Shader;
     std::set<std::string> m_Groups;
-    bool m_IsVisible;
+    std::unordered_map<std::string, bool> m_GroupsVisibility;
     bool m_IsBatchable;
     std::set<uint32_t> m_CameraIds;
     uint32_t m_DrawOrder;

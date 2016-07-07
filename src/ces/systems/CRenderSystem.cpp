@@ -148,7 +148,8 @@ void CRenderSystem::Draw(ICameraPtr camera)
             const std::set<std::string>& groups = renderComponent->Groups();
             std::for_each(groups.begin(), groups.end(), [&](const std::string& groupName)
             {
-                if (groupName == CRenderComponent::kBatchingGroupName)
+                if (groupName == CRenderComponent::kBatchingGroupName ||
+                    !renderComponent->Visible(groupName))
                 {
                     return;
                 }

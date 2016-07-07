@@ -23,9 +23,12 @@ class CZipFileSystem final : public IFileSystem
     JAM_OBJECT
 public:
     /*
-     * Constructor, create with a base path
+     * Constructor, create with a path to .zip file and base path in zip.
+     * Optional parameter createIfNotExist will allow to create empty .zip file
+     * Setup password to keep files in zip archive with ecryption
      */
-    CZipFileSystem(const std::string& zipPath, bool createIfNotExist = false, const std::string& password = "");
+    CZipFileSystem(const std::string& zipPath, const std::string& basePath,
+                   bool createIfNotExist = false, const std::string& password = "");
     ~CZipFileSystem();
     
     /*
@@ -109,6 +112,7 @@ private:
 private:
     std::string m_ZipPath;
     CZipPtr m_Zip;
+    std::string m_BasePath;
     bool m_IsInitialized;
     bool m_IsNeedCreate;
     std::string m_Password;

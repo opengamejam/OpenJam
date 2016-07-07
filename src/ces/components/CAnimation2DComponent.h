@@ -16,8 +16,6 @@ namespace jam
 {
 CLASS_PTR(CAnimation2DComponent)
 CLASS_PTR(ISprite)
-CLASS_PTR(ITexture)
-CLASS_PTR(IRenderer)
 
 class CAnimation2DComponent final : public CComponentBase
 {
@@ -39,7 +37,7 @@ public:
     };
     
 public:
-    CAnimation2DComponent(IRendererPtr renderer);
+    CAnimation2DComponent();
     ~CAnimation2DComponent();
     
     void Sprite(ISpritePtr sprite);
@@ -48,7 +46,6 @@ public:
     const CTransform3Df& FrameTransform();
     const std::vector<glm::vec2>& TextureFrame();
     const std::string& TextureName();
-    ITexturePtr Texture();
     bool IsStatic();
     
     const std::string& AnimationName() const;
@@ -75,21 +72,17 @@ public:
 private:
     const TSequence& Sequence();
     void Cache();
-    void LoadTextures(const std::vector<std::string>& textureNames);
     
 private:
     ISpritePtr m_Sprite;
-    IRendererPtr m_Renderer;
     
     std::unordered_map<std::string, TSequence> m_Sequences;
     std::vector<std::string> m_SequencesNames;
     std::unordered_map<std::string, unsigned long> m_SequenceDurations;
-    std::unordered_map<std::string, ITexturePtr> m_Textures;
     
     CTransform3Df m_CachedFrameTransform;
     std::vector<glm::vec2> m_CachedTextureFrame;
     std::string m_CachedTextureName;
-    ITexturePtr m_CachedTexture;
     bool m_CachedIsStatic;
     
     unsigned long m_FullTime;

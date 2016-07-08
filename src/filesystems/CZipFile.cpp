@@ -27,7 +27,7 @@ CZip::CZip(const std::string& zipPath, bool needCreate, const std::string& passw
 , m_ZipArchive(nullptr)
 , m_UnzFile(nullptr)
 {
-    if (needCreate && access(m_FileName.c_str(), F_OK) != -1)
+    if (needCreate && access(m_FileName.c_str(), F_OK) == -1)
     {
         void* zipCreated = zipOpen64(FileName().c_str(), APPEND_STATUS_CREATE);
         if (zipCreated)

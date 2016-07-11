@@ -1,0 +1,10 @@
+[submodule "libs/TinyXML"]
+	path = libs/TinyXML
+	url = https://github.com/yevgeniy-logachev/TinyXML.git
+[submodule "libs/zlib"]
+	path = libs/zlib
+	url = https://github.com/madler/zlib.git
+[submodule "libs/glm"]
+	path = libs/glm
+	url = https://github.com/g-truc/glm.git
+	branch = 0.9.7

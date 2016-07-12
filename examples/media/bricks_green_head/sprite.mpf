@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<MappingEntry>
+    <Textures>
+        <Texture>/atlas1.pvr</Texture>
+    </Textures>
+    <Frames>
+        <Frame name="frame1" textureIdx="0" u="0.0, 0.0" v="0.294921875, 0.390625" />
+    </Frames>
+    <Animations>
+        <Animation>
+            <Name>Brick1Idle</Name>
+            <Frames>
+                <Frame frameNumber="0" offsetX="-75.0" offsetY="-100.0" originalWidth="150" originalHeight="200" animDuration="50" />
+            </Frames>
+        </Animation>
+        <Animation>
+            <Name>Brick1Crash</Name>
+            <Frames>
+                <Frame frameNumber="0" offsetX="-75.0" offsetY="-100.0" originalWidth="150" originalHeight="200" animDuration="50" />
+            </Frames>
+        </Animation>
+    </Animations>
+</MappingEntry>

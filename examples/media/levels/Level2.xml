@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Level>
+    <Object name="Background"
+            filename="pattern_mesh"
+            color="0xFFFFFFFF"
+    />
+    <PhysicObject
+            name="Bat"
+            filename="bat_green_head"
+            position="384, 950"
+            color="0xFFFFFFFF"
+            body="static"
+            size="190, 50"
+            linearDamping="2.0"
+            density="1.0"
+            friction="0.9"
+            restitution="1.01"
+    />
+    <Ball
+            name="Ball"
+            filename="ball_slash"
+            body="dynamic"
+            size="32"
+            allowRotation="1"
+            density="3.0"
+            friction="0.0"
+            restitution="1.0"
+    />
+    <Object name="BricksRoot" filename="" >
+        <SkinHead
+                name="SkinHead"
+                filename="bricks_green_head"
+                position="384, 150"
+                size="110, 200"
+                density="7.0"
+                friction="0.2"
+                body="dynamic" >
+                
+                <Object name="Tail"
+                        filename="" />
+        </SkinHead>
+    </Object>
+    <PhysicObject
+            name="Top"
+            position="384, -30"
+            size="768, 60"
+            body="static"
+            restitution="1.01"
+    />
+    <PhysicObject
+            name="Bottom"
+            position="384, 1154"
+            size="768, 60"
+            body="static"
+            restitution="1.01"
+    />
+    <PhysicObject
+            name="Left"
+            position="-30, 562"
+            size="60, 1154"
+            body="static"
+            restitution="1.01"
+    />
+    <PhysicObject
+            name="Right"
+            position="798, 562"
+            size="60, 1154"
+            body="static"
+            restitution="1.01"
+    />
+</Level>

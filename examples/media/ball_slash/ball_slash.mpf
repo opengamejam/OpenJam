@@ -1,0 +1,17 @@
+<?xml version="1.0" ?>
+<MappingEntry>
+    <Textures>
+        <Texture>/atlas1.pvr</Texture>
+    </Textures>
+    <Frames>
+        <Frame name="0" textureIdx="0" u="0.0, 0.0" v="0.6796875, 0.2890625"/>
+    </Frames>
+    <Animations>
+        <Animation>
+            <Name>BallSmall</Name>
+            <Frames>
+                <Frame frameNumber="0" offsetX="-32.0" offsetY="-16.0" originalWidth="64" originalHeight="32" animDuration="0" />
+            </Frames>
+        </Animation>
+    </Animations>
+</MappingEntry>

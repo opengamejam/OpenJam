@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Level>
+    <Background filename="pattern_glitch" x="-120" y="0" />
+    <Bat filename="bat_glitch">
+        <Physics x="384" y="950" w="154" h="50" linearDamping="2.0" density="1.0" friction="0.9"/>
+    </Bat>
+    <Ball filename="ball_glitch_small">
+        <Physics r="32" restitution="1.01" density="0.0" friction="0.0"/>
+        <Tail filename="tail_fire" />
+    </Ball>
+    <Blocks>
+        <Block type="1" filename="bricks_glitch_3" x="109" y="200" w="110" h="50" r="0.0" color="#ffffffff" />
+        <Block type="2" filename="bricks_glitch_3" x="219" y="200" w="110" h="50" r="0.0" color="#ffffffff"  />
+        <Block type="3" filename="bricks_glitch_3" x="329" y="200" w="110" h="50" r="0.0" color="#ffffffff" />
+        <Block type="0" filename="bricks_glitch_3" x="439" y="200" w="110" h="50" r="0.0" color="#ffffffff" />
+        <Block type="1" filename="bricks_glitch_3" x="549" y="200" w="110" h="50" r="0.0" color="#ffffffff" />
+        <Block type="2" filename="bricks_glitch_3" x="659" y="200" w="110" h="50" r="0.0" color="#ffffffff" />
+
+        <Block type="3" filename="bricks_glitch_3" x="109" y="255" w="110" h="50" r="0.0" color="#ffffffff" />
+        <Block type="0" filename="bricks_glitch_3" x="219" y="255" w="110" h="50" r="0.0" color="#ffffffff" />
+        <Block type="1" filename="bricks_glitch_3" x="329" y="255" w="110" h="50" r="0.0" color="#ffffffff" />
+        <Block type="2" filename="bricks_glitch_3" x="439" y="255" w="110" h="50" r="0.0" color="#ffffffff" />
+        <Block type="3" filename="bricks_glitch_3" x="549" y="255" w="110" h="50" r="0.0" color="#ffffffff" />
+        <Block type="0" filename="bricks_glitch_3" x="659" y="255" w="110" h="50" r="0.0" color="#ffffffff" />
+
+        <Block type="3" filename="bricks_glitch" x="109" y="310" w="110" h="50" r="0.0" color="#ffffffff" />
+        <Block type="0" filename="bricks_glitch" x="219" y="310" w="110" h="50" r="0.0" color="#ffffffff" />
+        <Block type="1" filename="bricks_glitch" x="329" y="310" w="110" h="50" r="0.0" color="#ffffffff" />
+        <Block type="2" filename="bricks_glitch" x="439" y="310" w="110" h="50" r="0.0" color="#ffffffff" />
+        <Block type="3" filename="bricks_glitch" x="549" y="310" w="110" h="50" r="0.0" color="#ffffffff" />
+        <Block type="0" filename="bricks_glitch" x="659" y="310" w="110" h="50" r="0.0" color="#ffffffff" />
+
+        <Block type="3" filename="bricks_glitch" x="109" y="365" w="110" h="50" r="0.0" color="#ffffffff" />
+        <Block type="0" filename="bricks_glitch" x="219" y="365" w="110" h="50" r="0.0" color="#ffffffff" />
+        <Block type="1" filename="bricks_glitch" x="329" y="365" w="110" h="50" r="0.0" color="#ffffffff" />
+        <Block type="2" filename="bricks_glitch" x="439" y="365" w="110" h="50" r="0.0" color="#ffffffff" />
+        <Block type="3" filename="bricks_glitch" x="549" y="365" w="110" h="50" r="0.0" color="#ffffffff" />
+        <Block type="0" filename="bricks_glitch" x="659" y="365" w="110" h="50" r="0.0" color="#ffffffff" />
+
+        <Block type="3" filename="bricks_glitch_2" x="109" y="420" w="110" h="50" r="0.0" color="#ffffffff" />
+        <Block type="0" filename="bricks_glitch_2" x="219" y="420" w="110" h="50" r="0.0" color="#ffffffff" />
+        <Block type="1" filename="bricks_glitch_2" x="329" y="420" w="110" h="50" r="0.0" color="#ffffffff" />
+        <Block type="2" filename="bricks_glitch_2" x="439" y="420" w="110" h="50" r="0.0" color="#ffffffff" />
+        <Block type="3" filename="bricks_glitch_2" x="549" y="420" w="110" h="50" r="0.0" color="#ffffffff" />
+        <Block type="0" filename="bricks_glitch_2" x="659" y="420" w="110" h="50" r="0.0" color="#ffffffff" />
+
+        <Block type="3" filename="bricks_glitch_2" x="109" y="475" w="110" h="50" r="0.0" color="#ffffffff" />
+        <Block type="0" filename="bricks_glitch_2" x="219" y="475" w="110" h="50" r="0.0" color="#ffffffff" />
+        <Block type="1" filename="bricks_glitch_2" x="329" y="475" w="110" h="50" r="0.0" color="#ffffffff" />
+        <Block type="2" filename="bricks_glitch_2" x="439" y="475" w="110" h="50" r="0.0" color="#ffffffff" />
+        <Block type="3" filename="bricks_glitch_2" x="549" y="475" w="110" h="50" r="0.0" color="#ffffffff" />
+        <Block type="0" filename="bricks_glitch_2" x="659" y="475" w="110" h="50" r="0.0" color="#ffffffff" />
+    </Blocks>
+    <Walls>
+        <Top filename="top">
+            <Physics x="384" y="-30" w="768" h="60" />
+        </Top>
+        <Bottom filename="bottom">
+            <Physics x="384" y="1154" w="768" h="60" />
+        </Bottom>
+        <Left filename="left">
+            <Physics x="-30" y="562" w="60" h="1154" />
+        </Left>
+        <Right filename="right">
+            <Physics x="798" y="562" w="60" h="1154" />
+        </Right>
+    </Walls>
+</Level>

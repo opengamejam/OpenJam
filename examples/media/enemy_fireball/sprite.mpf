@@ -1,0 +1,31 @@
+<?xml version="1.0" ?>
+<MappingEntry>
+    <Textures>
+        <Texture>/atlas1.pvr</Texture>
+    </Textures>
+    <Frames>
+        <Frame name="Frame1" textureIdx="0" u="0.0, 0.0" v="0.125, 0.125" />
+        <Frame name="Frame1" textureIdx="0" u="0.125, 0.0" v="0.25, 0.125" />
+        <Frame name="Frame1" textureIdx="0" u="0.25, 0.0" v="0.375, 0.125" />
+        <Frame name="Frame1" textureIdx="0" u="0.375, 0.0" v="0.5, 0.125" />
+        <Frame name="Frame1" textureIdx="0" u="0.5, 0.0" v="0.625, 0.125" />
+        <Frame name="Frame1" textureIdx="0" u="0.625, 0.0" v="0.75, 0.125" />
+        <Frame name="Frame1" textureIdx="0" u="0.75, 0.0" v="0.875, 0.125" />
+        <Frame name="Frame1" textureIdx="0" u="0.875, 0.0" v="1.0, 0.125" />
+    </Frames>
+    <Animations>
+        <Animation>
+            <Name>Enemy</Name>
+            <Frames>
+                <Frame frameNumber="7" offsetX="-32.0" offsetY="-32.0" originalWidth="64" originalHeight="64" animDuration="100" />
+                <Frame frameNumber="6" offsetX="-32.0" offsetY="-32.0" originalWidth="64" originalHeight="64" animDuration="100" />
+                <Frame frameNumber="5" offsetX="-32.0" offsetY="-32.0" originalWidth="64" originalHeight="64" animDuration="100" />
+                <Frame frameNumber="4" offsetX="-32.0" offsetY="-32.0" originalWidth="64" originalHeight="64" animDuration="100" />
+                <Frame frameNumber="3" offsetX="-32.0" offsetY="-32.0" originalWidth="64" originalHeight="64" animDuration="100" />
+                <Frame frameNumber="2" offsetX="-32.0" offsetY="-32.0" originalWidth="64" originalHeight="64" animDuration="100" />
+                <Frame frameNumber="1" offsetX="-32.0" offsetY="-32.0" originalWidth="64" originalHeight="64" animDuration="100" />
+                <Frame frameNumber="0" offsetX="-32.0" offsetY="-32.0" originalWidth="64" originalHeight="64" animDuration="100" />
+            </Frames>
+        </Animation>
+    </Animations>
+</MappingEntry>

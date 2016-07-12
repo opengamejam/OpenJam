@@ -1,0 +1,17 @@
+<?xml version="1.0" ?>
+<MappingEntry>
+    <Textures>
+        <Texture>/atlas1.pvr</Texture>
+    </Textures>
+    <Frames>
+        <Frame name="Frame1" textureIdx="0" u="0.0, 0.0" v="0.41015625, 0.13671875" />
+    </Frames>
+    <Animations>
+        <Animation>
+            <Name>Bat</Name>
+            <Frames>
+                <Frame frameNumber="0" offsetX="-105" offsetY="-35" originalWidth="210" originalHeight="70" animDuration="100" />
+            </Frames>
+        </Animation>
+    </Animations>
+</MappingEntry>

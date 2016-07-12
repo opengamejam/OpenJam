@@ -1,0 +1,40 @@
+<?xml version="1.0" ?>
+<MappingEntry>
+    <Textures>
+        <Texture>/atlas1.pvr</Texture>
+    </Textures>
+    <Frames>
+        <Frame name="Frame1" textureIdx="0" u="0.0, 0.0" v="0.30078125, 0.09765625" />
+        <Frame name="Frame2" textureIdx="0" u="0.30078125, 0.0" v="0.6015625, 0.09765625" />
+        <Frame name="Frame3" textureIdx="0" u="0.6015625, 0.0" v="0.90234375, 0.09765625" />
+        <Frame name="Frame4" textureIdx="0" u="0.0, 0.09765625" v="0.30078125, 0.1953125" />
+        <Frame name="Frame5" textureIdx="0" u="0.30078125, 0.09765625" v="0.6015625, 0.1953125" />
+        <Frame name="Frame6" textureIdx="0" u="0.6015625, 0.09765625" v="0.90234375, 0.1953125" />
+        <Frame name="Frame7" textureIdx="0" u="0.0, 0.1953125" v="0.30078125, 0.29296875" />
+        <Frame name="Frame8" textureIdx="0" u="0.30078125, 0.1953125" v="0.30078125, 0.29296875" />
+        <Frame name="Frame9" textureIdx="0" u="0.0, 0.0" v="0.30078125, 0.09765625" />
+    </Frames>
+    <Animations>
+        <Animation>
+            <Name>Bat</Name>
+            <Frames>
+                <Frame frameNumber="0" offsetX="-77.0f" offsetY="-25" originalWidth="154" originalHeight="50" animDuration="100" />
+                <Frame frameNumber="4" offsetX="-77.0f" offsetY="-25" originalWidth="154" originalHeight="50" animDuration="100" />
+                <Frame frameNumber="0" offsetX="-77.0f" offsetY="-25" originalWidth="154" originalHeight="50" animDuration="100" />
+                <Frame frameNumber="4" offsetX="-77.0f" offsetY="-25" originalWidth="154" originalHeight="50" animDuration="100" />
+                <Frame frameNumber="1" offsetX="-77.0f" offsetY="-25" originalWidth="154" originalHeight="50" animDuration="100" />
+                <Frame frameNumber="2" offsetX="-77.0f" offsetY="-25" originalWidth="154" originalHeight="50" animDuration="100" />
+                <Frame frameNumber="3" offsetX="-77.0f" offsetY="-25" originalWidth="154" originalHeight="50" animDuration="100" />
+                <Frame frameNumber="4" offsetX="-77.0f" offsetY="-25" originalWidth="154" originalHeight="50" animDuration="100" />
+                <Frame frameNumber="5" offsetX="-77.0f" offsetY="-25" originalWidth="154" originalHeight="50" animDuration="100" />
+                <Frame frameNumber="6" offsetX="-77.0f" offsetY="-25" originalWidth="154" originalHeight="50" animDuration="100" />
+                <Frame frameNumber="5" offsetX="-77.0f" offsetY="-25" originalWidth="154" originalHeight="50" animDuration="100" />
+                <Frame frameNumber="4" offsetX="-77.0f" offsetY="-25" originalWidth="154" originalHeight="50" animDuration="100" />
+                <Frame frameNumber="3" offsetX="-77.0f" offsetY="-25" originalWidth="154" originalHeight="50" animDuration="100" />
+                <Frame frameNumber="2" offsetX="-77.0f" offsetY="-25" originalWidth="154" originalHeight="50" animDuration="100" />
+                <Frame frameNumber="1" offsetX="-77.0f" offsetY="-25" originalWidth="154" originalHeight="50" animDuration="100" />
+                <Frame frameNumber="8" offsetX="-77.0f" offsetY="-25" originalWidth="154" originalHeight="50" animDuration="2000" />
+            </Frames>
+        </Animation>
+    </Animations>
+</MappingEntry>

@@ -110,7 +110,6 @@ if (OS_IPHONE)
 	# Architecture
 	set (CMAKE_XCODE_EFFECTIVE_PLATFORMS "-iphoneos;-iphonesimulator")
 	# Compiler settings
-	set (CMAKE_XCODE_ATTRIBUTE_GCC_VERSION 					"com.apple.compilers.llvm.clang.1_0")
 	set (CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD 	"gnu++11")
 	set (CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY 			"libc++")
 	set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -x objective-c")
@@ -136,6 +135,8 @@ elseif (OS_MAC)
 	# Compiler settings
 	set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -x objective-c")
 	set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -x objective-c++")
+	set (CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD 	"gnu++11")
+	set (CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY 			"libc++")
 
 	add_definitions (-DOS_MAC)
 	add_definitions (-DRENDER_OGL1_3)
@@ -168,6 +169,17 @@ elseif (OS_KOS)
 endif ()
 
 
+if(NOT SKIP_INSTALL_LIBRARIES AND NOT SKIP_INSTALL_ALL)
+    install(TARGETS ${PROJECT_NAME}
+        RUNTIME DESTINATION "${INSTALL_BIN_DIR}"
+        ARCHIVE DESTINATION "${INSTALL_LIB_DIR}"
+        LIBRARY DESTINATION "${INSTALL_LIB_DIR}")
+endif()
+
+if(NOT SKIP_INSTALL_HEADERS AND NOT SKIP_INSTALL_ALL)
+    install(FILES ${PROJECT_NAME}_SRCS DESTINATION "${INSTALL_INC_DIR}")
+endif()
+
 #============================================================================
 # zlib
 #============================================================================
@@ -185,7 +197,8 @@ ExternalProject_Add(zlib
     SOURCE_DIR ${ZLIB_DIR}
     PREFIX ${CMAKE_INSTALL_PREFIX}/zlib
     INSTALL_DIR ${CMAKE_INSTALL_PREFIX}
-    PATCH_COMMAND patch -f -d ${OPENJAM_LIB_DIR}/zlib -p1 < ${OPENJAM_LIB_DIR}/patches/zlib_ios.patch
+    		   -DCMAKE_C_COMPILER_WORKS=${CMAKE_C_COMPILER_WORKS} 
+    PATCH_COMMAND COMMAND ${CMAKE_COMMAND} -E copy ${OPENJAM_LIB_DIR}/patches/zlib/CMakeLists.txt ${OPENJAM_LIB_DIR}/zlib/CMakeLists.txt
     CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX} 
     		   -DCMAKE_C_COMPILER_WORKS=${CMAKE_C_COMPILER_WORKS} 
     		   -DCMAKE_C_FLAGS=${ZLIB_C_FLAGS} 
@@ -221,12 +234,12 @@ endif()
 
 add_library(minizip ${MINIZIP_SRCS} ${MINIZIP_HDRS})
 add_dependencies(minizip zlib)
-target_link_libraries(minizip ${ZLIB_NAME})
+link_library(minizip ${ZLIB_NAME})
 target_include_directories(minizip PUBLIC ${INSTALL_INC_DIR})
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${MINIZIP_DIR})
 add_dependencies(${PROJECT_NAME} minizip)
-link_library(${PROJECT_NAME} minizip)
+target_link_libraries(${PROJECT_NAME} minizip)
 
 #============================================================================
 # TinyXML
@@ -262,5 +275,63 @@ ExternalProject_Add(glm
     		   -DCMAKE_CXX_COMPILER_WORKS=${CMAKE_CXX_COMPILER_WORKS}
 )
 
+target_include_directories(${PROJECT_NAME} PUBLIC ${GLM_DIR})
 add_dependencies(${PROJECT_NAME} glm)
+
+#============================================================================
+# examples
+#============================================================================
+
+set(TESTAPP_PROJECT TestApp)
+
+set (${TESTAPP_PROJECT}_RES_DIR ${CMAKE_CURRENT_LIST_DIR}/examples/media)
+if (OS_IPHONE)
+	set (${TESTAPP_PROJECT}_RES_DIR
+         ${${TESTAPP_PROJECT}_RES_DIR}
+         ${CMAKE_CURRENT_LIST_DIR}/examples/platform/ios/Images.xcassets)
+endif()
+get_sources(${TESTAPP_PROJECT} ${CMAKE_CURRENT_LIST_DIR}/examples/src)
+
+add_executable(${TESTAPP_PROJECT} MACOSX_BUNDLE ${${TESTAPP_PROJECT}_SRCS} ${${TESTAPP_PROJECT}_RES_DIR})
+add_dependencies(${TESTAPP_PROJECT} ${PROJECT_NAME})
+target_link_libraries(${TESTAPP_PROJECT} ${PROJECT_NAME})
+target_include_directories(${TESTAPP_PROJECT} PUBLIC ${GLM_DIR})
+
+if (OS_IPHONE)
+	target_link_libraries (${TESTAPP_PROJECT} "-framework Foundation")
+	target_link_libraries (${TESTAPP_PROJECT} "-framework UIKit")
+	target_link_libraries (${TESTAPP_PROJECT} "-framework CoreGraphics")
+	target_link_libraries (${TESTAPP_PROJECT} "-framework GLKit")
+	target_link_libraries (${TESTAPP_PROJECT} "-framework OpenGLES")
+
+	set (MACOSX_BUNDLE_GUI_IDENTIFIER "com.openjam.\${PRODUCT_NAME:identifier}")
+
+	set_target_properties (${TESTAPP_PROJECT} 
+						   PROPERTIES 
+						   XCODE_ATTRIBUTE_IPHONEOS_DEPLOYMENT_TARGET 	"7.0"
+						   XCODE_ATTRIBUTE_TARGETED_DEVICE_FAMILY 		"1,2"
+						   XCODE_ATTRIBUTE_ASSETCATALOG_COMPILER_APPICON_NAME 		"AppIcon"
+						   XCODE_ATTRIBUTE_ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME 		"Brand Assets"
+						   MACOSX_BUNDLE_INFO_PLIST "${CMAKE_CURRENT_LIST_DIR}/examples/platform/ios/Info.plist"
+						   RESOURCE "${${TESTAPP_PROJECT}_RES_DIR}")
+elseif (OS_MAC)
+	target_link_libraries (${TESTAPP_PROJECT} "-framework OpenGL")
+	target_link_libraries (${TESTAPP_PROJECT} "-framework Cocoa")
+
+	set (MACOSX_BUNDLE_GUI_IDENTIFIER "com.openjam.\${PRODUCT_NAME:identifier}")
+	set (MACOSX_BUNDLE_BUNDLE_NAME ${TESTAPP_PROJECT})
+
+	set (CMAKE_OSX_DEPLOYMENT_TARGET "10.8")
+
+	# Window
+	#set(MACOSX_BUNDLE_NSMAIN_NIB_FILE "MainMenu")
+	set(MACOSX_BUNDLE_NSPRINCIPAL_CLASS "NSApplication")
+	#set_target_properties(${TESTAPP_PROJECT} PROPERTIES MACOSX_BUNDLE_INFO_PLIST ${CMAKE_CURRENT_LIST_DIR}/src/platform/osx/InfoOSX.plist)
+	# Copy resources
+	add_custom_command (TARGET ${TESTAPP_PROJECT} POST_BUILD
+                	  	COMMAND ${CMAKE_COMMAND} -E copy_directory ${${TESTAPP_PROJECT}_RES_DIR} "\${TARGET_BUILD_DIR}/\${FULL_PRODUCT_NAME}/media"
+                	  	COMMENT "Copying resource files and directories to OSX App Bundle...")
+endif()
+
+
 

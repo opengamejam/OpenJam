@@ -1,0 +1,17 @@
+<?xml version="1.0" ?>
+<MappingEntry>
+    <Textures>
+        <Texture>/atlas1.pvr</Texture>
+    </Textures>
+    <Frames>
+        <Frame name="Background1" textureIdx="0" u="0.0, 0.0" v="1.846, 2.90084985835694" />
+    </Frames>
+    <Animations>
+        <Animation>
+            <Name>Background1</Name>
+            <Frames>
+                <Frame frameNumber="0" offsetX="0" offsetY="0" originalWidth="927.0" originalHeight="1024.0" animDuration="200" />
+            </Frames>
+        </Animation>
+    </Animations>
+</MappingEntry>

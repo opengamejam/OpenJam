@@ -88,7 +88,6 @@ macro (link_library TARGET_NAME LIB_NAME)
 	endif()
 
 	target_link_libraries(${TARGET_NAME} ${INSTALL_LIB_DIR}/${prefix}${LIB_NAME}${suffix})
-	MESSAGE("Link: " ${INSTALL_LIB_DIR}/${prefix}${LIB_NAME}${suffix})
 
 endmacro()
 
@@ -101,16 +100,27 @@ set(OPENJAM_LIB_DIR ${CMAKE_SOURCE_DIR}/libs)
 define_Platform()
 get_sources(${PROJECT_NAME} ${CMAKE_CURRENT_LIST_DIR}/src)
 
+add_library(${PROJECT_NAME} ${${PROJECT_NAME}_SRCS})
+target_include_directories(${PROJECT_NAME} PUBLIC ${INSTALL_INC_DIR})
+
 set (CMAKE_CXX_FLAGS "-std=gnu++11 -fno-rtti -fno-exceptions -stdlib=libc++ -g -Wall")
 if (OS_IPHONE)
 	# SDK
 	set(CMAKE_OSX_SYSROOT "iphoneos")
-	# Arhitecture
-	set (CMAKE_OSX_ARCHITECTURES "$(ARCHS_STANDARD)")
+	# Architecture
 	set (CMAKE_XCODE_EFFECTIVE_PLATFORMS "-iphoneos;-iphonesimulator")
 	# Compiler settings
+	set (CMAKE_XCODE_ATTRIBUTE_GCC_VERSION 					"com.apple.compilers.llvm.clang.1_0")
+	set (CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD 	"gnu++11")
+	set (CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY 			"libc++")
 	set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -x objective-c")
 	set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -x objective-c++")
+	# IOS compiler cannot pass cmake compiler checking
+	set (CMAKE_C_COMPILER_WORKS 1)
+	set (CMAKE_CXX_COMPILER_WORKS 1)
+
+	set_property (TARGET ${PROJECT_NAME} PROPERTY XCODE_ATTRIBUTE_IPHONEOS_DEPLOYMENT_TARGET 	"7.0")
+	set_property (TARGET ${PROJECT_NAME} PROPERTY XCODE_ATTRIBUTE_TARGETED_DEVICE_FAMILY 		"1,2")
 
 	add_definitions (-DOS_IPHONE)
 	add_definitions (-DRENDER_OGLES1_1)
@@ -121,7 +131,7 @@ elseif (OS_MAC)
 	# SDK
 	set(XCODE_ATTRIBUTE_SDKROOT macosx)
 	set(CMAKE_OSX_SYSROOT macosx)
-	# Arhitecture		
+	# Architecture		
 	set (CMAKE_OSX_ARCHITECTURES "$(ARCHS_STANDARD)")
 	# Compiler settings
 	set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -x objective-c")
@@ -157,9 +167,6 @@ elseif (OS_KOS)
 	add_definitions (-DRENDER_OGL1_3)
 endif ()
 
-add_library(${PROJECT_NAME} ${${PROJECT_NAME}_SRCS})
-target_include_directories(${PROJECT_NAME} PUBLIC ${INSTALL_INC_DIR})
-
 
 #============================================================================
 # zlib
@@ -172,11 +179,18 @@ else()
 endif()
 set(ZLIB_DIR ${OPENJAM_LIB_DIR}/zlib)
 
+set(ZLIB_C_FLAGS " -Wno-error-implicit-function-declaration")
+
 ExternalProject_Add(zlib
     SOURCE_DIR ${ZLIB_DIR}
     PREFIX ${CMAKE_INSTALL_PREFIX}/zlib
     INSTALL_DIR ${CMAKE_INSTALL_PREFIX}
-    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
+    PATCH_COMMAND patch -f -d ${OPENJAM_LIB_DIR}/zlib -p1 < ${OPENJAM_LIB_DIR}/patches/zlib_ios.patch
+    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX} 
+    		   -DCMAKE_C_COMPILER_WORKS=${CMAKE_C_COMPILER_WORKS} 
+    		   -DCMAKE_C_FLAGS=${ZLIB_C_FLAGS} 
+    		   -DCMAKE_XCODE_EFFECTIVE_PLATFORMS=${CMAKE_XCODE_EFFECTIVE_PLATFORMS} 
+    		   -DCMAKE_OSX_SYSROOT=${CMAKE_OSX_SYSROOT}
 )
 
 #============================================================================
@@ -224,7 +238,9 @@ ExternalProject_Add(TinyXML
     SOURCE_DIR ${TINYXML_DIR}
     PREFIX ${CMAKE_INSTALL_PREFIX}/TinyXML
     INSTALL_DIR ${CMAKE_INSTALL_PREFIX}
-    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}
+    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX} 
+    		   -DCMAKE_C_COMPILER_WORKS=${CMAKE_C_COMPILER_WORKS} 
+    		   -DCMAKE_CXX_COMPILER_WORKS=${CMAKE_CXX_COMPILER_WORKS}
 )
 
 add_dependencies(${PROJECT_NAME} TinyXML)
@@ -240,7 +256,10 @@ ExternalProject_Add(glm
     SOURCE_DIR ${GLM_DIR}
     PREFIX ${CMAKE_INSTALL_PREFIX}/glm
     INSTALL_DIR ${CMAKE_INSTALL_PREFIX}
-    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX} -DGLM_STATIC_LIBRARY_ENABLE=ON
+    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX} 
+    		   -DGLM_STATIC_LIBRARY_ENABLE=ON 
+    		   -DCMAKE_C_COMPILER_WORKS=${CMAKE_C_COMPILER_WORKS} 
+    		   -DCMAKE_CXX_COMPILER_WORKS=${CMAKE_CXX_COMPILER_WORKS}
 )
 
 add_dependencies(${PROJECT_NAME} glm)

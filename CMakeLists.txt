@@ -87,7 +87,7 @@ macro (link_library TARGET_NAME LIB_NAME)
 	  	set(suffix ".lib")
 	endif()
 
-	target_link_libraries(${TARGET_NAME} ${INSTALL_LIB_DIR}/${prefix}${LIB_NAME}${suffix})
+	target_link_libraries(${TARGET_NAME} ${CMAKE_INSTALL_PREFIX}/${LIB_NAME}/lib/${prefix}${LIB_NAME}${suffix})
 
 endmacro()
 
@@ -181,67 +181,6 @@ if(NOT SKIP_INSTALL_HEADERS AND NOT SKIP_INSTALL_ALL)
 endif()
 
 #============================================================================
-# zlib
-#============================================================================
-
-if(UNIX)
-    set(ZLIB_NAME z)
-else()
-    set(ZLIB_NAME zlibstatic)
-endif()
-set(ZLIB_DIR ${OPENJAM_LIB_DIR}/zlib)
-
-set(ZLIB_C_FLAGS " -Wno-error-implicit-function-declaration")
-
-ExternalProject_Add(zlib
-    SOURCE_DIR ${ZLIB_DIR}
-    PREFIX ${CMAKE_INSTALL_PREFIX}/zlib
-    INSTALL_DIR ${CMAKE_INSTALL_PREFIX}
-    		   -DCMAKE_C_COMPILER_WORKS=${CMAKE_C_COMPILER_WORKS} 
-    PATCH_COMMAND COMMAND ${CMAKE_COMMAND} -E copy ${OPENJAM_LIB_DIR}/patches/zlib/CMakeLists.txt ${OPENJAM_LIB_DIR}/zlib/CMakeLists.txt
-    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX} 
-    		   -DCMAKE_C_COMPILER_WORKS=${CMAKE_C_COMPILER_WORKS} 
-    		   -DCMAKE_C_FLAGS=${ZLIB_C_FLAGS} 
-    		   -DCMAKE_XCODE_EFFECTIVE_PLATFORMS=${CMAKE_XCODE_EFFECTIVE_PLATFORMS} 
-    		   -DCMAKE_OSX_SYSROOT=${CMAKE_OSX_SYSROOT}
-)
-
-#============================================================================
-# minizip
-#============================================================================
-
-set(MINIZIP_DIR ${ZLIB_DIR}/contrib/minizip)
-
-set(MINIZIP_HDRS
-    ${MINIZIP_DIR}/crypt.h
-    ${MINIZIP_DIR}/ioapi.h
-    ${MINIZIP_DIR}/mztools.h
-    ${MINIZIP_DIR}/unzip.h
-    ${MINIZIP_DIR}/zip.h
-)
-
-set(MINIZIP_SRCS
-    ${MINIZIP_DIR}/ioapi.c
-    ${MINIZIP_DIR}/mztools.c
-    ${MINIZIP_DIR}/unzip.c
-    ${MINIZIP_DIR}/zip.c
-)
-
-if(WIN32)
-    set(MINIZIP_HDRS ${MINIZIP_HDRS} ${MINIZIP_DIR}/iowin32.h)
-    set(MINIZIP_SRCS ${MINIZIP_SRCS} ${MINIZIP_DIR}/iowin32.c)
-endif()
-
-add_library(minizip ${MINIZIP_SRCS} ${MINIZIP_HDRS})
-add_dependencies(minizip zlib)
-link_library(minizip ${ZLIB_NAME})
-target_include_directories(minizip PUBLIC ${INSTALL_INC_DIR})
-
-target_include_directories(${PROJECT_NAME} PUBLIC ${MINIZIP_DIR})
-add_dependencies(${PROJECT_NAME} minizip)
-target_link_libraries(${PROJECT_NAME} minizip)
-
-#============================================================================
 # TinyXML
 #============================================================================
 
@@ -249,13 +188,14 @@ set(TINYXML_DIR ${OPENJAM_LIB_DIR}/TinyXML)
 
 ExternalProject_Add(TinyXML
     SOURCE_DIR ${TINYXML_DIR}
-    PREFIX ${CMAKE_INSTALL_PREFIX}/TinyXML
+    PREFIX ${CMAKE_INSTALL_PREFIX}
     INSTALL_DIR ${CMAKE_INSTALL_PREFIX}
-    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX} 
+    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}/TinyXML
     		   -DCMAKE_C_COMPILER_WORKS=${CMAKE_C_COMPILER_WORKS} 
     		   -DCMAKE_CXX_COMPILER_WORKS=${CMAKE_CXX_COMPILER_WORKS}
 )
 
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_INSTALL_PREFIX}/TinyXML/include)
 add_dependencies(${PROJECT_NAME} TinyXML)
 link_library(${PROJECT_NAME} TinyXML)
 
@@ -267,16 +207,36 @@ set(GLM_DIR ${OPENJAM_LIB_DIR}/glm)
 
 ExternalProject_Add(glm
     SOURCE_DIR ${GLM_DIR}
-    PREFIX ${CMAKE_INSTALL_PREFIX}/glm
+    PREFIX ${CMAKE_INSTALL_PREFIX}
     INSTALL_DIR ${CMAKE_INSTALL_PREFIX}
-    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX} 
+    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}/glm
     		   -DGLM_STATIC_LIBRARY_ENABLE=ON 
     		   -DCMAKE_C_COMPILER_WORKS=${CMAKE_C_COMPILER_WORKS} 
     		   -DCMAKE_CXX_COMPILER_WORKS=${CMAKE_CXX_COMPILER_WORKS}
 )
 
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_INSTALL_PREFIX}/glm/include)
 target_include_directories(${PROJECT_NAME} PUBLIC ${GLM_DIR})
 add_dependencies(${PROJECT_NAME} glm)
+
+#============================================================================
+# vfspp
+#============================================================================
+
+set(VFSPP_DIR ${OPENJAM_LIB_DIR}/vfspp)
+
+ExternalProject_Add(vfspp
+    SOURCE_DIR ${VFSPP_DIR}
+    PREFIX ${CMAKE_INSTALL_PREFIX}
+    INSTALL_DIR ${CMAKE_INSTALL_PREFIX}
+    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}/vfspp
+    		   -DCMAKE_C_COMPILER_WORKS=${CMAKE_C_COMPILER_WORKS} 
+    		   -DCMAKE_CXX_COMPILER_WORKS=${CMAKE_CXX_COMPILER_WORKS}
+)
+
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_INSTALL_PREFIX}/vfspp/include)
+add_dependencies(${PROJECT_NAME} vfspp)
+link_library(${PROJECT_NAME} vfspp)
 
 #============================================================================
 # examples

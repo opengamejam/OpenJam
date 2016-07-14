@@ -9,6 +9,7 @@
 #include "CVirtualFileSystem.h"
 
 using namespace jam;
+using namespace vfspp;
 
 IResource::IResource(const std::string& filename)
     : m_Filename(filename)

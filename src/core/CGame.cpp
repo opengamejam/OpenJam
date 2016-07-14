@@ -23,6 +23,7 @@
 #include "CZipFileSystem.h"
 
 using namespace jam;
+using namespace vfspp;
 
 // *****************************************************************************
 // Constants
@@ -47,8 +48,8 @@ void CGame::Initialize()
 {
     vfs_initialize();
     
-    IFileSystemPtr root_fs(new CNativeFileSystem(CVirtualFileSystem::GetBundlePath() + "media/"));
-    IFileSystemPtr zip_fs(new CZipFileSystem(CVirtualFileSystem::GetBundlePath() + "media/bundle.zip", "/", false));
+    IFileSystemPtr root_fs(new CNativeFileSystem(CSystem::GetBundlePath() + "media/"));
+    IFileSystemPtr zip_fs(new CZipFileSystem(CSystem::GetBundlePath() + "media/bundle.zip", "/", false));
     IFileSystemPtr mem_fs(new CMemoryFileSystem());
     
     root_fs->Initialize();

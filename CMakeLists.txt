@@ -181,23 +181,23 @@ if(NOT SKIP_INSTALL_HEADERS AND NOT SKIP_INSTALL_ALL)
 endif()
 
 #============================================================================
-# TinyXML
+# tinyxml
 #============================================================================
 
-set(TINYXML_DIR ${OPENJAM_LIB_DIR}/TinyXML)
+set(TINYXML_DIR ${OPENJAM_LIB_DIR}/tinyxml)
 
-ExternalProject_Add(TinyXML
+ExternalProject_Add(tinyxml
     SOURCE_DIR ${TINYXML_DIR}
     PREFIX ${CMAKE_INSTALL_PREFIX}
     INSTALL_DIR ${CMAKE_INSTALL_PREFIX}
-    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}/TinyXML
+    CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}/tinyxml
     		   -DCMAKE_C_COMPILER_WORKS=${CMAKE_C_COMPILER_WORKS} 
     		   -DCMAKE_CXX_COMPILER_WORKS=${CMAKE_CXX_COMPILER_WORKS}
 )
 
-target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_INSTALL_PREFIX}/TinyXML/include)
-add_dependencies(${PROJECT_NAME} TinyXML)
-link_library(${PROJECT_NAME} TinyXML)
+target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_INSTALL_PREFIX}/tinyxml/include)
+add_dependencies(${PROJECT_NAME} tinyxml)
+link_library(${PROJECT_NAME} tinyxml)
 
 #============================================================================
 # glm

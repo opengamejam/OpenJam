@@ -7,7 +7,6 @@
 #include "IRenderView.h"
 #include "CSystem.h"
 #include "IScene.h"
-#include "IEventDispatcher.hpp"
 
 #include "CRenderSystem.h"
 #include "CAnimation2DSystem.h"
@@ -104,7 +103,6 @@ void CGame::Update(unsigned long dt)
     }
     
     CThreadPool::Get()->Update(dt);
-    Dispatcher()->Update(dt);
     
     if (!m_Scenes.empty())
     {

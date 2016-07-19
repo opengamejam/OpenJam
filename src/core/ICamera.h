@@ -16,6 +16,7 @@ CLASS_PTR(IRenderTarget)
     
 class ICamera : public CEntityBase
 {
+    JAM_OBJECT_BASE
 public:
     ICamera() = default;
     virtual ~ICamera() = default;

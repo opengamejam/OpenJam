@@ -91,7 +91,7 @@ CLASS_PTR(IScene)
     IScenePtr currentScene = m_Game->GetScene();
     if (currentScene)
     {
-        CTouchEventPtr event = std::make_shared<CTouchEvent>(CTouchEvent(glm::vec2(point.x, point.y), CTouchEvent::Down));
+        CTouchEventPtr event(new CTouchEvent(glm::vec2(point.x, point.y), CTouchEvent::Down));
         
         CEventSystemPtr eventSystem = m_Game->EventSystem();
         eventSystem->DispatchEvent(event);
@@ -106,7 +106,7 @@ CLASS_PTR(IScene)
     IScenePtr currentScene = m_Game->GetScene();
     if (currentScene)
     {
-        CTouchEventPtr event = std::make_shared<CTouchEvent>(CTouchEvent(glm::vec2(point.x, point.y), CTouchEvent::Move));
+        CTouchEventPtr event(new CTouchEvent(glm::vec2(point.x, point.y), CTouchEvent::Move));
         
         CEventSystemPtr eventSystem = m_Game->EventSystem();
         eventSystem->DispatchEvent(event);
@@ -121,7 +121,7 @@ CLASS_PTR(IScene)
     IScenePtr currentScene = m_Game->GetScene();
     if (currentScene)
     {
-        CTouchEventPtr event = std::make_shared<CTouchEvent>(CTouchEvent(glm::vec2(point.x, point.y), CTouchEvent::Up));
+        CTouchEventPtr event(new CTouchEvent(glm::vec2(point.x, point.y), CTouchEvent::Up));
         
         CEventSystemPtr eventSystem = m_Game->EventSystem();
         eventSystem->DispatchEvent(event);
@@ -136,7 +136,7 @@ CLASS_PTR(IScene)
     IScenePtr currentScene = m_Game->GetScene();
     if (currentScene)
     {
-        CTouchEventPtr event = std::make_shared<CTouchEvent>(CTouchEvent(glm::vec2(point.x, point.y), CTouchEvent::Reset));
+        CTouchEventPtr event(new CTouchEvent(glm::vec2(point.x, point.y), CTouchEvent::Reset));
         
         CEventSystemPtr eventSystem = m_Game->EventSystem();
         eventSystem->DispatchEvent(event);

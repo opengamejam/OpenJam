@@ -9,8 +9,6 @@
 
 #include "CRenderViewOSX.h"
 #import "GLKit/GLKit.h"
-#include "IEventable.h"
-#include "IEventDispatcher.hpp"
 #include "RenderGlobal.h"
 
 #include "CRendererOGL1_5.h"
@@ -34,7 +32,6 @@ CRenderViewOSX::CRenderViewOSX(unsigned int width, unsigned int height, void* gl
     , m_Renderer(nullptr)
     , m_DefaultRenderTarget(nullptr)
 {
-    IEventable::RegisterDispatcher(std::make_shared<IEventDispatcher>(IEventDispatcher()));
 }
 
 CRenderViewOSX::~CRenderViewOSX()

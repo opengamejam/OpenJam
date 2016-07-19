@@ -1,5 +1,5 @@
 //
-//  ImageDefs.h
+//  RenderGlobal.cpp
 //  OpenJam
 //
 //  Created by yev

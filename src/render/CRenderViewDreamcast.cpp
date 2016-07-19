@@ -8,7 +8,6 @@
 #include "CRenderViewDreamcast.h"
 #include "IEventable.h"
 #include "CTouchEvent.h"
-#include "IEventDispatcher.hpp"
 #include "RenderGlobal.h"
 #include "IRenderTarget.h"
 
@@ -32,7 +31,6 @@ CRenderViewDreamcast::CRenderViewDreamcast()
     , m_DefaultRenderTarget(nullptr)
 	, m_Joy(maple_enum_type(0, MAPLE_FUNC_CONTROLLER))
 {
-    IEventable::RegisterDispatcher(std::make_shared<IEventDispatcher>(IEventDispatcher()));
 }
 
 CRenderViewDreamcast::~CRenderViewDreamcast()
@@ -67,9 +65,9 @@ void CRenderViewDreamcast::UpdateEvents() const
 	if (joy_state->joyx != 0 ||
 		joy_state->joyy != 0)
 	{
-		CTouchEventPtr event = std::make_shared<CTouchEvent>(CTouchEvent(glm::vec2(joy_state->joyx, joy_state->joyy),
+		/*CTouchEventPtr event = std::make_shared<CTouchEvent>(CTouchEvent(glm::vec2(joy_state->joyx, joy_state->joyy),
                                                              CTouchEvent::Move));
-		Dispatcher()->DispatchEvent(event);
+		Dispatcher()->DispatchEvent(event);*/
 	}
 }
 

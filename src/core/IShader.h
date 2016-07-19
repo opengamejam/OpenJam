@@ -17,6 +17,7 @@ CLASS_PTR(IShaderSource)
     
 class IShader
 {
+    JAM_OBJECT_BASE
 public:
     enum ShaderType
     {

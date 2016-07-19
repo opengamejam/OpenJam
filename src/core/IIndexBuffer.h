@@ -17,6 +17,7 @@ CLASS_PTR(IIndexBuffer)
     
 class IIndexBuffer : public std::enable_shared_from_this<IIndexBuffer>
 {
+    JAM_OBJECT_BASE
 public:
     enum DataTypes
     {

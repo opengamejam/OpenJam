@@ -16,6 +16,7 @@ namespace jam
     
 class IMaterial
 {
+    JAM_OBJECT_BASE
 public:    
     enum TextureSamples
     {

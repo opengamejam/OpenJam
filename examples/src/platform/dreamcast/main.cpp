@@ -11,7 +11,6 @@
 #include "CGame.h"
 #include "CSystem.h"
 #include "CTouchEvent.h"
-#include "IEventDispatcher.hpp"
 
 using namespace jam;
 

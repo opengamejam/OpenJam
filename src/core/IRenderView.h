@@ -18,6 +18,7 @@ CLASS_PTR(IRenderer)
     
 class IRenderView : public std::enable_shared_from_this<IRenderView>
 {
+    JAM_OBJECT_BASE
 public:
 	IRenderView(uint32_t width, uint32_t height, float scaleFactor = 1.0f)
 		: m_Width(width)

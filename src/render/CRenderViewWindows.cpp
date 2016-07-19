@@ -8,8 +8,6 @@
 #if defined(OS_WINDOWS)
 
 #include "CRenderViewWindows.h"
-#include "IEventable.h"
-#include "IEventDispatcher.hpp"
 #include "RenderGlobal.h"
 #include "CRendererOGLES2_0.h"
 #include "CFrameBufferOGLES2_0.h"
@@ -36,7 +34,6 @@ CRenderViewWindows::CRenderViewWindows(unsigned int width, unsigned int height, 
     , m_Renderer(nullptr)
 	, m_DefaultRenderTarget(nullptr)
 {
-	IEventable::RegisterDispatcher(std::make_shared<IEventDispatcher>(IEventDispatcher()));
 }
 
 CRenderViewWindows::~CRenderViewWindows() 

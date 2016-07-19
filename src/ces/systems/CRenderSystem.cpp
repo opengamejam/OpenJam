@@ -125,13 +125,13 @@ void CRenderSystem::Draw(ICameraPtr camera)
         if (renderComponent->Batchable())
         {
             IMeshPtr mesh = renderComponent->Mesh(CRenderComponent::kBatchingGroupName);
-            if (m_ProccededBatches.find(mesh->UniqueId()) != m_ProccededBatches.end())
+            if (m_ProccededBatches.find(mesh->GetUid()) != m_ProccededBatches.end())
             {
                 return;
             }
             
             DrawGroup(renderComponent, CRenderComponent::kBatchingGroupName, projectionMatrix, viewMatrix, glm::mat4(1.0));
-            m_ProccededBatches.insert(mesh->UniqueId());
+            m_ProccededBatches.insert(mesh->GetUid());
         }
         else
         {

@@ -17,6 +17,7 @@ CLASS_PTR(IImage)
     
 class ITexture
 {
+    JAM_OBJECT_BASE
 public:
     enum TextureType
     {

@@ -45,12 +45,23 @@ public:                                         \
         return 0;                               \
     }                                           \
                                                 \
-    const std::string& SuperName() const        \
+    uint64_t GetUid()                           \
     {                                           \
-        return CTypeId<std::remove_const<std::remove_pointer<decltype(this)>::type>::type>::Name(); \
-    }
+        static uint64_t idx = NextUid();        \
+        return idx;                             \
+    }                                           \
+private:                                        \
+    uint64_t NextUid()                          \
+    {                                           \
+        std::lock_guard<std::mutex> lock(m_Mutex); \
+        static uint64_t nextId;                 \
+        uint64_t idx = nextId;                  \
+        nextId++;                               \
+        return idx;                             \
+    }                                           \
+    std::mutex m_Mutex;
 
-/* 
+/*
  * JAM_OBJECT should be declared inside class definition. It will add
  * to class some meta information to determine unique id for this class.
  * This macros should be used with derived classes, don't use it in

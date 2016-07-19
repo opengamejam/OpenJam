@@ -18,6 +18,7 @@ CLASS_PTR(IShader)
     
 class IShaderProgram
 {
+    JAM_OBJECT_BASE
 public:
     typedef std::map< int, std::vector<int> > TUniInt;
     typedef std::map< int, std::vector<float> > TUniFloat;

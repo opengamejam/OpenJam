@@ -25,6 +25,7 @@ CLASS_PTR(IRenderTarget)
     
 class IRenderer
 {
+    JAM_OBJECT_BASE
 public:
     IRenderer() = default;
     virtual ~IRenderer() = default;

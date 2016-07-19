@@ -12,7 +12,6 @@
 
 #include "Global.h"
 #include "ITexture.h"
-#include "ImageDefs.h"
 
 namespace jam
 {

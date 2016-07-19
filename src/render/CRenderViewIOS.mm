@@ -10,8 +10,6 @@
 #include "CRenderViewIOS.h"
 #import <OpenGLES/EAGL.h>
 #import "GLKit/GLKit.h"
-#include "IEventable.h"
-#include "IEventDispatcher.hpp"
 #include "RenderGlobal.h"
 #include "IRenderTarget.h"
 
@@ -40,7 +38,6 @@ CRenderViewIOS::CRenderViewIOS(void* glkView, RenderApi renderApi)
     , m_Renderer(nullptr)
     , m_DefaultRenderTarget(nullptr)
 {
-    IEventable::RegisterDispatcher(std::make_shared<IEventDispatcher>(IEventDispatcher()));
 }
 
 CRenderViewIOS::~CRenderViewIOS()

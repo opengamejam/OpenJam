@@ -8,7 +8,7 @@
 #ifndef IMESH_H
 #define IMESH_H
 
-#include "IUnique.h"
+#include "Global.h"
 
 namespace jam
 {
@@ -16,8 +16,9 @@ namespace jam
 CLASS_PTR(IVertexBuffer)
 CLASS_PTR(IIndexBuffer)
     
-class IMesh : public IUnique
+class IMesh
 {
+    JAM_OBJECT_BASE
 public:
     IMesh() = default;
     virtual ~IMesh() = default;

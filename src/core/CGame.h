@@ -7,7 +7,6 @@
 #define	CGAME_H
 
 #include "Global.h"
-#include "IEventable.h"
 
 namespace jam
 {
@@ -19,7 +18,7 @@ CLASS_PTR(ISystem)
 CLASS_PTR(CRenderSystem)
 CLASS_PTR(CEventSystem)
     
-class CGame : public IEventable
+class CGame
 {
 public:
     typedef std::unordered_map<typeid_t, ISystemPtr> TSystemMap;

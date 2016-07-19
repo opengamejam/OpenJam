@@ -6,7 +6,6 @@
 //  Copyright (c) 2014 Yevgeniy Logachev. All rights reserved.
 //
 #include "IScene.h"
-#include "IEventDispatcher.hpp"
 #include "IEntity.h"
 
 

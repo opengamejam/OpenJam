@@ -14,6 +14,7 @@ namespace jam
     
 class IShaderSource
 {
+    JAM_OBJECT_BASE
 public:    
     virtual const std::string& Vertex() const = 0;
     virtual const std::string& Fragment() const = 0;

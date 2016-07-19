@@ -17,6 +17,7 @@ CLASS_PTR(IVertexBuffer)
     
 class IVertexBuffer : public std::enable_shared_from_this<IVertexBuffer>
 {
+    JAM_OBJECT_BASE
 public:
     enum DataTypes
     {

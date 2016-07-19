@@ -16,6 +16,7 @@ namespace jam
 
 class IRenderTarget
 {
+    JAM_OBJECT_BASE
 public:
     typedef std::vector<uint8_t> TRawData;
     

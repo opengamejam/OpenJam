@@ -115,7 +115,7 @@ bool CShaderProgramOGL2_0::Link()
         printf("%s", infoLog.data());
     }
     
-    assert(glGetError() == GL_NO_ERROR);
+    //assert(glGetError() == GL_NO_ERROR);
     
     return m_IsLinked;
 }

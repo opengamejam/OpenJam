@@ -6,7 +6,6 @@
 #if defined(OS_KOS)
 
 #include "CRenderViewDreamcast.h"
-#include "IEventable.h"
 #include "CTouchEvent.h"
 #include "RenderGlobal.h"
 #include "IRenderTarget.h"

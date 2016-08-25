@@ -12,12 +12,11 @@
 
 #include "Global.h"
 #include "IRenderView.h"
-#include "IEventable.h"
 
 namespace jam
 {
 
-class CRenderViewDreamcast : public IRenderView, public IEventable
+class CRenderViewDreamcast : public IRenderView
 {
 public:
 	CRenderViewDreamcast();

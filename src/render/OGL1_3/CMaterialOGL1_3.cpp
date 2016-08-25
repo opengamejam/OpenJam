@@ -322,7 +322,7 @@ void CMaterialOGL1_3::ApplyState(IMaterial::MaterialState state, IMaterial::Mate
 		//glFrontFace(GL_CCW);
 	}
     
-    assert(glGetError() == GL_NO_ERROR);
+    //assert(glGetError() == GL_NO_ERROR);
 }
 
 void CMaterialOGL1_3::HashMe()

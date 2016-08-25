@@ -118,7 +118,7 @@ CTextureOGL1_3::CTextureOGL1_3()
 , m_IsDirty(true)
 {
 	glEnable(GL_TEXTURE_2D);
-    assert(glGetError() == GL_NO_ERROR);
+    //assert(glGetError() == GL_NO_ERROR);
 }
 
 CTextureOGL1_3::~CTextureOGL1_3()
@@ -173,7 +173,7 @@ void CTextureOGL1_3::Filter(ITexture::TextureFilters filter)
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
     
-    assert(glGetError() == GL_NO_ERROR);
+    //assert(glGetError() == GL_NO_ERROR);
 }
 
 ITexture::TextureFilters CTextureOGL1_3::Filter() const
@@ -220,7 +220,7 @@ bool CTextureOGL1_3::AssignImage(IImagePtr image)
             mipDataOffset += mipSize;
         }
         
-        assert(glGetError() == GL_NO_ERROR);
+        //assert(glGetError() == GL_NO_ERROR);
 
         if (image->MipsCount() > 1)
         {

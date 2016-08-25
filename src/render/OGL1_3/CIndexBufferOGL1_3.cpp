@@ -75,7 +75,7 @@ void CIndexBufferOGL1_3::ResizeRaw(uint64_t newSize)
     Bind();
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_Buffer.size(), m_Buffer.data(), GL_DYNAMIC_DRAW);
     Unbind();
-    assert(glGetError() == GL_NO_ERROR);
+    //assert(glGetError() == GL_NO_ERROR);
 #endif
 }
 
@@ -108,7 +108,7 @@ void CIndexBufferOGL1_3::Unlock(bool isNeedCommit)
         Bind();
         glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, m_Buffer.size(), m_Buffer.data());
         Unbind();
-        assert(glGetError() == GL_NO_ERROR);
+        //assert(glGetError() == GL_NO_ERROR);
     }
     m_IsLocked = false;
 #endif

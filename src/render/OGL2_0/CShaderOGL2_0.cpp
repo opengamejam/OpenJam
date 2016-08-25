@@ -98,7 +98,7 @@ bool CShaderOGL2_0::Compile(const std::string& source, ShaderType shaderType)
         m_Type = shaderType;
     }
     
-    assert(glGetError() == GL_NO_ERROR);
+    //assert(glGetError() == GL_NO_ERROR);
     
     return m_IsCompiled;
 }

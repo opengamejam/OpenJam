@@ -102,7 +102,7 @@ void CVertexBufferOGL1_3::ResizeRaw(uint64_t newSize)
     glBindBuffer(GL_ARRAY_BUFFER, m_Id);
     glBufferData(GL_ARRAY_BUFFER, m_Buffer.size(), m_Buffer.data(), GL_DYNAMIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
-    assert(glGetError() == GL_NO_ERROR);
+    //assert(glGetError() == GL_NO_ERROR);
 #endif
 }
 
@@ -135,7 +135,7 @@ void CVertexBufferOGL1_3::Unlock(bool isNeedCommit)
         glBindBuffer(GL_ARRAY_BUFFER, m_Id);
         glBufferSubData(GL_ARRAY_BUFFER, 0, m_Buffer.size(), m_Buffer.data());
         glBindBuffer(GL_ARRAY_BUFFER, 0);
-        assert(glGetError() == GL_NO_ERROR);
+        //assert(glGetError() == GL_NO_ERROR);
     }
 #endif
     

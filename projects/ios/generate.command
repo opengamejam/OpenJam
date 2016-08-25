@@ -1,5 +1,5 @@
 pushd $(dirname "$0")
 
-cmake projects/ -G Xcode ../../ -DCMAKE_INSTALL_PREFIX=./build -DPLATFORM:STRING=IOS
+cmake projects/ -G Xcode ../../ -DCMAKE_INSTALL_PREFIX=./build -DPLATFORM:STRING=iOS
 
 popd

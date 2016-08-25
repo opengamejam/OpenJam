@@ -26,8 +26,14 @@ public:
     
     static const std::string& Name()
     {
-        static std::string name = std::to_string(Id());
-        return name;
+        //static std::string name = std::to_string(Id());
+        //return name;
+        static std::stringstream ss;
+        if (ss.str().empty())
+        {
+            ss << Id();
+        }
+        return ss.str();
     }
 };
 

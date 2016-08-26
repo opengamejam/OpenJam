@@ -9,7 +9,9 @@
 #include "CStringUtils.h"
 #include "CMath.h"
 
-void jam::SplitString(std::vector<std::string>& tokens, const std::string& text, char delimeter)
+using namespace jam;
+
+void CStringUtils::SplitString(std::vector<std::string>& tokens, const std::string& text, char delimeter)
 {
     size_t start = 0;
     size_t end = 0;
@@ -21,7 +23,7 @@ void jam::SplitString(std::vector<std::string>& tokens, const std::string& text,
     tokens.push_back(text.substr(start));
 }
 
-std::string jam::ReplaceString(std::string string, const std::string& from, const std::string& to)
+std::string CStringUtils::ReplaceString(std::string string, const std::string& from, const std::string& to)
 {
     size_t pos = 0;
     while ((pos = string.find(from, pos)) != std::string::npos)
@@ -32,7 +34,27 @@ std::string jam::ReplaceString(std::string string, const std::string& from, cons
     return string;
 }
 
-glm::vec2 jam::str2vec2(const std::string& value, char delimeter)
+bool CStringUtils::StringEndsWith(std::string const& fullString, std::string const& ending)
+{
+    if (fullString.length() >= ending.length())
+    {
+        return (0 == fullString.compare(fullString.length() - ending.length(), ending.length(), ending));
+    }
+    
+    return false;
+}
+
+bool CStringUtils::StringStartsWith(std::string const& fullString, std::string const& starting)
+{
+    if (fullString.length() >= starting.length())
+    {
+        return (0 == fullString.compare(0, starting.length(), starting));
+    }
+    
+    return false;
+}
+
+glm::vec2 CStringUtils::ToVec2(const std::string& value, char delimeter)
 {
     std::vector<std::string> components;
     SplitString(components, value, delimeter);
@@ -50,7 +72,7 @@ glm::vec2 jam::str2vec2(const std::string& value, char delimeter)
     return glm::vec2(x, y);
 }
 
-glm::vec3 jam::str2vec3(const std::string& value, char delimeter)
+glm::vec3 CStringUtils::ToVec3(const std::string& value, char delimeter)
 {
     std::vector<std::string> components;
     SplitString(components, value, delimeter);

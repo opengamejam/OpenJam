@@ -80,17 +80,17 @@ get_sources(${PROJECT_NAME} ${CMAKE_SOURCE_DIR}/src)
 add_library(${PROJECT_NAME} ${${PROJECT_NAME}_SRCS})
 target_include_directories(${PROJECT_NAME} PUBLIC ${INSTALL_INC_DIR})
 
-set (CMAKE_CXX_FLAGS "-std=gnu++11 -fno-rtti -fno-exceptions -g -Wall")
+set (CMAKE_CXX_FLAGS "-std=c++11 -stdlib=libc++ -fno-rtti -fno-exceptions -Wall")
 if (${PLATFORM} STREQUAL "iOS")
 	# SDK
 	set(CMAKE_OSX_SYSROOT "iphoneos")
 	# Architecture
 	set (CMAKE_XCODE_EFFECTIVE_PLATFORMS "-iphoneos;-iphonesimulator")
 	# Compiler settings
-	set (CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD 	"gnu++11")
+	set (CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD 	"c++11")
 	set (CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY 			"libc++")
 	set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -x objective-c")
-	set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -x objective-c++ -stdlib=libc++")
+	set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -x objective-c++")
 	# IOS compiler cannot pass cmake compiler checking
 	set (CMAKE_C_COMPILER_WORKS 1)
 	set (CMAKE_CXX_COMPILER_WORKS 1)
@@ -111,8 +111,8 @@ elseif (${PLATFORM} STREQUAL "macOS")
 	set (CMAKE_OSX_ARCHITECTURES "$(ARCHS_STANDARD)")
 	# Compiler settings
 	set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -x objective-c")
-	set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -x objective-c++ -stdlib=libc++")
-	set (CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD 	"gnu++11")
+	set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -x objective-c++")
+	set (CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD 	"c++11")
 	set (CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY 			"libc++")
 
 	add_definitions (-DOS_MAC)
@@ -134,7 +134,7 @@ elseif (${PLATFORM} STREQUAL "Linux")
 elseif (${PLATFORM} STREQUAL "KOS")
 	# Compiler settings
 	set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fomit-frame-pointer -c -fmessage-length=0 -ml -m4-single-only -ffunction-sections -fdata-sections -fno-strict-aliasing -fno-builtin")
-	set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -c -fmessage-length=0 -fno-operator-names")
+	set (CMAKE_CXX_FLAGS "-std=c++11 -fno-rtti -fno-exceptions -Wall -c -fmessage-length=0 -fno-operator-names")
 	set (CMAKE_LINK_FLAGS "-nodefaultlibs -L${KOS_BASE_DIR}/lib/dreamcast -L${KOS_BASE_DIR}/addons/lib/dreamcast -Wl,--gc-sections -Wl,-T${KOS_BASE_DIR}/utils/ldscripts/shlelf.xc -ml -m4-single-only -Wl,-Ttext=0x8c010000")
 
 	# KOS
@@ -211,7 +211,6 @@ ExternalProject_Add(glm
     		   -DCMAKE_AR=${CMAKE_AR}
     		   -DCMAKE_RANLIB=${CMAKE_RANLIB}
     		   -DCMAKE_LINKER=${CMAKE_LINKER}
-    		   -DGLM_HAS_CXX11_STL=${GLM_HAS_CXX11_STL}
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_INSTALL_PREFIX}/glm/include)

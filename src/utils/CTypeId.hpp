@@ -24,15 +24,19 @@ public:
         return reinterpret_cast<typeid_t>(&type_id);
     }
     
+    
     static const std::string& Name()
     {
-        //static std::string name = std::to_string(Id());
-        //return name;
-        static std::stringstream ss;
-        if (ss.str().empty())
-        {
-            ss << Id();
-        }
+        static std::string name = ToString(Id());
+        return name;
+    }
+    
+private:
+    static std::string ToString(typeid_t value)
+    {
+        std::stringstream ss;
+        ss << value;
+        
         return ss.str();
     }
 };

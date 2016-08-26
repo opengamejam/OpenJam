@@ -20,13 +20,11 @@ public:
     CStringUtils() = default;
     ~CStringUtils() = default;
     
-};
-    
-    void SplitString(std::vector<std::string>& tokens, const std::string& text, char delimeter);
-    std::string ReplaceString(std::string string, const std::string& search, const std::string& replace);
+    static void SplitString(std::vector<std::string>& tokens, const std::string& text, char delimeter);
+    static std::string ReplaceString(std::string string, const std::string& search, const std::string& replace);
     
     template <class T>
-    std::string ToString(T value)
+    static std::string ToString(T value)
     {
         std::stringstream ss;
         ss << value;
@@ -35,7 +33,7 @@ public:
     }
     
     template <class T>
-    T FromString(const std::string& string)
+    static T FromString(const std::string& string)
     {
         std::stringstream ss(string);
         
@@ -45,28 +43,14 @@ public:
         return result;
     }
     
-    INL bool StringEndsWith(std::string const& fullString, std::string const& ending)
-    {
-        if (fullString.length() >= ending.length())
-        {
-            return (0 == fullString.compare(fullString.length() - ending.length(), ending.length(), ending));
-        }
-        
-        return false;
-    }
+    static bool StringEndsWith(std::string const& fullString, std::string const& ending);
+    static bool StringStartsWith(std::string const& fullString, std::string const& starting);
     
-    INL bool StringStartsWith(std::string const& fullString, std::string const& starting)
-    {
-        if (fullString.length() >= starting.length())
-        {
-            return (0 == fullString.compare(0, starting.length(), starting));
-        }
-        
-        return false;
-    }
+    static glm::vec2 ToVec2(const std::string& value, char delimeter = ',');
+    static glm::vec3 ToVec3(const std::string& value, char delimeter = ',');
     
-    glm::vec2 str2vec2(const std::string& value, char delimeter = ',');
-    glm::vec3 str2vec3(const std::string& value, char delimeter = ',');
-};
+}; // CStringUtils
+    
+}; // namespace jam
 
 #endif /* defined(CSTRINGUTILS_H) */

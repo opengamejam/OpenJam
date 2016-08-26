@@ -49,10 +49,10 @@ bool CModelObj::Load()
             line += ch;
             if (ch == '\n')
             {
-                line = ReplaceString(line, " \r", "");
-                line = ReplaceString(line, " \n", "");
-                line = ReplaceString(line, "\r", "");
-                line = ReplaceString(line, "\n", "");
+                line = CStringUtils::ReplaceString(line, " \r", "");
+                line = CStringUtils::ReplaceString(line, " \n", "");
+                line = CStringUtils::ReplaceString(line, "\r", "");
+                line = CStringUtils::ReplaceString(line, "\n", "");
                 
                 bool result = ParseLine(line, srcVertices, srcNormals, srcUVs,
                                         m_Vertices[currentGroup], m_Normals[currentGroup], m_UVs[currentGroup],
@@ -114,7 +114,7 @@ bool CModelObj::ParseLine(const std::string& line,
 {
     bool result = false;
     std::vector<std::string> components;
-    SplitString(components, line, ' ');
+    CStringUtils::SplitString(components, line, ' ');
     
     if (components.empty())
     {
@@ -123,19 +123,19 @@ bool CModelObj::ParseLine(const std::string& line,
     
     if (components[0] == "v")
     {
-        glm::vec3 vertex = str2vec3(ReplaceString(line, "v ", ""), ' ');
+        glm::vec3 vertex = CStringUtils::ToVec3(CStringUtils::ReplaceString(line, "v ", ""), ' ');
         srcVertices.push_back(vertex);
         result = true;
     }
     else if (components[0] == "vt")
     {
-        glm::vec2 uv = str2vec2(ReplaceString(line, "vt ", ""), ' ');
+        glm::vec2 uv = CStringUtils::ToVec2(CStringUtils::ReplaceString(line, "vt ", ""), ' ');
         srcUVs.push_back(uv);
         result = true;
     }
     else if (components[0] == "vn")
     {
-        glm::vec3 normal = str2vec3(ReplaceString(line, "vn ", ""), ' ');
+        glm::vec3 normal = CStringUtils::ToVec3(CStringUtils::ReplaceString(line, "vn ", ""), ' ');
         srcNormals.push_back(normal);
         result = true;
     }
@@ -163,21 +163,21 @@ bool CModelObj::ParseLine(const std::string& line,
         for (unsigned long i = 0; i < faces.size(); ++i)
         {
             std::vector<std::string> face;
-            SplitString(face, faces[i], '/');
+            CStringUtils::SplitString(face, faces[i], '/');
 
             if (face.size() > 0)
             {
-                unsigned int vertexIndex = FromString<unsigned int>(face[0]);
+                unsigned int vertexIndex = CStringUtils::FromString<unsigned int>(face[0]);
                 dstVertices.push_back(srcVertices[vertexIndex - 1]);
             }
             if (face.size() > 1)
             {
-                unsigned int uvIndex = FromString<unsigned int>(face[1]);
+                unsigned int uvIndex = CStringUtils::FromString<unsigned int>(face[1]);
                 dstUVs.push_back(srcUVs[uvIndex - 1]);
             }
             if (face.size() > 2)
             {
-                unsigned int normalIndex = FromString<unsigned int>(face[2]);
+                unsigned int normalIndex = CStringUtils::FromString<unsigned int>(face[2]);
                 dstNormals.push_back(srcNormals[normalIndex - 1]);
             }
         }
@@ -194,7 +194,7 @@ bool CModelObj::ParseLine(const std::string& line,
     }
     else if (components[0] == "g")
     {
-        group = ReplaceString(line, "g ", "");
+        group = CStringUtils::ReplaceString(line, "g ", "");
         result = true;
     }
     

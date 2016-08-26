@@ -158,11 +158,11 @@ bool CSpriteXML::ParseFrames(const TiXmlElement* xmlFrames)
         
         if (xmlFrame->Attribute("u"))
         {
-            textureFrame.u = str2vec2(xmlFrame->Attribute("u"));
+            textureFrame.u = CStringUtils::ToVec2(xmlFrame->Attribute("u"));
         }
         if (xmlFrame->Attribute("v"))
         {
-            textureFrame.v = str2vec2(xmlFrame->Attribute("v"));
+            textureFrame.v = CStringUtils::ToVec2(xmlFrame->Attribute("v"));
         }
         if (xmlFrame->Attribute("textureIdx", (int *)(&textureFrame.textureIdx)) == NULL)
         {

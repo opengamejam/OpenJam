@@ -114,7 +114,6 @@ private:
         }
         
     private:
-        
         F m_Function;
     };
     

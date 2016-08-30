@@ -144,7 +144,7 @@ if (${PLATFORM} STREQUAL "macOS" OR
     set(CMAKE_MACOSX_RPATH 1)
 endif()
 
-set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -std=gnu++11 -fno-rtti -fno-exceptions -g -Wall")
+set (CMAKE_CXX_FLAGS "-std=gnu++11 -stdlib=libc++ -fno-rtti -fno-exceptions -Wall")
 
 add_library(${PROJECT_NAME}thin STATIC ${LIBVFSPP_SRCS} ${LIBVFSPP_HDRS})
 set_target_properties(${PROJECT_NAME}thin PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${CMAKE_INSTALL_PREFIX}/${PROJECT_NAME}/lib
@@ -155,7 +155,7 @@ set_target_properties(${PROJECT_NAME}thin PROPERTIES ARCHIVE_OUTPUT_DIRECTORY ${
 
 if(${PLATFORM} STREQUAL "KOS")
     set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fomit-frame-pointer -c -fmessage-length=0 -ml -m4-single-only -ffunction-sections -fdata-sections -fno-strict-aliasing -fno-builtin")
-    set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -c -fmessage-length=0 -fno-operator-names")
+    set (CMAKE_CXX_FLAGS "-std=gnu++11 -fno-rtti -fno-exceptions -Wall -c -fmessage-length=0 -fno-operator-names")
     set (CMAKE_LINK_FLAGS "-nodefaultlibs -L${KOS_BASE_DIR}/lib/dreamcast -L${KOS_BASE_DIR}/addons/lib/dreamcast -Wl,--gc-sections -Wl,-T${KOS_BASE_DIR}/utils/ldscripts/shlelf.xc -ml -m4-single-only -Wl,-Ttext=0x8c010000")
     target_include_directories(${PROJECT_NAME}thin PUBLIC ${KOS_BASE_DIR}/include)
     target_include_directories(${PROJECT_NAME}thin PUBLIC ${KOS_BASE_DIR}/addons/include)

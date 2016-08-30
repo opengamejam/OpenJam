@@ -9,12 +9,14 @@
 #define	IRENDERVIEW_H
 
 #include "Global.h"
+#include "CSignal.hpp"
 
 namespace jam
 {    
     
 CLASS_PTR(IRenderTarget)
 CLASS_PTR(IRenderer)
+CLASS_PTR(CTouchEvent)
     
 class IRenderView : public std::enable_shared_from_this<IRenderView>
 {
@@ -39,6 +41,8 @@ public:
 
     INL uint32_t RealWidth() const { return m_Width * m_ScaleFactor; }
     INL uint32_t RealHeight() const { return m_Height * m_ScaleFactor; }
+    
+    CSignal<void, CTouchEventPtr> OnTouchSignal;
     
 private:
 	uint32_t m_Width;

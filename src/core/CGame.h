@@ -17,6 +17,7 @@ CLASS_PTR(ICamera)
 CLASS_PTR(ISystem)
 CLASS_PTR(CRenderSystem)
 CLASS_PTR(CEventSystem)
+CLASS_PTR(CTouchEvent)
     
 class CGame
 {
@@ -52,6 +53,13 @@ public:
 private:
     CGame(const CGame& orig) {}
     CGame& operator=(const CGame& other);
+    
+    void InitializeFileSystems();
+    void InitializeSystems();
+    void ShutdownFileSystems();
+    void ShutdownSystems();
+    
+    void OnTouchEvent(CTouchEventPtr event);
    
 private:
     bool m_IsInitialized;

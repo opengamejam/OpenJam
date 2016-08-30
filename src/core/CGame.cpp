@@ -21,6 +21,8 @@
 #include "CMemoryFileSystem.h"
 #include "CZipFileSystem.h"
 
+#include "CTouchEvent.h"
+
 using namespace jam;
 using namespace vfspp;
 
@@ -45,43 +47,24 @@ CGame::~CGame()
 
 void CGame::Initialize()
 {
-    vfs_initialize();
-    
-    IFileSystemPtr root_fs(new CNativeFileSystem(CSystem::GetBundlePath() + "media/"));
-    IFileSystemPtr zip_fs(new CZipFileSystem(CSystem::GetBundlePath() + "media/bundle.zip", "/", false));
-    IFileSystemPtr mem_fs(new CMemoryFileSystem());
-    
-    root_fs->Initialize();
-    zip_fs->Initialize();
-    mem_fs->Initialize();
-    
-    CVirtualFileSystemPtr vfs = vfs_get_global();
-    //vfs->AddFileSystem("/", root_fs);
-    vfs->AddFileSystem("/", zip_fs);
-    vfs->AddFileSystem("/memory/", mem_fs);
-    
-    CThreadPool::Get()->Initialize(5);
     m_RenderView->CreateView();
+    m_RenderView->OnTouchSignal += std::bind(&CGame::OnTouchEvent, this, std::placeholders::_1);
     
-    m_RenderSystem.reset(new CRenderSystem(m_RenderView->Renderer()));
-    m_EventSystem.reset(new CEventSystem());
-    CAnimation2DSystemPtr animationSystem(new CAnimation2DSystem());
-    CTransfromationSystemPtr transformationSystem(new CTransfromationSystem());
-    CUpdateSystemPtr updateSystem(new CUpdateSystem());
-    CBatchingSystemPtr batchingSystem(new CBatchingSystem(m_RenderView->Renderer()));
-    AddSystem(updateSystem);
-    AddSystem(animationSystem);
-    AddSystem(batchingSystem);
-    AddSystem(transformationSystem);
-    AddSystem(m_RenderSystem);
+    InitializeFileSystems();
+    InitializeSystems();
+    CThreadPool::Get()->Initialize(5);
     
     m_IsInitialized = true;
 }
 
 void CGame::Shutdown()
 {
-    vfs_shutdown();
+    m_RenderView->OnTouchSignal -= std::bind(&CGame::OnTouchEvent, this, std::placeholders::_1);
+    
+    ShutdownFileSystems();
+    ShutdownSystems();
     CThreadPool::Get()->Shutdown();
+    
     m_IsInitialized = false;
 }
 
@@ -102,6 +85,7 @@ void CGame::Update(unsigned long dt)
         return;
     }
     
+    m_RenderView->UpdateEvents();
     CThreadPool::Get()->Update(dt);
     
     if (!m_Scenes.empty())
@@ -209,4 +193,57 @@ CEventSystemPtr CGame::EventSystem() const
 // *****************************************************************************
 // Private Methods
 // *****************************************************************************
+
+void CGame::InitializeFileSystems()
+{
+    vfs_initialize();
+    
+    IFileSystemPtr root_fs(new CNativeFileSystem(CSystem::GetBundlePath() + "media/"));
+    IFileSystemPtr zip_fs(new CZipFileSystem(CSystem::GetBundlePath() + "media/bundle.zip", "/", false));
+    IFileSystemPtr mem_fs(new CMemoryFileSystem());
+    
+    root_fs->Initialize();
+    zip_fs->Initialize();
+    mem_fs->Initialize();
+    
+    CVirtualFileSystemPtr vfs = vfs_get_global();
+    //vfs->AddFileSystem("/", root_fs);
+    vfs->AddFileSystem("/", zip_fs);
+    vfs->AddFileSystem("/memory/", mem_fs);
+}
+
+void CGame::InitializeSystems()
+{
+    m_RenderSystem.reset(new CRenderSystem(m_RenderView->Renderer()));
+    m_EventSystem.reset(new CEventSystem());
+    
+    // TODO: read from config
+    CAnimation2DSystemPtr animationSystem(new CAnimation2DSystem());
+    CTransfromationSystemPtr transformationSystem(new CTransfromationSystem());
+    CUpdateSystemPtr updateSystem(new CUpdateSystem());
+    CBatchingSystemPtr batchingSystem(new CBatchingSystem(m_RenderView->Renderer()));
+    
+    AddSystem(updateSystem);
+    AddSystem(animationSystem);
+    AddSystem(batchingSystem);
+    AddSystem(transformationSystem);
+    AddSystem(m_RenderSystem);
+}
+
+void CGame::ShutdownFileSystems()
+{
+    vfs_shutdown();
+}
+
+void CGame::ShutdownSystems()
+{
+    m_System.clear();
+    m_RenderSystem = nullptr;
+    m_EventSystem = nullptr;
+}
+
+void CGame::OnTouchEvent(CTouchEventPtr event)
+{
+    EventSystem()->DispatchEvent(event);
+}
 

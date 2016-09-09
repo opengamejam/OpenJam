@@ -14,7 +14,7 @@
 namespace jam
 {    
     
-CLASS_PTR(IRenderTarget)
+CLASS_PTR(IFrameBuffer)
 CLASS_PTR(IRenderer)
 CLASS_PTR(CTouchEvent)
     
@@ -35,7 +35,7 @@ public:
     virtual void UpdateEvents() const = 0;
 
     virtual IRendererPtr Renderer() const = 0;
-    virtual IRenderTargetPtr DefaultRenderTarget() const = 0;
+    virtual IFrameBufferPtr DefaultRenderTarget() const = 0;
 	INL uint32_t Width() const { return m_Width; }
 	INL uint32_t Height() const { return m_Height; }
 

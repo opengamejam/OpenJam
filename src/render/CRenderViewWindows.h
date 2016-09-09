@@ -27,7 +27,7 @@ public:
 	virtual void        UpdateEvents() const;
 
     virtual IRendererPtr Renderer() const override;
-	virtual IRenderTargetPtr DefaultRenderTarget() const override;
+	virtual IFrameBufferPtr DefaultRenderTarget() const override;
     
 private:
     LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam);
@@ -41,7 +41,7 @@ private:
 	HDC					m_DeviceContext;
 	HINSTANCE           m_Instance;
     IRendererPtr m_Renderer;
-	IRenderTargetPtr m_DefaultRenderTarget;
+	IFrameBufferPtr m_DefaultRenderTarget;
 };
 
 }; // namespace jam

@@ -11,12 +11,12 @@
 #import <OpenGLES/EAGL.h>
 #import "GLKit/GLKit.h"
 #include "RenderGlobal.h"
+#include "IFrameBuffer.h"
 #include "IRenderTarget.h"
 
 #include "CRendererOGLES1_1.h"
 #include "CRendererOGLES2_0.h"
-#include "CFrameBufferOGLES1_1.h"
-#include "CFrameBufferOGLES2_0.h"
+
 
 using namespace jam;
 
@@ -55,16 +55,6 @@ void CRenderViewIOS::CreateView()
             [EAGLContext setCurrentContext:m_GLContext];
             
             m_Renderer.reset(new CRendererOGLES1_1(shared_from_this()));
-            
-            glGenRenderbuffers(1, &m_ColorBuffer);
-            glBindRenderbuffer(GL_RENDERBUFFER, m_ColorBuffer);
-            [m_GLContext renderbufferStorage:GL_RENDERBUFFER fromDrawable:(CAEAGLLayer*)(m_GLKView.layer)];
-            
-            std::shared_ptr<CFrameBufferOGLES1_1> renderTarget(new CFrameBufferOGLES1_1(RealWidth(), RealHeight()));
-            renderTarget->Initialize(-1, m_ColorBuffer);
-            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, m_ColorBuffer);
-            glViewport(0, 0, RealWidth(), RealHeight());
-            m_DefaultRenderTarget = renderTarget;
         }
         break;
             
@@ -74,16 +64,6 @@ void CRenderViewIOS::CreateView()
             [EAGLContext setCurrentContext:m_GLContext];
             
             m_Renderer.reset(new CRendererOGLES2_0(shared_from_this()));
-            
-            glGenRenderbuffers(1, &m_ColorBuffer);
-            glBindRenderbuffer(GL_RENDERBUFFER, m_ColorBuffer);
-            [m_GLContext renderbufferStorage:GL_RENDERBUFFER fromDrawable:(CAEAGLLayer*)(m_GLKView.layer)];
-            
-            std::shared_ptr<CFrameBufferOGLES2_0> renderTarget(new CFrameBufferOGLES2_0(RealWidth(), RealHeight()));
-            renderTarget->Initialize(-1, m_ColorBuffer);
-            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, m_ColorBuffer);
-            glViewport(0, 0, RealWidth(), RealHeight());
-            m_DefaultRenderTarget = renderTarget;
         }
         break;
             
@@ -92,17 +72,7 @@ void CRenderViewIOS::CreateView()
             m_GLContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1];
             [EAGLContext setCurrentContext:m_GLContext];
             
-            m_Renderer.reset(new CRendererOGLES1_1(shared_from_this()));
-            
-            glGenRenderbuffers(1, &m_ColorBuffer);
-            glBindRenderbuffer(GL_RENDERBUFFER, m_ColorBuffer);
-            [m_GLContext renderbufferStorage:GL_RENDERBUFFER fromDrawable:(CAEAGLLayer*)(m_GLKView.layer)];
-            
-            std::shared_ptr<CFrameBufferOGLES1_1> renderTarget(new CFrameBufferOGLES1_1(RealWidth(), RealHeight()));
-            renderTarget->Initialize(-1, m_ColorBuffer);
-            glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_RENDERBUFFER, m_ColorBuffer);
-            glViewport(0, 0, RealWidth(), RealHeight());
-            m_DefaultRenderTarget = renderTarget;
+            //m_Renderer.reset(new CRendererOGLES1_1(shared_from_this()));
         }
         break;
             
@@ -110,22 +80,42 @@ void CRenderViewIOS::CreateView()
             break;
     };
     
-    m_DefaultRenderTarget->CreateDepthAttachment();
-    m_DefaultRenderTarget->CreateStencilAttachment();
+    CRenderTargetColorPtr colorTarget = m_Renderer->CreateColorRenderTarget();
+    colorTarget->Initialize();
+    colorTarget->Bind();
+    [m_GLContext renderbufferStorage:GL_RENDERBUFFER fromDrawable:(CAEAGLLayer*)(m_GLKView.layer)];
+    colorTarget->Allocate(RealWidth(), RealHeight());
+
+    CRenderTargetDepthPtr depthTarget = m_Renderer->CreateDepthRenderTarget();
+    depthTarget->Initialize();
+    depthTarget->Bind();
+    depthTarget->Allocate(RealWidth(), RealHeight());
     
-    assert(m_Renderer);
+    CRenderTargetStencilPtr stencilTarget = m_Renderer->CreateStencilRenderTarget();
+    stencilTarget->Initialize();
+    stencilTarget->Bind();
+    stencilTarget->Allocate(RealWidth(), RealHeight());
+    
+    m_DefaultRenderTarget = m_Renderer->CreateFrameBuffer(RealWidth(), RealHeight());
+    m_DefaultRenderTarget->Initialize();
+    m_DefaultRenderTarget->Bind();
+    m_DefaultRenderTarget->AttachColor(colorTarget, 0);
+    m_DefaultRenderTarget->AttachDepth(depthTarget);
+    m_DefaultRenderTarget->AttachStencil(stencilTarget);
+    
+    assert(m_Renderer && m_DefaultRenderTarget->IsValid());
 }
 
 void CRenderViewIOS::Begin() const
 {
     [EAGLContext setCurrentContext:m_GLContext];
-    glBindRenderbuffer(GL_RENDERBUFFER, m_ColorBuffer);
+    m_DefaultRenderTarget->ColorAttachement(0)->Bind();
 }
 
 void CRenderViewIOS::End() const
 {
     [m_GLContext presentRenderbuffer:GL_RENDERBUFFER];
-    glBindRenderbuffer(GL_RENDERBUFFER, 0);
+    m_DefaultRenderTarget->ColorAttachement(0)->Unbind();
 }
 
 void CRenderViewIOS::UpdateEvents() const
@@ -138,7 +128,7 @@ IRendererPtr CRenderViewIOS::Renderer() const
     return m_Renderer;
 }
 
-IRenderTargetPtr CRenderViewIOS::DefaultRenderTarget() const
+IFrameBufferPtr CRenderViewIOS::DefaultRenderTarget() const
 {
     return m_DefaultRenderTarget;
 }

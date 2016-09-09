@@ -16,7 +16,7 @@
 #include "ITexture.h"
 #include "IShader.h"
 #include "IShaderProgram.h"
-#include "IRenderTarget.h"
+#include "IFrameBuffer.h"
 #include "IRenderView.h"
 
 #endif /* RENDERGLOBAL_H */

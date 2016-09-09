@@ -17,6 +17,10 @@
 #include "CShaderOGLES1_1.h"
 #include "CShaderProgramOGLES1_1.h"
 #include "CFrameBufferOGLES1_1.h"
+#include "CRenderTargetColorOGLES1_1.h"
+#include "CRenderTargetDepthOGLES1_1.h"
+#include "CRenderTargetStencilOGLES1_1.h"
+#include "CRenderTargetTextureOGLES1_1.h"
 
 using namespace jam;
 
@@ -46,7 +50,37 @@ IRenderViewPtr CRendererOGLES1_1::RenderView() const
     return m_RenderView;
 }
 
-IVertexBufferPtr CRendererOGLES1_1::CreatVertexBuffer()
+IFrameBufferPtr CRendererOGLES1_1::CreateFrameBuffer(uint32_t width, uint32_t height)
+{
+    IFrameBufferPtr frameBuffer(new CFrameBufferOGLES1_1(width, height));
+    return frameBuffer;
+}
+
+CRenderTargetColorPtr CRendererOGLES1_1::CreateColorRenderTarget()
+{
+    CRenderTargetColorPtr colorTarget(new CRenderTargetColorOGLES1_1());
+    return colorTarget;
+}
+
+CRenderTargetDepthPtr CRendererOGLES1_1::CreateDepthRenderTarget()
+{
+    CRenderTargetDepthPtr depthTarget(new CRenderTargetDepthOGLES1_1());
+    return depthTarget;
+}
+
+CRenderTargetStencilPtr CRendererOGLES1_1::CreateStencilRenderTarget()
+{
+    CRenderTargetStencilPtr stencilTarget(new CRenderTargetStencilOGLES1_1());
+    return stencilTarget;
+}
+
+CRenderTargetTexturePtr CRendererOGLES1_1::CreateTextureRenderTarget()
+{
+    CRenderTargetTexturePtr textureTarget(new CRenderTargetTextureOGLES1_1());
+    return textureTarget;
+}
+
+IVertexBufferPtr CRendererOGLES1_1::CreateVertexBuffer()
 {
     IVertexBufferPtr vertexBuffer(new CVertexBufferOGLES1_1());
     return vertexBuffer;
@@ -86,12 +120,6 @@ IShaderProgramPtr CRendererOGLES1_1::CreateShaderProgram()
 {
     IShaderProgramPtr shaderProgram(new CShaderProgramOGLES1_1());
     return shaderProgram;
-}
-
-IRenderTargetPtr CRendererOGLES1_1::CreateRenderTarget(unsigned int width, unsigned int height)
-{
-    IRenderTargetPtr renderTarget(new CFrameBufferOGLES1_1(width, height));
-    return renderTarget;
 }
 
 void CRendererOGLES1_1::Draw(IMeshPtr mesh, IMaterialPtr material, IShaderProgramPtr shader)

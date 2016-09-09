@@ -119,7 +119,7 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, IRendererPtr rend
         
         if (elementSize > 0)
         {
-            vertexBuffer = renderer->CreatVertexBuffer();
+            vertexBuffer = renderer->CreateVertexBuffer();
             vertexBuffer->Initialize(elementSize);
             material->CullFace(false); // TODO: temp
             assert(vertexBuffer && vertexBuffer->IsValid());

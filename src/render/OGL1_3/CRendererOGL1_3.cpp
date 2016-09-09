@@ -17,7 +17,11 @@
 #include "CMeshOGL1_3.h"
 #include "CShaderOGL1_3.h"
 #include "CShaderProgramOGL1_3.h"
-#include <CFrameBufferOGL1_3.h>
+#include "CFrameBufferOGL1_3.h"
+#include "CRenderTargetColorOGL1_3.h"
+#include "CRenderTargetDepthOGL1_3.h"
+#include "CRenderTargetStencilOGL1_3.h"
+#include "CRenderTargetTextureOGL1_3.h"
 #include "glm/ext.hpp"
 
 using namespace jam;
@@ -48,7 +52,37 @@ IRenderViewPtr CRendererOGL1_3::RenderView() const
     return m_RenderView;
 }
 
-IVertexBufferPtr CRendererOGL1_3::CreatVertexBuffer()
+IFrameBufferPtr CRendererOGL1_3::CreateFrameBuffer(uint32_t width, uint32_t height)
+{
+    IFrameBufferPtr frameBuffer(new CFrameBufferOGL1_3(width, height));
+    return frameBuffer;
+}
+
+CRenderTargetColorPtr CRendererOGL1_3::CreateColorRenderTarget()
+{
+    CRenderTargetColorPtr colorTarget(new CRenderTargetColorOGL1_3());
+    return colorTarget;
+}
+
+CRenderTargetDepthPtr CRendererOGL1_3::CreateDepthRenderTarget()
+{
+    CRenderTargetDepthPtr depthTarget(new CRenderTargetDepthOGL1_3());
+    return depthTarget;
+}
+
+CRenderTargetStencilPtr CRendererOGL1_3::CreateStencilRenderTarget()
+{
+    CRenderTargetStencilPtr stencilTarget(new CRenderTargetStencilOGL1_3());
+    return stencilTarget;
+}
+
+CRenderTargetTexturePtr CRendererOGL1_3::CreateTextureRenderTarget()
+{
+    CRenderTargetTexturePtr textureTarget(new CRenderTargetTextureOGL1_3());
+    return textureTarget;
+}
+
+IVertexBufferPtr CRendererOGL1_3::CreateVertexBuffer()
 {
     IVertexBufferPtr vertexBuffer(new CVertexBufferOGL1_3());
     return vertexBuffer;
@@ -88,12 +122,6 @@ IShaderProgramPtr CRendererOGL1_3::CreateShaderProgram()
 {
     IShaderProgramPtr shaderProgram(new CShaderProgramOGL1_3());
     return shaderProgram;
-}
-
-IRenderTargetPtr CRendererOGL1_3::CreateRenderTarget(uint32_t width, uint32_t height)
-{
-    IRenderTargetPtr renderTarget(new CFrameBufferOGL1_3(width, height));
-    return renderTarget;
 }
 
 void CRendererOGL1_3::Draw(IMeshPtr mesh, IMaterialPtr material, IShaderProgramPtr shader)

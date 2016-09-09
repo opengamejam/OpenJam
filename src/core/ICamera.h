@@ -12,7 +12,7 @@
 
 namespace jam
 {
-CLASS_PTR(IRenderTarget)
+CLASS_PTR(IFrameBuffer)
     
 class ICamera : public CEntityBase
 {
@@ -30,8 +30,8 @@ public:
     virtual uint32_t Id() const = 0;
     
     virtual glm::mat4x4 ProjectionMatrix() = 0;
-    virtual IRenderTargetPtr RenderTarget() const = 0;
-    virtual void RenderTarget(IRenderTargetPtr renderTarget) = 0;
+    virtual IFrameBufferPtr RenderTarget() const = 0;
+    virtual void RenderTarget(IFrameBufferPtr renderTarget) = 0;
     
     virtual void FlipY() = 0;
     virtual void FlipX() = 0;

@@ -8,7 +8,7 @@
 #include "CRenderViewDreamcast.h"
 #include "CTouchEvent.h"
 #include "RenderGlobal.h"
-#include "IRenderTarget.h"
+#include "IFrameBuffer.h"
 
 #include "CRendererOGL1_3.h"
 #include "CFrameBufferOGL1_3.h"
@@ -75,7 +75,7 @@ IRendererPtr CRenderViewDreamcast::Renderer() const
     return m_Renderer;
 }
 
-IRenderTargetPtr CRenderViewDreamcast::DefaultRenderTarget() const
+IFrameBufferPtr CRenderViewDreamcast::DefaultRenderTarget() const
 {
     return m_DefaultRenderTarget;
 }

@@ -27,8 +27,8 @@ public:
     virtual uint32_t Id() const override;
     
     virtual glm::mat4x4 ProjectionMatrix() override;
-    virtual IRenderTargetPtr RenderTarget() const override;
-    virtual void RenderTarget(IRenderTargetPtr renderTarget) override;
+    virtual IFrameBufferPtr RenderTarget() const override;
+    virtual void RenderTarget(IFrameBufferPtr renderTarget) override;
     
     virtual void FlipY() override;
     virtual void FlipX() override;
@@ -39,7 +39,7 @@ private:
     float m_Near;
     float m_Far;
     glm::mat4x4 m_ProjectionMatrix;
-    IRenderTargetPtr m_RenderTarget;
+    IFrameBufferPtr m_RenderTarget;
     
     uint32_t m_Id;
 };

@@ -9,15 +9,6 @@
 
 #include "CRendererOGLES1_0.h"
 
-#include "CVertexBufferOGLES1_0.h"
-#include "CIndexBufferOGLES1_0.h"
-#include "CMaterialOGLES1_0.h"
-#include "CTextureOGLES1_0.h"
-#include "CMeshOGLES1_0.h"
-#include "CShaderOGLES1_0.h"
-#include "CShaderProgramOGLES1_0.h"
-#include "CFrameBufferOGLES1_0.h"
-
 using namespace jam;
 
 // *****************************************************************************
@@ -46,7 +37,37 @@ IRenderViewPtr CRendererOGLES1_0::RenderView() const
     return m_RenderView;
 }
 
-IVertexBufferPtr CRendererOGLES1_0::CreatVertexBuffer()
+IFrameBufferPtr CRendererOGLES1_0::CreateFrameBuffer(uint32_t width, uint32_t height)
+{
+    IFrameBufferPtr frameBuffer(new CFrameBufferOGLES1_0(width, height));
+    return frameBuffer;
+}
+
+CRenderTargetColorPtr CRendererOGLES1_0::CreateColorRenderTarget()
+{
+    CRenderTargetColorPtr colorTarget(new CRenderTargetColorOGLES1_0());
+    return colorTarget;
+}
+
+CRenderTargetDepthPtr CRendererOGLES1_0::CreateDepthRenderTarget()
+{
+    CRenderTargetDepthPtr depthTarget(new CRenderTargetDepthOGLES1_0());
+    return depthTarget;
+}
+
+CRenderTargetStencilPtr CRendererOGLES1_0::CreateStencilRenderTarget()
+{
+    CRenderTargetStencilPtr stencilTarget(new CRenderTargetStencilOGLES1_0());
+    return stencilTarget;
+}
+
+CRenderTargetTexturePtr CRendererOGLES1_0::CreateTextureRenderTarget()
+{
+    CRenderTargetTexturePtr textureTarget(new CRenderTargetTextureOGLES1_0());
+    return textureTarget;
+}
+
+IVertexBufferPtr CRendererOGLES1_0::CreateVertexBuffer()
 {
     IVertexBufferPtr vertexBuffer(new CVertexBufferOGLES1_0());
     return vertexBuffer;
@@ -88,12 +109,6 @@ IShaderProgramPtr CRendererOGLES1_0::CreateShaderProgram()
     return shaderProgram;
 }
 
-IRenderTargetPtr CRendererOGLES1_0::CreateRenderTarget(unsigned int width, unsigned int height)
-{
-    IRenderTargetPtr renderTarget(new CFrameBufferOGLES1_0(width, height));
-    return renderTarget;
-}
-
 void CRendererOGLES1_0::Draw(IMeshPtr mesh, IMaterialPtr material, IShaderProgramPtr shader)
 {
     if (!mesh ||
@@ -103,20 +118,27 @@ void CRendererOGLES1_0::Draw(IMeshPtr mesh, IMaterialPtr material, IShaderProgra
     }
     
     const IShaderProgram::TUniMatrix4Float& uniforms = shader->UniformsMatrix4x4f();
-	IShaderProgram::TUniMatrix4Float::const_iterator it = uniforms.find(shader->ProjectionMatrix());
-    
+    IShaderProgram::TUniMatrix4Float::const_iterator it = uniforms.find(shader->ProjectionMatrix());
     if (it != uniforms.end())
     {
         glMatrixMode(GL_PROJECTION);
-        glLoadTransposeMatrixf(glm::value_ptr(it->second));
-    }   // TODO: load identity for other case
+        glLoadMatrixf(glm::value_ptr(it->second));
+    }
+    else
+    {
+        glLoadMatrixf(glm::value_ptr(glm::mat4(1.0f)));
+    }
     
     it = uniforms.find(shader->ModelMatrix());
     if (it != uniforms.end())
     {
         glMatrixMode(GL_MODELVIEW);
-        glLoadTransposeMatrixf(glm::value_ptr(it->second));
-    }   // TODO: load identity for other case
+        glLoadMatrixf(glm::value_ptr(it->second));
+    }
+    else
+    {
+        glLoadMatrixf(glm::value_ptr(glm::mat4(1.0f)));
+    }
     
     if (mesh->IndexBuffer())
     {
@@ -150,8 +172,7 @@ void CRendererOGLES1_0::Draw(IVertexBufferPtr vertexBuffer, IIndexBufferPtr inde
     }
     
     int primitiveType = CovertPrimitiveType(material->PrimitiveType());
-    const GLvoid *data = nullptr;
-    glDrawElements(primitiveType, (GLsizei)indexBuffer->Size(), GL_UNSIGNED_SHORT, data);
+    glDrawElements(primitiveType, (GLsizei)indexBuffer->Size(), GL_UNSIGNED_INT, nullptr);
 }
 
 // *****************************************************************************
@@ -202,12 +223,4 @@ INL int CovertPrimitiveType(IMaterial::PrimitiveTypes type)
     return primitiveType;
 }
 
-// *****************************************************************************
-// Protected Methods
-// *****************************************************************************
-
-// *****************************************************************************
-// Private Methods
-// *****************************************************************************
-
-#endif // RENDER_OGLES1_0
+#endif // defined(RENDER_OGLES1_0)

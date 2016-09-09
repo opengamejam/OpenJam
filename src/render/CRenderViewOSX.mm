@@ -115,7 +115,7 @@ IRendererPtr CRenderViewOSX::Renderer() const
     return m_Renderer;
 }
 
-IRenderTargetPtr CRenderViewOSX::DefaultRenderTarget() const
+IFrameBufferPtr CRenderViewOSX::DefaultRenderTarget() const
 {
     return m_DefaultRenderTarget;
 }

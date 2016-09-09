@@ -14,7 +14,7 @@
 #include "CUpdateSystem.h"
 #include "CBatchingSystem.h"
 #include "CEventSystem.h"
-#include "IRenderTarget.h"
+#include "IFrameBuffer.h"
 #include "CThreadPool.h"
 #include "CVirtualFileSystem.h"
 #include "CNativeFileSystem.h"

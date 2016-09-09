@@ -17,7 +17,7 @@ namespace jam
 CLASS_PTR(CRenderSystem)
 CLASS_PTR(IEntity)
 CLASS_PTR(ICamera)
-CLASS_PTR(IRenderTarget)
+CLASS_PTR(IFrameBuffer)
 CLASS_PTR(CRenderComponent)
 CLASS_PTR(CBatch)
 CLASS_PTR(IMesh)
@@ -52,7 +52,7 @@ private:
 private:
     IRendererPtr m_Renderer;
     
-    std::set<IRenderTargetPtr> m_ProccededRenderTargets;
+    std::set<IFrameBufferPtr> m_ProccededRenderTargets;
     std::set<uint64_t> m_ProccededBatches;
     
     std::list<CRenderComponentPtr> m_SortedComponents;

@@ -46,7 +46,37 @@ IRenderViewPtr CRendererOGL2_0::RenderView() const
     return m_RenderView;
 }
 
-IVertexBufferPtr CRendererOGL2_0::CreatVertexBuffer()
+IFrameBufferPtr CRendererOGL2_0::CreateFrameBuffer(uint32_t width, uint32_t height)
+{
+    IFrameBufferPtr frameBuffer(new CFrameBufferOGL2_0(width, height));
+    return frameBuffer;
+}
+
+CRenderTargetColorPtr CRendererOGL2_0::CreateColorRenderTarget()
+{
+    CRenderTargetColorPtr colorTarget(new CRenderTargetColorOGL2_0());
+    return colorTarget;
+}
+
+CRenderTargetDepthPtr CRendererOGL2_0::CreateDepthRenderTarget()
+{
+    CRenderTargetDepthPtr depthTarget(new CRenderTargetDepthOGL2_0());
+    return depthTarget;
+}
+
+CRenderTargetStencilPtr CRendererOGL2_0::CreateStencilRenderTarget()
+{
+    CRenderTargetStencilPtr stencilTarget(new CRenderTargetStencilOGL2_0());
+    return stencilTarget;
+}
+
+CRenderTargetTexturePtr CRendererOGL2_0::CreateTextureRenderTarget()
+{
+    CRenderTargetTexturePtr textureTarget(new CRenderTargetTextureOGL2_0());
+    return textureTarget;
+}
+
+IVertexBufferPtr CRendererOGL2_0::CreateVertexBuffer()
 {
     IVertexBufferPtr vertexBuffer(new CVertexBufferOGL2_0());
     return vertexBuffer;
@@ -86,12 +116,6 @@ IShaderProgramPtr CRendererOGL2_0::CreateShaderProgram()
 {
     IShaderProgramPtr shaderProgram(new CShaderProgramOGL2_0());
     return shaderProgram;
-}
-
-IRenderTargetPtr CRendererOGL2_0::CreateRenderTarget(unsigned int width, unsigned int height)
-{
-    IRenderTargetPtr renderTarget(new CFrameBufferOGL2_0(width, height));
-    return renderTarget;
 }
 
 void CRendererOGL2_0::Draw(IMeshPtr mesh, IMaterialPtr material, IShaderProgramPtr shader)
@@ -185,4 +209,4 @@ INL int CovertPrimitiveType(IMaterial::PrimitiveTypes type)
     return primitiveType;
 }
 
-#endif // RENDER_OGL2_0 || RENDER_OGLES2_0
+#endif // RENDER_OGL2_0

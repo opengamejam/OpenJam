@@ -170,7 +170,7 @@ IRendererPtr CRenderViewWindows::Renderer() const
     return f;
 }
 
-IRenderTargetPtr CRenderViewWindows::DefaultRenderTarget() const
+IFrameBufferPtr CRenderViewWindows::DefaultRenderTarget() const
 {
 	return m_DefaultRenderTarget;
 }

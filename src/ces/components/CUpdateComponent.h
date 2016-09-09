@@ -28,7 +28,7 @@ public:
     
     void SetUpdateFunc(const TUpdateFunc& updateFunc);
     
-    bool Update(unsigned long dt);
+    void Update(unsigned long dt);
     
 private:
     TUpdateFunc m_UpdateFunc;

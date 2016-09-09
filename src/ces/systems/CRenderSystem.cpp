@@ -93,7 +93,7 @@ void CRenderSystem::Draw(ICameraPtr camera)
         return;
     }
     
-    IRenderTargetPtr currentRenderTarget = camera->RenderTarget();
+    IFrameBufferPtr currentRenderTarget = camera->RenderTarget();
     if (!currentRenderTarget)
     {
         return;

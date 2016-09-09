@@ -144,7 +144,7 @@ CBatchingSystem::SGeometry CBatchingSystem::CreateNewGeometry(IMaterialPtr mater
 {
     IMeshPtr mesh = m_Renderer->CreateMesh();
     assert(mesh);
-    IVertexBufferPtr vertexBuffer = m_Renderer->CreatVertexBuffer();
+    IVertexBufferPtr vertexBuffer = m_Renderer->CreateVertexBuffer();
     vertexBuffer->Initialize(elementVertexSize);
     
     IIndexBufferPtr indexBuffer = nullptr;

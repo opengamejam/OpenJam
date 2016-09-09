@@ -5,55 +5,147 @@
 //  Created by Yevgeniy Logachev
 //  Copyright (c) 2014 yev. All rights reserved.
 //
-#if defined(RENDER_OGL1_3)
+#if defined(RENDER_OGL1_3) || defined(RENDER_OGLES1_0)
 
-#ifndef CFRAMEBUFFEROGLES1_H
-#define CFRAMEBUFFEROGLES1_H
+#ifndef CFRAMEBUFFEROGL1_3_H
+#define CFRAMEBUFFEROGL1_3_H
 
-#include "IRenderTarget.h"
+#include "IFrameBuffer.h"
 
 namespace jam
 {
 
-class CFrameBufferOGL1_3 : public IRenderTarget
+class CFrameBufferOGL1_3 : public IFrameBuffer
 {
 public:
     CFrameBufferOGL1_3(uint32_t width, uint32_t height);
     virtual ~CFrameBufferOGL1_3();
     
-    void Initialize(uint32_t externalFrameBuffer, uint32_t externalColorBuffer = -1,
-                    uint32_t externalDepthBuffer = -1, uint32_t externalStencilBuffer = -1);
+    /*
+     * Initialize framebuffer object
+     */
     virtual void Initialize() override;
     
-    virtual bool CreateColorAttachment(int index) override;
-    virtual bool CreateDepthAttachment() override;
-    virtual bool CreateStencilAttachment() override;
-    virtual bool CreateTextureAttachment() override;
+    /*
+     * Deinitialize framebuffer object
+     */
+    virtual void Shutdown() override;
     
+    /*
+     * Check if framebuffer is initialized
+     */
+    virtual bool IsInitialized() override;
+    
+    /*
+     * Resize frame buffer
+     */
+    virtual void Resize(uint64_t width, uint64_t height) override;
+    
+    /*
+     * Get maximum color attachements
+     */
+    virtual uint64_t MaxColorAttachements() const override;
+    
+    /*
+     * Attach render buffer or render texture as color buffer.
+     * Setup index to specify multiple render target
+     */
+    virtual void AttachColor(IRenderTargetPtr colorTarget, uint64_t index) override;
+    
+    /*
+     * Attach render buffer or render texture as depth buffer
+     */
+    virtual void AttachDepth(IRenderTargetPtr colorTarget) override;
+    
+    /*
+     * Attach render buffer or render texture as stencil buffer
+     */
+    virtual void AttachStencil(IRenderTargetPtr colorTarget) override;
+    
+    /*
+     * Detach color buffer
+     */
+    virtual void DetachColor(uint64_t index) override;
+    
+    /*
+     * Detach depth buffer
+     */
+    virtual void DetachDepth() override;
+    
+    /*
+     * Detach stencil buffer
+     */
+    virtual void DetachStencil() override;
+    
+    /*
+     * Returns attched color buffer for index
+     */
+    virtual IRenderTargetPtr ColorAttachement(uint64_t index) const override;
+    
+    /*
+     * Returns attched depth buffer
+     */
+    virtual IRenderTargetPtr DepthAttachement() const override;
+    
+    /*
+     * Returns attched stencil buffer
+     */
+    virtual IRenderTargetPtr StencilAttachement() const override;
+    
+    /*
+     * Check if framebuffer is valid. For ex. OpenGL requires at least one
+     * attached color buffers to be a valid framebuffer
+     */
+    virtual bool IsValid() const override;
+    
+    /*
+     * Bind current framebuffer
+     */
     virtual void Bind() const override;
+    
+    /*
+     * Unbind framebuffer
+     */
     virtual void Unbind() const override;
+    
+    /*
+     * Clear all attached renderbuffers with color 'ClearColor'
+     */
     virtual void Clear() const override;
     
-    virtual void ClearColor(const CColor4f& color) override;
-    virtual const CColor4f& ClearColor() const override;
-    
+    /*
+     * Returns framebuffer width
+     */
     virtual uint32_t Width() const override;
+    
+    /*
+     * Returns framebuffer height
+     */
     virtual uint32_t Height() const override;
     
+    /*
+     * Setup clear color which will fill color buffer after clear
+     */
+    virtual void ClearColor(const CColor4f& color) override;
+    
+    /*
+     * Returns current clear color
+     */
+    virtual const CColor4f& ClearColor() const override;
+    
+    /*
+     * Extract framebuffer raw image data (TODO: format)
+     */
     virtual TRawData RawData() override;
     
 private:
     uint32_t m_FrameBuffer;
     
-    std::vector<uint32_t> m_ColorBuffers;
-    uint32_t m_DepthBuffer;
-    uint32_t m_StencilBuffer;
-    int m_NumColorAtachments;
+    std::vector<IRenderTargetPtr> m_ColorBuffers;
+    IRenderTargetPtr m_DepthBuffer;
+    IRenderTargetPtr m_StencilBuffer;
     
-    bool m_IsFrameBufferExt;
-    bool m_IsColor0BufferExt;
-    bool m_IsDepthBufferExt;
-    bool m_IsStencilBufferExt;
+    int m_NumColorAtachments;
     
     uint32_t m_Width;
     uint32_t m_Height;
@@ -63,6 +155,6 @@ private:
 
 }; // namespace jam
 
-#endif /* defined(CFRAMEBUFFEROGLES1_H) */
+#endif /* defined(CFRAMEBUFFEROGL1_3_H) */
 
-#endif /* RENDER_OGL1_3 */
+#endif /* defined(RENDER_OGL1_3) || defined(RENDER_OGLES1_0) */

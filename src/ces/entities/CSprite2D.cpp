@@ -69,7 +69,7 @@ CSprite2DPtr CSprite2D::Create(const std::string& filename, IRendererPtr rendere
     material->Opacity(false);
     
     // Vertex buffer
-    vertexBuffer = renderer->CreatVertexBuffer();
+    vertexBuffer = renderer->CreateVertexBuffer();
     vertexBuffer->Initialize(sizeof(glm::vec3) + sizeof(CColor4f) + sizeof(glm::vec2));
     assert(vertexBuffer && vertexBuffer->IsValid());
     

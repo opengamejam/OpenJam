@@ -34,7 +34,7 @@ public:
     virtual void UpdateEvents() const override;
     
     virtual IRendererPtr Renderer() const override;
-    virtual IRenderTargetPtr DefaultRenderTarget() const override;
+    virtual IFrameBufferPtr DefaultRenderTarget() const override;
 
 private:
 #if defined(__OBJC__)
@@ -43,7 +43,7 @@ private:
 #endif
     RenderApi m_RenderApi;
     IRendererPtr m_Renderer;
-    IRenderTargetPtr m_DefaultRenderTarget;
+    IFrameBufferPtr m_DefaultRenderTarget;
 };
 
 }; // namespace jam

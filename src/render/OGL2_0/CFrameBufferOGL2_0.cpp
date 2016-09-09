@@ -5,9 +5,14 @@
 //  Created by Yevgeniy Logachev
 //  Copyright (c) 2014 yev. All rights reserved.
 //
-#if defined(RENDER_OGL2_0)
+#if defined(RENDER_OGL2_0) || defined(RENDER_OGLES2_0)
 
 #include "CFrameBufferOGL2_0.h"
+#include "IRenderTarget.h"
+#include "CRenderTargetColorOGL2_0.h"
+#include "CRenderTargetDepthOGL2_0.h"
+#include "CRenderTargetStencilOGL2_0.h"
+#include "CRenderTargetTextureOGL2_0.h"
 
 using namespace jam;
 
@@ -21,13 +26,7 @@ using namespace jam;
 
 CFrameBufferOGL2_0::CFrameBufferOGL2_0(uint32_t width, uint32_t height)
 : m_FrameBuffer(-1)
-, m_DepthBuffer(-1)
-, m_StencilBuffer(-1)
 , m_NumColorAtachments(1)
-, m_IsFrameBufferExt(false)
-, m_IsColor0BufferExt(false)
-, m_IsDepthBufferExt(false)
-, m_IsStencilBufferExt(false)
 , m_Width(width)
 , m_Height(height)
 , m_ClearColor(CColor4f(0.0f, 0.0f, 1.0f, 1.0f))
@@ -36,174 +35,246 @@ CFrameBufferOGL2_0::CFrameBufferOGL2_0(uint32_t width, uint32_t height)
     glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS, &m_NumColorAtachments);
 #endif
     m_ColorBuffers.resize(m_NumColorAtachments);
-    std::for_each(m_ColorBuffers.begin(), m_ColorBuffers.end(), [&](uint32_t& colorBuffer)
-    {
-        colorBuffer = -1;
-    });
 }
 
 CFrameBufferOGL2_0::~CFrameBufferOGL2_0()
 {
-    uint32_t i = 0;
-    std::for_each(m_ColorBuffers.begin(), m_ColorBuffers.end(), [&](uint32_t colorBuffer)
-    {
-        if (colorBuffer != -1 && (i != 0 || !m_IsColor0BufferExt))
-        {
-            glDeleteRenderbuffers(1, &colorBuffer);
-        }
-    });
-    
-    if (m_DepthBuffer != -1)
-    {
-        glDeleteRenderbuffers(1, &m_DepthBuffer);
-    }
-    
-    if (m_StencilBuffer != -1)
-    {
-        glDeleteRenderbuffers(1, &m_StencilBuffer);
-    }
-    
-    if (m_FrameBuffer != -1 && !m_IsDepthBufferExt)
-    {
-        glDeleteFramebuffers(1, &m_FrameBuffer);
-    }
-    
-    //assert(glGetError() == GL_NO_ERROR);
-}
-
-void CFrameBufferOGL2_0::Initialize(uint32_t externalFrameBuffer, uint32_t externalColorBuffer,
-                                          uint32_t externalDepthBuffer, uint32_t externalStencilBuffer)
-{
-    if (m_FrameBuffer == -1 && externalFrameBuffer != -1)
-    {
-        m_FrameBuffer = externalFrameBuffer;
-        m_IsFrameBufferExt = true;
-    }
-    
-    if (m_ColorBuffers[0] == -1 && externalColorBuffer != -1)
-    {
-        m_ColorBuffers[0] = externalColorBuffer;
-        m_IsColor0BufferExt = true;
-    }
-    
-    if (m_DepthBuffer == -1 && externalDepthBuffer != -1)
-    {
-        m_DepthBuffer = externalDepthBuffer;
-        m_IsDepthBufferExt = true;
-    }
-    
-    if (m_StencilBuffer == -1 && externalStencilBuffer != -1)
-    {
-        m_StencilBuffer = externalStencilBuffer;
-        m_IsStencilBufferExt = true;
-    }
-    
-    Initialize();
+    Shutdown();
 }
 
 void CFrameBufferOGL2_0::Initialize()
 {
-    if (m_FrameBuffer == -1)
+    if (!IsInitialized())
     {
         glGenFramebuffers(1, &m_FrameBuffer);
     }
-    glBindFramebuffer(GL_FRAMEBUFFER, m_FrameBuffer);
-    
-    //assert(glGetError() == GL_NO_ERROR);
 }
 
-bool CFrameBufferOGL2_0::CreateColorAttachment(int index)
+void CFrameBufferOGL2_0::Shutdown()
 {
-    if (index >= m_ColorBuffers.size())
+    if (IsInitialized())
     {
-        return false;
+        glDeleteFramebuffers(1, &m_FrameBuffer);
+        m_FrameBuffer = -1;
     }
-    
-    if (m_ColorBuffers[index] != -1)
-    {
-        return true;
-    }
-    
-    glGenRenderbuffers(1, &m_ColorBuffers[index]);
-    glBindRenderbuffer(GL_RENDERBUFFER, m_ColorBuffers[index]);
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8, Width(), Height());
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0 + index, GL_RENDERBUFFER, m_ColorBuffers[index]);
-    
-    bool result = (glCheckFramebufferStatus(GL_FRAMEBUFFER) == GL_FRAMEBUFFER_COMPLETE);
-    if (result)
-    {
-        glViewport(0, 0, Width(), Height());
-    }
-    
-    //assert(glGetError() == GL_NO_ERROR);
-    return result;
 }
 
-bool CFrameBufferOGL2_0::CreateDepthAttachment()
+bool CFrameBufferOGL2_0::IsInitialized()
 {
-    if (m_DepthBuffer != -1)
-    {
-        return true;
-    }
-    
-    glGenRenderbuffers(1, &m_DepthBuffer);
-    glBindRenderbuffer(GL_RENDERBUFFER, m_DepthBuffer);
-    
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, Width(), Height());
-    
-    glBindFramebuffer(GL_FRAMEBUFFER, m_FrameBuffer);
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, m_DepthBuffer);
-    
-    //assert(glGetError() == GL_NO_ERROR);
-    return m_DepthBuffer != -1;
+    return (m_FrameBuffer != -1);
 }
 
-bool CFrameBufferOGL2_0::CreateStencilAttachment()
+void CFrameBufferOGL2_0::Resize(uint64_t width, uint64_t height)
 {
-    if (m_StencilBuffer != -1)
+    m_Width = width;
+    m_Height = height;
+    
+    Bind();
+    
+    std::for_each(m_ColorBuffers.begin(), m_ColorBuffers.end(), [width, height](IRenderTargetPtr renderBuffer)
     {
-        return true;
+        if (renderBuffer && renderBuffer->ColorTarget())
+        {
+            std::static_pointer_cast<CRenderTargetColorOGL2_0>(renderBuffer)->Allocate(width, height);
+        }
+        else if (renderBuffer && renderBuffer->TextureTarget())
+        {
+            //std::static_pointer_cast<CRenderTargetTextureOGL2_0>(renderBuffer)-> // TODO:
+        }
+    });
+    
+    if (DepthAttachement())
+    {
+        std::static_pointer_cast<CRenderTargetDepthOGL2_0>(DepthAttachement())->Allocate(width, height);
     }
     
-    return false; // TODO:
+    if (StencilAttachement())
+    {
+        std::static_pointer_cast<CRenderTargetDepthOGL2_0>(StencilAttachement())->Allocate(width, height);
+    }
+    
+    if (IsValid())
+    {
+        glViewport(0, 0, width, height);
+    }
 }
 
-bool CFrameBufferOGL2_0::CreateTextureAttachment()
+uint64_t CFrameBufferOGL2_0::MaxColorAttachements() const
 {
-    return false;   // TODO:
+    return m_NumColorAtachments;
+}
+
+void CFrameBufferOGL2_0::AttachColor(IRenderTargetPtr colorTarget, uint64_t index)
+{
+    if (!colorTarget)
+    {
+        return;
+    }
+    
+    if (index < MaxColorAttachements())
+    {
+        Bind();
+        
+        IRenderTargetPtr renderBuffer = colorTarget->ColorTarget();
+        IRenderTargetPtr renderTexture = colorTarget->TextureTarget();
+        if (renderBuffer)
+        {
+            std::static_pointer_cast<CRenderTargetColorOGL2_0>(renderBuffer)->BindToFrameBuffer(index);
+        }
+        else if (renderTexture)
+        {
+            std::static_pointer_cast<CRenderTargetTextureOGL2_0>(renderTexture)->BindAsColorToFrameBuffer(index);
+        }
+        
+        m_ColorBuffers[index] = colorTarget;
+    }
+}
+
+void CFrameBufferOGL2_0::AttachDepth(IRenderTargetPtr depthTarget)
+{
+    if (!depthTarget)
+    {
+        return;
+    }
+    
+    Bind();
+    IRenderTargetPtr renderBuffer = depthTarget->DepthTarget();
+    IRenderTargetPtr renderTexture = depthTarget->TextureTarget();
+    if (renderBuffer)
+    {
+        std::static_pointer_cast<CRenderTargetDepthOGL2_0>(renderBuffer)->BindToFrameBuffer();
+    }
+    else if (renderTexture)
+    {
+        std::static_pointer_cast<CRenderTargetTextureOGL2_0>(renderTexture)->BindAsDepthToFrameBuffer();
+    }
+    
+    m_DepthBuffer = depthTarget;
+}
+
+void CFrameBufferOGL2_0::AttachStencil(IRenderTargetPtr stencilTarget)
+{
+    if (!stencilTarget)
+    {
+        return;
+    }
+    
+    Bind();
+    IRenderTargetPtr renderBuffer = stencilTarget->StencilTarget();
+    IRenderTargetPtr renderTexture = stencilTarget->TextureTarget();
+    if (renderBuffer)
+    {
+        std::static_pointer_cast<CRenderTargetStencilOGL2_0>(renderBuffer)->BindToFrameBuffer();
+    }
+    else if (renderTexture)
+    {
+        std::static_pointer_cast<CRenderTargetTextureOGL2_0>(renderTexture)->BindAsStencilToFrameBuffer();
+    }
+}
+
+void CFrameBufferOGL2_0::DetachColor(uint64_t index)
+{
+    if (index < MaxColorAttachements())
+    {
+        Bind();
+        IRenderTargetPtr renderBuffer = m_ColorBuffers[index];
+        if (renderBuffer && renderBuffer->ColorTarget())
+        {
+            std::static_pointer_cast<CRenderTargetColorOGL2_0>(renderBuffer)->UnbindFromFrameBuffer(index);
+        }
+        else if (renderBuffer && renderBuffer->TextureTarget())
+        {
+            std::static_pointer_cast<CRenderTargetTextureOGL2_0>(renderBuffer)->UnbindAsColorFromFrameBuffer(index);
+        }
+        m_ColorBuffers[index] = nullptr;
+    }
+}
+
+void CFrameBufferOGL2_0::DetachDepth()
+{
+    Bind();
+    IRenderTargetPtr renderBuffer = m_DepthBuffer;
+    if (renderBuffer && renderBuffer->DepthTarget())
+    {
+        std::static_pointer_cast<CRenderTargetDepthOGL2_0>(renderBuffer)->UnbindFromFrameBuffer();
+    }
+    else if (renderBuffer && renderBuffer->TextureTarget())
+    {
+        std::static_pointer_cast<CRenderTargetTextureOGL2_0>(renderBuffer)->UnbindAsDepthFromFrameBuffer();
+    }
+    m_DepthBuffer = nullptr;
+}
+
+void CFrameBufferOGL2_0::DetachStencil()
+{
+    Bind();
+    IRenderTargetPtr renderBuffer = m_StencilBuffer;
+    if (renderBuffer && renderBuffer->StencilTarget())
+    {
+        std::static_pointer_cast<CRenderTargetStencilOGL2_0>(renderBuffer)->UnbindFromFrameBuffer();
+    }
+    else if (renderBuffer && renderBuffer->TextureTarget())
+    {
+        std::static_pointer_cast<CRenderTargetTextureOGL2_0>(renderBuffer)->UnbindAsStencilFromFrameBuffer();
+    }
+    m_StencilBuffer = nullptr;
+}
+
+IRenderTargetPtr CFrameBufferOGL2_0::ColorAttachement(uint64_t index) const
+{
+    if (index < MaxColorAttachements())
+    {
+        return m_ColorBuffers[index];
+    }
+    
+    return nullptr;
+}
+
+IRenderTargetPtr CFrameBufferOGL2_0::DepthAttachement() const
+{
+    return m_DepthBuffer;
+}
+
+IRenderTargetPtr CFrameBufferOGL2_0::StencilAttachement() const
+{
+    return m_StencilBuffer;
+}
+
+bool CFrameBufferOGL2_0::IsValid() const
+{
+    GLenum result = glCheckFramebufferStatus(GL_FRAMEBUFFER);
+    return (result == GL_FRAMEBUFFER_COMPLETE);
 }
 
 void CFrameBufferOGL2_0::Bind() const
 {
     glBindFramebuffer(GL_FRAMEBUFFER, m_FrameBuffer);
+    
+    if (IsValid())
+    {
+        glViewport(0, 0, Width(), Height());
+    }
 }
 
 void CFrameBufferOGL2_0::Unbind() const
 {
-    glBindFramebuffer(GL_FRAMEBUFFER, -1);
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void CFrameBufferOGL2_0::Clear() const
 {
     glClearColor(m_ClearColor.R(), m_ClearColor.G(), m_ClearColor.B(), m_ClearColor.A());
     
-    GLbitfield clearBits = 0;
-    if (true) // TODO: checks for targets, that has only depth or stencil render buffers
-    {
-        clearBits |= GL_COLOR_BUFFER_BIT;
-    }
-    if (m_DepthBuffer != 0)
+    GLbitfield clearBits = GL_COLOR_BUFFER_BIT;
+    if (DepthAttachement())
     {
         clearBits |= GL_DEPTH_BUFFER_BIT;
     }
-    if (m_StencilBuffer != 0)
+    if (StencilAttachement())
     {
         clearBits |= GL_STENCIL_BUFFER_BIT;
     }
-    if (clearBits)
-    {
-        glClear(clearBits);
-    }
+    glClear(clearBits);
 }
 
 void CFrameBufferOGL2_0::ClearColor(const CColor4f& color)
@@ -226,12 +297,12 @@ uint32_t CFrameBufferOGL2_0::Height() const
     return m_Height;
 }
 
-IRenderTarget::TRawData CFrameBufferOGL2_0::RawData()
+IFrameBuffer::TRawData CFrameBufferOGL2_0::RawData()
 {
     Bind();
     
     uint32_t rawdataSize = Width() * Height() * 4;
-    IRenderTarget::TRawData data(rawdataSize, 0);
+    IFrameBuffer::TRawData data(rawdataSize, 0);
     glReadPixels(0, 0, Width(), Height(), GL_RGBA, GL_UNSIGNED_BYTE, &data[0]);
     
     Unbind();
@@ -247,4 +318,4 @@ IRenderTarget::TRawData CFrameBufferOGL2_0::RawData()
 // Private Methods
 // *****************************************************************************
 
-#endif // RENDER_OGL2_0 || RENDER_OGLES2_0
+#endif // defined(RENDER_OGL2_0) || defined(RENDER_OGLES2_0)

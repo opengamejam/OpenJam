@@ -46,7 +46,37 @@ IRenderViewPtr CRendererOGL1_5::RenderView() const
     return m_RenderView;
 }
 
-IVertexBufferPtr CRendererOGL1_5::CreatVertexBuffer()
+IFrameBufferPtr CRendererOGL1_5::CreateFrameBuffer(uint32_t width, uint32_t height)
+{
+    IFrameBufferPtr frameBuffer(new CFrameBufferOGL1_3(width, height));
+    return frameBuffer;
+}
+
+CRenderTargetColorPtr CRendererOGL1_5::CreateColorRenderTarget()
+{
+    CRenderTargetColorPtr colorTarget(new CRenderTargetColorOGL1_3());
+    return colorTarget;
+}
+
+CRenderTargetDepthPtr CRendererOGL1_5::CreateDepthRenderTarget()
+{
+    CRenderTargetDepthPtr depthTarget(new CRenderTargetDepthOGL1_3());
+    return depthTarget;
+}
+
+CRenderTargetStencilPtr CRendererOGL1_5::CreateStencilRenderTarget()
+{
+    CRenderTargetStencilPtr stencilTarget(new CRenderTargetStencilOGL1_3());
+    return stencilTarget;
+}
+
+CRenderTargetTexturePtr CRendererOGL1_5::CreateTextureRenderTarget()
+{
+    CRenderTargetTexturePtr textureTarget(new CRenderTargetTextureOGL1_3());
+    return textureTarget;
+}
+
+IVertexBufferPtr CRendererOGL1_5::CreateVertexBuffer()
 {
     IVertexBufferPtr vertexBuffer(new CVertexBufferOGL1_5());
     return vertexBuffer;
@@ -86,12 +116,6 @@ IShaderProgramPtr CRendererOGL1_5::CreateShaderProgram()
 {
     IShaderProgramPtr shaderProgram(new CShaderProgramOGL1_5());
     return shaderProgram;
-}
-
-IRenderTargetPtr CRendererOGL1_5::CreateRenderTarget(unsigned int width, unsigned int height)
-{
-    IRenderTargetPtr renderTarget(new CFrameBufferOGL1_5(width, height));
-    return renderTarget;
 }
 
 void CRendererOGL1_5::Draw(IMeshPtr mesh, IMaterialPtr material, IShaderProgramPtr shader)

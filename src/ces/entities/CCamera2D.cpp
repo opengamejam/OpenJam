@@ -71,12 +71,12 @@ glm::mat4x4 CCamera2D::ProjectionMatrix()
     return m_ProjectionMatrix * resultTransform();
 }
 
-IRenderTargetPtr CCamera2D::RenderTarget() const
+IFrameBufferPtr CCamera2D::RenderTarget() const
 {
     return m_RenderTarget;
 }
 
-void CCamera2D::RenderTarget(IRenderTargetPtr renderTarget)
+void CCamera2D::RenderTarget(IFrameBufferPtr renderTarget)
 {
     m_RenderTarget = renderTarget;
 }

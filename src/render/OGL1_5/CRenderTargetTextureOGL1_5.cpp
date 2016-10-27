@@ -30,20 +30,22 @@ CRenderTargetTextureOGL1_5::~CRenderTargetTextureOGL1_5()
 
 }
 
-void CRenderTargetTextureOGL1_5::Initialize()
+void CRenderTargetTextureOGL1_5::Initialize(InternalFormats internalFormat)
 {
-    if (!IsInitialized())
+    if (IsInitialized())
     {
-        glGenRenderbuffers(1, &m_Id);
+        return;
     }
+    glGenRenderbuffers(1, &m_Id);
 }
 
 void CRenderTargetTextureOGL1_5::Shutdown()
 {
-    if (IsInitialized())
+    if (!IsInitialized())
     {
-        glDeleteRenderbuffers(1, &m_Id);
+        return;
     }
+    glDeleteRenderbuffers(1, &m_Id);
 }
 
 bool CRenderTargetTextureOGL1_5::IsInitialized()
@@ -77,7 +79,7 @@ void CRenderTargetTextureOGL1_5::BindAsColorToFrameBuffer(uint64_t colorAttachem
                            GL_COLOR_ATTACHMENT0 + colorAttachementIdx,
                            GL_TEXTURE_2D,
                            0, // TODO: texture id
-                           0);
+                           m_Id);
 }
 
 void CRenderTargetTextureOGL1_5::BindAsDepthToFrameBuffer()
@@ -86,7 +88,7 @@ void CRenderTargetTextureOGL1_5::BindAsDepthToFrameBuffer()
                            GL_DEPTH_ATTACHMENT,
                            GL_TEXTURE_2D,
                            0, // TODO: texture id
-                           0);
+                           m_Id);
 }
 
 void CRenderTargetTextureOGL1_5::BindAsStencilToFrameBuffer()
@@ -95,7 +97,7 @@ void CRenderTargetTextureOGL1_5::BindAsStencilToFrameBuffer()
                            GL_STENCIL_ATTACHMENT,
                            GL_TEXTURE_2D,
                            0, // TODO: texture id
-                           0);
+                           m_Id);
 }
 
 void CRenderTargetTextureOGL1_5::UnbindAsColorFromFrameBuffer(uint64_t colorAttachementIdx)

@@ -25,7 +25,7 @@ public:
     /*
      * Initialize render target object
      */
-    virtual void Initialize() override;
+    virtual void Initialize(InternalFormats internalFormat) override;
     
     /*
      * Deinitialize render target object
@@ -59,7 +59,11 @@ public:
     void UnbindFromFrameBuffer(uint64_t colorAttachementIdx);
     
 private:
+    GLenum ConvertInternalFormat(InternalFormats internalFormat);
+    
+private:
     uint32_t m_Id;
+    GLenum m_InternalFormat;
 };
     
 }; // namespace jam

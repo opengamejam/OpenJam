@@ -25,7 +25,7 @@ public:
     /*
      * Initialize render target object
      */
-    virtual void Initialize() override;
+    virtual void Initialize(InternalFormats internalFormat) override;
     
     /*
      * Deinitialize render target object

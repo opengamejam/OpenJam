@@ -21,6 +21,7 @@ using namespace jam;
 
 CRenderTargetStencilOGL1_5::CRenderTargetStencilOGL1_5()
 : m_Id(0)
+, m_InternalFormat(0)
 {
 
 }
@@ -30,20 +31,28 @@ CRenderTargetStencilOGL1_5::~CRenderTargetStencilOGL1_5()
 
 }
 
-void CRenderTargetStencilOGL1_5::Initialize()
+void CRenderTargetStencilOGL1_5::Initialize(InternalFormats internalFormat)
 {
-    if (!IsInitialized())
+    if (IsInitialized())
+    {
+        return;
+    }
+    
+    if ((internalFormat & Stencil8) == Stencil8)
     {
         glGenRenderbuffers(1, &m_Id);
+        m_InternalFormat = GL_STENCIL_INDEX8;
     }
 }
 
 void CRenderTargetStencilOGL1_5::Shutdown()
 {
-    if (IsInitialized())
+    if (!IsInitialized())
     {
-        glDeleteRenderbuffers(1, &m_Id);
+        return;
     }
+    
+    glDeleteRenderbuffers(1, &m_Id);
 }
 
 bool CRenderTargetStencilOGL1_5::IsInitialized()
@@ -53,7 +62,8 @@ bool CRenderTargetStencilOGL1_5::IsInitialized()
 
 void CRenderTargetStencilOGL1_5::Allocate(uint64_t width, uint64_t height)
 {
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8_OES, width, height);
+    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8_OES,
+                          static_cast<GLsizei>(width), static_cast<GLsizei>(height));
 }
 
 void CRenderTargetStencilOGL1_5::Bind() const
@@ -68,18 +78,36 @@ void CRenderTargetStencilOGL1_5::Unbind() const
 
 void CRenderTargetStencilOGL1_5::BindToFrameBuffer()
 {
+    GLenum attachement = GL_STENCIL_ATTACHMENT;
+    if (m_InternalFormat == GL_DEPTH24_STENCIL8_OES)
+    {
+        attachement = GL_DEPTH_ATTACHMENT;
+    }
+    
     glFramebufferRenderbuffer(GL_FRAMEBUFFER,
-                              GL_STENCIL_ATTACHMENT,
+                              attachement,
                               GL_RENDERBUFFER,
                               m_Id);
 }
 
 void CRenderTargetStencilOGL1_5::UnbindFromFrameBuffer()
 {
+    GLenum attachement = GL_STENCIL_ATTACHMENT;
+    if (m_InternalFormat == GL_DEPTH24_STENCIL8_OES)
+    {
+        attachement = GL_DEPTH_ATTACHMENT;
+    }
+    
     glFramebufferRenderbuffer(GL_FRAMEBUFFER,
-                              GL_STENCIL_ATTACHMENT,
+                              attachement,
                               GL_RENDERBUFFER,
                               0);
+}
+
+void CRenderTargetStencilOGL1_5::InitializeWithDepthId(uint32_t depthId)
+{
+    m_InternalFormat =  GL_DEPTH24_STENCIL8_OES;
+    m_Id = depthId;
 }
 
 // *****************************************************************************

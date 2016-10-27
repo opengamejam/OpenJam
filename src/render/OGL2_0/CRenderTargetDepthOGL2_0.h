@@ -14,6 +14,8 @@
 
 namespace jam
 {
+CLASS_PTR(CRenderTargetStencil);
+    
 
 class CRenderTargetDepthOGL2_0 : public CRenderTargetDepth
 {
@@ -25,7 +27,7 @@ public:
     /*
      * Initialize render target object
      */
-    virtual void Initialize() override;
+    virtual void Initialize(InternalFormats internalFormat) override;
     
     /*
      * Deinitialize render target object
@@ -36,8 +38,6 @@ public:
      * Check if render target is initialized
      */
     virtual bool IsInitialized() override;
-    
-    // TODO: depth + stencil
     
     /*
      * Allocate render buffer with 'width' and 'height'
@@ -55,13 +55,24 @@ public:
     virtual void Unbind() const override;
     
     /*
+     * Returns self as stencil target
+     */
+    virtual CRenderTargetStencilPtr StencilTarget() override;
+    
+    /*
      * OGL2_0 specific
      */
     void BindToFrameBuffer();
     void UnbindFromFrameBuffer();
     
 private:
+    void CreateStencil();
+    void DeleteStencil();
+    
+private:
     uint32_t m_Id;
+    GLenum m_InternalFormat;
+    CRenderTargetStencilPtr m_Stencil;
 };
     
 }; // namespace jam

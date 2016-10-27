@@ -25,7 +25,7 @@ public:
     /*
      * Initialize render target object
      */
-    virtual void Initialize() override;
+    virtual void Initialize(InternalFormats internalFormat) override;
     
     /*
      * Deinitialize render target object
@@ -61,7 +61,13 @@ public:
     void UnbindFromFrameBuffer();
     
 private:
+    void CreateStencil();
+    void DeleteStencil();
+    
+private:
     uint32_t m_Id;
+    GLenum m_InternalFormat;
+    CRenderTargetStencilPtr m_Stencil;
 };
     
 }; // namespace jam

@@ -21,6 +21,7 @@ using namespace jam;
 
 CRenderTargetColorOGL2_0::CRenderTargetColorOGL2_0()
 : m_Id(0)
+, m_InternalFormat(0)
 {
 
 }
@@ -30,20 +31,25 @@ CRenderTargetColorOGL2_0::~CRenderTargetColorOGL2_0()
 
 }
 
-void CRenderTargetColorOGL2_0::Initialize()
+void CRenderTargetColorOGL2_0::Initialize(InternalFormats internalFormat)
 {
-    if (!IsInitialized())
+    if (IsInitialized())
     {
-        glGenRenderbuffers(1, &m_Id);
+        return;
     }
+    
+    glGenRenderbuffers(1, &m_Id);
+    m_InternalFormat = ConvertInternalFormat(internalFormat);
 }
 
 void CRenderTargetColorOGL2_0::Shutdown()
 {
-    if (IsInitialized())
+    if (!IsInitialized())
     {
-        glDeleteRenderbuffers(1, &m_Id);
+        return;
     }
+    
+    glDeleteRenderbuffers(1, &m_Id);
 }
 
 bool CRenderTargetColorOGL2_0::IsInitialized()
@@ -53,7 +59,8 @@ bool CRenderTargetColorOGL2_0::IsInitialized()
 
 void CRenderTargetColorOGL2_0::Allocate(uint64_t width, uint64_t height)
 {
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8_OES, width, height);
+    glRenderbufferStorage(GL_RENDERBUFFER, m_InternalFormat,
+                          static_cast<GLsizei>(width), static_cast<GLsizei>(height));
 }
 
 void CRenderTargetColorOGL2_0::Bind() const
@@ -89,5 +96,10 @@ void CRenderTargetColorOGL2_0::UnbindFromFrameBuffer(uint64_t colorAttachementId
 // *****************************************************************************
 // Private Methods
 // *****************************************************************************
+
+GLenum CRenderTargetColorOGL2_0::ConvertInternalFormat(InternalFormats internalFormat)
+{
+    return GL_RGBA8_OES; // TODO:
+}
 
 #endif // defined(RENDER_OGL2_0) || defined(RENDER_OGLES2_0)

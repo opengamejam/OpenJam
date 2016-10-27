@@ -24,10 +24,27 @@ class IRenderTarget : public std::enable_shared_from_this<IRenderTarget>
 {
     JAM_OBJECT_BASE
 public:
+    enum InternalFormats
+    {
+        ColorR8         = 0x10,
+        ColorR16        = 0x11,
+        ColorR32        = 0x12,
+        ColorRGB888     = 0x13,
+        ColorRGB565     = 0x14,
+        ColorRGBA8888   = 0x15,
+        ColorRGBA4444   = 0x16,
+        ColorRGB10_A2   = 0x17,
+        Depth16         = 0x80,
+        Depth24         = 0x81,
+        Depth32         = 0x82,
+        Stencil8        = 0x100,
+        Depth24_Stencil8 = Depth24 | Stencil8,
+    };
+    
     /*
      * Initialize render target object
      */
-    virtual void Initialize() = 0;
+    virtual void Initialize(InternalFormats internalFormat) = 0;
     
     /*
      * Deinitialize render target object

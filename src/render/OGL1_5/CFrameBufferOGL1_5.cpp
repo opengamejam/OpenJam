@@ -90,7 +90,7 @@ void CFrameBufferOGL1_5::Resize(uint64_t width, uint64_t height)
     
     if (StencilAttachement())
     {
-        std::static_pointer_cast<CRenderTargetDepthOGL1_5>(StencilAttachement())->Allocate(width, height);
+        std::static_pointer_cast<CRenderTargetStencilOGL1_5>(StencilAttachement())->Allocate(width, height);
     }
     
     if (IsValid())

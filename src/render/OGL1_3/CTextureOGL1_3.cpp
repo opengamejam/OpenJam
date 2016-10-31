@@ -8,7 +8,6 @@
 #if defined(RENDER_OGL1_3)
 
 #include "CTextureOGL1_3.h"
-#include "IImage.h"
 
 using namespace jam;
 
@@ -103,175 +102,20 @@ static const std::map<ITexture::TextureFilters, float> s_GLFilters = {
     {ITexture::TextureFilters::UseMipMaps, GL_LINEAR_MIPMAP_NEAREST}
 };
 
-INL float TextureFilterToGlFilter(ITexture::TextureFilters filter);
-INL int TexelFormatsToGlInternalFormat(TexelFormats texelFormat);
-INL int TexelFormatsToGlFormat(TexelFormats texelFormat);
-INL int TexelTypeToGlType(TexelTypes texelType, TexelFormats texelFormat);
-
 // *****************************************************************************
 // Public Methods
 // *****************************************************************************
 
 CTextureOGL1_3::CTextureOGL1_3()
-: m_Id(0)
-, m_Filter(ITexture::Linear)
-, m_IsDirty(true)
 {
-	glEnable(GL_TEXTURE_2D);
-    //assert(glGetError() == GL_NO_ERROR);
+    glEnable(GL_TEXTURE_2D);
 }
 
 CTextureOGL1_3::~CTextureOGL1_3()
 {
-    glDeleteTextures(1, (GLuint*)(&m_Id));
 }
 
-void CTextureOGL1_3::Bind()
-{
-    if (!IsValid())
-    {
-        return;
-    }
-    
-    glClientActiveTextureARB(GL_TEXTURE0);
-    glActiveTextureARB(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, m_Id);    // TODO: texture type
-}
-
-void CTextureOGL1_3::Unbind()
-{
-    if (!IsValid())
-    {
-        return;
-    }
-    
-    glClientActiveTextureARB(GL_TEXTURE0);
-    glActiveTextureARB(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, 0);    // TODO: texture type
-}
-
-void CTextureOGL1_3::Filter(ITexture::TextureFilters filter)
-{
-    if (!IsValid())
-    {
-        return;
-    }
-    
-    m_Filter = filter;
-    m_IsDirty = true;
-    
-    GLfloat parameter = TextureFilterToGlFilter(filter);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, parameter);
-    if (filter == ITexture::TextureFilters::Linear)
-    {
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    }
-    else
-    {
-        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, parameter);
-    }
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    
-    //assert(glGetError() == GL_NO_ERROR);
-}
-
-ITexture::TextureFilters CTextureOGL1_3::Filter() const
-{
-    return m_Filter;
-}
-
-bool CTextureOGL1_3::AssignImage(IImagePtr image)
-{
-    if (!IsValid())
-    {
-        glGenTextures(1, (GLuint*)(&m_Id));
-        //glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    }
-    
-    if (image)
-    {
-        Bind();
-        
-        assert(image && !image->RawData().empty());
-        
-        int glInternalFormat = TexelFormatsToGlInternalFormat(image->TexelFormat());
-        int glFormat = TexelFormatsToGlFormat(image->TexelFormat());
-        int glType = TexelTypeToGlType(image->TexelType(), image->TexelFormat());
-        
-        uint32_t mipDataOffset = 0;
-        for (uint32_t i = 0; i < image->MipsCount(); ++i)
-        {
-            uint32_t mipWidth = std::max<uint32_t>(image->Width() >> i, 1);
-            uint32_t mipHeight = std::max<uint32_t>(image->Height() >> i, 1);
-            uint32_t mipSize = std::max<uint32_t>(32, mipWidth * mipHeight * image->Bpp() / 8);
-            
-            if (image->IsCompressed())
-            {
-                glCompressedTexImage2D(GL_TEXTURE_2D, i, glInternalFormat, mipWidth, mipHeight, 0,
-                                       (GLsizei)mipSize, &image->RawData()[mipDataOffset]);
-            }
-            else
-            {
-                glTexImage2D(GL_TEXTURE_2D, i, glInternalFormat, mipWidth, mipHeight, 0, glFormat, glType,
-                             &image->RawData()[mipDataOffset]);
-            }
-            
-            mipDataOffset += mipSize;
-        }
-        
-        //assert(glGetError() == GL_NO_ERROR);
-
-        if (image->MipsCount() > 1)
-        {
-            Filter(ITexture::TextureFilters::UseMipMaps);
-        }
-        else
-        {
-            Filter(ITexture::TextureFilters::Linear);
-        }
-        
-        Unbind();
-        
-        return true;
-    }
-    
-    return false;
-}
-
-const std::string& CTextureOGL1_3::Hash()
-{
-    if (m_IsDirty)
-    {
-        HashMe();
-        m_IsDirty = false;
-    }
-    
-    return m_Hash;
-}
-
-// *****************************************************************************
-// Protected Methods
-// *****************************************************************************
-
-// *****************************************************************************
-// Private Methods
-// *****************************************************************************
-
-void CTextureOGL1_3::HashMe()
-{
-    std::stringstream ss;
-    ss << Filter();
-    
-    m_Hash = ss.str();
-}
-
-bool CTextureOGL1_3::IsValid() const
-{
-    return (m_Id != 0);
-}
-
-INL float TextureFilterToGlFilter(ITexture::TextureFilters filter)
+GLfloat CTextureOGL1_3::TextureFilterToGlFilter(ITexture::TextureFilters filter)
 {
     GLfloat parameter = GL_LINEAR;
     
@@ -285,7 +129,7 @@ INL float TextureFilterToGlFilter(ITexture::TextureFilters filter)
     return parameter;
 }
 
-INL int TexelFormatsToGlInternalFormat(TexelFormats texelFormat)
+GLenum CTextureOGL1_3::TexelFormatsToGlInternalFormat(TexelFormats texelFormat)
 {
     std::map<TexelFormats, int>::const_iterator iter = s_GlInternalFormats.find(texelFormat);
     assert(iter != s_GlInternalFormats.end());
@@ -293,30 +137,27 @@ INL int TexelFormatsToGlInternalFormat(TexelFormats texelFormat)
     return iter->second;
 }
 
-INL int TexelFormatsToGlFormat(TexelFormats texelFormat)
+GLenum CTextureOGL1_3::TexelFormatsToGlFormat(TexelFormats texelFormat)
 {
     std::map<TexelFormats, int>::const_iterator iter = s_GlFormats.find(texelFormat);
     assert(iter != s_GlFormats.end());
-
+    
     return iter->second;
 }
 
-INL int TexelTypeToGlType(TexelTypes texelType, TexelFormats texelFormat)
+GLenum CTextureOGL1_3::TexelTypeToGlType(TexelTypes texelType, TexelFormats texelFormat)
 {
     int glType = GL_UNSIGNED_BYTE;
     switch (texelFormat) {
         case TF_RGB565:
-        case TF_RGB565_TWID:
             glType = GL_UNSIGNED_SHORT_5_6_5;
             break;
             
         case TF_RGBA4444:
-        case TF_ARGB4444_TWID:
             glType = GL_UNSIGNED_SHORT_4_4_4_4;
             break;
             
         case TF_RGBA5551:
-        case TF_ARGB1555_TWID:
             glType = GL_UNSIGNED_SHORT_5_5_5_1;
             break;
             
@@ -331,4 +172,12 @@ INL int TexelTypeToGlType(TexelTypes texelType, TexelFormats texelFormat)
     return glType;
 }
 
-#endif // RENDER_OGL1_3
+// *****************************************************************************
+// Protected Methods
+// *****************************************************************************
+
+// *****************************************************************************
+// Private Methods
+// *****************************************************************************
+
+#endif /* defined(RENDER_OGL1_3) */

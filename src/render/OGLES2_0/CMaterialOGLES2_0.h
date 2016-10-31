@@ -10,15 +10,26 @@
 #ifndef CMATERIALOGLES2_0_H
 #define CMATERIALOGLES2_0_H
 
-#include "CMaterialOGL2_0.h"
+#include "CMaterialOGLBase.h"
 
 namespace jam
 {
-
-typedef CMaterialOGL2_0 CMaterialOGLES2_0;
-
+    
+class CMaterialOGLES2_0 : public CMaterialOGLBase
+{
+public:
+    CMaterialOGLES2_0();
+    virtual ~CMaterialOGLES2_0();
+    
+    /*
+     * OpenGL specific
+     */
+    virtual GLenum ConvertTestFunc(IMaterial::TestFuncs func);
+    virtual GLenum ConvertOperation(IMaterial::Operations op);
+};
+    
 }; // namespace jam
 
-#endif /* defined(CMATERIALOGLES2_0_H) */
+#endif /* CMATERIALOGLES2_0_H */
 
-#endif // RENDER_OGLES2_0
+#endif /* defined(RENDER_OGLES2_0) */

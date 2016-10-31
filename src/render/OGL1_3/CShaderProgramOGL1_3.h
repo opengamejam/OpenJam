@@ -10,12 +10,12 @@
 #ifndef CSHADERPROGRAMOGL1_3_H
 #define	CSHADERPROGRAMOGL1_3_H
 
-#include "IShaderProgram.h"
+#include "CShaderProgramOGLBase.h"
 
 namespace jam
 {
-
-class CShaderProgramOGL1_3 : public IShaderProgram
+    
+class CShaderProgramOGL1_3 : public CShaderProgramOGLBase
 {
 public:
     CShaderProgramOGL1_3();
@@ -82,9 +82,9 @@ private:
     TUniFloat m_UniFloatVec;
     TUniMatrix4Float m_UniMatrixFloat;
 };
-
+    
 }; // namespace jam
 
 #endif	/* CSHADERPROGRAMOGL1_3_H */
 
-#endif /* RENDER_OGL1_3 */
+#endif /* defined(RENDER_OGL1_3) */

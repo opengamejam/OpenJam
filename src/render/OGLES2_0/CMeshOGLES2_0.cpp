@@ -23,8 +23,6 @@ using namespace jam;
 
 CMeshOGLES2_0::CMeshOGLES2_0()
 	: m_VAO(0)
-	, m_VertexBuffer(nullptr)
-	, m_IndexBuffer(nullptr)
 {
 #ifdef GL_GLEXT_PROTOTYPES // TODO:
 	glGenVertexArraysOES(1, &m_VAO);
@@ -77,58 +75,6 @@ bool CMeshOGLES2_0::IsValid() const
 #else
 	return true;
 #endif
-}
-
-IVertexBufferPtr CMeshOGLES2_0::VertexBuffer() const
-{
-	return m_VertexBuffer;
-}
-
-void CMeshOGLES2_0::VertexBuffer(IVertexBufferPtr vertexBuffer)
-{
-	if (m_VertexBuffer != vertexBuffer)
-	{
-		Bind();
-
-		if (m_VertexBuffer)
-		{
-			m_VertexBuffer->Unbind();
-		}
-		if (vertexBuffer)
-		{
-			vertexBuffer->Bind();
-		}
-
-		Unbind();
-	}
-
-	m_VertexBuffer = vertexBuffer;
-}
-
-IIndexBufferPtr CMeshOGLES2_0::IndexBuffer() const
-{
-	return m_IndexBuffer;
-}
-
-void CMeshOGLES2_0::IndexBuffer(IIndexBufferPtr indexBuffer)
-{
-	if (m_IndexBuffer != indexBuffer)
-	{
-		Bind();
-
-		if (m_IndexBuffer)
-		{
-			m_IndexBuffer->Unbind();
-		}
-		if (indexBuffer)
-		{
-			indexBuffer->Bind();
-		}
-
-		Unbind();
-	}
-
-	m_IndexBuffer = indexBuffer;
 }
 
 // *****************************************************************************

@@ -5,7 +5,7 @@
 //  Created by Yevgeniy Logachev on 9/2/16.
 //
 //
-#if defined(RENDER_OGL1_3) || defined(RENDER_OGLES1_0)
+#if defined(RENDER_OGL1_3)
 
 #include "CRenderTargetColorOGL1_3.h"
 
@@ -20,66 +20,59 @@ using namespace jam;
 // *****************************************************************************
 
 CRenderTargetColorOGL1_3::CRenderTargetColorOGL1_3()
-: m_Id(0)
 {
-
 }
 
 CRenderTargetColorOGL1_3::~CRenderTargetColorOGL1_3()
 {
-
 }
 
-void CRenderTargetColorOGL1_3::Initialize()
+GLenum CRenderTargetColorOGL1_3::ConvertInternalFormat(InternalFormats internalFormat)
 {
-    if (!IsInitialized())
+    switch (internalFormat)
     {
-        glGenRenderbuffers(1, &m_Id);
+        case ColorR8:
+            return GL_R8I;
+            break;
+        case ColorR16:
+            return GL_R16I;
+            break;
+        case ColorR32:
+            return GL_R32I;
+            break;
+        case ColorRGB888:
+            return GL_RGB8;
+            break;
+        case ColorRGB565:
+            return GL_RGB565;
+            break;
+        case ColorRGBA8888:
+            return GL_RGBA8;
+            break;
+        case ColorRGBA4444:
+            return GL_RGBA4;
+            break;
+        case ColorRGB10_A2:
+            return GL_RGB10_A2;
+            break;
+        case Depth16:
+            return GL_DEPTH_COMPONENT16;
+            break;
+        case Depth24:
+            return GL_DEPTH_COMPONENT24;
+            break;
+        case Depth32:
+            return GL_DEPTH_COMPONENT32F;
+            break;
+        case Stencil8:
+            return GL_STENCIL_INDEX8;
+            break;
+        case Depth24_Stencil8:
+            return GL_DEPTH24_STENCIL8;
+            break;
     }
-}
-
-void CRenderTargetColorOGL1_3::Shutdown()
-{
-    if (IsInitialized())
-    {
-        glDeleteRenderbuffers(1, &m_Id);
-    }
-}
-
-bool CRenderTargetColorOGL1_3::IsInitialized()
-{
-    return (m_Id > 0);
-}
-
-void CRenderTargetColorOGL1_3::Allocate(uint64_t width, uint64_t height)
-{
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8_OES, width, height);
-}
-
-void CRenderTargetColorOGL1_3::Bind() const
-{
-    glBindRenderbuffer(GL_RENDERBUFFER, m_Id);
-}
-
-void CRenderTargetColorOGL1_3::Unbind() const
-{
-    glBindRenderbuffer(GL_RENDERBUFFER, 0);
-}
-
-void CRenderTargetColorOGL1_3::BindToFrameBuffer(uint64_t colorAttachementIdx)
-{
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER,
-                              GL_COLOR_ATTACHMENT0 + colorAttachementIdx,
-                              GL_RENDERBUFFER,
-                              m_Id);
-}
-
-void CRenderTargetColorOGL1_3::UnbindFromFrameBuffer(uint64_t colorAttachementIdx)
-{
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER,
-                              GL_COLOR_ATTACHMENT0 + colorAttachementIdx,
-                              GL_RENDERBUFFER,
-                              0);
+    
+    return GL_RGB8;
 }
 
 // *****************************************************************************
@@ -90,4 +83,4 @@ void CRenderTargetColorOGL1_3::UnbindFromFrameBuffer(uint64_t colorAttachementId
 // Private Methods
 // *****************************************************************************
 
-#endif /* defined(RENDER_OGL1_3) || defined(RENDER_OGLES1_0) */
+#endif /* defined(RENDER_OGL1_3) */

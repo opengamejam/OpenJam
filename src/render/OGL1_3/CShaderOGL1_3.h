@@ -10,12 +10,12 @@
 #ifndef CSHADEROGL1_3_H
 #define	CSHADEROGL1_3_H
 
-#include "IShader.h"
+#include "CShaderOGLBase.h"
 
 namespace jam
 {
-
-class CShaderOGL1_3 : public IShader
+    
+class CShaderOGL1_3 : public CShaderOGLBase
 {
 public:
     CShaderOGL1_3();
@@ -28,9 +28,9 @@ public:
     virtual const std::string& Source() const override;
     virtual void AddDefinition(const std::string& identifier) override;
 };
-
+    
 }; // namespace jam
 
 #endif	/* CSHADEROGL1_3_H */
 
-#endif /* RENDER_OGL1_3 */
+#endif /* defined(RENDER_OGL1_3) */

@@ -10,15 +10,28 @@
 #ifndef CTEXTUREOGLES2_0_H
 #define	CTEXTUREOGLES2_0_H
 
-#include "CTextureOGL2_0.h"
+#include "CTextureOGLBase.h"
 
 namespace jam
 {
-
-typedef CTextureOGL2_0 CTextureOGLES2_0;
-
+    
+class CTextureOGLES2_0 : public CTextureOGLBase
+{
+public:
+    CTextureOGLES2_0();
+    virtual ~CTextureOGLES2_0();
+    
+    /*
+     * OpenGL specific
+     */
+    virtual GLfloat TextureFilterToGlFilter(ITexture::TextureFilters filter) override;
+    virtual GLenum TexelFormatsToGlInternalFormat(TexelFormats texelFormat) override;
+    virtual GLenum TexelFormatsToGlFormat(TexelFormats texelFormat) override;
+    virtual GLenum TexelTypeToGlType(TexelTypes texelType, TexelFormats texelFormat) override;
+};
+    
 }; // namespace jam
 
 #endif /* CTEXTUREOGLES2_0_H */
 
-#endif /* RENDER_OGLES2_0 */
+#endif /* defined(RENDER_OGLES2_0) */

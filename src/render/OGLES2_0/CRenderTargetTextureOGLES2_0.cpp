@@ -19,6 +19,14 @@ using namespace jam;
 // Public Methods
 // *****************************************************************************
 
+CRenderTargetTextureOGLES2_0::CRenderTargetTextureOGLES2_0()
+{
+}
+
+CRenderTargetTextureOGLES2_0::~CRenderTargetTextureOGLES2_0()
+{
+}
+
 // *****************************************************************************
 // Protected Methods
 // *****************************************************************************
@@ -27,4 +35,4 @@ using namespace jam;
 // Private Methods
 // *****************************************************************************
 
-#endif /* RENDER_OGLES2_0 */
+#endif /* defined(RENDER_OGLES2_0) */

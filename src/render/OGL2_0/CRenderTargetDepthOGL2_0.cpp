@@ -41,9 +41,11 @@ GLenum CRenderTargetDepthOGL2_0::ConvertToInternalFormat(InternalFormats interna
         case Depth32:
             return GL_DEPTH_COMPONENT32F;
             break;
+#if GL_EXT_packed_depth_stencil
         case Depth24_Stencil8:
             return GL_DEPTH24_STENCIL8;
             break;
+#endif
             
         default:
             // Unacceptible type of depth buffer

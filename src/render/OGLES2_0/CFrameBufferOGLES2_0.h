@@ -10,15 +10,20 @@
 #ifndef CFRAMEBUFFEROGLES2_0_H
 #define CFRAMEBUFFEROGLES2_0_H
 
-#include "CFrameBufferOGL2_0.h"
+#include "CFrameBufferOGLBase.h"
 
 namespace jam
 {
     
-typedef CFrameBufferOGL2_0 CFrameBufferOGLES2_0;
+class CFrameBufferOGLES2_0 : public CFrameBufferOGLBase
+{
+public:
+    CFrameBufferOGLES2_0(uint32_t width, uint32_t height);
+    virtual ~CFrameBufferOGLES2_0();
+};
     
 }; // namespace jam
 
-#endif /* defined(CFRAMEBUFFEROGLES2_0_H) */
+#endif /* CFRAMEBUFFEROGLES2_0_H */
 
-#endif /* RENDER_OGLES2_0 */
+#endif /* defined(RENDER_OGLES2_0) */

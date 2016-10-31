@@ -67,4 +67,4 @@ void CShaderOGL1_3::AddDefinition(const std::string& identifier)
 // Private Methods
 // *****************************************************************************
 
-#endif // RENDER_OGL1_3
+#endif /* defined(RENDER_OGL1_3) */

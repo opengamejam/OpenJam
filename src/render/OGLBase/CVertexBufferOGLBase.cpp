@@ -39,7 +39,11 @@ void CVertexBufferOGLBase::Initialize(uint64_t elementSize)
 {
     if (!IsValid())
     {
+#ifdef GL_ARRAY_BUFFER
         glGenBuffers(1, &m_Id);
+#else
+        m_Id = 1;
+#endif
     }
     ElementSize(elementSize);
 }
@@ -76,7 +80,9 @@ void CVertexBufferOGLBase::Shutdown()
 {
     if (IsValid())
     {
+#ifdef GL_ARRAY_BUFFER
         glDeleteBuffers(1, &m_Id);
+#endif
         m_Id = 0;
     }
 }
@@ -94,9 +100,11 @@ uint64_t CVertexBufferOGLBase::SizeRaw() const
 void CVertexBufferOGLBase::ResizeRaw(uint64_t newSize)
 {
     m_Buffer.resize(newSize);
+#ifdef GL_ARRAY_BUFFER
     glBindBuffer(GL_ARRAY_BUFFER, m_Id);
     glBufferData(GL_ARRAY_BUFFER, m_Buffer.size(), m_Buffer.data(), GL_DYNAMIC_DRAW);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+#endif
     //assert(glGetError() == GL_NO_ERROR);
 }
 
@@ -123,6 +131,7 @@ void CVertexBufferOGLBase::Unlock(bool isNeedCommit)
         return;
     }
     
+#ifdef GL_ARRAY_BUFFER
     if (isNeedCommit)
     {
         glBindBuffer(GL_ARRAY_BUFFER, m_Id);
@@ -130,6 +139,7 @@ void CVertexBufferOGLBase::Unlock(bool isNeedCommit)
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         //assert(glGetError() == GL_NO_ERROR);
     }
+#endif
     
     m_IsLocked = false;
 }
@@ -151,12 +161,16 @@ bool CVertexBufferOGLBase::ZeroStride()
 
 void CVertexBufferOGLBase::Bind()
 {
+#ifdef GL_ARRAY_BUFFER
     glBindBuffer(GL_ARRAY_BUFFER, m_Id);
+#endif
 }
 
 void CVertexBufferOGLBase::Unbind()
 {
+#ifdef GL_ARRAY_BUFFER
     glBindBuffer(GL_ARRAY_BUFFER, 0);
+#endif
 }
 
 GLenum CVertexBufferOGLBase::ConvertDataType(DataTypes dataType)

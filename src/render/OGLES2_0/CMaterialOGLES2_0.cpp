@@ -19,6 +19,92 @@ using namespace jam;
 // Public Methods
 // *****************************************************************************
 
+CMaterialOGLES2_0::CMaterialOGLES2_0()
+{
+}
+
+CMaterialOGLES2_0::~CMaterialOGLES2_0()
+{
+}
+
+GLenum CMaterialOGLES2_0::ConvertTestFunc(IMaterial::TestFuncs func)
+{
+    unsigned int stencilFunc = GL_NEVER;
+    switch (func)
+    {
+        case IMaterial::Never:
+            stencilFunc = GL_NEVER;
+            break;
+            
+        case IMaterial::Less:
+            stencilFunc = GL_LESS;
+            break;
+            
+        case IMaterial::Equal:
+            stencilFunc = GL_EQUAL;
+            break;
+            
+        case IMaterial::LEqual:
+            stencilFunc = GL_LEQUAL;
+            break;
+            
+        case IMaterial::Greater:
+            stencilFunc = GL_GREATER;
+            break;
+            
+        case IMaterial::NotEqual:
+            stencilFunc = GL_NOTEQUAL;
+            break;
+            
+        case IMaterial::GEqual:
+            stencilFunc = GL_GEQUAL;
+            break;
+            
+        case IMaterial::Always:
+            stencilFunc = GL_ALWAYS;
+            break;
+    };
+    
+    return stencilFunc;
+}
+
+GLenum CMaterialOGLES2_0::ConvertOperation(IMaterial::Operations op)
+{
+    unsigned int operation = GL_KEEP;
+    switch (op)
+    {
+        case IMaterial::Keep:
+            operation = GL_KEEP;
+            break;
+            
+        case IMaterial::Replace:
+            operation = GL_REPLACE;
+            break;
+            
+        case IMaterial::Incr:
+            operation = GL_INCR;
+            break;
+            
+        case IMaterial::Decr:
+            operation = GL_DECR;
+            break;
+            
+        case IMaterial::Invert:
+            // TODO:
+            break;
+            
+        case IMaterial::IncrWrap:
+            // TODO:
+            break;
+            
+        case IMaterial::DecrWrap:
+            // TODO:
+            break;
+    };
+    
+    return operation;
+}
+
 // *****************************************************************************
 // Protected Methods
 // *****************************************************************************
@@ -27,4 +113,4 @@ using namespace jam;
 // Private Methods
 // *****************************************************************************
 
-#endif // RENDER_OGLES2_0
+#endif /* defined(RENDER_OGLES2_0) */

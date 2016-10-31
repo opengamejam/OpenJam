@@ -32,22 +32,13 @@ using namespace jam;
 // Public Methods
 // *****************************************************************************
 
-INL int ConvertPrimitiveType(IMaterial::PrimitiveTypes type);
-
 CRendererOGLES2_0::CRendererOGLES2_0(IRenderViewPtr renderView)
-: m_RenderView(renderView)
+: CRendererOGLBase(renderView)
 {
-    
 }
 
 CRendererOGLES2_0::~CRendererOGLES2_0()
 {
-    
-}
-
-IRenderViewPtr CRendererOGLES2_0::RenderView() const
-{
-    return m_RenderView;
 }
 
 IFrameBufferPtr CRendererOGLES2_0::CreateFrameBuffer(uint32_t width, uint32_t height)
@@ -124,19 +115,17 @@ IShaderProgramPtr CRendererOGLES2_0::CreateShaderProgram()
 
 void CRendererOGLES2_0::Draw(IMeshPtr mesh, IMaterialPtr material, IShaderProgramPtr shader)
 {
-    if (!mesh ||
-        !material)
-    {
-        return;
-    }
+    assert(mesh && material);
+    IVertexBufferPtr vertexBuffer = mesh->VertexBuffer();
+    IIndexBufferPtr indexBuffer = mesh->IndexBuffer();
     
-    if (mesh->IndexBuffer())
+    if (indexBuffer)
     {
-        Draw(mesh->VertexBuffer(), mesh->IndexBuffer(), material);
+        Draw(vertexBuffer, indexBuffer, material);
     }
     else
     {
-        Draw(mesh->VertexBuffer(), material);
+        Draw(vertexBuffer, material);
     }
 }
 
@@ -173,45 +162,4 @@ void CRendererOGLES2_0::Draw(IVertexBufferPtr vertexBuffer, IIndexBufferPtr inde
 // Private Methods
 // *****************************************************************************
 
-INL int ConvertPrimitiveType(IMaterial::PrimitiveTypes type)
-{
-    int primitiveType = GL_TRIANGLES;
-    switch (type)
-    {
-        case IMaterial::Points:
-            primitiveType = GL_POINTS;
-            break;
-            
-        case IMaterial::Lines:
-            primitiveType = GL_LINES;
-            break;
-            
-        case IMaterial::LinesLoop:
-            primitiveType = GL_LINE_LOOP;
-            break;
-            
-        case IMaterial::LinesStrip:
-            primitiveType = GL_LINE_STRIP;
-            break;
-            
-        case IMaterial::Triangles:
-            primitiveType = GL_TRIANGLES;
-            break;
-            
-        case IMaterial::TrianglesFan:
-            primitiveType = GL_TRIANGLE_FAN;
-            break;
-            
-        case IMaterial::TrianglesStrip:
-            primitiveType = GL_TRIANGLE_STRIP;
-            break;
-            
-        default:
-            break;
-    }
-    
-    return primitiveType;
-}
-
-
-#endif // RENDER_OGLES2_0
+#endif /* defined(RENDER_OGLES2_0) */

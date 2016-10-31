@@ -311,6 +311,118 @@ void CMaterialOGLBase::ApplyState(IMaterial::MaterialState state, IMaterial::Mat
     //assert(glGetError() == GL_NO_ERROR);
 }
 
+/* KOS support
+ 
+ 
+ void CMaterialOGL1_3::ApplyState(IMaterial::MaterialState state, IMaterial::MaterialState prevState)
+{
+#if !defined(OS_KOS)
+    if (state.lineWidth != prevState.lineWidth)
+    {
+        glLineWidth(state.lineWidth);
+    }
+#endif
+    
+    if (state.cullFace != prevState.cullFace)
+    {
+        if (state.cullFace)
+        {
+            glEnable(GL_CULL_FACE);
+        }
+        else
+        {
+            glDisable(GL_CULL_FACE);
+        }
+    }
+    
+    // Depth
+    if (state.depthTest.isEnabled != prevState.depthTest.isEnabled)
+    {
+        if (state.depthTest.isEnabled)
+        {
+            glEnable(GL_DEPTH_TEST);
+        }
+        else
+        {
+            glDisable(GL_DEPTH_TEST);
+        }
+    }
+    if (state.depthTest.isWriteEnabled != prevState.depthTest.isWriteEnabled)
+    {
+        glDepthMask(state.depthTest.isWriteEnabled ? GL_TRUE : GL_FALSE);
+    }
+    if (state.depthTest.func != prevState.depthTest.func)
+    {
+        glDepthFunc(ConvertTestFunc(state.depthTest.func));
+    }
+#if !defined(OS_KOS)
+    if (state.depthTest.rangeNear != prevState.depthTest.rangeNear ||
+        state.depthTest.rangeFar != prevState.depthTest.rangeFar)
+    {
+        glDepthRange(state.depthTest.rangeNear, state.depthTest.rangeFar);
+    }
+#endif
+    
+    // Stencil
+#ifdef GL_STENCIL_TEST
+    if (state.stencilTest.isEnabled != prevState.stencilTest.isEnabled)
+    {
+        if (state.stencilTest.isEnabled)
+        {
+            glEnable(GL_STENCIL_TEST);
+        }
+        else
+        {
+            glDisable(GL_STENCIL_TEST);
+        }
+    }
+    
+#if !defined(OS_KOS)
+    if (state.stencilTest.func != prevState.stencilTest.func ||
+        state.stencilTest.ref != prevState.stencilTest.ref ||
+        state.stencilTest.mask != prevState.stencilTest.mask)
+    {
+        glStencilFunc(ConvertTestFunc(state.stencilTest.func), state.stencilTest.ref, state.stencilTest.mask);
+    }
+    if (state.stencilTest.failOp != prevState.stencilTest.failOp ||
+        state.stencilTest.zFailOp != prevState.stencilTest.zFailOp ||
+        state.stencilTest.zPassOp != prevState.stencilTest.zPassOp)
+    {
+        glStencilOp(ConvertOperation(state.stencilTest.failOp),
+                    ConvertOperation(state.stencilTest.zFailOp),
+                    ConvertOperation(state.stencilTest.zPassOp));
+    }
+#endif // !defined(OS_KOS)
+    
+#endif
+    
+    // Blending
+    if (state.opacity != prevState.opacity)
+    {
+        if (state.opacity)
+        {
+            glDisable(GL_BLEND);
+        }
+        else
+        {
+            glEnable(GL_BLEND);
+        }
+    }
+    
+    {
+        //glColorMask(GL_TRUE, GL_TRUE, GL_TRUE, GL_TRUE);
+        
+        
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        
+        glShadeModel(GL_SMOOTH);
+        
+        //glFrontFace(GL_CCW);
+    }
+    
+    //assert(glGetError() == GL_NO_ERROR);
+}*/
+
 void CMaterialOGLBase::HashMe()
 {
     std::stringstream ss;

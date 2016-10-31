@@ -26,7 +26,7 @@ using namespace jam;
 // Public Methods
 // *****************************************************************************
 
-CRenderViewOSX::CRenderViewOSX(unsigned int width, unsigned int height, void* glkView, RenderApi renderApi)
+CRenderViewOSX::CRenderViewOSX(uint32_t width, uint32_t height, void* glkView, RenderApi renderApi)
 	: IRenderView(width, height, 1.0f)
 	, m_GLView((__bridge NSOpenGLView*)glkView)
     , m_GLContext(nil)
@@ -104,7 +104,7 @@ void CRenderViewOSX::CreateView()
     stencilTarget->Allocate(RealWidth(), RealHeight());
     
     m_DefaultRenderTarget = m_Renderer->CreateFrameBuffer(RealWidth(), RealHeight());
-    // Init our renderer.  Use 0 for the defaultFBO which is appropriate for
+    // Use 0 for the defaultFBO which is appropriate for
     // OSX (but not iOS since iOS apps must create their own FBO)
     std::static_pointer_cast<CFrameBufferOGLBase>(m_DefaultRenderTarget)->InitializeWithFBO(0);
     m_DefaultRenderTarget->Bind();
@@ -119,12 +119,10 @@ void CRenderViewOSX::CreateView()
 void CRenderViewOSX::Begin() const
 {
     [m_GLContext makeCurrentContext];
-    //glBindRenderbuffer(GL_RENDERBUFFER, m_RenderBuffer);
 }
 
 void CRenderViewOSX::End() const
 {
-    //glBindRenderbuffer(GL_RENDERBUFFER, 0);
     [m_GLContext flushBuffer];
 }
 

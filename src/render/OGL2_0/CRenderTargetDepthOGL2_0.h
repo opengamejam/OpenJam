@@ -14,6 +14,7 @@
 
 namespace jam
 {
+    
 class CRenderTargetDepthOGL2_0 : public CRenderTargetDepthOGLBase
 {
     JAM_OBJECT

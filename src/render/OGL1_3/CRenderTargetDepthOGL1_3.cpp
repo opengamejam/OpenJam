@@ -5,9 +5,10 @@
 //  Created by Yevgeniy Logachev on 9/2/16.
 //
 //
-#if defined(RENDER_OGL1_3) || defined(RENDER_OGLES1_0)
+#if defined(RENDER_OGL1_3)
 
 #include "CRenderTargetDepthOGL1_3.h"
+#include "CRenderTargetStencilOGL1_3.h"
 
 using namespace jam;
 
@@ -20,66 +21,47 @@ using namespace jam;
 // *****************************************************************************
 
 CRenderTargetDepthOGL1_3::CRenderTargetDepthOGL1_3()
-: m_Id(0)
 {
-
 }
 
 CRenderTargetDepthOGL1_3::~CRenderTargetDepthOGL1_3()
 {
-
 }
 
-void CRenderTargetDepthOGL1_3::Initialize()
+GLenum CRenderTargetDepthOGL1_3::ConvertToInternalFormat(InternalFormats internalFormat)
 {
-    if (!IsInitialized())
+    switch (internalFormat)
     {
-        glGenRenderbuffers(1, &m_Id);
+        case Depth16:
+            return GL_DEPTH_COMPONENT16;
+            break;
+        case Depth24:
+            return GL_DEPTH_COMPONENT24;
+            break;
+        case Depth32:
+            return GL_DEPTH_COMPONENT32F;
+            break;
+        case Depth24_Stencil8:
+            return GL_DEPTH24_STENCIL8;
+            break;
+            
+        default:
+            // Unacceptible type of depth buffer
+            assert(false);
+            break;
     }
+    
+    return GL_DEPTH_COMPONENT24;
 }
 
-void CRenderTargetDepthOGL1_3::Shutdown()
+CRenderTargetStencilPtr CRenderTargetDepthOGL1_3::CreateStencilObject()
 {
-    if (IsInitialized())
-    {
-        glDeleteRenderbuffers(1, &m_Id);
-    }
-}
-
-bool CRenderTargetDepthOGL1_3::IsInitialized()
-{
-    return (m_Id > 0);
-}
-
-void CRenderTargetDepthOGL1_3::Allocate(uint64_t width, uint64_t height)
-{
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8_OES, width, height);
-}
-
-void CRenderTargetDepthOGL1_3::Bind() const
-{
-    glBindRenderbuffer(GL_RENDERBUFFER, m_Id);
-}
-
-void CRenderTargetDepthOGL1_3::Unbind() const
-{
-    glBindRenderbuffer(GL_RENDERBUFFER, 0);
-}
-
-void CRenderTargetDepthOGL1_3::BindToFrameBuffer()
-{
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER,
-                              GL_DEPTH_ATTACHMENT,
-                              GL_RENDERBUFFER,
-                              m_Id);
-}
-
-void CRenderTargetDepthOGL1_3::UnbindFromFrameBuffer()
-{
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER,
-                              GL_DEPTH_ATTACHMENT,
-                              GL_RENDERBUFFER,
-                              0);
+#if GL_EXT_packed_depth_stencil
+    CRenderTargetStencilPtr stencil(new CRenderTargetStencilOGL1_3());
+    return stencil;
+#else
+    return nullptr;
+#endif
 }
 
 // *****************************************************************************
@@ -90,4 +72,4 @@ void CRenderTargetDepthOGL1_3::UnbindFromFrameBuffer()
 // Private Methods
 // *****************************************************************************
 
-#endif /* defined(RENDER_OGL1_3) || defined(RENDER_OGLES1_0) */
+#endif /* defined(RENDER_OGL1_3) */

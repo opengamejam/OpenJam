@@ -38,7 +38,11 @@ void CIndexBufferOGLBase::Initialize(DataTypes dataType)
 {
     if (!IsValid())
     {
+#ifdef GL_ELEMENT_ARRAY_BUFFER
         glGenBuffers(1, &m_Id);
+#else
+        m_Id = 1;
+#endif
         m_Stream = IIndexBuffer::SIndexStream(shared_from_this());
         m_Stream.dataType = dataType;
     }
@@ -49,7 +53,9 @@ void CIndexBufferOGLBase::Shutdown()
 {
     if (IsValid())
     {
+#ifdef GL_ELEMENT_ARRAY_BUFFER
         glDeleteBuffers(1, &m_Id);
+#endif
         m_Id = 0;
     }
 }
@@ -67,9 +73,11 @@ uint64_t CIndexBufferOGLBase::SizeRaw() const
 void CIndexBufferOGLBase::ResizeRaw(uint64_t newSize)
 {
     m_Buffer.resize(newSize);
+#ifdef GL_ELEMENT_ARRAY_BUFFER
     Bind();
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_Buffer.size(), m_Buffer.data(), GL_DYNAMIC_DRAW);
     Unbind();
+#endif
     //assert(glGetError() == GL_NO_ERROR);
 }
 
@@ -96,6 +104,7 @@ bool CIndexBufferOGLBase::IsLocked() const
 
 void CIndexBufferOGLBase::Unlock(bool isNeedCommit)
 {
+#ifdef GL_ELEMENT_ARRAY_BUFFER
     if (isNeedCommit)
     {
         Bind();
@@ -103,17 +112,22 @@ void CIndexBufferOGLBase::Unlock(bool isNeedCommit)
         Unbind();
         //assert(glGetError() == GL_NO_ERROR);
     }
+#endif
     m_IsLocked = false;
 }
 
 void CIndexBufferOGLBase::Bind()
 {
+#ifdef GL_ELEMENT_ARRAY_BUFFER
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, m_Id);
+#endif
 }
 
 void CIndexBufferOGLBase::Unbind()
 {
+#ifdef GL_ELEMENT_ARRAY_BUFFER
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+#endif
 }
 
 // *****************************************************************************

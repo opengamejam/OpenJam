@@ -10,15 +10,26 @@
 #ifndef CRENDERTARGETCOLOROGLES2_0_H
 #define CRENDERTARGETCOLOROGLES2_0_H
 
-#include "CRenderTargetColorOGL2_0.h"
+#include "CRenderTargetColorOGLBase.h"
 
 namespace jam
 {
     
-typedef CRenderTargetColorOGL2_0 CRenderTargetColorOGLES2_0;
+class CRenderTargetColorOGLES2_0 : public CRenderTargetColorOGLBase
+{
+    JAM_OBJECT
+public:
+    CRenderTargetColorOGLES2_0();
+    virtual ~CRenderTargetColorOGLES2_0();
+    
+    /*
+     * OpenGL specific
+     */
+    virtual GLenum ConvertInternalFormat(InternalFormats internalFormat) override;
+};
     
 }; // namespace jam
 
 #endif /* CRENDERTARGETCOLOROGLES2_0_H */
 
-#endif /* RENDER_OGLES2_0 */
+#endif /* defined(RENDER_OGLES2_0) */

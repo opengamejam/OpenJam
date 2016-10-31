@@ -10,15 +10,26 @@
 #ifndef CRENDERTARGETSTENCILOGLES2_0_H
 #define CRENDERTARGETSTENCILOGLES2_0_H
 
-#include "CRenderTargetStencilOGL2_0.h"
+#include "CRenderTargetStencilOGLBase.h"
 
 namespace jam
 {
-
-typedef CRenderTargetStencilOGL2_0 CRenderTargetStencilOGLES2_0;
+    
+class CRenderTargetStencilOGLES2_0 : public CRenderTargetStencilOGLBase
+{
+    JAM_OBJECT
+public:
+    CRenderTargetStencilOGLES2_0();
+    virtual ~CRenderTargetStencilOGLES2_0();
+    
+    /*
+     * OpenGL specific
+     */
+    virtual GLenum ConvertToInternalFormat(InternalFormats internalFormat) override;
+};
     
 }; // namespace jam
 
 #endif /* CRENDERTARGETSTENCILOGLES2_0_H */
 
-#endif /* RENDER_OGLES2_0 */
+#endif /* defined(RENDER_OGLES2_0) */

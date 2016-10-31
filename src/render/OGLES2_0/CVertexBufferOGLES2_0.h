@@ -10,15 +10,23 @@
 #ifndef CVERTEXBUFFEROGLES2_0_H
 #define CVERTEXBUFFEROGLES2_0_H
 
-#include "CVertexBufferOGL2_0.h"
+#include "CVertexBufferOGLBase.h"
 
 namespace jam
 {
     
-typedef CVertexBufferOGL2_0 CVertexBufferOGLES2_0;
+class CVertexBufferOGLES2_0 : public CVertexBufferOGLBase
+{
+public:
+    CVertexBufferOGLES2_0();
+    virtual ~CVertexBufferOGLES2_0();
+    
+    virtual void Bind() override;
+    virtual void Unbind() override;
+};
     
 }; // namespace jam
 
 #endif /* defined(CVERTEXBUFFEROGLES2_0_H) */
 
-#endif /* RENDER_OGLES2_0 */
+#endif /* defined(RENDER_OGLES2_0) */

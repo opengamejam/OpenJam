@@ -5,7 +5,7 @@
 //  Created by Yevgeniy Logachev
 //  Copyright (c) 2014 Yevgeniy Logachev. All rights reserved.
 //
-#if defined(RENDER_OGL2_0) || defined(RENDER_OGLES2_0)
+#if defined(RENDER_OGL2_0)
 
 #include "CShaderOGL2_0.h"
 #include "CShaderSourceInsert.h"
@@ -21,8 +21,7 @@ using namespace jam;
 // *****************************************************************************
 
 CShaderOGL2_0::CShaderOGL2_0()
-: IShader()
-, m_Id(0)
+: m_Id(0)
 , m_IsCompiled(false)
 , m_Type(ShaderType::Vertex)
 {

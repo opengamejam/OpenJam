@@ -10,41 +10,28 @@
 #ifndef CTEXTUREOGL1_3_H
 #define	CTEXTUREOGL1_3_H
 
-#include "Global.h"
-#include "ITexture.h"
+#include "CTextureOGLBase.h"
 
 namespace jam
 {
-
-class CTextureOGL1_3 : public ITexture
+    
+class CTextureOGL1_3 : public CTextureOGLBase
 {
 public:
     CTextureOGL1_3();
     virtual ~CTextureOGL1_3();
     
-    virtual bool AssignImage(IImagePtr image) override;
-    
-    virtual void Filter(TextureFilters filter) override;
-    virtual TextureFilters Filter() const override;
-    
-    virtual void Bind() override;
-    virtual void Unbind() override;
-    virtual const std::string& Hash() override;
-    
-private:
-    bool IsValid() const;
-    void HashMe();
-    
-private:
-    uint32_t m_Id;
-    
-    TextureFilters m_Filter;
-    std::string m_Hash;
-    bool m_IsDirty;
+    /*
+     * OpenGL specific
+     */
+    virtual GLfloat TextureFilterToGlFilter(ITexture::TextureFilters filter) override;
+    virtual GLenum TexelFormatsToGlInternalFormat(TexelFormats texelFormat) override;
+    virtual GLenum TexelFormatsToGlFormat(TexelFormats texelFormat) override;
+    virtual GLenum TexelTypeToGlType(TexelTypes texelType, TexelFormats texelFormat) override;
 };
-
+    
 }; // namespace jam
 
 #endif /* CTEXTUREOGL1_3_H */
 
-#endif /* RENDER_OGL1_3 */
+#endif /* defined(RENDER_OGL1_3) */

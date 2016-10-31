@@ -20,8 +20,7 @@ using namespace jam;
 // *****************************************************************************
 
 CShaderProgramOGL2_0::CShaderProgramOGL2_0()
-: IShaderProgram()
-, m_ProgramObject(0)
+: m_ProgramObject(0)
 , m_IsLinked(false)
 {
     m_ProgramObject = glCreateProgram();

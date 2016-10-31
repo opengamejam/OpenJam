@@ -10,15 +10,20 @@
 #ifndef CINDEXBUFFEROGLES2_0_H
 #define CINDEXBUFFEROGLES2_0_H
 
-#include "CIndexBufferOGL2_0.h"
+#include "CIndexBufferOGLBase.h"
 
 namespace jam
 {
     
-typedef CIndexBufferOGL2_0 CIndexBufferOGLES2_0;
+class CIndexBufferOGLES2_0 : public CIndexBufferOGLBase
+{
+public:
+    CIndexBufferOGLES2_0();
+    virtual ~CIndexBufferOGLES2_0();
+};
     
 }; // namespace jam
 
-#endif /* defined(CINDEXBUFFEROGLES2_0_H) */
+#endif /* CINDEXBUFFEROGLES2_0_H */
 
-#endif /* RENDER_OGLES2_0 */
+#endif /* defined(RENDER_OGLES2_0) */

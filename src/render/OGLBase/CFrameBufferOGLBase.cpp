@@ -306,7 +306,10 @@ IFrameBuffer::TRawData CFrameBufferOGLBase::RawData()
     
     uint32_t rawdataSize = Width() * Height() * 4;
     IFrameBuffer::TRawData data(rawdataSize, 0);
+    
+#ifdef GL3_PROTOTYPES // TODO
     glReadPixels(0, 0, Width(), Height(), GL_RGBA, GL_UNSIGNED_BYTE, &data[0]);
+#endif
     
     Unbind();
     

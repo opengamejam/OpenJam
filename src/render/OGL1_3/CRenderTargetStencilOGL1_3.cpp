@@ -5,7 +5,7 @@
 //  Created by Yevgeniy Logachev on 9/2/16.
 //
 //
-#if defined(RENDER_OGL1_3) || defined(RENDER_OGLES1_0)
+#if defined(RENDER_OGL1_3)
 
 #include "CRenderTargetStencilOGL1_3.h"
 
@@ -20,66 +20,28 @@ using namespace jam;
 // *****************************************************************************
 
 CRenderTargetStencilOGL1_3::CRenderTargetStencilOGL1_3()
-: m_Id(0)
 {
-
 }
 
 CRenderTargetStencilOGL1_3::~CRenderTargetStencilOGL1_3()
 {
-
 }
 
-void CRenderTargetStencilOGL1_3::Initialize()
+GLenum CRenderTargetStencilOGL1_3::ConvertToInternalFormat(InternalFormats internalFormat)
 {
-    if (!IsInitialized())
+    switch (internalFormat)
     {
-        glGenRenderbuffers(1, &m_Id);
+        case Stencil8:
+            return GL_STENCIL_INDEX8;
+            break;
+            
+        default:
+            // Unacceptible type of depth buffer
+            assert(false);
+            break;
     }
-}
-
-void CRenderTargetStencilOGL1_3::Shutdown()
-{
-    if (IsInitialized())
-    {
-        glDeleteRenderbuffers(1, &m_Id);
-    }
-}
-
-bool CRenderTargetStencilOGL1_3::IsInitialized()
-{
-    return (m_Id > 0);
-}
-
-void CRenderTargetStencilOGL1_3::Allocate(uint64_t width, uint64_t height)
-{
-    glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA8_OES, width, height);
-}
-
-void CRenderTargetStencilOGL1_3::Bind() const
-{
-    glBindRenderbuffer(GL_RENDERBUFFER, m_Id);
-}
-
-void CRenderTargetStencilOGL1_3::Unbind() const
-{
-    glBindRenderbuffer(GL_RENDERBUFFER, 0);
-}
-
-void CRenderTargetStencilOGL1_3::BindToFrameBuffer()
-{
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER,
-                              GL_STENCIL_ATTACHMENT,
-                              GL_RENDERBUFFER,
-                              m_Id);
-}
-
-void CRenderTargetStencilOGL1_3::UnbindFromFrameBuffer()
-{
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER,
-                              GL_STENCIL_ATTACHMENT,
-                              GL_RENDERBUFFER,
-                              0);
+    
+    return GL_STENCIL_INDEX8;
 }
 
 // *****************************************************************************
@@ -90,4 +52,4 @@ void CRenderTargetStencilOGL1_3::UnbindFromFrameBuffer()
 // Private Methods
 // *****************************************************************************
 
-#endif /* defined(RENDER_OGL1_3) || defined(RENDER_OGLES1_0) */
+#endif /* defined(RENDER_OGL1_3) */

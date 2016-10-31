@@ -20,148 +20,16 @@ using namespace jam;
 // *****************************************************************************
 
 CVertexBufferOGL1_3::CVertexBufferOGL1_3()
-: m_Id(0)
-, m_ElementSize(0)
-, m_IsLocked(false)
-, m_ZeroStride(false)
 {
-    
 }
 
 CVertexBufferOGL1_3::~CVertexBufferOGL1_3()
 {
-    Shutdown();
-}
-
-void CVertexBufferOGL1_3::Initialize(uint64_t elementSize)
-{
-    if (!IsValid())
-    {
-#ifdef GL_ARRAY_BUFFER
-        glGenBuffers(1, &m_Id);
-#else
-        m_Id = 1;
-#endif
-    }
-    ElementSize(elementSize);
-}
-
-const IVertexBuffer::TVertexStreamMap& CVertexBufferOGL1_3::VertexStreams() const
-{
-    return m_VertexStreamers;
-}
-
-IVertexBuffer::SVertexStream& CVertexBufferOGL1_3::Lock(IVertexBuffer::VertexTypes vertexType)
-{
-    LockRaw();
-    
-    if (m_VertexStreamers.find(vertexType) == m_VertexStreamers.end())
-    {
-        uint64_t absoluteOffset = 0;
-        std::for_each(m_VertexStreamers.begin(), m_VertexStreamers.end(), [&](const TVertexStreamMap::value_type& value)
-        {
-            const IVertexBuffer::SVertexStream& stream = value.second;
-            absoluteOffset += (stream.DataSize() * Size());
-        });
-        
-        IVertexBuffer::SVertexStream stream = IVertexBuffer::SVertexStream(shared_from_this());
-        stream.streamIndex = m_VertexStreamers.size();
-        stream.absoluteOffset = absoluteOffset;
-        
-        m_VertexStreamers[vertexType] = stream;
-    }
-    
-    return m_VertexStreamers[vertexType];
-}
-
-void CVertexBufferOGL1_3::Shutdown()
-{
-    if (IsValid())
-    {
-#ifdef GL_ARRAY_BUFFER
-        glDeleteBuffers(1, &m_Id);
-#endif
-        m_Id = 0;
-    }
-}
-
-bool CVertexBufferOGL1_3::IsValid() const
-{
-    return (m_Id != 0);
-}
-
-uint64_t CVertexBufferOGL1_3::SizeRaw() const
-{
-    return m_Buffer.size();
-}
-
-void CVertexBufferOGL1_3::ResizeRaw(uint64_t newSize)
-{
-    m_Buffer.resize(newSize);
-#ifdef GL_ARRAY_BUFFER
-    glBindBuffer(GL_ARRAY_BUFFER, m_Id);
-    glBufferData(GL_ARRAY_BUFFER, m_Buffer.size(), m_Buffer.data(), GL_DYNAMIC_DRAW);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-    //assert(glGetError() == GL_NO_ERROR);
-#endif
-}
-
-uint64_t CVertexBufferOGL1_3::ElementSize() const
-{
-    return m_ElementSize;
-}
-
-void* CVertexBufferOGL1_3::LockRaw()
-{
-    m_IsLocked = true;
-    return m_Buffer.data();
-}
-
-bool CVertexBufferOGL1_3::IsLocked() const
-{
-    return m_IsLocked;
-}
-
-void CVertexBufferOGL1_3::Unlock(bool isNeedCommit)
-{
-    if (!m_IsLocked)
-    {
-        return;
-    }
-    
-#ifdef GL_ARRAY_BUFFER
-    if (isNeedCommit)
-    {
-        glBindBuffer(GL_ARRAY_BUFFER, m_Id);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, m_Buffer.size(), m_Buffer.data());
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        //assert(glGetError() == GL_NO_ERROR);
-    }
-#endif
-    
-    m_IsLocked = false;
-}
-
-bool CVertexBufferOGL1_3::HasStream(IVertexBuffer::VertexTypes vertexType)
-{
-    return (m_VertexStreamers.find(vertexType) != m_VertexStreamers.end());
-}
-
-void CVertexBufferOGL1_3::ZeroStride(bool isZeroStride)
-{
-    m_ZeroStride = isZeroStride;
-}
-
-bool CVertexBufferOGL1_3::ZeroStride()
-{
-    return m_ZeroStride;
 }
 
 void CVertexBufferOGL1_3::Bind()
 {
-#ifdef GL_ARRAY_BUFFER
-    glBindBuffer(GL_ARRAY_BUFFER, m_Id);
-#endif
+    CVertexBufferOGLBase::Bind();
     
     const IVertexBuffer::TVertexStreamMap& vertexStreams = VertexStreams();
     std::for_each(vertexStreams.begin(), vertexStreams.end(),
@@ -204,15 +72,11 @@ void CVertexBufferOGL1_3::Bind()
             }
         }
     });
-
-    Unlock();
 }
 
 void CVertexBufferOGL1_3::Unbind()
 {
-#ifdef GL_ARRAY_BUFFER
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
-#endif
+    CVertexBufferOGLBase::Unbind();
     
     const IVertexBuffer::TVertexStreamMap& vertexStreams = VertexStreams();
     std::for_each(vertexStreams.begin(), vertexStreams.end(),
@@ -247,30 +111,8 @@ void CVertexBufferOGL1_3::Unbind()
 // Protected Methods
 // *****************************************************************************
 
-void CVertexBufferOGL1_3::ElementSize(uint64_t elementSize)
-{
-    m_ElementSize = std::max<uint64_t>(elementSize, 1);
-}
-
 // *****************************************************************************
 // Private Methods
 // *****************************************************************************
-
-int CVertexBufferOGL1_3::ConvertDataType(DataTypes dataType)
-{
-    static std::map<DataTypes, int> converter = {
-        {Unknown, GL_BYTE},
-        {Byte, GL_BYTE},
-        {UByte, GL_UNSIGNED_BYTE},
-        {Short, GL_SHORT},
-        {UShort, GL_UNSIGNED_SHORT},
-        {Int, GL_INT},
-        {UInt, GL_UNSIGNED_INT},
-        {Float, GL_FLOAT},
-        {ShortFloat, GL_2_BYTES}, // TODO
-    };
-    
-    return converter[dataType];
-}
 
 #endif // RENDER_OGL1_3

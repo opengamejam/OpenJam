@@ -10,6 +10,8 @@
 #include "CRenderViewOSX.h"
 #import "GLKit/GLKit.h"
 #include "RenderGlobal.h"
+#include "IFrameBuffer.h"
+#include "IRenderTarget.h"
 
 #include "CRendererOGL1_5.h"
 #include "CFrameBufferOGL1_5.h"
@@ -48,6 +50,7 @@ void CRenderViewOSX::CreateView()
             NSOpenGLPixelFormatAttribute attributes[] =
             {
                 NSOpenGLPFADoubleBuffer,
+                NSOpenGLPFAColorSize, 32,
                 NSOpenGLPFADepthSize, 24,
                 NSOpenGLPFAStencilSize, 8,
                 NSOpenGLPFAOpenGLProfile, NSOpenGLProfileVersionLegacy,
@@ -60,10 +63,6 @@ void CRenderViewOSX::CreateView()
             [m_GLContext makeCurrentContext];
             
             m_Renderer.reset(new CRendererOGL1_5(shared_from_this()));
-            
-            std::shared_ptr<CFrameBufferOGL1_5> renderTarget(new CFrameBufferOGL1_5(RealWidth(), RealHeight()));
-            renderTarget->Initialize(0, 0);
-            m_DefaultRenderTarget = renderTarget;
         }
         break;
             
@@ -88,6 +87,30 @@ void CRenderViewOSX::CreateView()
     
     [m_GLView setPixelFormat:pixelformat];
     [m_GLView setOpenGLContext:m_GLContext];
+    
+    CRenderTargetColorPtr colorTarget = m_Renderer->CreateColorRenderTarget();
+    colorTarget->Initialize(IRenderTarget::ColorRGBA8888);
+    colorTarget->Bind();
+    colorTarget->Allocate(RealWidth(), RealHeight());
+    
+    CRenderTargetDepthPtr depthTarget = m_Renderer->CreateDepthRenderTarget();
+    depthTarget->Initialize(IRenderTarget::Depth24);
+    depthTarget->Bind();
+    depthTarget->Allocate(RealWidth(), RealHeight());
+    
+    CRenderTargetStencilPtr stencilTarget = m_Renderer->CreateStencilRenderTarget();
+    stencilTarget->Initialize(IRenderTarget::Stencil8);
+    stencilTarget->Bind();
+    stencilTarget->Allocate(RealWidth(), RealHeight());
+    
+    m_DefaultRenderTarget = m_Renderer->CreateFrameBuffer(RealWidth(), RealHeight());
+    // Init our renderer.  Use 0 for the defaultFBO which is appropriate for
+    // OSX (but not iOS since iOS apps must create their own FBO)
+    std::static_pointer_cast<CFrameBufferOGLBase>(m_DefaultRenderTarget)->InitializeWithFBO(0);
+    m_DefaultRenderTarget->Bind();
+    m_DefaultRenderTarget->AttachColor(colorTarget, 0);
+    m_DefaultRenderTarget->AttachDepth(depthTarget);
+    m_DefaultRenderTarget->AttachStencil(stencilTarget);
     
     GLint swap = 1;
     [m_GLContext setValues:&swap forParameter:NSOpenGLCPSwapInterval];

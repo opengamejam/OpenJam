@@ -5,10 +5,9 @@
 //  Created by Yevgeniy Logachev
 //  Copyright (c) 2014 yev. All rights reserved.
 //
-#if defined(RENDER_OGL1_5) || defined(RENDER_OGLES1_1)
+#if defined(RENDER_OGL1_5)
 
 #include "CShaderProgramOGL1_5.h"
-#include "IMaterial.h"  // TODO: to remove
 
 using namespace jam;
 
@@ -30,11 +29,6 @@ CShaderProgramOGL1_5::CShaderProgramOGL1_5()
 , m_ColorHandle(-1u)
 , m_IsLinked(false)
 {
-    m_TextureDataHadle.resize(IMaterial::MaxSamplingTextures);
-    for (size_t i = 0; i < m_TextureDataHadle.size(); ++i)
-    {
-        m_TextureDataHadle[i] = -1u;
-    }
 }
 
 CShaderProgramOGL1_5::~CShaderProgramOGL1_5()
@@ -86,7 +80,12 @@ bool CShaderProgramOGL1_5::Link()
     m_VertexCoordHandle    = Attribute("MainVertexPosition");
     m_TextureCoordHandle   = Attribute("MainVertexUV");
     m_VertexColorHandle    = Attribute("MainVertexColor");
-    
+   
+    m_TextureDataHadle.resize(6);
+    for (size_t i = 0; i < m_TextureDataHadle.size(); ++i)
+    {
+        m_TextureDataHadle[i] = -1u;
+    }
     m_TextureDataHadle[0]  = Uniform("MainTexture0");
     m_TextureDataHadle[1]  = Uniform("MainTexture1");
     m_TextureDataHadle[2]  = Uniform("MainTexture2");
@@ -188,7 +187,7 @@ uint32_t CShaderProgramOGL1_5::ModelMatrix()
 
 uint32_t CShaderProgramOGL1_5::Texture(uint32_t index)
 {
-    if (index < IMaterial::MaxSamplingTextures)
+    if (index < 5)
     {
         return m_TextureDataHadle[index];
     }
@@ -290,4 +289,4 @@ void CShaderProgramOGL1_5::UpdateUniforms() const
 // Private Methods
 // *****************************************************************************
 
-#endif // RENDER_OGL1_5 || RENDER_OGLES1_1
+#endif /* defined(RENDER_OGL1_5) */

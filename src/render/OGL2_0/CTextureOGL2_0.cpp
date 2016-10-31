@@ -5,10 +5,9 @@
 //  Created by Yevgeniy Logachev
 //  Copyright (c) 2014 Yevgeniy Logachev. All rights reserved.
 //
-#if defined(RENDER_OGL2_0) || defined(RENDER_OGLES2_0)
+#if defined(RENDER_OGL2_0)
 
 #include "CTextureOGL2_0.h"
-#include "IImage.h"
 
 using namespace jam;
 
@@ -76,172 +75,19 @@ static const std::map<ITexture::TextureFilters, float> s_GLFilters = {
     {ITexture::TextureFilters::UseMipMaps, GL_LINEAR_MIPMAP_NEAREST}
 };
 
-INL float TextureFilterToGlFilter(ITexture::TextureFilters filter);
-INL int TexelFormatsToGlInternalFormat(TexelFormats texelFormat);
-INL int TexelFormatsToGlFormat(TexelFormats texelFormat);
-INL int TexelTypeToGlType(TexelTypes texelType, TexelFormats texelFormat);
-
 // *****************************************************************************
 // Public Methods
 // *****************************************************************************
 
 CTextureOGL2_0::CTextureOGL2_0()
-: m_Id(0)
-, m_Filter(ITexture::Linear)
-, m_IsDirty(true)
 {
-    
 }
 
 CTextureOGL2_0::~CTextureOGL2_0()
 {
-    glDeleteTextures(1, &m_Id);
 }
 
-void CTextureOGL2_0::Bind()
-{
-    if (!IsValid())
-    {
-        return;
-    }
-    
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, m_Id);    // TODO: texture type
-}
-
-void CTextureOGL2_0::Unbind()
-{
-    if (!IsValid())
-    {
-        return;
-    }
-    
-    glActiveTexture(GL_TEXTURE0);
-    glBindTexture(GL_TEXTURE_2D, 0);    // TODO: texture type
-}
-
-void CTextureOGL2_0::Filter(ITexture::TextureFilters filter)
-{
-    if (!IsValid())
-    {
-        return;
-    }
-    
-    m_Filter = filter;
-    m_IsDirty = true;
-    
-    GLfloat parameter = TextureFilterToGlFilter(filter);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, parameter);
-    if (filter == ITexture::TextureFilters::Linear)
-    {
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-    }
-    else
-    {
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, parameter);
-    }
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-    
-    //assert(glGetError() == GL_NO_ERROR);
-}
-
-ITexture::TextureFilters CTextureOGL2_0::Filter() const
-{
-    return m_Filter;
-}
-
-bool CTextureOGL2_0::AssignImage(IImagePtr image)
-{
-    if (!IsValid())
-    {
-        glGenTextures(1, &m_Id);
-        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    }
-    
-    if (image)
-    {
-        Bind();
-        
-        assert(image && !image->RawData().empty());
-        
-        int glInternalFormat = TexelFormatsToGlInternalFormat(image->TexelFormat());
-        int glFormat = TexelFormatsToGlFormat(image->TexelFormat());
-        int glType = TexelTypeToGlType(image->TexelType(), image->TexelFormat());
-        
-        uint32_t mipDataOffset = 0;
-        for (uint32_t i = 0; i < image->MipsCount(); ++i)
-        {
-            uint32_t mipWidth = std::max<uint32_t>(image->Width() >> i, 1);
-            uint32_t mipHeight = std::max<uint32_t>(image->Height() >> i, 1);
-            uint32_t mipSize = std::max<uint32_t>(32, mipWidth * mipHeight * image->Bpp() / 8);
-            
-            if (image->IsCompressed())
-            {
-                glCompressedTexImage2D(GL_TEXTURE_2D, i, glInternalFormat, mipWidth, mipHeight, 0,
-                                       (GLsizei)mipSize, &image->RawData()[mipDataOffset]);
-            }
-            else
-            {
-                glTexImage2D(GL_TEXTURE_2D, i, glInternalFormat, mipWidth, mipHeight, 0, glFormat, glType,
-                             &image->RawData()[mipDataOffset]);
-            }
-            
-            mipDataOffset += mipSize;
-        }
-        
-        //assert(glGetError() == GL_NO_ERROR);
-        
-        if (image->MipsCount() > 1)
-        {
-            Filter(ITexture::TextureFilters::UseMipMaps);
-        }
-        else
-        {
-            Filter(ITexture::TextureFilters::Linear);
-        }
-        
-        Unbind();
-        
-        return true;
-    }
-    
-    return false;
-}
-
-const std::string& CTextureOGL2_0::Hash()
-{
-    if (m_IsDirty)
-    {
-        HashMe();
-        m_IsDirty = false;
-    }
-    
-    return m_Hash;
-}
-
-// *****************************************************************************
-// Protected Methods
-// *****************************************************************************
-
-// *****************************************************************************
-// Private Methods
-// *****************************************************************************
-
-void CTextureOGL2_0::HashMe()
-{
-    std::stringstream ss;
-    ss << Filter();
-    
-    m_Hash = ss.str();
-}
-
-bool CTextureOGL2_0::IsValid() const
-{
-    return (m_Id != 0);
-}
-
-INL float TextureFilterToGlFilter(ITexture::TextureFilters filter)
+GLfloat CTextureOGL2_0::TextureFilterToGlFilter(ITexture::TextureFilters filter)
 {
     GLfloat parameter = GL_LINEAR;
     
@@ -255,7 +101,7 @@ INL float TextureFilterToGlFilter(ITexture::TextureFilters filter)
     return parameter;
 }
 
-INL int TexelFormatsToGlInternalFormat(TexelFormats texelFormat)
+GLenum CTextureOGL2_0::TexelFormatsToGlInternalFormat(TexelFormats texelFormat)
 {
     std::map<TexelFormats, int>::const_iterator iter = s_GlInternalFormats.find(texelFormat);
     assert(iter != s_GlInternalFormats.end());
@@ -263,7 +109,7 @@ INL int TexelFormatsToGlInternalFormat(TexelFormats texelFormat)
     return iter->second;
 }
 
-INL int TexelFormatsToGlFormat(TexelFormats texelFormat)
+GLenum CTextureOGL2_0::TexelFormatsToGlFormat(TexelFormats texelFormat)
 {
     std::map<TexelFormats, int>::const_iterator iter = s_GlFormats.find(texelFormat);
     assert(iter != s_GlFormats.end());
@@ -271,7 +117,7 @@ INL int TexelFormatsToGlFormat(TexelFormats texelFormat)
     return iter->second;
 }
 
-INL int TexelTypeToGlType(TexelTypes texelType, TexelFormats texelFormat)
+GLenum CTextureOGL2_0::TexelTypeToGlType(TexelTypes texelType, TexelFormats texelFormat)
 {
     int glType = GL_UNSIGNED_BYTE;
     switch (texelFormat) {
@@ -298,4 +144,12 @@ INL int TexelTypeToGlType(TexelTypes texelType, TexelFormats texelFormat)
     return glType;
 }
 
-#endif // RENDER_OGL2_0 || RENDER_OGLES2_0
+// *****************************************************************************
+// Protected Methods
+// *****************************************************************************
+
+// *****************************************************************************
+// Private Methods
+// *****************************************************************************
+
+#endif /* defined(RENDER_OGL2_0) */

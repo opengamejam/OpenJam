@@ -5,17 +5,17 @@
 //  Created by Yevgeniy Logachev
 //  Copyright (c) 2014 Yevgeniy Logachev. All rights reserved.
 //
-#if defined(RENDER_OGL2_0) || defined(RENDER_OGLES2_0)
+#if defined(RENDER_OGL2_0)
 
 #ifndef CSHADEROGL2_0_H
 #define	CSHADEROGL2_0_H
 
-#include "IShader.h"
+#include "CShaderOGLBase.h"
 
 namespace jam
 {
 
-class CShaderOGL2_0 : public IShader
+class CShaderOGL2_0 : public CShaderOGLBase
 {
 public:
     CShaderOGL2_0();
@@ -40,4 +40,4 @@ private:
 
 #endif	/* CSHADEROGL2_0_H */
 
-#endif /* RENDER_OGL2_0 || RENDER_OGLES2_0 */
+#endif /* defined(RENDER_OGL2_0) */

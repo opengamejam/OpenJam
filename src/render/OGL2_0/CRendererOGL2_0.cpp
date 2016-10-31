@@ -17,6 +17,10 @@
 #include "CShaderOGL2_0.h"
 #include "CShaderProgramOGL2_0.h"
 #include "CFrameBufferOGL2_0.h"
+#include "CRenderTargetColorOGL2_0.h"
+#include "CRenderTargetDepthOGL2_0.h"
+#include "CRenderTargetStencilOGL2_0.h"
+#include "CRenderTargetTextureOGL2_0.h"
 
 using namespace jam;
 
@@ -28,22 +32,13 @@ using namespace jam;
 // Public Methods
 // *****************************************************************************
 
-INL int CovertPrimitiveType(IMaterial::PrimitiveTypes type);
-
 CRendererOGL2_0::CRendererOGL2_0(IRenderViewPtr renderView)
-: m_RenderView(renderView)
+: CRendererOGLBase(renderView)
 {
-
 }
 
 CRendererOGL2_0::~CRendererOGL2_0()
 {
-
-}
-
-IRenderViewPtr CRendererOGL2_0::RenderView() const
-{
-    return m_RenderView;
 }
 
 IFrameBufferPtr CRendererOGL2_0::CreateFrameBuffer(uint32_t width, uint32_t height)
@@ -120,19 +115,17 @@ IShaderProgramPtr CRendererOGL2_0::CreateShaderProgram()
 
 void CRendererOGL2_0::Draw(IMeshPtr mesh, IMaterialPtr material, IShaderProgramPtr shader)
 {
-    if (!mesh ||
-        !material)
-    {
-        return;
-    }
+    assert(mesh && material);
+    IVertexBufferPtr vertexBuffer = mesh->VertexBuffer();
+    IIndexBufferPtr indexBuffer = mesh->IndexBuffer();
     
-    if (mesh->IndexBuffer())
+    if (indexBuffer)
     {
-        Draw(mesh->VertexBuffer(), mesh->IndexBuffer(), material);
+        Draw(vertexBuffer, indexBuffer, material);
     }
     else
     {
-        Draw(mesh->VertexBuffer(), material);
+        Draw(vertexBuffer, material);
     }
 }
 
@@ -144,7 +137,7 @@ void CRendererOGL2_0::Draw(IVertexBufferPtr vertexBuffer, IMaterialPtr material)
         return;
     }
     
-    int primitiveType = CovertPrimitiveType(material->PrimitiveType());
+    int primitiveType = ConvertPrimitiveType(material->PrimitiveType());
     glDrawArrays(primitiveType, 0, (GLsizei)vertexBuffer->Size());
 }
 
@@ -157,7 +150,7 @@ void CRendererOGL2_0::Draw(IVertexBufferPtr vertexBuffer, IIndexBufferPtr indexB
         return;
     }
         
-    int primitiveType = CovertPrimitiveType(material->PrimitiveType());
+    int primitiveType = ConvertPrimitiveType(material->PrimitiveType());
     glDrawElements(primitiveType, (GLsizei)indexBuffer->Size(), GL_UNSIGNED_SHORT, nullptr);
 }
 
@@ -169,44 +162,4 @@ void CRendererOGL2_0::Draw(IVertexBufferPtr vertexBuffer, IIndexBufferPtr indexB
 // Private Methods
 // *****************************************************************************
 
-INL int CovertPrimitiveType(IMaterial::PrimitiveTypes type)
-{
-    int primitiveType = GL_TRIANGLES;
-    switch (type)
-    {
-        case IMaterial::Points:
-            primitiveType = GL_POINTS;
-            break;
-            
-        case IMaterial::Lines:
-            primitiveType = GL_LINES;
-            break;
-            
-        case IMaterial::LinesLoop:
-            primitiveType = GL_LINE_LOOP;
-            break;
-            
-        case IMaterial::LinesStrip:
-            primitiveType = GL_LINE_STRIP;
-            break;
-            
-        case IMaterial::Triangles:
-            primitiveType = GL_TRIANGLES;
-            break;
-            
-        case IMaterial::TrianglesFan:
-            primitiveType = GL_TRIANGLE_FAN;
-            break;
-            
-        case IMaterial::TrianglesStrip:
-            primitiveType = GL_TRIANGLE_STRIP;
-            break;
-            
-        default:
-            break;
-    }
-    
-    return primitiveType;
-}
-
-#endif // RENDER_OGL2_0
+#endif /* defined(RENDER_OGL2_0) */

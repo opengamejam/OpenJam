@@ -20,8 +20,6 @@ using namespace jam;
 // Public Methods
 // *****************************************************************************
 
-INL uint32_t ShaderTypeToGlType(IShader::ShaderType type);
-
 CShaderOGL2_0::CShaderOGL2_0()
 : IShader()
 , m_Id(0)
@@ -131,24 +129,4 @@ void CShaderOGL2_0::AddDefinition(const std::string& identifier)
 // Private Methods
 // *****************************************************************************
 
-INL uint32_t ShaderTypeToGlType(IShader::ShaderType type)
-{
-    uint32_t glType = GL_VERTEX_SHADER;
-    switch (type)
-    {
-        case IShader::Vertex:
-            glType = GL_VERTEX_SHADER;
-            break;
-            
-        case IShader::Fragment:
-            glType = GL_FRAGMENT_SHADER;
-            break;
-            
-        case IShader::Geometry:
-            break;
-    }
-    
-    return glType;
-}
-
-#endif // RENDER_OGL2_0 || RENDER_OGLES2_0
+#endif /* defined(RENDER_OGL2_0) */

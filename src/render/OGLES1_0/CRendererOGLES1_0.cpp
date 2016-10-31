@@ -19,7 +19,7 @@ using namespace jam;
 // Public Methods
 // *****************************************************************************
 
-INL int CovertPrimitiveType(IMaterial::PrimitiveTypes type);
+INL int ConvertPrimitiveType(IMaterial::PrimitiveTypes type);
 
 CRendererOGLES1_0::CRendererOGLES1_0(IRenderViewPtr renderView)
 : m_RenderView(renderView)
@@ -158,7 +158,7 @@ void CRendererOGLES1_0::Draw(IVertexBufferPtr vertexBuffer, IMaterialPtr materia
         return;
     }
     
-    int primitiveType = CovertPrimitiveType(material->PrimitiveType());
+    int primitiveType = ConvertPrimitiveType(material->PrimitiveType());
     glDrawArrays(primitiveType, 0, (GLsizei)vertexBuffer->Size());
 }
 
@@ -171,7 +171,7 @@ void CRendererOGLES1_0::Draw(IVertexBufferPtr vertexBuffer, IIndexBufferPtr inde
         return;
     }
     
-    int primitiveType = CovertPrimitiveType(material->PrimitiveType());
+    int primitiveType = ConvertPrimitiveType(material->PrimitiveType());
     glDrawElements(primitiveType, (GLsizei)indexBuffer->Size(), GL_UNSIGNED_INT, nullptr);
 }
 
@@ -183,7 +183,7 @@ void CRendererOGLES1_0::Draw(IVertexBufferPtr vertexBuffer, IIndexBufferPtr inde
 // Private Methods
 // *****************************************************************************
 
-INL int CovertPrimitiveType(IMaterial::PrimitiveTypes type)
+INL int ConvertPrimitiveType(IMaterial::PrimitiveTypes type)
 {
     int primitiveType = GL_TRIANGLES;
     switch (type)

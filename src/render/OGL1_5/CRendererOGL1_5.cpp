@@ -17,6 +17,10 @@
 #include "CShaderOGL1_5.h"
 #include "CShaderProgramOGL1_5.h"
 #include "CFrameBufferOGL1_5.h"
+#include "CRenderTargetColorOGL1_5.h"
+#include "CRenderTargetDepthOGL1_5.h"
+#include "CRenderTargetStencilOGL1_5.h"
+#include "CRenderTargetTextureOGL1_5.h"
 
 using namespace jam;
 
@@ -28,51 +32,42 @@ using namespace jam;
 // Public Methods
 // *****************************************************************************
 
-INL int CovertPrimitiveType(IMaterial::PrimitiveTypes type);
-
 CRendererOGL1_5::CRendererOGL1_5(IRenderViewPtr renderView)
-: m_RenderView(renderView)
+: CRendererOGLBase(renderView)
 {
-
 }
 
 CRendererOGL1_5::~CRendererOGL1_5()
 {
-
-}
-
-IRenderViewPtr CRendererOGL1_5::RenderView() const
-{
-    return m_RenderView;
 }
 
 IFrameBufferPtr CRendererOGL1_5::CreateFrameBuffer(uint32_t width, uint32_t height)
 {
-    IFrameBufferPtr frameBuffer(new CFrameBufferOGL1_3(width, height));
+    IFrameBufferPtr frameBuffer(new CFrameBufferOGL1_5(width, height));
     return frameBuffer;
 }
 
 CRenderTargetColorPtr CRendererOGL1_5::CreateColorRenderTarget()
 {
-    CRenderTargetColorPtr colorTarget(new CRenderTargetColorOGL1_3());
+    CRenderTargetColorPtr colorTarget(new CRenderTargetColorOGL1_5());
     return colorTarget;
 }
 
 CRenderTargetDepthPtr CRendererOGL1_5::CreateDepthRenderTarget()
 {
-    CRenderTargetDepthPtr depthTarget(new CRenderTargetDepthOGL1_3());
+    CRenderTargetDepthPtr depthTarget(new CRenderTargetDepthOGL1_5());
     return depthTarget;
 }
 
 CRenderTargetStencilPtr CRendererOGL1_5::CreateStencilRenderTarget()
 {
-    CRenderTargetStencilPtr stencilTarget(new CRenderTargetStencilOGL1_3());
+    CRenderTargetStencilPtr stencilTarget(new CRenderTargetStencilOGL1_5());
     return stencilTarget;
 }
 
 CRenderTargetTexturePtr CRendererOGL1_5::CreateTextureRenderTarget()
 {
-    CRenderTargetTexturePtr textureTarget(new CRenderTargetTextureOGL1_3());
+    CRenderTargetTexturePtr textureTarget(new CRenderTargetTextureOGL1_5());
     return textureTarget;
 }
 
@@ -167,7 +162,7 @@ void CRendererOGL1_5::Draw(IVertexBufferPtr vertexBuffer, IMaterialPtr material)
         return;
     }
     
-    int primitiveType = CovertPrimitiveType(material->PrimitiveType());
+    int primitiveType = ConvertPrimitiveType(material->PrimitiveType());
     glDrawArrays(primitiveType, 0, (GLsizei)vertexBuffer->Size());
 }
 
@@ -180,7 +175,7 @@ void CRendererOGL1_5::Draw(IVertexBufferPtr vertexBuffer, IIndexBufferPtr indexB
         return;
     }
         
-    int primitiveType = CovertPrimitiveType(material->PrimitiveType());
+    int primitiveType = ConvertPrimitiveType(material->PrimitiveType());
     glDrawElements(primitiveType, (GLsizei)indexBuffer->Size(), GL_UNSIGNED_SHORT, nullptr);
 }
 
@@ -192,44 +187,4 @@ void CRendererOGL1_5::Draw(IVertexBufferPtr vertexBuffer, IIndexBufferPtr indexB
 // Private Methods
 // *****************************************************************************
 
-INL int CovertPrimitiveType(IMaterial::PrimitiveTypes type)
-{
-    int primitiveType = GL_TRIANGLES;
-    switch (type)
-    {
-        case IMaterial::Points:
-            primitiveType = GL_POINTS;
-            break;
-            
-        case IMaterial::Lines:
-            primitiveType = GL_LINES;
-            break;
-            
-        case IMaterial::LinesLoop:
-            primitiveType = GL_LINE_LOOP;
-            break;
-            
-        case IMaterial::LinesStrip:
-            primitiveType = GL_LINE_STRIP;
-            break;
-            
-        case IMaterial::Triangles:
-            primitiveType = GL_TRIANGLES;
-            break;
-            
-        case IMaterial::TrianglesFan:
-            primitiveType = GL_TRIANGLE_FAN;
-            break;
-            
-        case IMaterial::TrianglesStrip:
-            primitiveType = GL_TRIANGLE_STRIP;
-            break;
-            
-        default:
-            break;
-    }
-    
-    return primitiveType;
-}
-
-#endif // RENDER_OGL1_5 || RENDER_OGLES1_1
+#endif /* defined(RENDER_OGL1_5) */

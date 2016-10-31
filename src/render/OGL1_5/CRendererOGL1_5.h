@@ -10,21 +10,16 @@
 #ifndef CRENDEREROGL1_5_H
 #define CRENDEREROGL1_5_H
 
-#include "IRenderer.h"
+#include "CRendererOGLBase.h"
 
 namespace jam
 {
     
-class CRendererOGL1_5 : public IRenderer
+class CRendererOGL1_5 : public CRendererOGLBase
 {
 public:
     CRendererOGL1_5(IRenderViewPtr renderView);
     virtual ~CRendererOGL1_5();
-    
-    /*
-     * Returns render view
-     */
-    virtual IRenderViewPtr RenderView() const override;
     
     /*
      * Create framebuffer object
@@ -100,13 +95,10 @@ public:
      * Draw indexed triangles with material properties
      */
     virtual void Draw(IVertexBufferPtr vertexBuffer, IIndexBufferPtr indexBuffer, IMaterialPtr material) override;
-    
-private:
-    IRenderViewPtr m_RenderView;
 };
     
 }; // namespace jam
 
-#endif /* defined(CRENDEREROGL1_5_H) */
+#endif /* CRENDEREROGL1_5_H */
 
-#endif /* RENDER_OGL1_5 || RENDER_OGLES1_1 */
+#endif /* defined(RENDER_OGL1_5) */

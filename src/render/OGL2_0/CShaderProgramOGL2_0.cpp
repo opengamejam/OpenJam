@@ -5,10 +5,9 @@
 //  Created by Yevgeniy Logachev
 //  Copyright (c) 2014 Yevgeniy Logachev. All rights reserved.
 //
-#if defined(RENDER_OGL2_0) || defined(RENDER_OGLES2_0)
+#if defined(RENDER_OGL2_0)
 
 #include "CShaderProgramOGL2_0.h"
-#include "IMaterial.h" // TODO: to remove
 
 using namespace jam;
 
@@ -471,4 +470,4 @@ void CShaderProgramOGL2_0::UpdateUniforms() const
 // Private Methods
 // *****************************************************************************
 
-#endif // RENDER_OGL2_0 || RENDER_OGLES2_0
+#endif /* defined(RENDER_OGL2_0) */

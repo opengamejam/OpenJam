@@ -5,7 +5,7 @@
 //  Created by Yevgeniy Logachev
 //  Copyright (c) 2014 yev. All rights reserved.
 //
-#if defined(RENDER_OGL1_5) || defined(RENDER_OGLES1_1)
+#if defined(RENDER_OGL1_5)
 
 #include "CShaderOGL1_5.h"
 
@@ -67,4 +67,4 @@ void CShaderOGL1_5::AddDefinition(const std::string& identifier)
 // Private Methods
 // *****************************************************************************
 
-#endif // RENDER_OGL1_5 || RENDER_OGLES1_1
+#endif /* defined(RENDER_OGL1_5) */

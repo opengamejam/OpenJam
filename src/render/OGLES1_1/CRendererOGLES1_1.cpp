@@ -32,22 +32,13 @@ using namespace jam;
 // Public Methods
 // *****************************************************************************
 
-INL int ConvertPrimitiveType(IMaterial::PrimitiveTypes type);
-
 CRendererOGLES1_1::CRendererOGLES1_1(IRenderViewPtr renderView)
-: m_RenderView(renderView)
+: CRendererOGLBase(renderView)
 {
-    
 }
 
 CRendererOGLES1_1::~CRendererOGLES1_1()
 {
-    
-}
-
-IRenderViewPtr CRendererOGLES1_1::RenderView() const
-{
-    return m_RenderView;
 }
 
 IFrameBufferPtr CRendererOGLES1_1::CreateFrameBuffer(uint32_t width, uint32_t height)
@@ -131,26 +122,26 @@ void CRendererOGLES1_1::Draw(IMeshPtr mesh, IMaterialPtr material, IShaderProgra
     }
     
     const IShaderProgram::TUniMatrix4Float& uniforms = shader->UniformsMatrix4x4f();
-	IShaderProgram::TUniMatrix4Float::const_iterator it = uniforms.find(shader->ProjectionMatrix());
+    IShaderProgram::TUniMatrix4Float::const_iterator it = uniforms.find(shader->ProjectionMatrix());
+    glMatrixMode(GL_PROJECTION);
     if (it != uniforms.end())
     {
-        glMatrixMode(GL_PROJECTION);
         glLoadMatrixf(glm::value_ptr(it->second));
     }
     else
     {
-        glLoadMatrixf(glm::value_ptr(glm::mat4(1.0f)));
+        glLoadMatrixf(glm::value_ptr(glm::mat4(1.0)));
     }
     
+    glMatrixMode(GL_MODELVIEW);
     it = uniforms.find(shader->ModelMatrix());
     if (it != uniforms.end())
     {
-        glMatrixMode(GL_MODELVIEW);
         glLoadMatrixf(glm::value_ptr(it->second));
     }
     else
     {
-        glLoadMatrixf(glm::value_ptr(glm::mat4(1.0f)));
+        glLoadMatrixf(glm::value_ptr(glm::mat4(1.0)));
     }
     
     if (mesh->IndexBuffer())
@@ -185,7 +176,7 @@ void CRendererOGLES1_1::Draw(IVertexBufferPtr vertexBuffer, IIndexBufferPtr inde
     }
     
     int primitiveType = ConvertPrimitiveType(material->PrimitiveType());
-    glDrawElements(primitiveType, (GLsizei)indexBuffer->Size(), GL_UNSIGNED_INT, nullptr);
+    glDrawElements(primitiveType, (GLsizei)indexBuffer->Size(), GL_UNSIGNED_SHORT, nullptr);
 }
 
 // *****************************************************************************
@@ -196,44 +187,4 @@ void CRendererOGLES1_1::Draw(IVertexBufferPtr vertexBuffer, IIndexBufferPtr inde
 // Private Methods
 // *****************************************************************************
 
-INL int ConvertPrimitiveType(IMaterial::PrimitiveTypes type)
-{
-    int primitiveType = GL_TRIANGLES;
-    switch (type)
-    {
-        case IMaterial::Points:
-            primitiveType = GL_POINTS;
-            break;
-            
-        case IMaterial::Lines:
-            primitiveType = GL_LINES;
-            break;
-            
-        case IMaterial::LinesLoop:
-            primitiveType = GL_LINE_LOOP;
-            break;
-            
-        case IMaterial::LinesStrip:
-            primitiveType = GL_LINE_STRIP;
-            break;
-            
-        case IMaterial::Triangles:
-            primitiveType = GL_TRIANGLES;
-            break;
-            
-        case IMaterial::TrianglesFan:
-            primitiveType = GL_TRIANGLE_FAN;
-            break;
-            
-        case IMaterial::TrianglesStrip:
-            primitiveType = GL_TRIANGLE_STRIP;
-            break;
-            
-        default:
-            break;
-    }
-    
-    return primitiveType;
-}
-
-#endif // RENDER_OGLES1_1
+#endif /* defined(RENDER_OGLES1_1) */

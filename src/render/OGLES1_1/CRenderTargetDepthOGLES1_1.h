@@ -10,15 +10,27 @@
 #ifndef CRENDERTARGETDEPTHOGLES1_1_H
 #define CRENDERTARGETDEPTHOGLES1_1_H
 
-#include "CRenderTargetDepthOGL1_5.h"
+#include "CRenderTargetDepthOGLBase.h"
 
 namespace jam
 {
-
-typedef CRenderTargetDepthOGL1_5 CRenderTargetDepthOGLES1_1;
+    
+class CRenderTargetDepthOGLES1_1 : public CRenderTargetDepthOGLBase
+{
+    JAM_OBJECT
+public:
+    CRenderTargetDepthOGLES1_1();
+    virtual ~CRenderTargetDepthOGLES1_1();
+    
+    /*
+     * OpenGL specific
+     */
+    virtual GLenum ConvertToInternalFormat(InternalFormats internalFormat) override;
+    virtual CRenderTargetStencilPtr CreateStencilObject() override;
+};
     
 }; // namespace jam
 
 #endif /* CRENDERTARGETDEPTHOGLES1_1_H */
 
-#endif /* RENDER_OGLES1_1 */
+#endif /* defined(RENDER_OGLES1_1) */

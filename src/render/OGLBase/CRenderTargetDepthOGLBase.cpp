@@ -123,7 +123,10 @@ void CRenderTargetDepthOGLBase::CreateStencil()
     assert(!m_Stencil);
     
     m_Stencil = CreateStencilObject();
-    std::static_pointer_cast<CRenderTargetStencilOGLBase>(m_Stencil)->InitializeWithDepthId(m_Id);
+    if (m_Stencil)
+    {
+        std::static_pointer_cast<CRenderTargetStencilOGLBase>(m_Stencil)->InitializeWithDepthId(m_Id);
+    }
 }
 
 void CRenderTargetDepthOGLBase::DeleteStencil()

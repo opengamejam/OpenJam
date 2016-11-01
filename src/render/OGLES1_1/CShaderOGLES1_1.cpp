@@ -20,6 +20,45 @@ using namespace jam;
 // Public Methods
 // *****************************************************************************
 
+CShaderOGLES1_1::CShaderOGLES1_1()
+{
+}
+
+CShaderOGLES1_1::~CShaderOGLES1_1()
+{
+}
+
+uint32_t CShaderOGLES1_1::Id()
+{
+    return 0;
+}
+
+bool CShaderOGLES1_1::Compile(const std::string& source, ShaderType shaderType)
+{
+    return true;
+}
+
+bool CShaderOGLES1_1::IsCompiled() const
+{
+    return true;
+}
+
+IShader::ShaderType CShaderOGLES1_1::Type() const
+{
+    return IShader::Vertex;
+}
+
+const std::string& CShaderOGLES1_1::Source() const
+{
+    static std::string dummySource;
+    return dummySource;
+}
+
+void CShaderOGLES1_1::AddDefinition(const std::string& identifier)
+{
+    
+}
+
 // *****************************************************************************
 // Protected Methods
 // *****************************************************************************
@@ -28,4 +67,4 @@ using namespace jam;
 // Private Methods
 // *****************************************************************************
 
-#endif // RENDER_OGLES1_1
+#endif /* defined(RENDER_OGLES1_1) */

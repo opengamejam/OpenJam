@@ -31,9 +31,11 @@ GLenum CRenderTargetStencilOGLES2_0::ConvertToInternalFormat(InternalFormats int
 {
     switch (internalFormat)
     {
+#if GL_OES_stencil8
         case Stencil8:
-            return GL_STENCIL_INDEX8;
+            return GL_STENCIL_INDEX8_OES;
             break;
+#endif
             
         default:
             // Unacceptible type of depth buffer
@@ -41,7 +43,11 @@ GLenum CRenderTargetStencilOGLES2_0::ConvertToInternalFormat(InternalFormats int
             break;
     }
     
-    return GL_STENCIL_INDEX8;
+#if GL_OES_stencil8
+    return GL_STENCIL_INDEX8_OES;
+#else
+    return GL_RGB565; // TODO: error
+#endif
 }
 
 // *****************************************************************************

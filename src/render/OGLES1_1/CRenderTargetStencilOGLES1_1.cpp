@@ -19,6 +19,31 @@ using namespace jam;
 // Public Methods
 // *****************************************************************************
 
+CRenderTargetStencilOGLES1_1::CRenderTargetStencilOGLES1_1()
+{
+}
+
+CRenderTargetStencilOGLES1_1::~CRenderTargetStencilOGLES1_1()
+{
+}
+
+GLenum CRenderTargetStencilOGLES1_1::ConvertToInternalFormat(InternalFormats internalFormat)
+{
+    switch (internalFormat)
+    {
+        case Stencil8:
+            return GL_STENCIL_INDEX8;
+            break;
+            
+        default:
+            // Unacceptible type of depth buffer
+            assert(false);
+            break;
+    }
+    
+    return GL_STENCIL_INDEX8;
+}
+
 // *****************************************************************************
 // Protected Methods
 // *****************************************************************************
@@ -27,4 +52,4 @@ using namespace jam;
 // Private Methods
 // *****************************************************************************
 
-#endif /* RENDER_OGLES1_1 */
+#endif /* defined(RENDER_OGLES1_1) */

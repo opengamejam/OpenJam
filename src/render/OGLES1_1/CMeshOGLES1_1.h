@@ -10,15 +10,20 @@
 #ifndef CMESHOGLES1_1_H
 #define CMESHOGLES1_1_H
 
-#include "CMeshOGL1_5.h"
+#include "CMeshOGLBase.h"
 
 namespace jam
 {
-
-typedef CMeshOGL1_5 CMeshOGLES1_1;
-
+    
+class CMeshOGLES1_1 : public CMeshOGLBase
+{
+public:
+    CMeshOGLES1_1();
+    virtual ~CMeshOGLES1_1();
+};
+    
 }; // namespace jam
 
-#endif /* defined(CMeshOGLES1_1_H) */
-
 #endif /* CMESHOGLES1_1_H */
+
+#endif /* defined(RENDER_OGLES1_1) */

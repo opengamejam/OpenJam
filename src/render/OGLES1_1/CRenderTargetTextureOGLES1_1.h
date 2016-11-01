@@ -10,15 +10,21 @@
 #ifndef CRENDERTARGETTEXTUREOGLES1_1_H
 #define CRENDERTARGETTEXTUREOGLES1_1_H
 
-#include "CRenderTargetTextureOGL1_5.h"
+#include "CRenderTargetTextureOGLBase.h"
 
 namespace jam
 {
-
-typedef CRenderTargetTextureOGL1_5 CRenderTargetTextureOGLES1_1;
+    
+class CRenderTargetTextureOGLES1_1 : public CRenderTargetTextureOGLBase
+{
+    JAM_OBJECT
+public:
+    CRenderTargetTextureOGLES1_1();
+    virtual ~CRenderTargetTextureOGLES1_1();
+};
     
 }; // namespace jam
 
 #endif /* CRENDERTARGETTEXTUREOGLES1_1_H */
 
-#endif /* RENDER_OGLES1_1 */
+#endif /* defined(RENDER_OGLES1_1) */

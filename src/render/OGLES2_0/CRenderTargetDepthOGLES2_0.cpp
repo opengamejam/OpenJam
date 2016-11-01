@@ -57,7 +57,7 @@ GLenum CRenderTargetDepthOGLES2_0::ConvertToInternalFormat(InternalFormats inter
             break;
     }
     
-    return GL_DEPTH_COMPONENT24_OES;
+    return GL_DEPTH_COMPONENT16;
 }
 
 CRenderTargetStencilPtr CRenderTargetDepthOGLES2_0::CreateStencilObject()

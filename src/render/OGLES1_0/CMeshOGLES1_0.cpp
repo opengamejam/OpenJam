@@ -5,7 +5,7 @@
 //  Created by Yevgeniy Logachev
 //  Copyright (c) 2014 yev. All rights reserved.
 //
-#if defined(RENDER_OGL1_3)
+#if defined(RENDER_OGLES1_0)
 
 #include "CMeshOGLES1_0.h"
 
@@ -19,6 +19,14 @@ using namespace jam;
 // Public Methods
 // *****************************************************************************
 
+CMeshOGLES1_0::CMeshOGLES1_0()
+{
+}
+
+CMeshOGLES1_0::~CMeshOGLES1_0()
+{
+}
+
 // *****************************************************************************
 // Protected Methods
 // *****************************************************************************
@@ -27,4 +35,4 @@ using namespace jam;
 // Private Methods
 // *****************************************************************************
 
-#endif // RENDER_OGL1_3
+#endif /* defined(RENDER_OGLES1_0) */

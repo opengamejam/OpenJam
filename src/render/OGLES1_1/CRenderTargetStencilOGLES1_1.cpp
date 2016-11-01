@@ -36,7 +36,7 @@ GLenum CRenderTargetStencilOGLES1_1::ConvertToInternalFormat(InternalFormats int
             break;
             
         default:
-            // Unacceptible type of depth buffer
+            // Unacceptible type of stencil buffer
             assert(false);
             break;
     }

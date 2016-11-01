@@ -5,20 +5,25 @@
 //  Created by Yevgeniy Logachev
 //  Copyright (c) 2014 yev. All rights reserved.
 //
-#if defined(RENDER_OGL1_3)
+#if defined(RENDER_OGLES1_0)
 
 #ifndef CMESHOGLES1_0_H
 #define CMESHOGLES1_0_H
 
-#include "CMeshOGL1_3.h"
+#include "CMeshOGLBase.h"
 
 namespace jam
 {
 
-typedef CMeshOGL1_3 CMeshOGLES1_0;
-
+class CMeshOGLES1_0 : public CMeshOGLBase
+{
+public:
+    CMeshOGLES1_0();
+    virtual ~CMeshOGLES1_0();
+};
+    
 }; // namespace jam
 
-#endif /* defined(CMeshOGLES1_H) */
-
 #endif /* CMESHOGLES1_0_H */
+
+#endif /* defined(RENDER_OGLES1_0) */

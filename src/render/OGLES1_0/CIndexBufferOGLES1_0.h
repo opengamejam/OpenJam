@@ -5,20 +5,25 @@
 //  Created by Yevgeniy Logachev
 //  Copyright (c) 2014 yev. All rights reserved.
 //
-#if defined(RENDER_OGL1_3)
+#if defined(RENDER_OGLES1_0)
 
 #ifndef CINDEXBUFFEROGLES1_0_H
 #define CINDEXBUFFEROGLES1_0_H
 
-#include "CIndexBufferOGL1_3.h"
+#include "CIndexBufferOGLBase.h"
 
 namespace jam
 {
     
-typedef CIndexBufferOGL1_3 CIndexBufferOGLES1_0;
+class CIndexBufferOGLES1_0 : public CIndexBufferOGLBase
+{
+public:
+    CIndexBufferOGLES1_0();
+    virtual ~CIndexBufferOGLES1_0();
+};
     
 }; // namespace jam
 
-#endif /* defined(CINDEXBUFFEROGLES1_0_H) */
+#endif /* CINDEXBUFFEROGLES1_0_H */
 
-#endif /* RENDER_OGL1_3 */
+#endif /* defined(RENDER_OGLES1_0) */

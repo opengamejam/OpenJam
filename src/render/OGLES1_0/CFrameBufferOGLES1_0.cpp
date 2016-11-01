@@ -19,6 +19,15 @@ using namespace jam;
 // Public Methods
 // *****************************************************************************
 
+CFrameBufferOGLES1_0::CFrameBufferOGLES1_0(uint32_t width, uint32_t height)
+: CFrameBufferOGLBase(width, height)
+{
+}
+
+CFrameBufferOGLES1_0::~CFrameBufferOGLES1_0()
+{
+}
+
 // *****************************************************************************
 // Protected Methods
 // *****************************************************************************

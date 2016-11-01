@@ -10,12 +10,23 @@
 #ifndef CRENDERTARGETCOLOROGLES1_0_H
 #define CRENDERTARGETCOLOROGLES1_0_H
 
-#include "CRenderTargetColorOGL1_3.h"
+#include "CRenderTargetColorOGLBase.h"
 
 namespace jam
 {
-
-typedef CRenderTargetColorOGL1_3 CRenderTargetColorOGLES1_0;
+    
+class CRenderTargetColorOGLES1_0 : public CRenderTargetColorOGLBase
+{
+    JAM_OBJECT
+public:
+    CRenderTargetColorOGLES1_0();
+    virtual ~CRenderTargetColorOGLES1_0();
+    
+    /*
+     * OpenGL specific
+     */
+    virtual GLenum ConvertInternalFormat(InternalFormats internalFormat) override;
+};
     
 }; // namespace jam
 

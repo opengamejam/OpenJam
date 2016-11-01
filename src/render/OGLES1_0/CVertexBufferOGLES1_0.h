@@ -5,20 +5,28 @@
 //  Created by Yevgeniy Logachev
 //  Copyright (c) 2014 yev. All rights reserved.
 //
-#if defined(RENDER_OGL1_3)
+#if defined(RENDER_OGLES1_0)
 
 #ifndef CVERTEXBUFFEROGLES1_0_H
 #define CVERTEXBUFFEROGLES1_0_H
 
-#include "CVertexBufferOGL1_3.h"
+#include "CVertexBufferOGLBase.h"
 
 namespace jam
 {
     
-typedef CVertexBufferOGL1_3 CVertexBufferOGLES1_0;
+class CVertexBufferOGLES1_0 : public CVertexBufferOGLBase
+{
+public:
+    CVertexBufferOGLES1_0();
+    virtual ~CVertexBufferOGLES1_0();
+    
+    virtual void Bind() override;
+    virtual void Unbind() override;
+};
     
 }; // namespace jam
 
 #endif /* defined(CVERTEXBUFFEROGLES1_0_H) */
 
-#endif /* RENDER_OGL1_3 */
+#endif /* defined(RENDER_OGLES1_0) */

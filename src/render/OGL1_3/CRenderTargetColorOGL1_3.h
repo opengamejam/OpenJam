@@ -15,18 +15,18 @@
 namespace jam
 {
     
-    class CRenderTargetColorOGL1_3 : public CRenderTargetColorOGLBase
-    {
-        JAM_OBJECT
-    public:
-        CRenderTargetColorOGL1_3();
-        virtual ~CRenderTargetColorOGL1_3();
-        
-        /*
-         * OpenGL specific
-         */
-        virtual GLenum ConvertInternalFormat(InternalFormats internalFormat) override;
-    };
+class CRenderTargetColorOGL1_3 : public CRenderTargetColorOGLBase
+{
+    JAM_OBJECT
+public:
+    CRenderTargetColorOGL1_3();
+    virtual ~CRenderTargetColorOGL1_3();
+    
+    /*
+     * OpenGL specific
+     */
+    virtual GLenum ConvertInternalFormat(InternalFormats internalFormat) override;
+};
     
 }; // namespace jam
 

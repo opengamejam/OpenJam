@@ -5,20 +5,31 @@
 //  Created by Yevgeniy Logachev
 //  Copyright (c) 2014 yev. All rights reserved.
 //
-#if defined(RENDER_OGL1_3)
+#if defined(RENDER_OGLES1_0)
 
 #ifndef CMATERIALOGLES1_0_H
 #define CMATERIALOGLES1_0_H
 
-#include "CMaterialOGL1_3.h"
+#include "CMaterialOGLBase.h"
 
 namespace jam
 {
-
-typedef CMaterialOGL1_3 CMaterialOGLES1_0;
-
+    
+class CMaterialOGLES1_0 : public CMaterialOGLBase
+{
+public:
+    CMaterialOGLES1_0();
+    virtual ~CMaterialOGLES1_0();
+    
+    /*
+     * OpenGL specific
+     */
+    virtual GLenum ConvertTestFunc(IMaterial::TestFuncs func);
+    virtual GLenum ConvertOperation(IMaterial::Operations op);
+};
+    
 }; // namespace jam
 
-#endif /* defined(CMaterialOGLES1_0_H) */
-
 #endif /* CMATERIALOGLES1_0_H */
+
+#endif /* defined(CMATERIALOGLES1_0_H) */

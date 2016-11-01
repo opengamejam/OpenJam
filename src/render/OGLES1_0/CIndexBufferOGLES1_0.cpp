@@ -5,7 +5,7 @@
 //  Created by Yevgeniy Logachev on 4/14/15.
 //
 //
-#if defined(RENDER_OGL1_3)
+#if defined(RENDER_OGLES1_0)
 
 #include "CIndexBufferOGLES1_0.h"
 
@@ -19,6 +19,14 @@ using namespace jam;
 // Public Methods
 // *****************************************************************************
 
+CIndexBufferOGLES1_0::CIndexBufferOGLES1_0()
+{
+}
+
+CIndexBufferOGLES1_0::~CIndexBufferOGLES1_0()
+{
+}
+
 // *****************************************************************************
 // Protected Methods
 // *****************************************************************************
@@ -27,4 +35,4 @@ using namespace jam;
 // Private Methods
 // *****************************************************************************
 
-#endif // RENDER_OGL1_3
+#endif // defined(RENDER_OGLES1_0)

@@ -15,18 +15,18 @@
 namespace jam
 {
     
-    class CRenderTargetStencilOGL1_3 : public CRenderTargetStencilOGLBase
-    {
-        JAM_OBJECT
-    public:
-        CRenderTargetStencilOGL1_3();
-        virtual ~CRenderTargetStencilOGL1_3();
-        
-        /*
-         * OpenGL specific
-         */
-        virtual GLenum ConvertToInternalFormat(InternalFormats internalFormat) override;
-    };
+class CRenderTargetStencilOGL1_3 : public CRenderTargetStencilOGLBase
+{
+    JAM_OBJECT
+public:
+    CRenderTargetStencilOGL1_3();
+    virtual ~CRenderTargetStencilOGL1_3();
+    
+    /*
+     * OpenGL specific
+     */
+    virtual GLenum ConvertToInternalFormat(InternalFormats internalFormat) override;
+};
     
 }; // namespace jam
 

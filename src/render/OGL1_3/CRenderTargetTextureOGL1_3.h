@@ -15,13 +15,13 @@
 namespace jam
 {
     
-    class CRenderTargetTextureOGL1_3 : public CRenderTargetTextureOGLBase
-    {
-        JAM_OBJECT
-    public:
-        CRenderTargetTextureOGL1_3();
-        virtual ~CRenderTargetTextureOGL1_3();
-    };
+class CRenderTargetTextureOGL1_3 : public CRenderTargetTextureOGLBase
+{
+    JAM_OBJECT
+public:
+    CRenderTargetTextureOGL1_3();
+    virtual ~CRenderTargetTextureOGL1_3();
+};
     
 }; // namespace jam
 

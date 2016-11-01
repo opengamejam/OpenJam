@@ -9,6 +9,19 @@
 
 #include "CRendererOGLES1_0.h"
 
+#include "CVertexBufferOGLES1_0.h"
+#include "CIndexBufferOGLES1_0.h"
+#include "CMaterialOGLES1_0.h"
+#include "CTextureOGLES1_0.h"
+#include "CMeshOGLES1_0.h"
+#include "CShaderOGLES1_0.h"
+#include "CShaderProgramOGLES1_0.h"
+#include "CFrameBufferOGLES1_0.h"
+#include "CRenderTargetColorOGLES1_0.h"
+#include "CRenderTargetDepthOGLES1_0.h"
+#include "CRenderTargetStencilOGLES1_0.h"
+#include "CRenderTargetTextureOGLES1_0.h"
+
 using namespace jam;
 
 // *****************************************************************************
@@ -19,22 +32,13 @@ using namespace jam;
 // Public Methods
 // *****************************************************************************
 
-INL int ConvertPrimitiveType(IMaterial::PrimitiveTypes type);
-
 CRendererOGLES1_0::CRendererOGLES1_0(IRenderViewPtr renderView)
-: m_RenderView(renderView)
+: CRendererOGLBase(renderView)
 {
-    
 }
 
 CRendererOGLES1_0::~CRendererOGLES1_0()
 {
-    
-}
-
-IRenderViewPtr CRendererOGLES1_0::RenderView() const
-{
-    return m_RenderView;
 }
 
 IFrameBufferPtr CRendererOGLES1_0::CreateFrameBuffer(uint32_t width, uint32_t height)
@@ -119,25 +123,25 @@ void CRendererOGLES1_0::Draw(IMeshPtr mesh, IMaterialPtr material, IShaderProgra
     
     const IShaderProgram::TUniMatrix4Float& uniforms = shader->UniformsMatrix4x4f();
     IShaderProgram::TUniMatrix4Float::const_iterator it = uniforms.find(shader->ProjectionMatrix());
+    glMatrixMode(GL_PROJECTION);
     if (it != uniforms.end())
     {
-        glMatrixMode(GL_PROJECTION);
         glLoadMatrixf(glm::value_ptr(it->second));
     }
     else
     {
-        glLoadMatrixf(glm::value_ptr(glm::mat4(1.0f)));
+        glLoadMatrixf(glm::value_ptr(glm::mat4(1.0)));
     }
     
+    glMatrixMode(GL_MODELVIEW);
     it = uniforms.find(shader->ModelMatrix());
     if (it != uniforms.end())
     {
-        glMatrixMode(GL_MODELVIEW);
         glLoadMatrixf(glm::value_ptr(it->second));
     }
     else
     {
-        glLoadMatrixf(glm::value_ptr(glm::mat4(1.0f)));
+        glLoadMatrixf(glm::value_ptr(glm::mat4(1.0)));
     }
     
     if (mesh->IndexBuffer())
@@ -172,7 +176,8 @@ void CRendererOGLES1_0::Draw(IVertexBufferPtr vertexBuffer, IIndexBufferPtr inde
     }
     
     int primitiveType = ConvertPrimitiveType(material->PrimitiveType());
-    glDrawElements(primitiveType, (GLsizei)indexBuffer->Size(), GL_UNSIGNED_INT, nullptr);
+    const GLvoid *data = nullptr;
+    glDrawElements(primitiveType, (GLsizei)indexBuffer->Size(), GL_UNSIGNED_SHORT, data);
 }
 
 // *****************************************************************************
@@ -183,44 +188,4 @@ void CRendererOGLES1_0::Draw(IVertexBufferPtr vertexBuffer, IIndexBufferPtr inde
 // Private Methods
 // *****************************************************************************
 
-INL int ConvertPrimitiveType(IMaterial::PrimitiveTypes type)
-{
-    int primitiveType = GL_TRIANGLES;
-    switch (type)
-    {
-        case IMaterial::Points:
-            primitiveType = GL_POINTS;
-            break;
-            
-        case IMaterial::Lines:
-            primitiveType = GL_LINES;
-            break;
-            
-        case IMaterial::LinesLoop:
-            primitiveType = GL_LINE_LOOP;
-            break;
-            
-        case IMaterial::LinesStrip:
-            primitiveType = GL_LINE_STRIP;
-            break;
-            
-        case IMaterial::Triangles:
-            primitiveType = GL_TRIANGLES;
-            break;
-            
-        case IMaterial::TrianglesFan:
-            primitiveType = GL_TRIANGLE_FAN;
-            break;
-            
-        case IMaterial::TrianglesStrip:
-            primitiveType = GL_TRIANGLE_STRIP;
-            break;
-            
-        default:
-            break;
-    }
-    
-    return primitiveType;
-}
-
-#endif // defined(RENDER_OGLES1_0)
+#endif /* defined(RENDER_OGLES1_0) */

@@ -35,4 +35,4 @@ CIndexBufferOGLES1_0::~CIndexBufferOGLES1_0()
 // Private Methods
 // *****************************************************************************
 
-#endif // defined(RENDER_OGLES1_0)
+#endif /* defined(RENDER_OGLES1_0) */

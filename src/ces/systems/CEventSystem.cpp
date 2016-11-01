@@ -27,20 +27,17 @@ CEventSystem::CEventSystem()
 
 CEventSystem::~CEventSystem()
 {
-    
 }
 
 void CEventSystem::DispatchEvent(IEventPtr event)
 {
     const ISystem::TEntities& entities = Entities();
-    std::all_of(entities.begin(), entities.end(), [&](IEntityPtr entity)
-    {
+    std::all_of(entities.begin(), entities.end(), [&](IEntityPtr entity) {
         bool stopPropagation = false;
-        entity->Get<CEventComponent>([&](CEventComponentPtr eventComponent)
-        {
+        entity->Get<CEventComponent>([&](CEventComponentPtr eventComponent) {
             stopPropagation = eventComponent->DispatchEvent(event);
         });
-        
+
         return !stopPropagation;
     });
 }
@@ -48,15 +45,12 @@ void CEventSystem::DispatchEvent(IEventPtr event)
 void CEventSystem::Update(unsigned long dt)
 {
     const ISystem::TEntities& entities = DirtyEntities();
-    std::for_each(entities.begin(), entities.end(), [&](IEntityPtr entity)
-    {
-        entity->Get<CEventComponent>([&](CEventComponentPtr eventComponent)
-        {
+    std::for_each(entities.begin(), entities.end(), [&](IEntityPtr entity) {
+        entity->Get<CEventComponent>([&](CEventComponentPtr eventComponent) {
             IEventPtr event = eventComponent->Pop();
-            while(event)
-            {
+            while (event) {
                 DispatchEvent(event);
-                
+
                 event = eventComponent->Pop();
             }
         });
@@ -70,14 +64,12 @@ void CEventSystem::Update(unsigned long dt)
 void CEventSystem::OnChangedComponent(IComponentPtr component)
 {
     CSystemBase::OnChangedComponent(component);
-    if (!IsComponentRegistered(component->GetId()))
-    {
+    if (!IsComponentRegistered(component->GetId())) {
         return;
     }
-    
+
     CEventComponentPtr eventComponent = std::static_pointer_cast<CEventComponent>(component);
-    while(eventComponent->DispatchCount())
-    {
+    while (eventComponent->DispatchCount()) {
         IEventPtr event = eventComponent->Pop();
         DispatchEvent(event);
     }
@@ -86,4 +78,3 @@ void CEventSystem::OnChangedComponent(IComponentPtr component)
 // *****************************************************************************
 // Private Methods
 // *****************************************************************************
-

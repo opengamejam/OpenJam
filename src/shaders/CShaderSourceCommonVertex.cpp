@@ -15,34 +15,32 @@ using namespace jam;
 
 const std::string CShaderSourceCommon::s_GeomentryShader;
 const std::string CShaderSourceCommon::s_VertexShader = MULTI_LINE_STRING(
-\n#ifdef OGL2_0\n
+\n #ifdef OGL2_0\n
 
-uniform mediump vec3     LightDir;
-                                                                          
-varying mediump vec3     VaryingLightDir;
-                                                                          
-void main(void)
-{
-    mat4 MVMatrix = MainViewMatrix * MainModelMatrix;
-    mat4 MVPMatrix = MainProjectionMatrix * MainModelMatrix;
-    gl_Position = MVPMatrix * MainVertexPosition;
-    
-    VaryingNormal = vec3(MainNormalMatrix * vec4(MainVertexNormal, 0.0));
-    VaryingTextureCoord = MainVertexUV;
-    VaryingMainColor = MainVertexColor;
-    
-    vec4 vertexPos = MVMatrix * MainVertexPosition;
-    vec4 lightPos = MVMatrix * vec4(LightDir, 0.0);
-    
-    VaryingLightDir = vec3(lightPos - vertexPos);
-}
-                                                                          
-\n#endif\n
+        uniform mediump vec3 LightDir;
 
-\n#ifdef OGLES3\n
+    varying mediump vec3 VaryingLightDir;
 
-\n#endif\n
-);
+    void main(void) {
+        mat4 MVMatrix = MainViewMatrix * MainModelMatrix;
+        mat4 MVPMatrix = MainProjectionMatrix * MainModelMatrix;
+        gl_Position = MVPMatrix * MainVertexPosition;
+
+        VaryingNormal = vec3(MainNormalMatrix * vec4(MainVertexNormal, 0.0));
+        VaryingTextureCoord = MainVertexUV;
+        VaryingMainColor = MainVertexColor;
+
+        vec4 vertexPos = MVMatrix * MainVertexPosition;
+        vec4 lightPos = MVMatrix * vec4(LightDir, 0.0);
+
+        VaryingLightDir = vec3(lightPos - vertexPos);
+    }
+                                                                          
+\n #endif \n
+
+\n #ifdef OGLES3\n
+
+\n #endif \n);
 
 // *****************************************************************************
 // Public Methods

@@ -14,35 +14,33 @@
 
 #include "IIndexBuffer.h"
 
-namespace jam
-{
-    
-class CIndexBufferOGLBase : public IIndexBuffer
-{
+namespace jam {
+
+class CIndexBufferOGLBase : public IIndexBuffer {
 public:
     CIndexBufferOGLBase();
     virtual ~CIndexBufferOGLBase();
-    
+
     virtual void Initialize(DataTypes dataType) override;
     virtual void Shutdown() override;
     virtual bool IsValid() const override;
-    
+
     virtual uint64_t SizeRaw() const override;
     virtual void ResizeRaw(uint64_t newSize) override;
-    
+
     virtual uint64_t ElementSize() const override;
-    
+
     virtual void* LockRaw() override;
     virtual SIndexStream& Lock() override;
     virtual bool IsLocked() const override;
     virtual void Unlock(bool isNeedCommit = false) override;
-    
+
     virtual void Bind() override;
     virtual void Unbind() override;
-    
+
 protected:
     virtual void ElementSize(uint64_t elementSize) override;
-    
+
 private:
     unsigned int m_Id;
     std::vector<char> m_Buffer;
@@ -50,7 +48,7 @@ private:
     bool m_IsLocked;
     SIndexStream m_Stream;
 };
-    
+
 }; // namespace jam
 
 #endif /* CINDEXBUFFEROGLBASE_H */

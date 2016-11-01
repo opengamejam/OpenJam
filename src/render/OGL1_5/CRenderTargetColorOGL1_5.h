@@ -12,22 +12,20 @@
 
 #include "CRenderTargetColorOGLBase.h"
 
-namespace jam
-{
+namespace jam {
 
-class CRenderTargetColorOGL1_5 : public CRenderTargetColorOGLBase
-{
+class CRenderTargetColorOGL1_5 : public CRenderTargetColorOGLBase {
     JAM_OBJECT
 public:
     CRenderTargetColorOGL1_5();
     virtual ~CRenderTargetColorOGL1_5();
-    
+
     /*
      * OpenGL specific
      */
     virtual GLenum ConvertInternalFormat(InternalFormats internalFormat) override;
 };
-    
+
 }; // namespace jam
 
 #endif /* CRENDERTARGETCOLOROGL1_5_H */

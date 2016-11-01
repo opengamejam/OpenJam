@@ -10,19 +10,17 @@
     defined(RENDER_OGL2_0) || defined(RENDER_OGLES2_0)
 
 #ifndef CSHADEROGLBASE_H
-#define	CSHADEROGLBASE_H
+#define CSHADEROGLBASE_H
 
 #include "IShader.h"
 
-namespace jam
-{
+namespace jam {
 
-class CShaderOGLBase : public IShader
-{
+class CShaderOGLBase : public IShader {
 public:
     CShaderOGLBase();
     virtual ~CShaderOGLBase();
-    
+
     /*
      * OpenGL specific
      */
@@ -31,7 +29,7 @@ public:
 
 }; // namespace jam
 
-#endif	/* CSHADEROGLBASE_H */
+#endif /* CSHADEROGLBASE_H */
 
 #endif /* defined(RENDER_OGL1_3) || defined(RENDER_OGLES1_0) || \
           defined(RENDER_OGL1_5) || defined(RENDER_OGLES1_1) || \

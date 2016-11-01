@@ -8,19 +8,17 @@
 #if defined(RENDER_OGL1_5)
 
 #ifndef CSHADEROGL1_5_H
-#define	CSHADEROGL1_5_H
+#define CSHADEROGL1_5_H
 
 #include "CShaderOGLBase.h"
 
-namespace jam
-{
+namespace jam {
 
-class CShaderOGL1_5 : public CShaderOGLBase
-{
+class CShaderOGL1_5 : public CShaderOGLBase {
 public:
     CShaderOGL1_5();
     virtual ~CShaderOGL1_5();
-    
+
     virtual uint32_t Id() override;
     virtual bool Compile(const std::string& source, ShaderType shaderType) override;
     virtual bool IsCompiled() const override;
@@ -31,6 +29,6 @@ public:
 
 }; // namespace jam
 
-#endif	/* CSHADEROGL1_5_H */
+#endif /* CSHADEROGL1_5_H */
 
 #endif /* defined(RENDER_OGL1_5) */

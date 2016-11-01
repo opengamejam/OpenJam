@@ -14,20 +14,17 @@ using namespace jam;
 // Constants
 // *****************************************************************************
 
-
 // *****************************************************************************
 // Public Methods
 // *****************************************************************************
 
 CUpdateComponent::CUpdateComponent(const TUpdateFunc& updateFunc)
-: m_UpdateFunc(updateFunc)
+    : m_UpdateFunc(updateFunc)
 {
-
 }
 
 CUpdateComponent::~CUpdateComponent()
 {
-
 }
 
 void CUpdateComponent::SetUpdateFunc(const TUpdateFunc& updateFunc)
@@ -37,8 +34,7 @@ void CUpdateComponent::SetUpdateFunc(const TUpdateFunc& updateFunc)
 
 void CUpdateComponent::Update(unsigned long dt)
 {
-    if (m_UpdateFunc)
-    {
+    if (m_UpdateFunc) {
         m_UpdateFunc(dt);
     }
 }

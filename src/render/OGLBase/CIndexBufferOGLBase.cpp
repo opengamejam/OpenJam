@@ -22,11 +22,10 @@ using namespace jam;
 // *****************************************************************************
 
 CIndexBufferOGLBase::CIndexBufferOGLBase()
-: m_Id(0)
-, m_ElementSize(1)
-, m_IsLocked(false)
+    : m_Id(0)
+    , m_ElementSize(1)
+    , m_IsLocked(false)
 {
-    
 }
 
 CIndexBufferOGLBase::~CIndexBufferOGLBase()
@@ -36,8 +35,7 @@ CIndexBufferOGLBase::~CIndexBufferOGLBase()
 
 void CIndexBufferOGLBase::Initialize(DataTypes dataType)
 {
-    if (!IsValid())
-    {
+    if (!IsValid()) {
 #ifdef GL_ELEMENT_ARRAY_BUFFER
         glGenBuffers(1, &m_Id);
 #else
@@ -51,8 +49,7 @@ void CIndexBufferOGLBase::Initialize(DataTypes dataType)
 
 void CIndexBufferOGLBase::Shutdown()
 {
-    if (IsValid())
-    {
+    if (IsValid()) {
 #ifdef GL_ELEMENT_ARRAY_BUFFER
         glDeleteBuffers(1, &m_Id);
 #endif
@@ -105,8 +102,7 @@ bool CIndexBufferOGLBase::IsLocked() const
 void CIndexBufferOGLBase::Unlock(bool isNeedCommit)
 {
 #ifdef GL_ELEMENT_ARRAY_BUFFER
-    if (isNeedCommit)
-    {
+    if (isNeedCommit) {
         Bind();
         glBufferSubData(GL_ELEMENT_ARRAY_BUFFER, 0, m_Buffer.size(), m_Buffer.data());
         Unbind();

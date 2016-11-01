@@ -15,8 +15,7 @@ void CStringUtils::SplitString(std::vector<std::string>& tokens, const std::stri
 {
     size_t start = 0;
     size_t end = 0;
-    while ((end = text.find(delimeter, start)) != std::string::npos)
-    {
+    while ((end = text.find(delimeter, start)) != std::string::npos) {
         tokens.push_back(text.substr(start, end - start));
         start = end + 1;
     }
@@ -26,8 +25,7 @@ void CStringUtils::SplitString(std::vector<std::string>& tokens, const std::stri
 std::string CStringUtils::ReplaceString(std::string string, const std::string& from, const std::string& to)
 {
     size_t pos = 0;
-    while ((pos = string.find(from, pos)) != std::string::npos)
-    {
+    while ((pos = string.find(from, pos)) != std::string::npos) {
         string.replace(pos, from.length(), to);
         pos += to.length();
     }
@@ -36,21 +34,19 @@ std::string CStringUtils::ReplaceString(std::string string, const std::string& f
 
 bool CStringUtils::StringEndsWith(std::string const& fullString, std::string const& ending)
 {
-    if (fullString.length() >= ending.length())
-    {
+    if (fullString.length() >= ending.length()) {
         return (0 == fullString.compare(fullString.length() - ending.length(), ending.length(), ending));
     }
-    
+
     return false;
 }
 
 bool CStringUtils::StringStartsWith(std::string const& fullString, std::string const& starting)
 {
-    if (fullString.length() >= starting.length())
-    {
+    if (fullString.length() >= starting.length()) {
         return (0 == fullString.compare(0, starting.length(), starting));
     }
-    
+
     return false;
 }
 
@@ -59,16 +55,14 @@ glm::vec2 CStringUtils::ToVec2(const std::string& value, char delimeter)
     std::vector<std::string> components;
     SplitString(components, value, delimeter);
     float x = 0.0f;
-    if (components.size() > 0)
-    {
+    if (components.size() > 0) {
         x = FromString<float>(ReplaceString(components[0], " ", ""));
     }
     float y = 0.0f;
-    if (components.size() > 1)
-    {
+    if (components.size() > 1) {
         y = FromString<float>(ReplaceString(components[1], " ", ""));
     }
-    
+
     return glm::vec2(x, y);
 }
 
@@ -77,20 +71,17 @@ glm::vec3 CStringUtils::ToVec3(const std::string& value, char delimeter)
     std::vector<std::string> components;
     SplitString(components, value, delimeter);
     float x = 0.0f;
-    if (components.size() > 0)
-    {
+    if (components.size() > 0) {
         x = FromString<float>(ReplaceString(components[0], " ", ""));
     }
     float y = 0.0f;
-    if (components.size() > 1)
-    {
+    if (components.size() > 1) {
         y = FromString<float>(ReplaceString(components[1], " ", ""));
     }
     float z = 0.0f;
-    if (components.size() > 2)
-    {
+    if (components.size() > 2) {
         z = FromString<float>(ReplaceString(components[2], " ", ""));
     }
-    
+
     return glm::vec3(x, y, z);
 }

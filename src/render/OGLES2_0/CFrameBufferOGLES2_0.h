@@ -12,16 +12,14 @@
 
 #include "CFrameBufferOGLBase.h"
 
-namespace jam
-{
-    
-class CFrameBufferOGLES2_0 : public CFrameBufferOGLBase
-{
+namespace jam {
+
+class CFrameBufferOGLES2_0 : public CFrameBufferOGLBase {
 public:
     CFrameBufferOGLES2_0(uint32_t width, uint32_t height);
     virtual ~CFrameBufferOGLES2_0();
 };
-    
+
 }; // namespace jam
 
 #endif /* CFRAMEBUFFEROGLES2_0_H */

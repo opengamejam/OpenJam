@@ -14,26 +14,23 @@ using namespace jam;
 // Constants
 // *****************************************************************************
 
-
 // *****************************************************************************
 // Public Methods
 // *****************************************************************************
 
 CBatchComponent::CBatchComponent()
-: m_BatchId(0)
-, m_Transform()
-, m_OldTransform()
-, m_OffsetVertex(0)
-, m_SizeVertex(0)
-, m_OffsetIndex(0)
-, m_SizeIndex(0)
+    : m_BatchId(0)
+    , m_Transform()
+    , m_OldTransform()
+    , m_OffsetVertex(0)
+    , m_SizeVertex(0)
+    , m_OffsetIndex(0)
+    , m_SizeIndex(0)
 {
-    
 }
 
 CBatchComponent::~CBatchComponent()
 {
-    
 }
 
 uint64_t CBatchComponent::BatchId() const

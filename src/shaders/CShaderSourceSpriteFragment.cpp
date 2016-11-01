@@ -14,19 +14,17 @@ using namespace jam;
 // *****************************************************************************
 
 const std::string CShaderSourceSprite::s_FragmentShader = MULTI_LINE_STRING(
-\n#ifdef OGL2_0\n
+\n #ifdef OGL2_0\n
 
-void main()
-{
-    vec4 color = texture2D(MainTexture0, VaryingTextureCoord);
-    gl_FragColor = color;
-}
-\n#endif\n
+    void main() {
+        vec4 color = texture2D(MainTexture0, VaryingTextureCoord);
+        gl_FragColor = color;
+    }
+\n #endif \n
 
-\n#ifdef OGLES3\n
+\n #ifdef OGLES3\n
 
-\n#endif\n
-);
+\n #endif \n);
 
 // *****************************************************************************
 // Public Methods

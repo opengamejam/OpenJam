@@ -22,25 +22,24 @@ int main(int argc, char** argv)
 
     IScene* scene = new CGameScene();
     game->PushScene(scene);
-    
+
     unsigned long lastTimestamp = CSystem::GetTickCount();
-    while(game->IsRunning())
-    {
+    while (game->IsRunning()) {
         unsigned long currentTimestamp = CSystem::GetTickCount();
         unsigned long dt = currentTimestamp - lastTimestamp;
-        lastTimestamp   = currentTimestamp;
+        lastTimestamp = currentTimestamp;
 
         game->Update(dt);
     }
-    
+
     game->Stop();
-    
+
     game->PopScene();
     delete scene;
 
     delete game;
     delete render;
-    delete renderView;  
+    delete renderView;
 
     return (EXIT_SUCCESS);
 }

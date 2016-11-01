@@ -10,29 +10,27 @@
     defined(RENDER_OGL2_0) || defined(RENDER_OGLES2_0)
 
 #ifndef CTEXTUREOGLBASE_H
-#define	CTEXTUREOGLBASE_H
+#define CTEXTUREOGLBASE_H
 
 #include "ITexture.h"
 #include "IImage.h"
 
-namespace jam
-{
+namespace jam {
 
-class CTextureOGLBase : public ITexture
-{
+class CTextureOGLBase : public ITexture {
 public:
     CTextureOGLBase();
     virtual ~CTextureOGLBase();
-    
+
     virtual bool AssignImage(IImagePtr image) override;
-    
+
     virtual void Filter(TextureFilters filter) override;
     virtual TextureFilters Filter() const override;
-    
+
     virtual void Bind() override;
     virtual void Unbind() override;
     virtual const std::string& Hash() override;
-    
+
     /*
      * OpenGL specific
      */
@@ -40,13 +38,13 @@ public:
     virtual GLenum TexelFormatsToGlInternalFormat(TexelFormats texelFormat) = 0;
     virtual GLenum TexelFormatsToGlFormat(TexelFormats texelFormat) = 0;
     virtual GLenum TexelTypeToGlType(TexelTypes texelType, TexelFormats texelFormat) = 0;
-    
+
 protected:
     bool IsValid() const;
-    
+
 private:
     void HashMe();
-    
+
 private:
     uint32_t m_Id;
 

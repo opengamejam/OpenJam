@@ -11,20 +11,18 @@
 
 #include "ISystem.h"
 
-namespace jam
-{
+namespace jam {
 CLASS_PTR(CAnimation2DSystem)
-    
-class CAnimation2DSystem : public CSystemBase
-{
+
+class CAnimation2DSystem : public CSystemBase {
     JAM_OBJECT
 public:
     CAnimation2DSystem();
     virtual ~CAnimation2DSystem();
-    
+
     void Update(unsigned long dt) override;
 };
-    
+
 } // namespace jam
 
 #endif /* CANIMATION2DSYSTEM_H */

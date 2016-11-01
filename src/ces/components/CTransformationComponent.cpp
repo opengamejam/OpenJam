@@ -15,7 +15,6 @@ using namespace jam;
 // Constants
 // *****************************************************************************
 
-
 // *****************************************************************************
 // Public Methods
 // *****************************************************************************
@@ -26,12 +25,11 @@ CTransformationComponent::CTransformationComponent()
 
 CTransformationComponent::~CTransformationComponent()
 {
-
 }
 
 void CTransformationComponent::AddTransform(int key,
-                                            const CTransform3Df& transform,
-                                            bool isAffectsOnChilds)
+    const CTransform3Df& transform,
+    bool isAffectsOnChilds)
 {
     m_Transforms[key] = STransformProps(transform, isAffectsOnChilds);
 }
@@ -42,7 +40,7 @@ void CTransformationComponent::RemoveTransform(int key)
 }
 
 const CTransform3Df& CTransformationComponent::Transform(int key)
-{    
+{
     return m_Transforms[key].transform;
 }
 

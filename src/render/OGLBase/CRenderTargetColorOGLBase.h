@@ -14,58 +14,56 @@
 
 #include "IRenderTarget.h"
 
-namespace jam
-{
+namespace jam {
 
-class CRenderTargetColorOGLBase : public CRenderTargetColor
-{
+class CRenderTargetColorOGLBase : public CRenderTargetColor {
     JAM_OBJECT
 public:
     CRenderTargetColorOGLBase();
     virtual ~CRenderTargetColorOGLBase();
-    
+
     /*
      * Initialize render target object
      */
     virtual void Initialize(InternalFormats internalFormat) override;
-    
+
     /*
      * Deinitialize render target object
      */
     virtual void Shutdown() override;
-    
+
     /*
      * Check if render target is initialized
      */
     virtual bool IsInitialized() override;
-    
+
     /*
      * Allocate render buffer with 'width' and 'height'
      */
     virtual void Allocate(uint64_t width, uint64_t height) override;
-    
+
     /*
      * Bind current render target
      */
     virtual void Bind() const override;
-    
+
     /*
      * Unbind current render target
      */
     virtual void Unbind() const override;
-    
+
     /*
      * OpenGL specific
      */
     virtual void BindToFrameBuffer(uint64_t colorAttachementIdx);
     virtual void UnbindFromFrameBuffer(uint64_t colorAttachementIdx);
     virtual GLenum ConvertInternalFormat(InternalFormats internalFormat) = 0;
-    
+
 private:
     uint32_t m_Id;
     InternalFormats m_InternalFormat;
 };
-    
+
 }; // namespace jam
 
 #endif /* CRENDERTARGETCOLOROGLBASE_H */

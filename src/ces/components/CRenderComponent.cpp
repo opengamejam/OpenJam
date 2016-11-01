@@ -22,15 +22,13 @@ const std::string CRenderComponent::kBatchingGroupName = "jam_batch_group";
 // *****************************************************************************
 
 CRenderComponent::CRenderComponent()
-: m_IsBatchable(false)
-, m_DrawOrder(0)
+    : m_IsBatchable(false)
+    , m_DrawOrder(0)
 {
-
 }
 
 CRenderComponent::~CRenderComponent()
 {
-
 }
 
 IMeshPtr CRenderComponent::Mesh(const std::string& group)
@@ -55,23 +53,19 @@ void CRenderComponent::Material(IMaterialPtr material, const std::string& group)
     m_Material[group] = material;
     m_Groups.insert(group);
     m_GroupsVisibility[group] = true;
-    
+
     m_DrawOrder = 0;
-    std::for_each(m_Material.begin(), m_Material.end(), [&](const std::pair<std::string, IMaterialPtr>& element)
-    {
+    std::for_each(m_Material.begin(), m_Material.end(), [&](const std::pair<std::string, IMaterialPtr>& element) {
         IMaterialPtr m = element.second;
-        if (!m->Opacity())
-        {
+        if (!m->Opacity()) {
             m_DrawOrder |= (1 << 2);
         }
-        
-        if (!m->DepthEnable())
-        {
+
+        if (!m->DepthEnable()) {
             m_DrawOrder |= (1 << 1);
         }
-        
-        if (!m->StencilEnable())
-        {
+
+        if (!m->StencilEnable()) {
             m_DrawOrder |= (1 << 0);
         }
     });
@@ -142,11 +136,10 @@ void CRenderComponent::RemoveCameraId(uint32_t cameraId)
 
 bool CRenderComponent::HasCameraId(uint32_t cameraId)
 {
-    if (m_CameraIds.empty())
-    {
+    if (m_CameraIds.empty()) {
         return true;
     }
-    
+
     return (m_CameraIds.find(cameraId) != m_CameraIds.end());
 }
 
@@ -158,11 +151,10 @@ const std::set<uint32_t>& CRenderComponent::CameraIds() const
 template <class T>
 bool IsAllValuesIsEqual(const std::unordered_map<std::string, T>& map)
 {
-    if (map.empty())
-    {
+    if (map.empty()) {
         return true;
     }
-    
+
     bool result = true;
     /*T value = map.first().second;
     std::all_of(map.begin(), map.end(), [&](const std::pair<std::string, T>& element)
@@ -174,27 +166,23 @@ bool IsAllValuesIsEqual(const std::unordered_map<std::string, T>& map)
         
         return result;
     });*/
-    
+
     return result;
 }
 
 bool CRenderComponent::Batchable() const
 {
-    if (m_IsBatchable)
-    {
-        return (IsAllValuesIsEqual(m_Material) &&
-                IsAllValuesIsEqual(m_Shader) &&
-                IsAllValuesIsEqual(m_Texture));
+    if (m_IsBatchable) {
+        return (IsAllValuesIsEqual(m_Material) && IsAllValuesIsEqual(m_Shader) && IsAllValuesIsEqual(m_Texture));
     }
-    
+
     return false;
 }
 
 void CRenderComponent::Batchable(bool isBatchable)
 {
     m_IsBatchable = isBatchable;
-    if (!Batchable())
-    {
+    if (!Batchable()) {
         printf("Render Component with different material in groups cannot be batched"); // TODO: Log system
     }
 }

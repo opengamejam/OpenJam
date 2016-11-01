@@ -8,21 +8,19 @@
 #if defined(OS_ANDROID)
 
 #ifndef CRENDERVIEWANDROID_H
-#define	CRENDERVIEWANDROID_H
+#define CRENDERVIEWANDROID_H
 
 #include "IRenderView.h"
 
-namespace jam
-{
+namespace jam {
 
-class CRenderViewAndroid : public IRenderView
-{
+class CRenderViewAndroid : public IRenderView {
 public:
-	CRenderViewAndroid(unsigned int width, unsigned int height);
-	virtual ~CRenderViewAndroid();
+    CRenderViewAndroid(unsigned int width, unsigned int height);
+    virtual ~CRenderViewAndroid();
 
-	virtual void CreateView();
-	virtual void SwapBuffer() const;
+    virtual void CreateView();
+    virtual void SwapBuffer() const;
     virtual void UpdateEvents() const;
 };
 
@@ -31,6 +29,4 @@ public:
 #endif /* CRENDERVIEWANDROID_H */
 
 #endif /* OS_ANDROID */
-
-
 

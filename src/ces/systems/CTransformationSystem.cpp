@@ -29,43 +29,36 @@ CTransfromationSystem::CTransfromationSystem()
 
 CTransfromationSystem::~CTransfromationSystem()
 {
-
 }
 
 void CTransfromationSystem::Update(unsigned long dt)
 {
     const ISystem::TEntities& entities = DirtyEntities();
-    std::for_each(entities.begin(), entities.end(), [&](IEntityPtr entity)
-    {
-        if (!IsEntityAdded(entity))
-        {
+    std::for_each(entities.begin(), entities.end(), [&](IEntityPtr entity) {
+        if (!IsEntityAdded(entity)) {
             return;
         }
-        
+
         CTransform3Df childTransform;
         IEntityPtr parent = entity->Parent().lock();
-        if (!parent)
-        {
-        	return;
+        if (!parent) {
+            return;
         }
 
-        parent->Get<CTransformationComponent>([&](CTransformationComponentPtr transformComponent)
-        {
+        parent->Get<CTransformationComponent>([&](CTransformationComponentPtr transformComponent) {
             const CTransformationComponent::TTransformsList& transforms = transformComponent->Transforms();
             std::for_each(transforms.begin(), transforms.end(),
-                          [&](const std::pair<int, CTransformationComponent::STransformProps>& element)
-            {
-                const CTransformationComponent::STransformProps& transformProps = element.second;
-                if (transformProps.isAffectsOnChilds)
-                {
-                    childTransform += transformProps.transform;
-                }
-            });
+                [&](const std::pair<int, CTransformationComponent::STransformProps>& element) {
+                    const CTransformationComponent::STransformProps& transformProps = element.second;
+                    if (transformProps.isAffectsOnChilds) {
+                        childTransform += transformProps.transform;
+                    }
+                });
         });
-        
+
         UpdateTransformsRecursively(entity, childTransform);
     });
-    
+
     ClearDirtyEntities();
 }
 
@@ -78,46 +71,39 @@ void CTransfromationSystem::Update(unsigned long dt)
 // *****************************************************************************
 
 void CTransfromationSystem::UpdateTransformsRecursively(IEntityPtr entity,
-                                                        const CTransform3Df& parentTransform)
+    const CTransform3Df& parentTransform)
 {
-    entity->Get<CTransformationComponent>([&](CTransformationComponentPtr transformComponent)
-    {
+    entity->Get<CTransformationComponent>([&](CTransformationComponentPtr transformComponent) {
         // Calculate summary transform
         CTransform3Df resultTransform = parentTransform;
         CTransform3Df childTransform = parentTransform;
         const CTransformationComponent::TTransformsList& transforms = transformComponent->Transforms();
-        
+
         std::for_each(transforms.begin(), transforms.end(),
-                      [&](const std::pair<int, CTransformationComponent::STransformProps>& element)
-        {
-            const CTransformationComponent::STransformProps& transformProps = element.second;
-            if (transformProps.isAffectsOnChilds)
-            {
-                childTransform += transformProps.transform;
-            }
-            resultTransform += transformProps.transform;
-        });
+            [&](const std::pair<int, CTransformationComponent::STransformProps>& element) {
+                const CTransformationComponent::STransformProps& transformProps = element.second;
+                if (transformProps.isAffectsOnChilds) {
+                    childTransform += transformProps.transform;
+                }
+                resultTransform += transformProps.transform;
+            });
         transformComponent->ResultTransform(resultTransform);
-        
-        entity->Get<CRenderComponent>([&](CRenderComponentPtr renderComponent)
-        {
+
+        entity->Get<CRenderComponent>([&](CRenderComponentPtr renderComponent) {
             IShaderProgramPtr shader = renderComponent->Shader();
-            if (shader)
-            {
-                if (renderComponent->Batchable())
-                {
+            if (shader) {
+                if (renderComponent->Batchable()) {
                     resultTransform = CTransform3Df();
                 }
-                
+
                 shader->BindUniformMatrix4x4f("MainModelMatrix", resultTransform());
                 renderComponent->Shader(shader);
             }
         });
-        
+
         // Update transform in childrens
         const IEntity::TEntities& childs = entity->Childs();
-        std::for_each(childs.begin(), childs.end(), [&](IEntityPtr entity)
-        {
+        std::for_each(childs.begin(), childs.end(), [&](IEntityPtr entity) {
             UpdateTransformsRecursively(entity, childTransform);
         });
     });

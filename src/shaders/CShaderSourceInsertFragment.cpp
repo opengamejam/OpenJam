@@ -14,29 +14,28 @@ using namespace jam;
 // *****************************************************************************
 
 const std::string CShaderSourceInsert::s_FragmentShader = MULTI_LINE_STRING(
-\n#ifdef OGL2_0\n
-                                                                            
-precision mediump float;
+\n #ifdef OGL2_0\n
 
-// Uniforms
-uniform sampler2D        MainTexture0;
-uniform sampler2D        MainTexture1;
-uniform sampler2D        MainTexture2;
-uniform sampler2D        MainTexture3;
-uniform sampler2D        MainTexture4;
-uniform sampler2D        MainTexture5;
+        precision mediump float;
 
-// Varyings
-varying mediump vec3     VaryingNormal;
-varying mediump vec2     VaryingTextureCoord;
-varying mediump vec4     VaryingMainColor;
+    // Uniforms
+    uniform sampler2D MainTexture0;
+    uniform sampler2D MainTexture1;
+    uniform sampler2D MainTexture2;
+    uniform sampler2D MainTexture3;
+    uniform sampler2D MainTexture4;
+    uniform sampler2D MainTexture5;
 
-\n#endif\n
+    // Varyings
+    varying mediump vec3 VaryingNormal;
+    varying mediump vec2 VaryingTextureCoord;
+    varying mediump vec4 VaryingMainColor;
 
-\n#ifdef OGLES3\n
+\n #endif \n
 
-\n#endif\n
-);
+\n #ifdef OGLES3\n
+
+\n #endif \n);
 
 // *****************************************************************************
 // Public Methods

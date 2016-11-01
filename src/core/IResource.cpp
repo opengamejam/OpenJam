@@ -14,16 +14,19 @@ using namespace vfspp;
 IResource::IResource(const std::string& filename)
     : m_Filename(filename)
     , m_IsExternalData(false)
-{}
+{
+}
 
 IResource::IResource(const std::string& name, const IResource::TResourceData& data)
-: m_Data(data)
-, m_Filename(name)
-, m_IsExternalData(true)
-{}
+    : m_Data(data)
+    , m_Filename(name)
+    , m_IsExternalData(true)
+{
+}
 
 IResource::~IResource()
-{}
+{
+}
 
 const std::string& IResource::Filename() const
 {
@@ -42,32 +45,27 @@ bool IResource::Load()
 
 bool IResource::Load(const std::string& filename)
 {
-    if (filename.empty())
-    {
+    if (filename.empty()) {
         return false;
     }
-    
-    if (!m_IsExternalData)
-    {
+
+    if (!m_IsExternalData) {
         bool result = false;
-        
+
         CVirtualFileSystemPtr vfs = vfs_get_global();
         IFilePtr file = vfs->OpenFile(filename, IFile::In);
-        if (file && file->IsOpened())
-        {
+        if (file && file->IsOpened()) {
             uint64_t fileSize = file->Size();
             m_Data.resize(fileSize + 1);
             memset(&m_Data[0], 0, fileSize + 1);
-            
+
             result = (file->Read(&m_Data[0], fileSize) == fileSize);
-            
+
             vfs->CloseFile(file);
         }
-        
+
         return result;
-    }
-    else
-    {
+    } else {
         return true;
     }
 }

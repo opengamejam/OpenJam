@@ -11,26 +11,24 @@
 
 #include "ISystem.h"
 
-namespace jam
-{
+namespace jam {
 CLASS_PTR(CTouchSystem)
 CLASS_PTR(IRenderer)
 CLASS_PTR(IRenderView)
 CLASS_PTR(IFrameBuffer)
 
-class CTouchSystem : public CSystemBase
-{
+class CTouchSystem : public CSystemBase {
     JAM_OBJECT
 public:
     CTouchSystem(IRenderViewPtr renderView);
     virtual ~CTouchSystem();
-    
+
     virtual void Update(unsigned long dt) override;
-    
+
 private:
     IFrameBufferPtr m_RenderTarget;
 };
-    
+
 } // namespace jam
 
 #endif /* CTOUCHSYSTEM_H */

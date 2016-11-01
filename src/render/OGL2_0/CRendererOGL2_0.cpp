@@ -33,7 +33,7 @@ using namespace jam;
 // *****************************************************************************
 
 CRendererOGL2_0::CRendererOGL2_0(IRenderViewPtr renderView)
-: CRendererOGLBase(renderView)
+    : CRendererOGLBase(renderView)
 {
 }
 
@@ -118,38 +118,30 @@ void CRendererOGL2_0::Draw(IMeshPtr mesh, IMaterialPtr material, IShaderProgramP
     assert(mesh && material);
     IVertexBufferPtr vertexBuffer = mesh->VertexBuffer();
     IIndexBufferPtr indexBuffer = mesh->IndexBuffer();
-    
-    if (indexBuffer)
-    {
+
+    if (indexBuffer) {
         Draw(vertexBuffer, indexBuffer, material);
-    }
-    else
-    {
+    } else {
         Draw(vertexBuffer, material);
     }
 }
 
 void CRendererOGL2_0::Draw(IVertexBufferPtr vertexBuffer, IMaterialPtr material)
 {
-    if (!vertexBuffer ||
-        !material)
-    {
+    if (!vertexBuffer || !material) {
         return;
     }
-    
+
     int primitiveType = ConvertPrimitiveType(material->PrimitiveType());
     glDrawArrays(primitiveType, 0, (GLsizei)vertexBuffer->Size());
 }
 
 void CRendererOGL2_0::Draw(IVertexBufferPtr vertexBuffer, IIndexBufferPtr indexBuffer, IMaterialPtr material)
 {
-    if (!vertexBuffer ||
-        !indexBuffer ||
-        !material)
-    {
+    if (!vertexBuffer || !indexBuffer || !material) {
         return;
     }
-        
+
     int primitiveType = ConvertPrimitiveType(material->PrimitiveType());
     glDrawElements(primitiveType, (GLsizei)indexBuffer->Size(), GL_UNSIGNED_SHORT, nullptr);
 }

@@ -27,25 +27,24 @@ KOS_INIT_ROMDISK(romdisk);
 
 int main()
 {
-	m_RenderView.reset(new CRenderViewDreamcast());
-	m_Game.reset(new CGame(m_RenderView));
-	m_Game->Initialize();
+    m_RenderView.reset(new CRenderViewDreamcast());
+    m_Game.reset(new CGame(m_RenderView));
+    m_Game->Initialize();
 
-	m_MainScene.reset(new CGameScene(m_Game));
-	m_Game->PushScene(m_MainScene);
+    m_MainScene.reset(new CGameScene(m_Game));
+    m_Game->PushScene(m_MainScene);
 
-	while(1)
-	{
-		static unsigned long prev_time = CSystem::GetTickCount();
-		unsigned long curr_time = CSystem::GetTickCount();
-		unsigned long dt = curr_time - prev_time;
-		prev_time = curr_time;
+    while (1) {
+        static unsigned long prev_time = CSystem::GetTickCount();
+        unsigned long curr_time = CSystem::GetTickCount();
+        unsigned long dt = curr_time - prev_time;
+        prev_time = curr_time;
 
-		m_Game->Update(dt);
-		m_Game->Draw();
-	}
+        m_Game->Update(dt);
+        m_Game->Draw();
+    }
 
-	return 0;
+    return 0;
 }
 
 #endif // OS_KOS

@@ -17,7 +17,6 @@
 #include "CRendererOGLES1_1.h"
 #include "CRendererOGLES2_0.h"
 
-
 using namespace jam;
 
 // *****************************************************************************
@@ -29,10 +28,10 @@ using namespace jam;
 // *****************************************************************************
 
 CRenderViewIOS::CRenderViewIOS(void* glkView, RenderApi renderApi)
-	: IRenderView(((__bridge UIView*)glkView).frame.size.width,
-                  ((__bridge UIView*)glkView).frame.size.height,
-                  ((__bridge UIView*)glkView).contentScaleFactor)
-	, m_GLKView((__bridge UIView*)glkView)
+    : IRenderView(((__bridge UIView*)glkView).frame.size.width,
+          ((__bridge UIView*)glkView).frame.size.height,
+          ((__bridge UIView*)glkView).contentScaleFactor)
+    , m_GLKView((__bridge UIView*)glkView)
     , m_GLContext(nil)
     , m_RenderApi(renderApi)
     , m_Renderer(nullptr)
@@ -42,44 +41,36 @@ CRenderViewIOS::CRenderViewIOS(void* glkView, RenderApi renderApi)
 
 CRenderViewIOS::~CRenderViewIOS()
 {
-
 }
 
 void CRenderViewIOS::CreateView()
 {
-    switch (m_RenderApi)
-    {
-        case OGLES1_1:
-        {
-            m_GLContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1];
-            [EAGLContext setCurrentContext:m_GLContext];
-            
-            m_Renderer.reset(new CRendererOGLES1_1(shared_from_this()));
-        }
+    switch (m_RenderApi) {
+    case OGLES1_1: {
+        m_GLContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1];
+        [EAGLContext setCurrentContext:m_GLContext];
+
+        m_Renderer.reset(new CRendererOGLES1_1(shared_from_this()));
+    } break;
+
+    case OGLES2_0: {
+        m_GLContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
+        [EAGLContext setCurrentContext:m_GLContext];
+
+        m_Renderer.reset(new CRendererOGLES2_0(shared_from_this()));
+    } break;
+
+    case OGLES3_0: { // TODO: OGLES3
+        m_GLContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1];
+        [EAGLContext setCurrentContext:m_GLContext];
+
+        //m_Renderer.reset(new CRendererOGLES1_1(shared_from_this()));
+    } break;
+
+    default:
         break;
-            
-        case OGLES2_0:
-        {
-            m_GLContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
-            [EAGLContext setCurrentContext:m_GLContext];
-            
-            m_Renderer.reset(new CRendererOGLES2_0(shared_from_this()));
-        }
-        break;
-            
-        case OGLES3_0:
-        {   // TODO: OGLES3
-            m_GLContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1];
-            [EAGLContext setCurrentContext:m_GLContext];
-            
-            //m_Renderer.reset(new CRendererOGLES1_1(shared_from_this()));
-        }
-        break;
-            
-        default:
-            break;
     };
-    
+
     CRenderTargetColorPtr colorTarget = m_Renderer->CreateColorRenderTarget();
     colorTarget->Initialize(IRenderTarget::ColorRGBA8888);
     colorTarget->Bind();
@@ -90,14 +81,14 @@ void CRenderViewIOS::CreateView()
     depthTarget->Initialize(IRenderTarget::Depth24_Stencil8);
     depthTarget->Bind();
     depthTarget->Allocate(RealWidth(), RealHeight());
-    
+
     m_DefaultRenderTarget = m_Renderer->CreateFrameBuffer(RealWidth(), RealHeight());
     m_DefaultRenderTarget->Initialize();
     m_DefaultRenderTarget->Bind();
     m_DefaultRenderTarget->AttachColor(colorTarget, 0);
     m_DefaultRenderTarget->AttachDepth(depthTarget);
     m_DefaultRenderTarget->AttachStencil(depthTarget->StencilTarget());
-    
+
     assert(m_Renderer && m_DefaultRenderTarget->IsValid());
 }
 
@@ -115,7 +106,6 @@ void CRenderViewIOS::End() const
 
 void CRenderViewIOS::UpdateEvents() const
 {
-
 }
 
 IRendererPtr CRenderViewIOS::Renderer() const

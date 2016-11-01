@@ -1,3 +1,4 @@
+
 //
 //  CMaterialOGL1_3.h
 //  OpenJam
@@ -12,24 +13,23 @@
 
 #include "CMaterialOGLBase.h"
 
-namespace jam
-{
-    
-class CMaterialOGL1_3 : public CMaterialOGLBase
-{
+namespace jam {
+
+class CMaterialOGL1_3 : public CMaterialOGLBase {
 public:
     CMaterialOGL1_3();
     virtual ~CMaterialOGL1_3();
-    
+
     /*
      * OpenGL specific
      */
     virtual GLenum ConvertTestFunc(IMaterial::TestFuncs func);
     virtual GLenum ConvertOperation(IMaterial::Operations op);
 };
-    
+
 }; // namespace jam
 
 #endif /* CMATERIALOGL1_3_H */
 
 #endif /* defined(CMATERIALOGL1_3_H) */
+    

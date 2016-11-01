@@ -36,4 +36,4 @@ CFrameBufferOGLES1_1::~CFrameBufferOGLES1_1()
 // Private Methods
 // *****************************************************************************
 
-#endif // defined(RENDER_OGLES1_1)
+#endif /* defined(RENDER_OGLES1_1) */

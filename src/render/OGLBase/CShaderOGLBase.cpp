@@ -39,21 +39,20 @@ CShaderOGLBase::~CShaderOGLBase()
 
 GLenum CShaderOGLBase::ShaderTypeToGlType(IShader::ShaderType type)
 {
-    switch (type)
-    {
-        case IShader::Vertex:
-            return GL_VERTEX_SHADER;
-            break;
-            
-        case IShader::Fragment:
-            return GL_FRAGMENT_SHADER;
-            break;
-            
-        case IShader::Geometry:
-            // TODO:
-            break;
+    switch (type) {
+    case IShader::Vertex:
+        return GL_VERTEX_SHADER;
+        break;
+
+    case IShader::Fragment:
+        return GL_FRAGMENT_SHADER;
+        break;
+
+    case IShader::Geometry:
+        // TODO:
+        break;
     }
-    
+
     return GL_VERTEX_SHADER;
 }
 

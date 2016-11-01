@@ -33,7 +33,7 @@ using namespace jam;
 // *****************************************************************************
 
 CRendererOGLES1_1::CRendererOGLES1_1(IRenderViewPtr renderView)
-: CRendererOGLBase(renderView)
+    : CRendererOGLBase(renderView)
 {
 }
 
@@ -115,66 +115,50 @@ IShaderProgramPtr CRendererOGLES1_1::CreateShaderProgram()
 
 void CRendererOGLES1_1::Draw(IMeshPtr mesh, IMaterialPtr material, IShaderProgramPtr shader)
 {
-    if (!mesh ||
-        !material)
-    {
+    if (!mesh || !material) {
         return;
     }
-    
+
     const IShaderProgram::TUniMatrix4Float& uniforms = shader->UniformsMatrix4x4f();
     IShaderProgram::TUniMatrix4Float::const_iterator it = uniforms.find(shader->ProjectionMatrix());
     glMatrixMode(GL_PROJECTION);
-    if (it != uniforms.end())
-    {
+    if (it != uniforms.end()) {
         glLoadMatrixf(glm::value_ptr(it->second));
-    }
-    else
-    {
+    } else {
         glLoadMatrixf(glm::value_ptr(glm::mat4(1.0)));
     }
-    
+
     glMatrixMode(GL_MODELVIEW);
     it = uniforms.find(shader->ModelMatrix());
-    if (it != uniforms.end())
-    {
+    if (it != uniforms.end()) {
         glLoadMatrixf(glm::value_ptr(it->second));
-    }
-    else
-    {
+    } else {
         glLoadMatrixf(glm::value_ptr(glm::mat4(1.0)));
     }
-    
-    if (mesh->IndexBuffer())
-    {
+
+    if (mesh->IndexBuffer()) {
         Draw(mesh->VertexBuffer(), mesh->IndexBuffer(), material);
-    }
-    else
-    {
+    } else {
         Draw(mesh->VertexBuffer(), material);
     }
 }
 
 void CRendererOGLES1_1::Draw(IVertexBufferPtr vertexBuffer, IMaterialPtr material)
 {
-    if (!vertexBuffer ||
-        !material)
-    {
+    if (!vertexBuffer || !material) {
         return;
     }
-    
+
     int primitiveType = ConvertPrimitiveType(material->PrimitiveType());
     glDrawArrays(primitiveType, 0, (GLsizei)vertexBuffer->Size());
 }
 
 void CRendererOGLES1_1::Draw(IVertexBufferPtr vertexBuffer, IIndexBufferPtr indexBuffer, IMaterialPtr material)
 {
-    if (!vertexBuffer ||
-        !indexBuffer ||
-        !material)
-    {
+    if (!vertexBuffer || !indexBuffer || !material) {
         return;
     }
-    
+
     int primitiveType = ConvertPrimitiveType(material->PrimitiveType());
     glDrawElements(primitiveType, (GLsizei)indexBuffer->Size(), GL_UNSIGNED_SHORT, nullptr);
 }

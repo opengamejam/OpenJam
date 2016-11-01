@@ -1,3 +1,4 @@
+
 //
 //  CUpdateSystem.h
 //  OpenJam
@@ -27,16 +28,13 @@ CUpdateSystem::CUpdateSystem()
 
 CUpdateSystem::~CUpdateSystem()
 {
-
 }
 
 void CUpdateSystem::Update(unsigned long dt)
 {
     const ISystem::TEntities& entities = Entities();
-    std::for_each(entities.begin(), entities.end(), [&](IEntityPtr entity)
-    {
-        entity->Get<CUpdateComponent>([dt](CUpdateComponentPtr updateComponent)
-        {
+    std::for_each(entities.begin(), entities.end(), [&](IEntityPtr entity) {
+        entity->Get<CUpdateComponent>([dt](CUpdateComponentPtr updateComponent) {
             updateComponent->Update(dt);
         });
     });
@@ -49,3 +47,4 @@ void CUpdateSystem::Update(unsigned long dt)
 // *****************************************************************************
 // Private Methods
 // *****************************************************************************
+

@@ -24,14 +24,12 @@ using namespace jam;
 // Public Methods
 // *****************************************************************************
 
-struct SOrderComparator
-{
+struct SOrderComparator {
     bool operator()(CRenderComponentPtr rc1, CRenderComponentPtr rc2) const
     {
         IEntityPtr e1 = rc1->Entity();
         IEntityPtr e2 = rc2->Entity();
-        if (!e1 || !e2)
-        {
+        if (!e1 || !e2) {
             return false;
         }
 
@@ -40,14 +38,13 @@ struct SOrderComparator
 
 #if defined(OS_KOS) // TODO: KOS render transparacy objects in other order
         IMaterialPtr m2 = rc2->Material();
-        if (m2 && !m2->Opacity())
-        {
-        	return o1 > o2;
+        if (m2 && !m2->Opacity()) {
+            return o1 > o2;
         }
 #endif
         return o1 < o2;
     }
-    
+
     INL static uint64_t OrderKey(CRenderComponentPtr rc, IEntityPtr e)
     {
         return (((uint64_t)e->HierarchyIndex() << 32) | rc->DrawOrder());
@@ -63,7 +60,6 @@ CRenderSystem::CRenderSystem(IRendererPtr renderer)
 
 CRenderSystem::~CRenderSystem()
 {
-    
 }
 
 void CRenderSystem::Update(unsigned long dt)
@@ -81,108 +77,92 @@ void CRenderSystem::Update(unsigned long dt)
             }
         });
     });*/
-    
+
     ClearDirtyEntities();
     m_ProccededRenderTargets.clear();
 }
 
 void CRenderSystem::Draw(ICameraPtr camera)
 {
-    if (!camera)
-    {
+    if (!camera) {
         return;
     }
-    
+
     IFrameBufferPtr currentRenderTarget = camera->RenderTarget();
-    if (!currentRenderTarget)
-    {
+    if (!currentRenderTarget) {
         return;
     }
-    
+
     currentRenderTarget->Bind();
-    if (m_ProccededRenderTargets.find(currentRenderTarget) == m_ProccededRenderTargets.end())
-    {
+    if (m_ProccededRenderTargets.find(currentRenderTarget) == m_ProccededRenderTargets.end()) {
         currentRenderTarget->Clear();
         m_ProccededRenderTargets.insert(currentRenderTarget);
     }
-    
+
     glm::mat4 projectionMatrix = camera->ProjectionMatrix();
     glm::mat4 viewMatrix(1.0);
-    camera->Get<CTransformationComponent>([&](CTransformationComponentPtr viewTransform)
-    {
+    camera->Get<CTransformationComponent>([&](CTransformationComponentPtr viewTransform) {
         viewMatrix = viewTransform->ResultTransform()();
     });
-    
+
     // Draw
     unsigned int cameraId = camera->Id();
-    std::for_each(m_SortedComponents.begin(), m_SortedComponents.end(), [&](CRenderComponentPtr renderComponent)
-    {
-        if (!renderComponent->HasCameraId(cameraId))
-        {
+    std::for_each(m_SortedComponents.begin(), m_SortedComponents.end(), [&](CRenderComponentPtr renderComponent) {
+        if (!renderComponent->HasCameraId(cameraId)) {
             return;
         }
-        
-        if (renderComponent->Batchable())
-        {
+
+        if (renderComponent->Batchable()) {
             IMeshPtr mesh = renderComponent->Mesh(CRenderComponent::kBatchingGroupName);
-            if (m_ProccededBatches.find(mesh->GetUid()) != m_ProccededBatches.end())
-            {
+            if (m_ProccededBatches.find(mesh->GetUid()) != m_ProccededBatches.end()) {
                 return;
             }
-            
+
             DrawGroup(renderComponent, CRenderComponent::kBatchingGroupName, projectionMatrix, viewMatrix, glm::mat4(1.0));
             m_ProccededBatches.insert(mesh->GetUid());
-        }
-        else
-        {
+        } else {
             IEntityPtr entity = renderComponent->Entity();
             glm::mat4 modelMatrix(1.0);
-            if (entity)
-            {
-                entity->Get<CTransformationComponent>([&](CTransformationComponentPtr modelTransform)
-                {
+            if (entity) {
+                entity->Get<CTransformationComponent>([&](CTransformationComponentPtr modelTransform) {
                     modelMatrix = modelTransform->ResultTransform()();
                 });
             }
-            
+
             const std::set<std::string>& groups = renderComponent->Groups();
-            std::for_each(groups.begin(), groups.end(), [&](const std::string& groupName)
-            {
-                if (groupName == CRenderComponent::kBatchingGroupName ||
-                    !renderComponent->Visible(groupName))
-                {
+            std::for_each(groups.begin(), groups.end(), [&](const std::string& groupName) {
+                if (groupName == CRenderComponent::kBatchingGroupName || !renderComponent->Visible(groupName)) {
                     return;
                 }
-                
+
                 DrawGroup(renderComponent, groupName, projectionMatrix, viewMatrix, modelMatrix);
             });
         }
     });
-    
+
     currentRenderTarget->Unbind();
     m_ProccededBatches.clear();
 }
 
 void CRenderSystem::DrawGroup(CRenderComponentPtr renderComponent,
-                              const std::string& groupName,
-                              const glm::mat4& projectionMatrix,
-                              const glm::mat4& viewMatrix,
-                              const glm::mat4& modelMatrix) const
+    const std::string& groupName,
+    const glm::mat4& projectionMatrix,
+    const glm::mat4& viewMatrix,
+    const glm::mat4& modelMatrix) const
 {
     IMeshPtr mesh = renderComponent->Mesh(groupName);
     IMaterialPtr material = renderComponent->Material(groupName);
     ITexturePtr texture = renderComponent->Texture(groupName);
     IShaderProgramPtr shader = renderComponent->Shader(groupName);
-    if (!shader || !material || !mesh)
-    {
+    if (!shader || !material || !mesh) {
         return;
     }
-    
+
     glm::mat4 normalMat = glm::transpose(glm::inverse(viewMatrix * modelMatrix));
     shader->BindUniformMatrix4x4f("MainNormalMatrix", normalMat);
     shader->BindUniformMatrix4x4f("MainProjectionMatrix", projectionMatrix);
     shader->BindUniformMatrix4x4f("MainViewMatrix", viewMatrix);
-    
+
     Draw(mesh, material, texture, shader);
 }
 
@@ -191,17 +171,15 @@ void CRenderSystem::Draw(IMeshPtr mesh, IMaterialPtr material, ITexturePtr textu
     shader->Bind();
     shader->UpdateUniforms();
     material->Bind();
-    if (texture)
-    {
+    if (texture) {
         texture->Bind();
     }
     mesh->Bind();
-    
+
     m_Renderer->Draw(mesh, material, shader);
-    
+
     mesh->Unbind();
-    if (texture)
-    {
+    if (texture) {
         texture->Unbind();
     }
     material->Unbind();
@@ -219,17 +197,15 @@ void CRenderSystem::Draw(IMeshPtr mesh, IMaterialPtr material, ITexturePtr textu
 void CRenderSystem::OnAddedEntity(IEntityPtr entity)
 {
     CSystemBase::OnAddedEntity(entity);
-    
-    entity->Get<CRenderComponent>([&](CRenderComponentPtr renderComponent)
-    {
+
+    entity->Get<CRenderComponent>([&](CRenderComponentPtr renderComponent) {
         std::map<CRenderComponentPtr, uint64_t>::const_iterator it = m_OrderKeys.find(renderComponent);
-        if (it != m_OrderKeys.end())
-        {
+        if (it != m_OrderKeys.end()) {
             return;
         }
-        
+
         uint64_t order_key = SOrderComparator::OrderKey(renderComponent, entity);
-        
+
         m_OrderKeys[renderComponent] = order_key;
         m_SortedComponents.push_back(renderComponent);
         m_SortedComponents.sort(SOrderComparator());
@@ -239,18 +215,16 @@ void CRenderSystem::OnAddedEntity(IEntityPtr entity)
 void CRenderSystem::OnChangedComponent(IComponentPtr component)
 {
     CSystemBase::OnChangedComponent(component);
-    
+
     CRenderComponentPtr renderComponent = std::static_pointer_cast<CRenderComponent>(component);
-    
+
     std::map<CRenderComponentPtr, uint64_t>::iterator it = m_OrderKeys.find(renderComponent);
-    if (it == m_OrderKeys.end())
-    {
+    if (it == m_OrderKeys.end()) {
         return;
     }
-    
+
     uint64_t order_key = SOrderComparator::OrderKey(renderComponent, renderComponent->Entity());
-    if (order_key != it->second)
-    {
+    if (order_key != it->second) {
         it->second = order_key;
         m_SortedComponents.sort(SOrderComparator());
     }
@@ -259,14 +233,12 @@ void CRenderSystem::OnChangedComponent(IComponentPtr component)
 void CRenderSystem::OnRemovedEntity(IEntityPtr entity)
 {
     CSystemBase::OnRemovedEntity(entity);
-    
-    entity->Get<CRenderComponent>([&](CRenderComponentPtr renderComponent)
-    {
-        if (m_OrderKeys.find(renderComponent) == m_OrderKeys.end())
-        {
+
+    entity->Get<CRenderComponent>([&](CRenderComponentPtr renderComponent) {
+        if (m_OrderKeys.find(renderComponent) == m_OrderKeys.end()) {
             return;
         }
-        
+
         m_OrderKeys.erase(renderComponent);
         std::list<CRenderComponentPtr>::const_iterator it = std::find(m_SortedComponents.begin(), m_SortedComponents.end(), renderComponent);
         m_SortedComponents.erase(it);

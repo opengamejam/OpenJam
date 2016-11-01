@@ -29,26 +29,25 @@ CRenderTargetColorOGLES1_1::~CRenderTargetColorOGLES1_1()
 
 GLenum CRenderTargetColorOGLES1_1::ConvertInternalFormat(InternalFormats internalFormat)
 {
-    switch (internalFormat)
-    {
-        case ColorRGB565:
-            return GL_RGB565;
-            break;
+    switch (internalFormat) {
+    case ColorRGB565:
+        return GL_RGB565;
+        break;
 #if GL_OES_rgb8_rgba8
-        case ColorRGBA8888:
-            return GL_RGBA8_OES;
-            break;
+    case ColorRGBA8888:
+        return GL_RGBA8_OES;
+        break;
 #endif
-        case ColorRGBA4444:
-            return GL_RGBA4;
-            break;
-            
-        default:
-            // Unacceptible type of color buffer
-            assert(false);
-            break;
+    case ColorRGBA4444:
+        return GL_RGBA4;
+        break;
+
+    default:
+        // Unacceptible type of color buffer
+        assert(false);
+        break;
     }
-    
+
     return GL_RGBA4;
 }
 

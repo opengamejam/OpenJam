@@ -12,19 +12,17 @@
 
 #include "CMeshOGLBase.h"
 
-namespace jam
-{
+namespace jam {
 
-class CMeshOGLES2_0 : public CMeshOGLBase
-{
+class CMeshOGLES2_0 : public CMeshOGLBase {
 public:
     CMeshOGLES2_0();
     virtual ~CMeshOGLES2_0();
-    
+
     virtual void Bind() override;
     virtual void Unbind() override;
     virtual bool IsValid() const override;
-    
+
 private:
     uint32_t m_VAO;
 };

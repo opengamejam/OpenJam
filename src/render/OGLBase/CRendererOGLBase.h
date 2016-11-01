@@ -15,29 +15,27 @@
 #include "IRenderer.h"
 #include "IMaterial.h"
 
-namespace jam
-{
-    
-class CRendererOGLBase : public IRenderer
-{
+namespace jam {
+
+class CRendererOGLBase : public IRenderer {
 public:
     CRendererOGLBase(IRenderViewPtr renderView);
     virtual ~CRendererOGLBase();
-    
+
     /*
      * Returns render view
      */
     virtual IRenderViewPtr RenderView() const override;
-    
+
     /*
      * OpenGL specific
      */
     virtual GLenum ConvertPrimitiveType(IMaterial::PrimitiveTypes type);
-    
+
 private:
     IRenderViewPtr m_RenderView;
 };
-    
+
 }; // namespace jam
 
 #endif /* CRENDEREROGLBASE_H */

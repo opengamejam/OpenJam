@@ -12,11 +12,9 @@
 
 #include "CMeshOGLBase.h"
 
-namespace jam
-{
+namespace jam {
 
-class CMeshOGL1_5 : public CMeshOGLBase
-{
+class CMeshOGL1_5 : public CMeshOGLBase {
 public:
     CMeshOGL1_5();
     virtual ~CMeshOGL1_5();

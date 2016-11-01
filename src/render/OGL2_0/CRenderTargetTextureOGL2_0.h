@@ -12,17 +12,15 @@
 
 #include "CRenderTargetTextureOGLBase.h"
 
-namespace jam
-{
+namespace jam {
 
-class CRenderTargetTextureOGL2_0 : public CRenderTargetTextureOGLBase
-{
+class CRenderTargetTextureOGL2_0 : public CRenderTargetTextureOGLBase {
     JAM_OBJECT
 public:
     CRenderTargetTextureOGL2_0();
     virtual ~CRenderTargetTextureOGL2_0();
 };
-    
+
 }; // namespace jam
 
 #endif /* CRENDERTARGETTEXTUREOGL2_0_H */

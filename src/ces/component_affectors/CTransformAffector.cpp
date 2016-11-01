@@ -14,8 +14,7 @@ using namespace jam;
 
 void CTransformAffector::Translating(IEntityPtr entity, const glm::vec3& translation)
 {
-    entity->Get<CTransformationComponent>([translation](CTransformationComponentPtr component)
-    {
+    entity->Get<CTransformationComponent>([translation](CTransformationComponentPtr component) {
         CTransform3Df transform = component->Transform(CTransformationComponent::Local);
 
         glm::vec3 value = transform.Position();
@@ -29,8 +28,7 @@ void CTransformAffector::Translating(IEntityPtr entity, const glm::vec3& transla
 
 void CTransformAffector::Rotating(IEntityPtr entity, const glm::vec3& rotation)
 {
-    entity->Get<CTransformationComponent>([rotation](CTransformationComponentPtr component)
-    {
+    entity->Get<CTransformationComponent>([rotation](CTransformationComponentPtr component) {
         CTransform3Df transform = component->Transform(CTransformationComponent::Local);
 
         glm::vec3 value = transform.Rotation();
@@ -44,8 +42,7 @@ void CTransformAffector::Rotating(IEntityPtr entity, const glm::vec3& rotation)
 
 void CTransformAffector::Scaling(IEntityPtr entity, const glm::vec3& scaling)
 {
-    entity->Get<CTransformationComponent>([scaling](CTransformationComponentPtr component)
-    {
+    entity->Get<CTransformationComponent>([scaling](CTransformationComponentPtr component) {
         CTransform3Df transform = component->Transform(CTransformationComponent::Local);
 
         glm::vec3 value = transform.Scale();
@@ -59,8 +56,7 @@ void CTransformAffector::Scaling(IEntityPtr entity, const glm::vec3& scaling)
 
 void CTransformAffector::Position(IEntityPtr entity, const glm::vec3& position)
 {
-    entity->Get<CTransformationComponent>([position](CTransformationComponentPtr component)
-    {
+    entity->Get<CTransformationComponent>([position](CTransformationComponentPtr component) {
         CTransform3Df transform = component->Transform(CTransformationComponent::Local);
 
         transform.Position(position);
@@ -72,8 +68,7 @@ void CTransformAffector::Position(IEntityPtr entity, const glm::vec3& position)
 
 void CTransformAffector::Rotation(IEntityPtr entity, const glm::vec3& rotation)
 {
-    entity->Get<CTransformationComponent>([rotation](CTransformationComponentPtr component)
-    {
+    entity->Get<CTransformationComponent>([rotation](CTransformationComponentPtr component) {
         CTransform3Df transform = component->Transform(CTransformationComponent::Local);
 
         transform.Rotation(rotation);
@@ -85,8 +80,7 @@ void CTransformAffector::Rotation(IEntityPtr entity, const glm::vec3& rotation)
 
 void CTransformAffector::Scale(IEntityPtr entity, const glm::vec3& scaling)
 {
-    entity->Get<CTransformationComponent>([scaling](CTransformationComponentPtr component)
-    {
+    entity->Get<CTransformationComponent>([scaling](CTransformationComponentPtr component) {
         CTransform3Df transform = component->Transform(CTransformationComponent::Local);
 
         transform.Scale(scaling);
@@ -99,8 +93,7 @@ void CTransformAffector::Scale(IEntityPtr entity, const glm::vec3& scaling)
 glm::vec3 CTransformAffector::Position(IEntityPtr entity)
 {
     glm::vec3 value;
-    entity->Get<CTransformationComponent>([&](CTransformationComponentPtr component)
-    {
+    entity->Get<CTransformationComponent>([&](CTransformationComponentPtr component) {
         CTransform3Df transform = component->Transform(CTransformationComponent::Local);
         value = transform.Position();
     });
@@ -111,8 +104,7 @@ glm::vec3 CTransformAffector::Position(IEntityPtr entity)
 glm::vec3 CTransformAffector::Rotation(IEntityPtr entity)
 {
     glm::vec3 value;
-    entity->Get<CTransformationComponent>([&](CTransformationComponentPtr component)
-    {
+    entity->Get<CTransformationComponent>([&](CTransformationComponentPtr component) {
         CTransform3Df transform = component->Transform(CTransformationComponent::Local);
         value = transform.Rotation();
     });
@@ -123,8 +115,7 @@ glm::vec3 CTransformAffector::Rotation(IEntityPtr entity)
 glm::vec3 CTransformAffector::Scale(IEntityPtr entity)
 {
     glm::vec3 value;
-    entity->Get<CTransformationComponent>([&](CTransformationComponentPtr component)
-    {
+    entity->Get<CTransformationComponent>([&](CTransformationComponentPtr component) {
         CTransform3Df transform = component->Transform(CTransformationComponent::Local);
         value = transform.Scale();
     });
@@ -134,8 +125,7 @@ glm::vec3 CTransformAffector::Scale(IEntityPtr entity)
 
 void CTransformAffector::Translating(CTransformationComponentPtr component, const glm::vec3& translation)
 {
-    if (!component)
-    {
+    if (!component) {
         return;
     }
 
@@ -151,8 +141,7 @@ void CTransformAffector::Translating(CTransformationComponentPtr component, cons
 
 void CTransformAffector::Rotating(CTransformationComponentPtr component, const glm::vec3& rotation)
 {
-    if (!component)
-    {
+    if (!component) {
         return;
     }
 
@@ -168,8 +157,7 @@ void CTransformAffector::Rotating(CTransformationComponentPtr component, const g
 
 void CTransformAffector::Scaling(CTransformationComponentPtr component, const glm::vec3& scaling)
 {
-    if (!component)
-    {
+    if (!component) {
         return;
     }
 
@@ -185,8 +173,7 @@ void CTransformAffector::Scaling(CTransformationComponentPtr component, const gl
 
 void CTransformAffector::Position(CTransformationComponentPtr component, const glm::vec3& position)
 {
-    if (!component)
-    {
+    if (!component) {
         return;
     }
 
@@ -200,8 +187,7 @@ void CTransformAffector::Position(CTransformationComponentPtr component, const g
 
 void CTransformAffector::Rotation(CTransformationComponentPtr component, const glm::vec3& rotation)
 {
-    if (!component)
-    {
+    if (!component) {
         return;
     }
 
@@ -215,8 +201,7 @@ void CTransformAffector::Rotation(CTransformationComponentPtr component, const g
 
 void CTransformAffector::Scale(CTransformationComponentPtr component, const glm::vec3& scaling)
 {
-    if (!component)
-    {
+    if (!component) {
         return;
     }
 

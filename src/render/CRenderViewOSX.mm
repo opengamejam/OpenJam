@@ -27,8 +27,8 @@ using namespace jam;
 // *****************************************************************************
 
 CRenderViewOSX::CRenderViewOSX(uint32_t width, uint32_t height, void* glkView, RenderApi renderApi)
-	: IRenderView(width, height, 1.0f)
-	, m_GLView((__bridge NSOpenGLView*)glkView)
+    : IRenderView(width, height, 1.0f)
+    , m_GLView((__bridge NSOpenGLView*)glkView)
     , m_GLContext(nil)
     , m_RenderApi(renderApi)
     , m_Renderer(nullptr)
@@ -42,67 +42,59 @@ CRenderViewOSX::~CRenderViewOSX()
 
 void CRenderViewOSX::CreateView()
 {
-    NSOpenGLPixelFormat *pixelformat = nil;
-    switch (m_RenderApi)
-    {
-        case OGLLegacy:
-        {
-            NSOpenGLPixelFormatAttribute attributes[] =
-            {
-                NSOpenGLPFADoubleBuffer,
-                NSOpenGLPFAColorSize, 32,
-                NSOpenGLPFADepthSize, 24,
-                NSOpenGLPFAStencilSize, 8,
-                NSOpenGLPFAOpenGLProfile, NSOpenGLProfileVersionLegacy,
-                0
-            };
-            pixelformat = [[NSOpenGLPixelFormat alloc] initWithAttributes:attributes];
-            assert(pixelformat);
-            m_GLContext = [[NSOpenGLContext alloc] initWithFormat:pixelformat
-                                                     shareContext:nil];
-            [m_GLContext makeCurrentContext];
-            
-            m_Renderer.reset(new CRendererOGL1_5(shared_from_this()));
-        }
-        break;
-            
-        case OGL3_2:
-        {
-            /*m_GLContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
+    NSOpenGLPixelFormat* pixelformat = nil;
+    switch (m_RenderApi) {
+    case OGLLegacy: {
+        NSOpenGLPixelFormatAttribute attributes[] = {
+            NSOpenGLPFADoubleBuffer,
+            NSOpenGLPFAColorSize, 32,
+            NSOpenGLPFADepthSize, 24,
+            NSOpenGLPFAStencilSize, 8,
+            NSOpenGLPFAOpenGLProfile, NSOpenGLProfileVersionLegacy,
+            0
+        };
+        pixelformat = [[NSOpenGLPixelFormat alloc] initWithAttributes:attributes];
+        assert(pixelformat);
+        m_GLContext = [[NSOpenGLContext alloc] initWithFormat:pixelformat
+                                                 shareContext:nil];
+        [m_GLContext makeCurrentContext];
+
+        m_Renderer.reset(new CRendererOGL1_5(shared_from_this()));
+    } break;
+
+    case OGL3_2: {
+        /*m_GLContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
             m_Renderer.reset(new CRendererOGLES2(shared_from_this()));*/
-            CGLEnable([m_GLContext CGLContextObj], kCGLCECrashOnRemovedFunctions);
-        }
-        break;
-            
-        case OGL4_1:
-        {
-            /*m_GLContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3];
+        CGLEnable([m_GLContext CGLContextObj], kCGLCECrashOnRemovedFunctions);
+    } break;
+
+    case OGL4_1: {
+        /*m_GLContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3];
             m_Renderer.reset(new CRendererOGLES1(shared_from_this()));*/
-        }
+    } break;
+
+    default:
         break;
-            
-        default:
-            break;
     };
-    
+
     [m_GLView setPixelFormat:pixelformat];
     [m_GLView setOpenGLContext:m_GLContext];
-    
+
     CRenderTargetColorPtr colorTarget = m_Renderer->CreateColorRenderTarget();
     colorTarget->Initialize(IRenderTarget::ColorRGBA8888);
     colorTarget->Bind();
     colorTarget->Allocate(RealWidth(), RealHeight());
-    
+
     CRenderTargetDepthPtr depthTarget = m_Renderer->CreateDepthRenderTarget();
     depthTarget->Initialize(IRenderTarget::Depth24);
     depthTarget->Bind();
     depthTarget->Allocate(RealWidth(), RealHeight());
-    
+
     CRenderTargetStencilPtr stencilTarget = m_Renderer->CreateStencilRenderTarget();
     stencilTarget->Initialize(IRenderTarget::Stencil8);
     stencilTarget->Bind();
     stencilTarget->Allocate(RealWidth(), RealHeight());
-    
+
     m_DefaultRenderTarget = m_Renderer->CreateFrameBuffer(RealWidth(), RealHeight());
     // Use 0 for the defaultFBO which is appropriate for
     // OSX (but not iOS since iOS apps must create their own FBO)
@@ -111,7 +103,7 @@ void CRenderViewOSX::CreateView()
     m_DefaultRenderTarget->AttachColor(colorTarget, 0);
     m_DefaultRenderTarget->AttachDepth(depthTarget);
     m_DefaultRenderTarget->AttachStencil(stencilTarget);
-    
+
     GLint swap = 1;
     [m_GLContext setValues:&swap forParameter:NSOpenGLCPSwapInterval];
 }
@@ -128,7 +120,6 @@ void CRenderViewOSX::End() const
 
 void CRenderViewOSX::UpdateEvents() const
 {
-
 }
 
 IRendererPtr CRenderViewOSX::Renderer() const

@@ -12,19 +12,17 @@
 
 #include "CVertexBufferOGLBase.h"
 
-namespace jam
-{
-    
-class CVertexBufferOGLES2_0 : public CVertexBufferOGLBase
-{
+namespace jam {
+
+class CVertexBufferOGLES2_0 : public CVertexBufferOGLBase {
 public:
     CVertexBufferOGLES2_0();
     virtual ~CVertexBufferOGLES2_0();
-    
+
     virtual void Bind() override;
     virtual void Unbind() override;
 };
-    
+
 }; // namespace jam
 
 #endif /* defined(CVERTEXBUFFEROGLES2_0_H) */

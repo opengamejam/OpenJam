@@ -1,3 +1,4 @@
+
 //
 //  ViewController.m
 //  OpenJam
@@ -23,8 +24,7 @@ CLASS_PTR(IRender)
 CLASS_PTR(CGame)
 CLASS_PTR(IScene)
 
-@interface ViewController ()
-{
+@interface ViewController () {
     IRenderViewPtr m_RenderView;
     CGamePtr m_Game;
     IScenePtr m_MainScene;
@@ -37,8 +37,7 @@ CLASS_PTR(IScene)
 - (id)init
 {
     self = [super init];
-    if (self)
-    {
+    if (self) {
         m_RenderView = nullptr;
         m_Game = nullptr;
         m_MainScene = nullptr;
@@ -49,20 +48,20 @@ CLASS_PTR(IScene)
 - (void)loadView
 {
     [super loadView];
-    
+
     self.view = [[GLKView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 }
 
 - (void)viewDidLoad
 {
     [super viewDidLoad];
-    
+
     self.preferredFramesPerSecond = 60;
-    
+
     m_RenderView.reset(new CRenderViewIOS((__bridge void*)(self.view), CRenderViewIOS::OGLES2_0));
     m_Game.reset(new CGame(m_RenderView));
     m_Game->Initialize();
-    
+
     m_MainScene.reset(new CGameScene(m_Game));
     m_Game->PushScene(m_MainScene);
 }
@@ -77,43 +76,43 @@ CLASS_PTR(IScene)
 - (void)update
 {
     unsigned long dt = [self timeSinceLastUpdate] * 1000.0f;
-    
+
     m_Game->Update(dt);
     m_Game->Draw();
 }
 
-- (void)touchesBegan:(NSSet *)touches withEvent:(UIEvent *)event
+- (void)touchesBegan:(NSSet*)touches withEvent:(UIEvent*)event
 {
     UITouch* uitouch = [[[event allTouches] allObjects] objectAtIndex:0];
     CGPoint point = [uitouch locationInView:self.view];
-    
+
     CTouchEventPtr touchevent(new CTouchEvent(glm::vec2(point.x, point.y), CTouchEvent::Down));
     emit m_RenderView->OnTouchSignal(touchevent);
 }
 
-- (void)touchesMoved:(NSSet *)touches withEvent:(UIEvent *)event
+- (void)touchesMoved:(NSSet*)touches withEvent:(UIEvent*)event
 {
     UITouch* uitouch = [[[event allTouches] allObjects] objectAtIndex:0];
     CGPoint point = [uitouch locationInView:self.view];
-    
+
     CTouchEventPtr touchevent(new CTouchEvent(glm::vec2(point.x, point.y), CTouchEvent::Move));
     emit m_RenderView->OnTouchSignal(touchevent);
 }
 
-- (void)touchesEnded:(NSSet *)touches withEvent:(UIEvent *)event
+- (void)touchesEnded:(NSSet*)touches withEvent:(UIEvent*)event
 {
     UITouch* uitouch = [[[event allTouches] allObjects] objectAtIndex:0];
     CGPoint point = [uitouch locationInView:self.view];
-    
+
     CTouchEventPtr touchevent(new CTouchEvent(glm::vec2(point.x, point.y), CTouchEvent::Up));
     emit m_RenderView->OnTouchSignal(touchevent);
 }
 
-- (void)touchesCancelled:(NSSet *)touches withEvent:(UIEvent *)event
+- (void)touchesCancelled:(NSSet*)touches withEvent:(UIEvent*)event
 {
     UITouch* uitouch = [[[event allTouches] allObjects] objectAtIndex:0];
     CGPoint point = [uitouch locationInView:self.view];
-    
+
     CTouchEventPtr touchevent(new CTouchEvent(glm::vec2(point.x, point.y), CTouchEvent::Reset));
     emit m_RenderView->OnTouchSignal(touchevent);
 }
@@ -121,3 +120,4 @@ CLASS_PTR(IScene)
 @end
 
 #endif /* OS_IPHONE */
+

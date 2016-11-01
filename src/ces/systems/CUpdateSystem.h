@@ -11,21 +11,18 @@
 
 #include "ISystem.h"
 
-namespace jam
-{
+namespace jam {
 CLASS_PTR(CUpdateSystem)
 
-class CUpdateSystem : public CSystemBase
-{
+class CUpdateSystem : public CSystemBase {
     JAM_OBJECT
 public:
     CUpdateSystem();
     virtual ~CUpdateSystem();
-    
+
     virtual void Update(unsigned long dt) override;
 };
-    
-} // namespace jam
 
+} // namespace jam
 
 #endif /* CUPDATESYSTEM_H */

@@ -26,25 +26,22 @@ CSignal<void, IComponentPtr> IComponent::OnChangedSignal;
 void CComponentBase::Entity(IEntityPtr entity)
 {
     IEntityPtr prevEntity = Entity();
-    if (entity == prevEntity)
-    {
+    if (entity == prevEntity) {
         return;
     }
-    
+
     IComponentPtr thisPtr = shared_from_this();
-    
-    if (prevEntity)
-    {
+
+    if (prevEntity) {
         prevEntity->RemoveComponent(thisPtr);
     }
-    
+
     m_Entity = entity;
-    
-    if (entity)
-    {
+
+    if (entity) {
         entity->AddComponent(thisPtr);
     }
-    
+
     Dirty();
 }
 

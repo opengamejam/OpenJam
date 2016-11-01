@@ -23,17 +23,15 @@ using namespace jam;
 // *****************************************************************************
 
 CRenderTargetDepthOGLBase::CRenderTargetDepthOGLBase()
-: m_Id(0)
-, m_InternalFormat(IRenderTarget::Depth24)
-, m_Stencil(nullptr)
+    : m_Id(0)
+    , m_InternalFormat(IRenderTarget::Depth24)
+    , m_Stencil(nullptr)
 {
-
 }
 
 CRenderTargetDepthOGLBase::~CRenderTargetDepthOGLBase()
 {
-    if (m_Stencil)
-    {
+    if (m_Stencil) {
         DeleteStencil();
     }
 }
@@ -41,24 +39,21 @@ CRenderTargetDepthOGLBase::~CRenderTargetDepthOGLBase()
 void CRenderTargetDepthOGLBase::Initialize(InternalFormats internalFormat)
 {
     assert(!IsInitialized());
-    
-    switch(internalFormat)
-    {
-        case Depth24_Stencil8:
-            if (!m_Stencil)
-            {
-                CreateStencil();
-            }
-            break;
-            
-        default:
-            if (m_Stencil)
-            {
-                DeleteStencil();
-            }
-            break;
+
+    switch (internalFormat) {
+    case Depth24_Stencil8:
+        if (!m_Stencil) {
+            CreateStencil();
+        }
+        break;
+
+    default:
+        if (m_Stencil) {
+            DeleteStencil();
+        }
+        break;
     };
-    
+
     glGenRenderbuffers(1, &m_Id);
 }
 
@@ -74,9 +69,9 @@ bool CRenderTargetDepthOGLBase::IsInitialized()
 }
 
 void CRenderTargetDepthOGLBase::Allocate(uint64_t width, uint64_t height)
-{    
+{
     glRenderbufferStorage(GL_RENDERBUFFER, ConvertToInternalFormat(m_InternalFormat),
-                          static_cast<GLsizei>(width), static_cast<GLsizei>(height));
+        static_cast<GLsizei>(width), static_cast<GLsizei>(height));
 }
 
 void CRenderTargetDepthOGLBase::Bind() const
@@ -97,17 +92,17 @@ CRenderTargetStencilPtr CRenderTargetDepthOGLBase::StencilTarget()
 void CRenderTargetDepthOGLBase::BindToFrameBuffer()
 {
     glFramebufferRenderbuffer(GL_FRAMEBUFFER,
-                              GL_DEPTH_ATTACHMENT,
-                              GL_RENDERBUFFER,
-                              m_Id);
+        GL_DEPTH_ATTACHMENT,
+        GL_RENDERBUFFER,
+        m_Id);
 }
 
 void CRenderTargetDepthOGLBase::UnbindFromFrameBuffer()
 {
     glFramebufferRenderbuffer(GL_FRAMEBUFFER,
-                              GL_DEPTH_ATTACHMENT,
-                              GL_RENDERBUFFER,
-                              0);
+        GL_DEPTH_ATTACHMENT,
+        GL_RENDERBUFFER,
+        0);
 }
 
 // *****************************************************************************
@@ -121,10 +116,9 @@ void CRenderTargetDepthOGLBase::UnbindFromFrameBuffer()
 void CRenderTargetDepthOGLBase::CreateStencil()
 {
     assert(!m_Stencil);
-    
+
     m_Stencil = CreateStencilObject();
-    if (m_Stencil)
-    {
+    if (m_Stencil) {
         std::static_pointer_cast<CRenderTargetStencilOGLBase>(m_Stencil)->InitializeWithDepthId(m_Id);
     }
 }
@@ -132,7 +126,7 @@ void CRenderTargetDepthOGLBase::CreateStencil()
 void CRenderTargetDepthOGLBase::DeleteStencil()
 {
     assert(m_Stencil);
-    
+
     std::static_pointer_cast<CRenderTargetStencilOGLBase>(m_Stencil)->InitializeWithDepthId(0);
     m_Stencil = nullptr;
 }

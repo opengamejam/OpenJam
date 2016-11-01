@@ -12,23 +12,21 @@
 
 #include "CRenderTargetDepthOGLBase.h"
 
-namespace jam
-{
-    
-class CRenderTargetDepthOGL1_3 : public CRenderTargetDepthOGLBase
-{
+namespace jam {
+
+class CRenderTargetDepthOGL1_3 : public CRenderTargetDepthOGLBase {
     JAM_OBJECT
 public:
     CRenderTargetDepthOGL1_3();
     virtual ~CRenderTargetDepthOGL1_3();
-    
+
     /*
      * OpenGL specific
      */
     virtual GLenum ConvertToInternalFormat(InternalFormats internalFormat) override;
     virtual CRenderTargetStencilPtr CreateStencilObject() override;
 };
-    
+
 }; // namespace jam
 
 #endif /* CRENDERTARGETDEPTHOGL1_3_H */

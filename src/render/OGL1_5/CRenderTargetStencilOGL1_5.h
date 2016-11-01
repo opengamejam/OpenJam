@@ -12,22 +12,20 @@
 
 #include "CRenderTargetStencilOGLBase.h"
 
-namespace jam
-{
+namespace jam {
 
-class CRenderTargetStencilOGL1_5 : public CRenderTargetStencilOGLBase
-{
+class CRenderTargetStencilOGL1_5 : public CRenderTargetStencilOGLBase {
     JAM_OBJECT
 public:
     CRenderTargetStencilOGL1_5();
     virtual ~CRenderTargetStencilOGL1_5();
-    
+
     /*
      * OpenGL specific
      */
     virtual GLenum ConvertToInternalFormat(InternalFormats internalFormat) override;
 };
-    
+
 }; // namespace jam
 
 #endif /* CRENDERTARGETSTENCILOGL1_5_H */

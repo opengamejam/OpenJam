@@ -12,12 +12,10 @@ using namespace jam;
 
 CTouchComponent::CTouchComponent()
 {
-
 }
 
 CTouchComponent::~CTouchComponent()
 {
-
 }
 
 void CTouchComponent::SetOnBeginTouch(const TTouchFunc& touchFunc)
@@ -37,24 +35,21 @@ void CTouchComponent::SetOnEndTouch(const TTouchFunc& touchFunc)
 
 void CTouchComponent::OnBeginTouch(const glm::vec2& touch)
 {
-    if (m_BeginTouchFunc)
-    {
+    if (m_BeginTouchFunc) {
         m_BeginTouchFunc(touch);
     }
 }
 
 void CTouchComponent::OnMoveTouch(const glm::vec2& touch)
 {
-    if (m_MoveTouchFunc)
-    {
+    if (m_MoveTouchFunc) {
         m_MoveTouchFunc(touch);
     }
 }
 
 void CTouchComponent::OnEndTouch(const glm::vec2& touch)
 {
-    if (m_EndTouchFunc)
-    {
+    if (m_EndTouchFunc) {
         m_EndTouchFunc(touch);
     }
 }

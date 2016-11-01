@@ -9,20 +9,18 @@
 #ifndef ISHADERSOURCE_H
 #define ISHADERSOURCE_H
 
-namespace jam
-{
-    
-class IShaderSource
-{
+namespace jam {
+
+class IShaderSource {
     JAM_OBJECT_BASE
-public:    
+public:
     virtual const std::string& Vertex() const = 0;
     virtual const std::string& Fragment() const = 0;
     virtual const std::string& Geometry() const = 0;
-    
+
     virtual bool Load(const std::string& filename) = 0;
 };
-    
+
 }; // namespace jam
 
 #endif // SHADERSSOURCES_H

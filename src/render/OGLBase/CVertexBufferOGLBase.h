@@ -14,46 +14,44 @@
 
 #include "IVertexBuffer.h"
 
-namespace jam
-{
-    
-class CVertexBufferOGLBase : public IVertexBuffer
-{
+namespace jam {
+
+class CVertexBufferOGLBase : public IVertexBuffer {
 public:
     CVertexBufferOGLBase();
     virtual ~CVertexBufferOGLBase();
-    
+
     virtual const TVertexStreamMap& VertexStreams() const override;
     virtual SVertexStream& Lock(VertexTypes vertexType) override;
-    
+
     virtual void Initialize(uint64_t elementSize) override;
     virtual void Shutdown() override;
     virtual bool IsValid() const override;
-    
+
     virtual uint64_t SizeRaw() const override;
     virtual void ResizeRaw(uint64_t newSize) override;
-    
+
     virtual uint64_t ElementSize() const override;
-    
+
     virtual void* LockRaw() override;
     virtual bool IsLocked() const override;
     virtual void Unlock(bool isNeedCommit = false) override;
     virtual bool HasStream(VertexTypes vertexType) override;
-    
+
     virtual void ZeroStride(bool isZeroStride) override;
     virtual bool ZeroStride() override;
-    
+
     virtual void Bind() override;
     virtual void Unbind() override;
-    
+
     /*
      * OpenGL specific
      */
     GLenum ConvertDataType(DataTypes dataType);
-    
+
 protected:
     virtual void ElementSize(uint64_t elementSize) override;
-    
+
 private:
     uint32_t m_Id;
     std::vector<uint8_t> m_Buffer;
@@ -62,7 +60,7 @@ private:
     TVertexStreamMap m_VertexStreamers;
     bool m_ZeroStride;
 };
-    
+
 }; // namespace jam
 
 #endif /* CVERTEXBUFFEROGLBASE_H */

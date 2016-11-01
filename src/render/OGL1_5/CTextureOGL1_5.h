@@ -8,19 +8,17 @@
 #if defined(RENDER_OGL1_5)
 
 #ifndef CTEXTUREOGL1_5_H
-#define	CTEXTUREOGL1_5_H
+#define CTEXTUREOGL1_5_H
 
 #include "CTextureOGLBase.h"
 
-namespace jam
-{
+namespace jam {
 
-class CTextureOGL1_5 : public CTextureOGLBase
-{
+class CTextureOGL1_5 : public CTextureOGLBase {
 public:
     CTextureOGL1_5();
     virtual ~CTextureOGL1_5();
-    
+
     /*
      * OpenGL specific
      */
@@ -35,3 +33,5 @@ public:
 #endif /* CTEXTUREOGL1_5_H */
 
 #endif /* defined(RENDER_OGL1_5) */
+
+

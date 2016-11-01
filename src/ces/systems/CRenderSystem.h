@@ -12,8 +12,7 @@
 #include "ISystem.h"
 #include "CRenderComponent.h"
 
-namespace jam
-{
+namespace jam {
 CLASS_PTR(CRenderSystem)
 CLASS_PTR(IEntity)
 CLASS_PTR(ICamera)
@@ -26,40 +25,38 @@ CLASS_PTR(ITexture)
 CLASS_PTR(IShaderProgram)
 CLASS_PTR(IRenderer)
 
-class CRenderSystem : public CSystemBase
-{
+class CRenderSystem : public CSystemBase {
     JAM_OBJECT
 public:
     CRenderSystem(IRendererPtr renderer);
     virtual ~CRenderSystem();
-    
+
     virtual void Update(unsigned long dt) override;
     void Draw(ICameraPtr camera);
-    
+
 protected:
     virtual void OnAddedEntity(IEntityPtr entity) override;
     virtual void OnRemovedEntity(IEntityPtr entity) override;
     virtual void OnChangedComponent(IComponentPtr component) override;
-    
+
 private:
     void DrawGroup(CRenderComponentPtr renderComponent,
-                   const std::string& groupName,
-                   const glm::mat4& projectionMatrix,
-                   const glm::mat4& viewMatrix,
-                   const glm::mat4& modelMatrix) const;
+        const std::string& groupName,
+        const glm::mat4& projectionMatrix,
+        const glm::mat4& viewMatrix,
+        const glm::mat4& modelMatrix) const;
     void Draw(IMeshPtr mesh, IMaterialPtr material, ITexturePtr texture, IShaderProgramPtr shader) const;
-    
+
 private:
     IRendererPtr m_Renderer;
-    
+
     std::set<IFrameBufferPtr> m_ProccededRenderTargets;
     std::set<uint64_t> m_ProccededBatches;
-    
+
     std::list<CRenderComponentPtr> m_SortedComponents;
     std::map<CRenderComponentPtr, uint64_t> m_OrderKeys;
 };
-    
-} // namespace jam
 
+} // namespace jam
 
 #endif /* CRENDERSYSTEM_H */

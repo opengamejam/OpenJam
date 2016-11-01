@@ -30,33 +30,32 @@ CRenderTargetDepthOGLES2_0::~CRenderTargetDepthOGLES2_0()
 
 GLenum CRenderTargetDepthOGLES2_0::ConvertToInternalFormat(InternalFormats internalFormat)
 {
-    switch (internalFormat)
-    {
-        case Depth16:
-            return GL_DEPTH_COMPONENT16;
-            break;
+    switch (internalFormat) {
+    case Depth16:
+        return GL_DEPTH_COMPONENT16;
+        break;
 #if GL_OES_depth24
-        case Depth24:
-            return GL_DEPTH_COMPONENT24_OES;
-            break;
+    case Depth24:
+        return GL_DEPTH_COMPONENT24_OES;
+        break;
 #endif
 #if GL_EXT_texture_storage
-        case Depth32:
-            return GL_DEPTH_COMPONENT32_OES;
-            break;
+    case Depth32:
+        return GL_DEPTH_COMPONENT32_OES;
+        break;
 #endif
 #if GL_OES_packed_depth_stencil
-        case Depth24_Stencil8:
-            return GL_DEPTH24_STENCIL8_OES;
-            break;
+    case Depth24_Stencil8:
+        return GL_DEPTH24_STENCIL8_OES;
+        break;
 #endif
-            
-        default:
-            // Unacceptible type of depth buffer
-            assert(false);
-            break;
+
+    default:
+        // Unacceptible type of depth buffer
+        assert(false);
+        break;
     }
-    
+
     return GL_DEPTH_COMPONENT16;
 }
 

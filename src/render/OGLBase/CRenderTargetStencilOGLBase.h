@@ -14,46 +14,44 @@
 
 #include "IRenderTarget.h"
 
-namespace jam
-{
+namespace jam {
 
-class CRenderTargetStencilOGLBase : public CRenderTargetStencil
-{
+class CRenderTargetStencilOGLBase : public CRenderTargetStencil {
     JAM_OBJECT
 public:
     CRenderTargetStencilOGLBase();
     virtual ~CRenderTargetStencilOGLBase();
-    
+
     /*
      * Initialize render target object
      */
     virtual void Initialize(InternalFormats internalFormat) override;
-    
+
     /*
      * Deinitialize render target object
      */
     virtual void Shutdown() override;
-    
+
     /*
      * Check if render target is initialized
      */
     virtual bool IsInitialized() override;
-    
+
     /*
      * Allocate render buffer with 'width' and 'height'
      */
     virtual void Allocate(uint64_t width, uint64_t height) override;
-    
+
     /*
      * Bind current render target
      */
     virtual void Bind() const override;
-    
+
     /*
      * Unbind current render target
      */
     virtual void Unbind() const override;
-    
+
     /*
      * OpenGL specific
      */
@@ -61,12 +59,12 @@ public:
     virtual void UnbindFromFrameBuffer();
     virtual void InitializeWithDepthId(uint32_t depthId);
     virtual GLenum ConvertToInternalFormat(InternalFormats internalFormat) = 0;
-    
+
 private:
     uint32_t m_Id;
     InternalFormats m_InternalFormat;
 };
-    
+
 }; // namespace jam
 
 #endif /* CRENDERTARGETSTENCILOGLBASE_H */

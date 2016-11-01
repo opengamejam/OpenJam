@@ -15,14 +15,14 @@ using namespace jam;
 // Constants
 // *****************************************************************************
 
-
 // *****************************************************************************
 // Public Methods
 // *****************************************************************************
 
 CRenderViewAndroid::CRenderViewAndroid(unsigned int width, unsigned int height)
     : IRenderView(width, height)
-{}
+{
+}
 
 CRenderViewAndroid::~CRenderViewAndroid()
 {
@@ -30,17 +30,14 @@ CRenderViewAndroid::~CRenderViewAndroid()
 
 void CRenderViewAndroid::CreateView()
 {
-    
 }
 
 void CRenderViewAndroid::SwapBuffer() const
 {
-    
 }
 
 void CRenderViewAndroid::UpdateEvents() const
 {
-    
 }
 
 // *****************************************************************************
@@ -52,3 +49,5 @@ void CRenderViewAndroid::UpdateEvents() const
 // *****************************************************************************
 
 #endif /* OS_ANDROID */
+
+

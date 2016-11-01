@@ -22,35 +22,31 @@ using namespace jam;
 // *****************************************************************************
 
 CRenderTargetColorOGLBase::CRenderTargetColorOGLBase()
-: m_Id(0)
-, m_InternalFormat(IRenderTarget::ColorRGBA8888)
+    : m_Id(0)
+    , m_InternalFormat(IRenderTarget::ColorRGBA8888)
 {
-
 }
 
 CRenderTargetColorOGLBase::~CRenderTargetColorOGLBase()
 {
-
 }
 
 void CRenderTargetColorOGLBase::Initialize(InternalFormats internalFormat)
 {
-    if (IsInitialized())
-    {
+    if (IsInitialized()) {
         return;
     }
-    
+
     glGenRenderbuffers(1, &m_Id);
     m_InternalFormat = internalFormat;
 }
 
 void CRenderTargetColorOGLBase::Shutdown()
 {
-    if (!IsInitialized())
-    {
+    if (!IsInitialized()) {
         return;
     }
-    
+
     glDeleteRenderbuffers(1, &m_Id);
 }
 
@@ -62,7 +58,7 @@ bool CRenderTargetColorOGLBase::IsInitialized()
 void CRenderTargetColorOGLBase::Allocate(uint64_t width, uint64_t height)
 {
     glRenderbufferStorage(GL_RENDERBUFFER, ConvertInternalFormat(m_InternalFormat),
-                          static_cast<GLsizei>(width), static_cast<GLsizei>(height));
+        static_cast<GLsizei>(width), static_cast<GLsizei>(height));
 }
 
 void CRenderTargetColorOGLBase::Bind() const
@@ -78,17 +74,17 @@ void CRenderTargetColorOGLBase::Unbind() const
 void CRenderTargetColorOGLBase::BindToFrameBuffer(uint64_t colorAttachementIdx)
 {
     glFramebufferRenderbuffer(GL_FRAMEBUFFER,
-                              GL_COLOR_ATTACHMENT0 + colorAttachementIdx,
-                              GL_RENDERBUFFER,
-                              m_Id);
+        GL_COLOR_ATTACHMENT0 + colorAttachementIdx,
+        GL_RENDERBUFFER,
+        m_Id);
 }
 
 void CRenderTargetColorOGLBase::UnbindFromFrameBuffer(uint64_t colorAttachementIdx)
 {
     glFramebufferRenderbuffer(GL_FRAMEBUFFER,
-                              GL_COLOR_ATTACHMENT0 + colorAttachementIdx,
-                              GL_RENDERBUFFER,
-                              0);
+        GL_COLOR_ATTACHMENT0 + colorAttachementIdx,
+        GL_RENDERBUFFER,
+        0);
 }
 
 // *****************************************************************************

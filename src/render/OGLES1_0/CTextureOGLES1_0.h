@@ -8,19 +8,17 @@
 #if defined(RENDER_OGLES1_0)
 
 #ifndef CTEXTUREOGLES1_0_H
-#define	CTEXTUREOGLES1_0_H
+#define CTEXTUREOGLES1_0_H
 
 #include "CTextureOGLBase.h"
 
-namespace jam
-{
+namespace jam {
 
-class CTextureOGLES1_0 : public CTextureOGLBase
-{
+class CTextureOGLES1_0 : public CTextureOGLBase {
 public:
     CTextureOGLES1_0();
     virtual ~CTextureOGLES1_0();
-    
+
     /*
      * OpenGL specific
      */
@@ -29,9 +27,11 @@ public:
     virtual GLenum TexelFormatsToGlFormat(TexelFormats texelFormat) override;
     virtual GLenum TexelTypeToGlType(TexelTypes texelType, TexelFormats texelFormat) override;
 };
-    
+
 }; // namespace jam
 
 #endif /* CTEXTUREOGLES1_0_H */
 
 #endif /* defined(RENDER_OGLES1_0) */
+
+

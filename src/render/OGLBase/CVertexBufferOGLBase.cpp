@@ -22,12 +22,11 @@ using namespace jam;
 // *****************************************************************************
 
 CVertexBufferOGLBase::CVertexBufferOGLBase()
-: m_Id(0)
-, m_ElementSize(0)
-, m_IsLocked(false)
-, m_ZeroStride(false)
+    : m_Id(0)
+    , m_ElementSize(0)
+    , m_IsLocked(false)
+    , m_ZeroStride(false)
 {
-    
 }
 
 CVertexBufferOGLBase::~CVertexBufferOGLBase()
@@ -37,8 +36,7 @@ CVertexBufferOGLBase::~CVertexBufferOGLBase()
 
 void CVertexBufferOGLBase::Initialize(uint64_t elementSize)
 {
-    if (!IsValid())
-    {
+    if (!IsValid()) {
 #ifdef GL_ARRAY_BUFFER
         glGenBuffers(1, &m_Id);
 #else
@@ -56,30 +54,27 @@ const IVertexBuffer::TVertexStreamMap& CVertexBufferOGLBase::VertexStreams() con
 IVertexBuffer::SVertexStream& CVertexBufferOGLBase::Lock(IVertexBuffer::VertexTypes vertexType)
 {
     LockRaw();
-    
-    if (m_VertexStreamers.find(vertexType) == m_VertexStreamers.end())
-    {
+
+    if (m_VertexStreamers.find(vertexType) == m_VertexStreamers.end()) {
         uint64_t absoluteOffset = 0;
-        std::for_each(m_VertexStreamers.begin(), m_VertexStreamers.end(), [&](const TVertexStreamMap::value_type& value)
-        {
+        std::for_each(m_VertexStreamers.begin(), m_VertexStreamers.end(), [&](const TVertexStreamMap::value_type& value) {
             const IVertexBuffer::SVertexStream& stream = value.second;
             absoluteOffset += (stream.DataSize() * Size());
         });
-        
+
         SVertexStream stream = SVertexStream(shared_from_this());
         stream.streamIndex = (unsigned int)m_VertexStreamers.size();
         stream.absoluteOffset = absoluteOffset;
-        
+
         m_VertexStreamers[vertexType] = stream;
     }
-    
+
     return m_VertexStreamers[vertexType];
 }
 
 void CVertexBufferOGLBase::Shutdown()
 {
-    if (IsValid())
-    {
+    if (IsValid()) {
 #ifdef GL_ARRAY_BUFFER
         glDeleteBuffers(1, &m_Id);
 #endif
@@ -126,21 +121,19 @@ bool CVertexBufferOGLBase::IsLocked() const
 
 void CVertexBufferOGLBase::Unlock(bool isNeedCommit)
 {
-    if (!m_IsLocked)
-    {
+    if (!m_IsLocked) {
         return;
     }
-    
+
 #ifdef GL_ARRAY_BUFFER
-    if (isNeedCommit)
-    {
+    if (isNeedCommit) {
         glBindBuffer(GL_ARRAY_BUFFER, m_Id);
         glBufferSubData(GL_ARRAY_BUFFER, 0, m_Buffer.size(), m_Buffer.data());
         glBindBuffer(GL_ARRAY_BUFFER, 0);
         //assert(glGetError() == GL_NO_ERROR);
     }
 #endif
-    
+
     m_IsLocked = false;
 }
 
@@ -176,17 +169,17 @@ void CVertexBufferOGLBase::Unbind()
 GLenum CVertexBufferOGLBase::ConvertDataType(DataTypes dataType)
 {
     static std::map<DataTypes, int> converter = {
-        {Unknown, GL_BYTE},
-        {Byte, GL_BYTE},
-        {UByte, GL_UNSIGNED_BYTE},
-        {Short, GL_SHORT},
-        {UShort, GL_UNSIGNED_SHORT},
-        {Int, GL_INT},
-        {UInt, GL_UNSIGNED_INT},
-        {Float, GL_FLOAT},
+        { Unknown, GL_BYTE },
+        { Byte, GL_BYTE },
+        { UByte, GL_UNSIGNED_BYTE },
+        { Short, GL_SHORT },
+        { UShort, GL_UNSIGNED_SHORT },
+        { Int, GL_INT },
+        { UInt, GL_UNSIGNED_INT },
+        { Float, GL_FLOAT },
         //{ShortFloat, GL_2_BYTES}, // TODO
     };
-    
+
     return converter[dataType];
 }
 

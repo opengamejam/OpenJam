@@ -20,30 +20,27 @@ using namespace jam;
 // Constants
 // *****************************************************************************
 
-
 // *****************************************************************************
 // Public Methods
 // *****************************************************************************
 
 CAnimation2DComponent::CAnimation2DComponent()
-: m_Sprite(nullptr)
-, m_CachedFrameTransform()
-, m_CachedIsStatic(true)
-, m_FullTime(0)
-, m_Time(0)
-, m_IsPlay(true)
+    : m_Sprite(nullptr)
+    , m_CachedFrameTransform()
+    , m_CachedIsStatic(true)
+    , m_FullTime(0)
+    , m_Time(0)
+    , m_IsPlay(true)
 {
 }
 
 CAnimation2DComponent::~CAnimation2DComponent()
 {
-
 }
 
 void CAnimation2DComponent::Sprite(ISpritePtr sprite)
 {
-    if (sprite == m_Sprite)
-    {
+    if (sprite == m_Sprite) {
         return;
     }
 
@@ -51,13 +48,11 @@ void CAnimation2DComponent::Sprite(ISpritePtr sprite)
     m_Sequences.clear();
     m_SequencesNames.clear();
 
-    if (sprite)
-    {
+    if (sprite) {
         // Sequences
         const ISprite::TTexturesList& textures = Sprite()->Textures();
         const ISprite::TAnimationsList& sequences = Sprite()->Animations();
-        std::for_each(sequences.begin(), sequences.end(), [&](const CAnimationDef& sequenceDef)
-        {
+        std::for_each(sequences.begin(), sequences.end(), [&](const CAnimationDef& sequenceDef) {
             m_SequencesNames.push_back(sequenceDef.name);
             TSequence& sequence = m_Sequences[sequenceDef.name];
 
@@ -65,8 +60,7 @@ void CAnimation2DComponent::Sprite(ISpritePtr sprite)
             unsigned long& duration = m_SequenceDurations[sequenceDef.name];
 
             const ISprite::TFramesList& frames = sequenceDef.frames;
-            std::for_each(frames.begin(), frames.end(), [&](const CFrameDef& frameDef)
-            {
+            std::for_each(frames.begin(), frames.end(), [&](const CFrameDef& frameDef) {
                 SFrame frame;
                 // Object transform
                 frame.transform.Position(glm::vec3(frameDef.offsetX, frameDef.offsetY, 0.0f));
@@ -75,9 +69,9 @@ void CAnimation2DComponent::Sprite(ISpritePtr sprite)
                 // Texture frame
                 frame.textureFrame.push_back(frameDef.textureFrame.u); // (0, 0)
                 frame.textureFrame.push_back(glm::vec2(frameDef.textureFrame.v.x,
-                                                       frameDef.textureFrame.u.y)); // (1, 0)
+                    frameDef.textureFrame.u.y)); // (1, 0)
                 frame.textureFrame.push_back(glm::vec2(frameDef.textureFrame.u.x,
-                                                       frameDef.textureFrame.v.y)); // (0, 1)
+                    frameDef.textureFrame.v.y)); // (0, 1)
                 frame.textureFrame.push_back(frameDef.textureFrame.v); // (1, 1)
 
                 frame.textureName = textures[frameDef.textureFrame.textureIdx];
@@ -90,9 +84,7 @@ void CAnimation2DComponent::Sprite(ISpritePtr sprite)
 
         // Load texture atlases
         //LoadTextures(textures);
-    }
-    else
-    {
+    } else {
         m_SequencesNames.push_back("null");
         TSequence& sequence = m_Sequences["null"];
         sequence.push_back(SFrame());
@@ -137,8 +129,7 @@ const std::string& CAnimation2DComponent::AnimationName() const
 
 void CAnimation2DComponent::AnimationName(const std::string& name)
 {
-    if (m_Sequences.find(name) != m_Sequences.end())
-    {
+    if (m_Sequences.find(name) != m_Sequences.end()) {
         m_AnimationName = name;
 
         m_Time = 0;
@@ -149,10 +140,8 @@ void CAnimation2DComponent::AnimationName(const std::string& name)
 uint32_t CAnimation2DComponent::AnimationIndex() const
 {
     uint32_t index = 0;
-    std::all_of(m_SequencesNames.begin(), m_SequencesNames.end(), [&](const std::string& name)
-    {
-        if (name == m_AnimationName)
-        {
+    std::all_of(m_SequencesNames.begin(), m_SequencesNames.end(), [&](const std::string& name) {
+        if (name == m_AnimationName) {
             return false;
         }
         ++index;
@@ -165,8 +154,7 @@ uint32_t CAnimation2DComponent::AnimationIndex() const
 
 void CAnimation2DComponent::AnimationIndex(uint32_t index)
 {
-    if (index < m_SequencesNames.size())
-    {
+    if (index < m_SequencesNames.size()) {
         AnimationName(m_SequencesNames[index]);
     }
 }
@@ -180,14 +168,12 @@ bool CAnimation2DComponent::Time(unsigned long ms)
 {
     unsigned int frameIndex = FrameId();
     m_Time = clamp<unsigned long>(ms, 0, m_FullTime);
-    if (m_Time == m_FullTime)
-    {
+    if (m_Time == m_FullTime) {
         m_Time = 0;
     }
 
     bool wasChanged = FrameId() != frameIndex;
-    if (wasChanged)
-    {
+    if (wasChanged) {
         Cache();
     }
 
@@ -212,8 +198,7 @@ uint32_t CAnimation2DComponent::FrameId()
 
 bool CAnimation2DComponent::FrameId(uint32_t frameIndex)
 {
-    if (FrameId() != frameIndex && frameIndex < Sequence().size())
-    {
+    if (FrameId() != frameIndex && frameIndex < Sequence().size()) {
         m_Time = static_cast<unsigned long>(((float)frameIndex / Sequence().size()) * FullTime());
 
         Cache();
@@ -260,9 +245,9 @@ const CAnimation2DComponent::TSequence& CAnimation2DComponent::Sequence()
 void CAnimation2DComponent::Cache()
 {
     const TSequence& sequence = Sequence();
-    unsigned int frameId    = FrameId();
-    m_CachedFrameTransform  = sequence[frameId].transform;
-    m_CachedTextureFrame    = sequence[frameId].textureFrame;
-    m_CachedTextureName     = sequence[frameId].textureName;
-    m_CachedIsStatic        = (sequence.size() <= 1);
+    unsigned int frameId = FrameId();
+    m_CachedFrameTransform = sequence[frameId].transform;
+    m_CachedTextureFrame = sequence[frameId].textureFrame;
+    m_CachedTextureName = sequence[frameId].textureName;
+    m_CachedIsStatic = (sequence.size() <= 1);
 }

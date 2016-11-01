@@ -20,7 +20,7 @@ using namespace jam;
 // *****************************************************************************
 
 CFrameBufferOGLES1_0::CFrameBufferOGLES1_0(uint32_t width, uint32_t height)
-: CFrameBufferOGLBase(width, height)
+    : CFrameBufferOGLBase(width, height)
 {
 }
 
@@ -36,4 +36,5 @@ CFrameBufferOGLES1_0::~CFrameBufferOGLES1_0()
 // Private Methods
 // *****************************************************************************
 
-#endif // defined(RENDER_OGLES1_0)
+#endif /* defined(RENDER_OGLES1_0) */
+

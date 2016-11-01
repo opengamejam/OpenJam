@@ -12,16 +12,14 @@
 
 #include "CIndexBufferOGLBase.h"
 
-namespace jam
-{
-    
-    class CIndexBufferOGLES1_1 : public CIndexBufferOGLBase
-    {
-    public:
-        CIndexBufferOGLES1_1();
-        virtual ~CIndexBufferOGLES1_1();
-    };
-    
+namespace jam {
+
+class CIndexBufferOGLES1_1 : public CIndexBufferOGLBase {
+public:
+    CIndexBufferOGLES1_1();
+    virtual ~CIndexBufferOGLES1_1();
+};
+
 }; // namespace jam
 
 #endif /* CINDEXBUFFEROGLES1_1_H */

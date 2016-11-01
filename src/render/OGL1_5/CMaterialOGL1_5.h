@@ -12,15 +12,13 @@
 
 #include "CMaterialOGLBase.h"
 
-namespace jam
-{
+namespace jam {
 
-class CMaterialOGL1_5 : public CMaterialOGLBase
-{
+class CMaterialOGL1_5 : public CMaterialOGLBase {
 public:
     CMaterialOGL1_5();
     virtual ~CMaterialOGL1_5();
-    
+
     /*
      * OpenGL specific
      */

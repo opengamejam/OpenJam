@@ -13,24 +13,22 @@
 #include "IEntity.h"
 #include "CTransform.hpp"
 
-namespace jam
-{
+namespace jam {
 CLASS_PTR(CTransfromationSystem)
 CLASS_PTR(CTransformationComponent)
-    
-class CTransfromationSystem : public CSystemBase
-{
+
+class CTransfromationSystem : public CSystemBase {
     JAM_OBJECT
 public:
     CTransfromationSystem();
     virtual ~CTransfromationSystem();
-    
+
     virtual void Update(unsigned long dt) override;
-    
+
 private:
     void UpdateTransformsRecursively(IEntityPtr entity, const CTransform3Df& parentTransform);
 };
-    
+
 } // namespace jam
 
 #endif /* CTRANSFORMATIONSYSTEM_H */

@@ -24,37 +24,31 @@ using namespace jam;
 // *****************************************************************************
 
 CMeshOGLBase::CMeshOGLBase()
-: m_VertexBuffer(nullptr)
-, m_IndexBuffer(nullptr)
+    : m_VertexBuffer(nullptr)
+    , m_IndexBuffer(nullptr)
 {
-    
 }
 
 CMeshOGLBase::~CMeshOGLBase()
 {
-    
 }
 
 void CMeshOGLBase::Bind()
 {
-    if (VertexBuffer())
-    {
+    if (VertexBuffer()) {
         VertexBuffer()->Bind();
     }
-    if (IndexBuffer())
-    {
+    if (IndexBuffer()) {
         IndexBuffer()->Bind();
     }
 }
 
 void CMeshOGLBase::Unbind()
 {
-    if (VertexBuffer())
-    {
+    if (VertexBuffer()) {
         VertexBuffer()->Unbind();
     }
-    if (IndexBuffer())
-    {
+    if (IndexBuffer()) {
         IndexBuffer()->Unbind();
     }
 }

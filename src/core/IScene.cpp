@@ -8,7 +8,6 @@
 #include "IScene.h"
 #include "IEntity.h"
 
-
 using namespace jam;
 
 CSceneBase::CSceneBase(CGamePtr game)
@@ -19,7 +18,6 @@ CSceneBase::CSceneBase(CGamePtr game)
 
 CSceneBase::~CSceneBase()
 {
-
 }
 
 CGamePtr CSceneBase::Game() const
@@ -35,8 +33,7 @@ const IScene::TCamerasList& CSceneBase::Cameras() const
 void CSceneBase::AddCamera(ICameraPtr camera)
 {
     assert(camera);
-    if (camera)
-    {
+    if (camera) {
         m_Cameras.push_back(camera);
     }
 }
@@ -64,6 +61,5 @@ IEntityPtr CSceneBase::Root()
 }
 
 void CSceneBase::Update(unsigned long dt)
-{    
-    
+{
 }

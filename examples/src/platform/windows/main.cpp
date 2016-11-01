@@ -17,26 +17,25 @@
 
 using namespace jam;
 
-int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR *lpCmdLine, int nCmdShow)
+int WINAPI WinMain(HINSTANCE hInstance, HINSTANCE hPrevInstance, TCHAR* lpCmdLine, int nCmdShow)
 {
     IRenderViewPtr renderView(new CRenderViewWindows(960, 640, hInstance));
-	CGamePtr game(new CGame(renderView));
-	game->Initialize();
+    CGamePtr game(new CGame(renderView));
+    game->Initialize();
 
     IScenePtr scene(new CGameScene(game));
     game->PushScene(scene);
-    
+
     unsigned long lastTimestamp = CSystem::GetTickCount();
-    while(1)
-    {
+    while (1) {
         unsigned long currentTimestamp = CSystem::GetTickCount();
         unsigned long dt = currentTimestamp - lastTimestamp;
         lastTimestamp = currentTimestamp;
 
-		renderView->UpdateEvents();
+        renderView->UpdateEvents();
 
         game->Update(dt);
-		game->Draw();
+        game->Draw();
     }
 
     return 0;

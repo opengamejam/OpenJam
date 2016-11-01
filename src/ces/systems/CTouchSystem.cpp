@@ -21,10 +21,8 @@ CTouchSystem::CTouchSystem(IRenderViewPtr renderView)
 
 CTouchSystem::~CTouchSystem()
 {
-
 }
 
 void CTouchSystem::Update(unsigned long dt)
 {
-
 }

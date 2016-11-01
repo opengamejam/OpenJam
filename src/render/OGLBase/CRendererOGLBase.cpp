@@ -31,14 +31,12 @@ using namespace jam;
 // *****************************************************************************
 
 CRendererOGLBase::CRendererOGLBase(IRenderViewPtr renderView)
-: m_RenderView(renderView)
+    : m_RenderView(renderView)
 {
-
 }
 
 CRendererOGLBase::~CRendererOGLBase()
 {
-
 }
 
 IRenderViewPtr CRendererOGLBase::RenderView() const
@@ -56,39 +54,38 @@ IRenderViewPtr CRendererOGLBase::RenderView() const
 
 GLenum CRendererOGLBase::ConvertPrimitiveType(IMaterial::PrimitiveTypes type)
 {
-    switch (type)
-    {
-        case IMaterial::Points:
-            return GL_POINTS;
-            break;
-            
-        case IMaterial::Lines:
-            return GL_LINES;
-            break;
-            
-        case IMaterial::LinesLoop:
-            return GL_LINE_LOOP;
-            break;
-            
-        case IMaterial::LinesStrip:
-            return GL_LINE_STRIP;
-            break;
-            
-        case IMaterial::Triangles:
-            return GL_TRIANGLES;
-            break;
-            
-        case IMaterial::TrianglesFan:
-            return GL_TRIANGLE_FAN;
-            break;
-            
-        case IMaterial::TrianglesStrip:
-            return GL_TRIANGLE_STRIP;
-            break;
-            
-        default:
-            return GL_TRIANGLES;
-            break;
+    switch (type) {
+    case IMaterial::Points:
+        return GL_POINTS;
+        break;
+
+    case IMaterial::Lines:
+        return GL_LINES;
+        break;
+
+    case IMaterial::LinesLoop:
+        return GL_LINE_LOOP;
+        break;
+
+    case IMaterial::LinesStrip:
+        return GL_LINE_STRIP;
+        break;
+
+    case IMaterial::Triangles:
+        return GL_TRIANGLES;
+        break;
+
+    case IMaterial::TrianglesFan:
+        return GL_TRIANGLE_FAN;
+        break;
+
+    case IMaterial::TrianglesStrip:
+        return GL_TRIANGLE_STRIP;
+        break;
+
+    default:
+        return GL_TRIANGLES;
+        break;
     }
 }
 

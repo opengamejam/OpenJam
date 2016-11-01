@@ -15,22 +15,20 @@ using namespace jam;
 
 const std::string CShaderSourceSprite::s_GeomentryShader;
 const std::string CShaderSourceSprite::s_VertexShader = MULTI_LINE_STRING(
-\n#ifdef OGL2_0\n
+\n #ifdef OGL2_0\n
 
-void main(void)
-{
-    mat4 MVP = MainProjectionMatrix * MainModelMatrix;
-    gl_Position = MVP * MainVertexPosition;
-    
-    VaryingTextureCoord = MainVertexUV;
-    VaryingMainColor = MainVertexColor;
-}
-\n#endif\n
+    void main(void) {
+        mat4 MVP = MainProjectionMatrix * MainModelMatrix;
+        gl_Position = MVP * MainVertexPosition;
 
-\n#ifdef OGLES3\n
+        VaryingTextureCoord = MainVertexUV;
+        VaryingMainColor = MainVertexColor;
+    }
+\n #endif \n
 
-\n#endif\n
-);
+\n #ifdef OGLES3\n
+
+\n #endif \n);
 
 // *****************************************************************************
 // Public Methods

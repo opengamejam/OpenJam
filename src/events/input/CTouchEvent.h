@@ -12,31 +12,28 @@
 #include "IEvent.h"
 #include "CMath.h"
 
-namespace jam
-{
-CLASS_PTR(CTouchEvent)  // TODO:
+namespace jam {
+CLASS_PTR(CTouchEvent) // TODO:
 
-class CTouchEvent : public IEvent
-{
+class CTouchEvent : public IEvent {
     JAM_OBJECT
 public:
-    enum ETouchEventType
-    {
+    enum ETouchEventType {
         Down = 0,
         Move,
         Up,
         Reset
     };
-    
+
 public:
     CTouchEvent(const glm::vec2& position, ETouchEventType type);
     virtual ~CTouchEvent();
-    
+
     virtual const std::string& Id() const override;
-    
+
     const glm::vec2& GetPosition() const;
     ETouchEventType GetType() const;
-    
+
 private:
     std::string m_Id;
     glm::vec2 m_Position;
@@ -46,3 +43,4 @@ private:
 }; // namespace jam
 
 #endif /* defined(CTOUCHEVENT_H) */
+

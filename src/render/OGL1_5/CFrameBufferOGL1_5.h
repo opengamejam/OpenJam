@@ -12,13 +12,11 @@
 
 #include "CFrameBufferOGLBase.h"
 
-namespace jam
-{
+namespace jam {
 
-class CFrameBufferOGL1_5 : public CFrameBufferOGLBase
-{
+class CFrameBufferOGL1_5 : public CFrameBufferOGLBase {
 public:
-	CFrameBufferOGL1_5(uint32_t width, uint32_t height);
+    CFrameBufferOGL1_5(uint32_t width, uint32_t height);
     virtual ~CFrameBufferOGL1_5();
 };
 
@@ -27,3 +25,4 @@ public:
 #endif /* CFRAMEBUFFEROGL1_5_H */
 
 #endif /* defined(RENDER_OGL1_5) */
+

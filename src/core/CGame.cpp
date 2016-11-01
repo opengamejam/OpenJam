@@ -30,7 +30,6 @@ using namespace vfspp;
 // Constants
 // *****************************************************************************
 
-
 // *****************************************************************************
 // Public Methods
 // *****************************************************************************
@@ -41,7 +40,7 @@ CGame::CGame(IRenderViewPtr render)
 {
 }
 
-CGame::~CGame() 
+CGame::~CGame()
 {
 }
 
@@ -49,22 +48,22 @@ void CGame::Initialize()
 {
     m_RenderView->CreateView();
     m_RenderView->OnTouchSignal += std::bind(&CGame::OnTouchEvent, this, std::placeholders::_1);
-    
+
     InitializeFileSystems();
     InitializeSystems();
     CThreadPool::Get()->Initialize(5);
-    
+
     m_IsInitialized = true;
 }
 
 void CGame::Shutdown()
 {
     m_RenderView->OnTouchSignal -= std::bind(&CGame::OnTouchEvent, this, std::placeholders::_1);
-    
+
     ShutdownFileSystems();
     ShutdownSystems();
     CThreadPool::Get()->Shutdown();
-    
+
     m_IsInitialized = false;
 }
 
@@ -80,22 +79,19 @@ IRenderViewPtr CGame::RenderView() const
 
 void CGame::Update(unsigned long dt)
 {
-    if (!IsInitialized())
-    {
+    if (!IsInitialized()) {
         return;
     }
-    
+
     m_RenderView->UpdateEvents();
     CThreadPool::Get()->Update(dt);
-    
-    if (!m_Scenes.empty())
-    {
+
+    if (!m_Scenes.empty()) {
         IScenePtr scene = m_Scenes.top();
         scene->Update(dt);
     }
-    
-    std::for_each(m_System.begin(), m_System.end(), [dt](const TSystemMap::value_type& system)
-    {
+
+    std::for_each(m_System.begin(), m_System.end(), [dt](const TSystemMap::value_type& system) {
         system.second->Update(dt);
     });
 }
@@ -103,14 +99,12 @@ void CGame::Update(unsigned long dt)
 void CGame::Draw()
 {
     CRenderSystemPtr renderSystem = RenderSystem();
-    if (renderSystem && !m_Scenes.empty())
-    {
+    if (renderSystem && !m_Scenes.empty()) {
         IScenePtr scene = m_Scenes.top();
-        
+
         m_RenderView->Begin();
         const IScene::TCamerasList& cameras = scene->Cameras();
-        std::for_each(cameras.begin(), cameras.end(), [&](ICameraPtr camera)
-        {
+        std::for_each(cameras.begin(), cameras.end(), [&](ICameraPtr camera) {
             renderSystem->Draw(camera);
         });
         m_RenderView->End();
@@ -120,11 +114,10 @@ void CGame::Draw()
 void CGame::PushScene(IScenePtr scene)
 {
     assert(scene);
-    if (!m_Scenes.empty())
-    {
+    if (!m_Scenes.empty()) {
         m_Scenes.top()->Pause();
     }
-    
+
     m_Scenes.push(scene);
     m_Scenes.top()->Start();
 }
@@ -132,8 +125,7 @@ void CGame::PushScene(IScenePtr scene)
 void CGame::PopScene()
 {
     assert(!m_Scenes.empty());
-    if (!m_Scenes.empty())
-    {
+    if (!m_Scenes.empty()) {
         m_Scenes.top()->Stop();
         m_Scenes.pop();
     }
@@ -141,11 +133,10 @@ void CGame::PopScene()
 
 IScenePtr CGame::GetScene() const
 {
-    if (!m_Scenes.empty())
-    {
+    if (!m_Scenes.empty()) {
         return m_Scenes.top();
     }
-    
+
     return nullptr;
 }
 
@@ -159,8 +150,7 @@ void CGame::RemoveSystem(ISystemPtr system)
 {
     typeid_t key = system->GetId();
     TSystemMap::const_iterator it = m_System.find(key);
-    if (it != m_System.end())
-    {
+    if (it != m_System.end()) {
         m_System.erase(it);
     }
 }
@@ -168,11 +158,10 @@ void CGame::RemoveSystem(ISystemPtr system)
 ISystemPtr CGame::GetSystem(typeid_t systemKey)
 {
     TSystemMap::const_iterator it = m_System.find(systemKey);
-    if (it != m_System.end())
-    {
+    if (it != m_System.end()) {
         return it->second;
     }
-    
+
     return nullptr;
 }
 
@@ -197,15 +186,15 @@ CEventSystemPtr CGame::EventSystem() const
 void CGame::InitializeFileSystems()
 {
     vfs_initialize();
-    
+
     IFileSystemPtr root_fs(new CNativeFileSystem(CSystem::GetBundlePath() + "media/"));
     IFileSystemPtr zip_fs(new CZipFileSystem(CSystem::GetBundlePath() + "media/bundle.zip", "/", false));
     IFileSystemPtr mem_fs(new CMemoryFileSystem());
-    
+
     root_fs->Initialize();
     zip_fs->Initialize();
     mem_fs->Initialize();
-    
+
     CVirtualFileSystemPtr vfs = vfs_get_global();
     //vfs->AddFileSystem("/", root_fs);
     vfs->AddFileSystem("/", zip_fs);
@@ -216,13 +205,13 @@ void CGame::InitializeSystems()
 {
     m_RenderSystem.reset(new CRenderSystem(m_RenderView->Renderer()));
     m_EventSystem.reset(new CEventSystem());
-    
+
     // TODO: read from config
     CAnimation2DSystemPtr animationSystem(new CAnimation2DSystem());
     CTransfromationSystemPtr transformationSystem(new CTransfromationSystem());
     CUpdateSystemPtr updateSystem(new CUpdateSystem());
     CBatchingSystemPtr batchingSystem(new CBatchingSystem(m_RenderView->Renderer()));
-    
+
     AddSystem(updateSystem);
     AddSystem(animationSystem);
     AddSystem(batchingSystem);

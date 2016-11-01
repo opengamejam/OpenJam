@@ -1,3 +1,4 @@
+ 
 //
 //  CShaderSourceSprite.h
 //  OpenJam
@@ -11,24 +12,23 @@
 #include "Global.h"
 #include "IShaderSource.h"
 
-namespace jam
-{
+namespace jam {
 
-class CShaderSourceSprite : public IShaderSource
-{
+class CShaderSourceSprite : public IShaderSource {
 public:
     virtual const std::string& Vertex() const override;
     virtual const std::string& Fragment() const override;
     virtual const std::string& Geometry() const override;
-    
+
     virtual bool Load(const std::string& filename) override;
-    
+
 private:
     static const std::string s_VertexShader;
     static const std::string s_FragmentShader;
     static const std::string s_GeomentryShader;
 };
-    
+
 }; // namespace jam
 
 #endif /* defined(CSHADERSOURCESPRITE_H) */
+    

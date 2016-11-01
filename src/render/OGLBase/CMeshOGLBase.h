@@ -14,25 +14,23 @@
 
 #include "IMesh.h"
 
-namespace jam
-{
+namespace jam {
 
-class CMeshOGLBase : public IMesh
-{
+class CMeshOGLBase : public IMesh {
 public:
     CMeshOGLBase();
     virtual ~CMeshOGLBase();
-    
+
     virtual void Bind() override;
     virtual void Unbind() override;
     virtual bool IsValid() const override;
-    
+
     virtual IVertexBufferPtr VertexBuffer() const override;
     virtual void VertexBuffer(IVertexBufferPtr vertexBuffer) override;
-    
+
     virtual IIndexBufferPtr IndexBuffer() const override;
     virtual void IndexBuffer(IIndexBufferPtr indexBuffer) override;
-    
+
 private:
     IVertexBufferPtr m_VertexBuffer;
     IIndexBufferPtr m_IndexBuffer;

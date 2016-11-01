@@ -19,21 +19,19 @@ using namespace jam;
 // *****************************************************************************
 
 CImageRaw::CImageRaw(const std::string& filename,
-                     const IResource::TResourceData& data,
-                     uint32_t width,
-                     uint32_t height,
-                     const TexelProps& texelProps)
-: IImage(filename, data)
-, m_Width(width)
-, m_Height(height)
-, m_TexelProps(texelProps)
+    const IResource::TResourceData& data,
+    uint32_t width,
+    uint32_t height,
+    const TexelProps& texelProps)
+    : IImage(filename, data)
+    , m_Width(width)
+    , m_Height(height)
+    , m_TexelProps(texelProps)
 {
-    
 }
 
 CImageRaw::~CImageRaw()
 {
-    
 }
 
 bool CImageRaw::Load()

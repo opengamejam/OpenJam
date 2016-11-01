@@ -6,35 +6,33 @@
 //  Copyright (c) 2014 Yevgeniy Logachev. All rights reserved.
 //
 #ifndef ISCENE_H
-#define	ISCENE_H
+#define ISCENE_H
 
 #include "Global.h"
 
-namespace jam
-{
+namespace jam {
 CLASS_PTR(ICamera)
 CLASS_PTR(IEntity)
 CLASS_PTR(CGame)
-    
+
 /*
  * Interface IScene
  */
-class IScene : public std::enable_shared_from_this<IScene>
-{
+class IScene : public std::enable_shared_from_this<IScene> {
     JAM_OBJECT_BASE
 public:
     typedef std::vector<ICameraPtr> TCamerasList;
-    
+
 public:
     IScene() = default;
     ~IScene() = default;
-    
-	virtual void Start() = 0;
+
+    virtual void Start() = 0;
     virtual void Pause() = 0;
     virtual void Resume() = 0;
-	virtual void Stop() = 0;
-	virtual void Update(unsigned long dt) = 0;
-    
+    virtual void Stop() = 0;
+    virtual void Update(unsigned long dt) = 0;
+
     virtual CGamePtr Game() const = 0;
     virtual const TCamerasList& Cameras() const = 0;
     virtual void AddCamera(ICameraPtr camera) = 0;
@@ -48,31 +46,31 @@ public:
 /*
  * Base class CSceneBase
  */
-class CSceneBase : public IScene
-{
+class CSceneBase : public IScene {
 public:
     CSceneBase(CGamePtr game);
     virtual ~CSceneBase();
-    
+
     virtual void Update(unsigned long dt) override;
-    
+
     virtual CGamePtr Game() const override;
     virtual const TCamerasList& Cameras() const override;
     virtual void AddCamera(ICameraPtr camera) override;
     virtual void RemoveCamera(ICameraPtr camera) override;
     virtual void RemoveCameraById(uint32_t cameraId) override;
     virtual void RemoveAllCameras() override;
-    
+
     virtual IEntityPtr Root() override;
-    
+
 private:
     CGameWeak m_Game;
     IEntityPtr m_Root;
-    
+
     TCamerasList m_Cameras;
 };
 
 }; // namespace jam
 
-#endif	/* ISCENE_H */
+#endif /* ISCENE_H */
+
 

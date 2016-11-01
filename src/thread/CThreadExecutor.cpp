@@ -17,10 +17,9 @@ CThreadExecutorPtr CThreadExecutor::Create()
 }
 
 CThreadExecutor::CThreadExecutor()
-: m_Thread(&CThreadExecutor::ThreadCall, this)
-, m_IsEnabled(true)
+    : m_Thread(&CThreadExecutor::ThreadCall, this)
+    , m_IsEnabled(true)
 {
-
 }
 
 CThreadExecutor::~CThreadExecutor()
@@ -52,16 +51,13 @@ bool CThreadExecutor::IsEmpty()
 
 void CThreadExecutor::ThreadCall()
 {
-    while (m_IsEnabled)
-    {
+    while (m_IsEnabled) {
         std::unique_lock<std::mutex> locker(m_Mutex);
-        m_ConditionVariable.wait(locker, [&]()
-        {
+        m_ConditionVariable.wait(locker, [&]() {
             return !m_Tasks.empty() || !m_IsEnabled;
         });
-        
-        while(!m_Tasks.empty())
-        {
+
+        while (!m_Tasks.empty()) {
             TExecuteBlock block = m_Tasks.front();
             m_Tasks.pop();
 

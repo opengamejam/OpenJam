@@ -12,27 +12,25 @@
 #include "ICamera.h"
 #include "CMath.h"
 
-namespace jam
-{
+namespace jam {
 CLASS_PTR(CCamera2D)
 
-class CCamera2D : public ICamera
-{
+class CCamera2D : public ICamera {
 public:
     static CCamera2DPtr Create(float _width, float _height, float _near = -10000.0f, float _far = 10000.0f);
-    
+
     CCamera2D(float _width, float _height, float _near = -10000.0f, float _far = 10000.0f);
     virtual ~CCamera2D();
-    
+
     virtual uint32_t Id() const override;
-    
+
     virtual glm::mat4x4 ProjectionMatrix() override;
     virtual IFrameBufferPtr RenderTarget() const override;
     virtual void RenderTarget(IFrameBufferPtr renderTarget) override;
-    
+
     virtual void FlipY() override;
     virtual void FlipX() override;
-    
+
 private:
     float m_Width;
     float m_Height;
@@ -40,10 +38,10 @@ private:
     float m_Far;
     glm::mat4x4 m_ProjectionMatrix;
     IFrameBufferPtr m_RenderTarget;
-    
+
     bool m_IsFlippedX;
     bool m_IsFlippedY;
-    
+
     uint32_t m_Id;
 };
 

@@ -15,12 +15,10 @@ CTouchEvent::CTouchEvent(const glm::vec2& position, ETouchEventType type)
     , m_Position(position)
     , m_Type(type)
 {
-
 }
 
 CTouchEvent::~CTouchEvent()
 {
-
 }
 
 const std::string& CTouchEvent::Id() const

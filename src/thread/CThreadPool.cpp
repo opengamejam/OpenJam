@@ -20,16 +20,14 @@ CThreadPool::CThreadPool()
 
 CThreadPool::~CThreadPool()
 {
-
 }
 
 CThreadPoolPtr CThreadPool::Get()
 {
-    if (!s_Instance)
-    {
+    if (!s_Instance) {
         s_Instance.reset(new CThreadPool());
     }
-    
+
     return s_Instance;
 }
 
@@ -41,12 +39,11 @@ bool CThreadPool::IsMainThread()
 void CThreadPool::Initialize(uint32_t threadsNum)
 {
     threadsNum = std::max<uint32_t>(1, threadsNum);
-    
+
     std::unique_lock<std::mutex> locker(m_Mutex);
-    
+
     m_ThreadExecutors.clear();
-    for (uint32_t i = 0; i < threadsNum; ++i)
-    {
+    for (uint32_t i = 0; i < threadsNum; ++i) {
         CThreadExecutorPtr executor = CThreadExecutor::Create();
         m_ThreadExecutors.push_back(executor);
     }
@@ -60,28 +57,20 @@ void CThreadPool::Shutdown()
 
 void CThreadPool::RunAsync(ThreadType threadType, const CThreadExecutor::TExecuteBlock& block)
 {
-    if (!block)
-    {
+    if (!block) {
         return;
     }
-    
-    if (threadType == CThreadPool::Main)
-    {
-        if (!IsMainThread())
-        {
+
+    if (threadType == CThreadPool::Main) {
+        if (!IsMainThread()) {
             std::unique_lock<std::mutex> locker(m_Mutex);
             m_MainThreadTasks.push(block);
-        }
-        else
-        {
+        } else {
             block();
         }
-    }
-    else
-    {
+    } else {
         CThreadExecutorPtr executor = FindLeisureExecutor();
-        if (executor)
-        {
+        if (executor) {
             executor->AddTask(block);
         }
     }
@@ -90,48 +79,40 @@ void CThreadPool::RunAsync(ThreadType threadType, const CThreadExecutor::TExecut
 void CThreadPool::Update(unsigned long dt)
 {
     CThreadExecutor::TExecuteBlock block = nullptr;
-    do
-    {
+    do {
         block = nullptr;
         {
             std::unique_lock<std::mutex> locker(m_Mutex);
-            if (!m_MainThreadTasks.empty())
-            {
+            if (!m_MainThreadTasks.empty()) {
                 block = m_MainThreadTasks.front();
                 m_MainThreadTasks.pop();
             }
         }
-        
-        if (block)
-        {
+
+        if (block) {
             block();
         }
-    }
-    while (block);
+    } while (block);
 }
 
 CThreadExecutorPtr CThreadPool::FindLeisureExecutor()
 {
     CThreadExecutorPtr executor = nullptr;
     uint32_t minTasks = std::numeric_limits<uint32_t>::max();
-    
-    std::all_of(m_ThreadExecutors.begin(), m_ThreadExecutors.end(), [&](CThreadExecutorPtr ex)
-    {
+
+    std::all_of(m_ThreadExecutors.begin(), m_ThreadExecutors.end(), [&](CThreadExecutorPtr ex) {
         uint32_t taskCount = ex->TaskCount();
-        
-        if (taskCount == 0)
-        {
+
+        if (taskCount == 0) {
             executor = ex;
             return false;
-        }
-        else if (minTasks > taskCount)
-        {
+        } else if (minTasks > taskCount) {
             minTasks = taskCount;
             executor = ex;
         }
-        
+
         return true;
     });
-    
+
     return executor;
 }

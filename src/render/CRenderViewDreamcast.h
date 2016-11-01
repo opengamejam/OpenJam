@@ -13,16 +13,14 @@
 #include "Global.h"
 #include "IRenderView.h"
 
-namespace jam
-{
+namespace jam {
 
-class CRenderViewDreamcast : public IRenderView
-{
+class CRenderViewDreamcast : public IRenderView {
 public:
-	CRenderViewDreamcast();
-	virtual ~CRenderViewDreamcast();
+    CRenderViewDreamcast();
+    virtual ~CRenderViewDreamcast();
 
-	virtual void CreateView() override;
+    virtual void CreateView() override;
     virtual void Begin() const override;
     virtual void End() const override;
     virtual void UpdateEvents() const override;
@@ -39,4 +37,6 @@ private:
 }; // namespace jam
 
 #endif /* CRENDERVIEWDREAMCAST_H */
-#endif// defined(OS_KOS)
+#endif // defined(OS_KOS)
+
+

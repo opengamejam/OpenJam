@@ -11,16 +11,14 @@
 
 #include "Global.h"
 
-namespace jam
-{
+namespace jam {
 
-class IEvent
-{
+class IEvent {
     JAM_OBJECT_BASE
 public:
     IEvent() = default;
     virtual ~IEvent() = default;
-    
+
     virtual const std::string& Id() const = 0;
 };
 

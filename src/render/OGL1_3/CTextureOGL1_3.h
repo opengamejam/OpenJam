@@ -8,19 +8,17 @@
 #if defined(RENDER_OGL1_3)
 
 #ifndef CTEXTUREOGL1_3_H
-#define	CTEXTUREOGL1_3_H
+#define CTEXTUREOGL1_3_H
 
 #include "CTextureOGLBase.h"
 
-namespace jam
-{
-    
-class CTextureOGL1_3 : public CTextureOGLBase
-{
+namespace jam {
+
+class CTextureOGL1_3 : public CTextureOGLBase {
 public:
     CTextureOGL1_3();
     virtual ~CTextureOGL1_3();
-    
+
     /*
      * OpenGL specific
      */
@@ -29,9 +27,10 @@ public:
     virtual GLenum TexelFormatsToGlFormat(TexelFormats texelFormat) override;
     virtual GLenum TexelTypeToGlType(TexelTypes texelType, TexelFormats texelFormat) override;
 };
-    
+
 }; // namespace jam
 
 #endif /* CTEXTUREOGL1_3_H */
 
 #endif /* defined(RENDER_OGL1_3) */
+

@@ -16,7 +16,6 @@ using namespace jam;
 // Constants
 // *****************************************************************************
 
-
 // *****************************************************************************
 // Public Methods
 // *****************************************************************************
@@ -68,19 +67,17 @@ bool CSystemBase::IsComponentRegistered(typeid_t id)
 
 bool CSystemBase::HaveSupportedComponents(IEntityPtr entity)
 {
-    if (!entity)
-    {
+    if (!entity) {
         return false;
     }
-    
+
     bool found = false;
     const ISystem::TComponentIds& componentIds = RegisteredComponents();
-    std::all_of(componentIds.begin(), componentIds.end(), [&](typeid_t id)
-    {
+    std::all_of(componentIds.begin(), componentIds.end(), [&](typeid_t id) {
         found = entity->HasComponent(id);
         return !found;
     });
-    
+
     return found;
 }
 
@@ -101,9 +98,7 @@ void CSystemBase::ClearDirtyEntities()
 
 void CSystemBase::OnAddedEntity(IEntityPtr entity)
 {
-    if (!IsEntityAdded(entity) &&
-        HaveSupportedComponents(entity))
-    {
+    if (!IsEntityAdded(entity) && HaveSupportedComponents(entity)) {
         AddEntity(entity);
     }
 }
@@ -115,8 +110,7 @@ void CSystemBase::OnChangedComponent(IComponentPtr component)
 
 void CSystemBase::OnRemovedEntity(IEntityPtr entity)
 {
-    if (IsEntityAdded(entity))
-    {
+    if (IsEntityAdded(entity)) {
         RemoveEntity(entity);
     }
 }

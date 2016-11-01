@@ -12,22 +12,20 @@
 
 #include "CMaterialOGLBase.h"
 
-namespace jam
-{
-    
-class CMaterialOGLES2_0 : public CMaterialOGLBase
-{
+namespace jam {
+
+class CMaterialOGLES2_0 : public CMaterialOGLBase {
 public:
     CMaterialOGLES2_0();
     virtual ~CMaterialOGLES2_0();
-    
+
     /*
      * OpenGL specific
      */
     virtual GLenum ConvertTestFunc(IMaterial::TestFuncs func);
     virtual GLenum ConvertOperation(IMaterial::Operations op);
 };
-    
+
 }; // namespace jam
 
 #endif /* CMATERIALOGLES2_0_H */

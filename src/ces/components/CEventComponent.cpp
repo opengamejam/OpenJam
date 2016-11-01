@@ -16,55 +16,45 @@ using namespace jam;
 // Constants
 // *****************************************************************************
 
-
 // *****************************************************************************
 // Public Methods
 // *****************************************************************************
 
 CEventComponent::CEventComponent()
-: m_DispatchCount(0)
+    : m_DispatchCount(0)
 {
-
 }
 
 CEventComponent::~CEventComponent()
 {
-
 }
 
 void CEventComponent::RegisterHandler(typeid_t eventId, const TEventHandler& eventHandler)
-{    
+{
     m_Handlers[eventId] = eventHandler;
 }
 
 void CEventComponent::UnregisterHandler(typeid_t eventId, const TEventHandler& eventHandler)
 {
     TEvenetHandlersMap::const_iterator it = m_Handlers.find(eventId);
-    if (it == m_Handlers.end())
-    {
+    if (it == m_Handlers.end()) {
         return;
     }
-    
+
     const TEventHandler& registeredHandler = it->second;
-    if (registeredHandler == eventHandler)
-    {
+    if (registeredHandler == eventHandler) {
         m_Handlers.erase(eventId);
-    }
-    else
-    {
+    } else {
         // TODO: Log
     }
 }
 
 void CEventComponent::AddEvent(IEventPtr event, bool fire)
 {
-    if (fire)
-    {
+    if (fire) {
         m_Events.insert(m_Events.begin(), event);
         m_DispatchCount++;
-    }
-    else
-    {
+    } else {
         m_Events.push_back(event);
     }
 }
@@ -84,21 +74,17 @@ const CEventComponent::TEvenetHandlersMap& CEventComponent::Handlers() const
 
 IEventPtr CEventComponent::Pop()
 {
-    if (m_Events.empty())
-    {
+    if (m_Events.empty()) {
         return nullptr;
     }
- 
+
     IEventPtr event = nullptr;
-    if (m_DispatchCount)
-    {
+    if (m_DispatchCount) {
         event = m_Events.front();
         m_Events.erase(m_Events.begin());
         m_DispatchCount--;
         return event;
-    }
-    else
-    {
+    } else {
         event = m_Events.back();
         m_Events.pop_back();
     }
@@ -113,11 +99,10 @@ uint64_t CEventComponent::DispatchCount() const
 bool CEventComponent::DispatchEvent(IEventPtr event)
 {
     TEvenetHandlersMap::iterator it = m_Handlers.find(event->GetId());
-    if (it == m_Handlers.end())
-    {
+    if (it == m_Handlers.end()) {
         return true;
     }
-    
+
     TEventHandler& eventHandler = it->second;
     return eventHandler(event);
 }

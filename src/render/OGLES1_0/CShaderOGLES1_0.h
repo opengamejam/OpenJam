@@ -8,19 +8,17 @@
 #if defined(RENDER_OGLES1_0)
 
 #ifndef CSHADEROGLES1_0_H
-#define	CSHADEROGLES1_0_H
+#define CSHADEROGLES1_0_H
 
 #include "CShaderOGLBase.h"
 
-namespace jam
-{
-    
-class CShaderOGLES1_0 : public CShaderOGLBase
-{
+namespace jam {
+
+class CShaderOGLES1_0 : public CShaderOGLBase {
 public:
     CShaderOGLES1_0();
     virtual ~CShaderOGLES1_0();
-    
+
     virtual uint32_t Id() override;
     virtual bool Compile(const std::string& source, ShaderType shaderType) override;
     virtual bool IsCompiled() const override;
@@ -28,9 +26,10 @@ public:
     virtual const std::string& Source() const override;
     virtual void AddDefinition(const std::string& identifier) override;
 };
-    
+
 }; // namespace jam
 
-#endif	/* CSHADEROGLES1_0_H */
+#endif /* CSHADEROGLES1_0_H */
 
 #endif /* defined(RENDER_OGLES1_0) */
+ 

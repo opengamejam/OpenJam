@@ -12,7 +12,6 @@
 
 @interface AppDelegateOSX : NSObject <NSApplicationDelegate>
 
-
 @end
 
 #endif /* OS_MAC */

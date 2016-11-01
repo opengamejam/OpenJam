@@ -12,18 +12,17 @@
 #include "Global.h"
 #include "IResource.h"
 
-namespace jam
-{
+namespace jam {
 
-class IModel3D : public IResource
-{
+class IModel3D : public IResource {
     JAM_OBJECT_BASE
 public:
     IModel3D(const std::string& filename)
         : IResource(filename)
-    {}
+    {
+    }
     virtual ~IModel3D() = default;
-    
+
     virtual const std::vector<glm::vec3>& Vertices(const std::string& group = "default") = 0;
     virtual const std::vector<glm::vec3>& Normals(const std::string& group = "default") = 0;
     virtual const std::vector<glm::vec2>& UVs(const std::string& group = "default") = 0;

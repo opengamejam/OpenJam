@@ -71,7 +71,7 @@ private:
     void DeleteStencil();
 
 private:
-    uint32_t m_Id;
+    GLuint m_Id;
     InternalFormats m_InternalFormat;
     CRenderTargetStencilPtr m_Stencil;
 };

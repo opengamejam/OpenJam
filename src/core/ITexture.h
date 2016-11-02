@@ -32,6 +32,14 @@ public:
     ITexture() = default;
     virtual ~ITexture() = default;
 
+    /*
+     * Allocate render buffer with 'width' and 'height'
+     */
+    virtual void Allocate(uint64_t width, uint64_t height) = 0;
+    
+    /*
+     * Assign image to texture
+     */
     virtual bool AssignImage(IImagePtr image) = 0;
 
     virtual void Filter(TextureFilters filter) = 0;

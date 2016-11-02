@@ -75,19 +75,16 @@ void CRenderViewIOS::CreateView()
     colorTarget->Initialize(IRenderTarget::ColorRGBA8888);
     colorTarget->Bind();
     [m_GLContext renderbufferStorage:GL_RENDERBUFFER fromDrawable:(CAEAGLLayer*)(m_GLKView.layer)];
-    colorTarget->Allocate(RealWidth(), RealHeight());
 
     CRenderTargetDepthPtr depthTarget = m_Renderer->CreateDepthRenderTarget();
     depthTarget->Initialize(IRenderTarget::Depth24_Stencil8);
     depthTarget->Bind();
-    depthTarget->Allocate(RealWidth(), RealHeight());
 
     m_DefaultRenderTarget = m_Renderer->CreateFrameBuffer(RealWidth(), RealHeight());
     m_DefaultRenderTarget->Initialize();
     m_DefaultRenderTarget->Bind();
     m_DefaultRenderTarget->AttachColor(colorTarget, 0);
     m_DefaultRenderTarget->AttachDepth(depthTarget);
-    m_DefaultRenderTarget->AttachStencil(depthTarget->StencilTarget());
 
     assert(m_Renderer && m_DefaultRenderTarget->IsValid());
 }

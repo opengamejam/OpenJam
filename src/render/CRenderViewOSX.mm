@@ -83,17 +83,14 @@ void CRenderViewOSX::CreateView()
     CRenderTargetColorPtr colorTarget = m_Renderer->CreateColorRenderTarget();
     colorTarget->Initialize(IRenderTarget::ColorRGBA8888);
     colorTarget->Bind();
-    colorTarget->Allocate(RealWidth(), RealHeight());
 
     CRenderTargetDepthPtr depthTarget = m_Renderer->CreateDepthRenderTarget();
     depthTarget->Initialize(IRenderTarget::Depth24);
     depthTarget->Bind();
-    depthTarget->Allocate(RealWidth(), RealHeight());
 
     CRenderTargetStencilPtr stencilTarget = m_Renderer->CreateStencilRenderTarget();
     stencilTarget->Initialize(IRenderTarget::Stencil8);
     stencilTarget->Bind();
-    stencilTarget->Allocate(RealWidth(), RealHeight());
 
     m_DefaultRenderTarget = m_Renderer->CreateFrameBuffer(RealWidth(), RealHeight());
     // Use 0 for the defaultFBO which is appropriate for

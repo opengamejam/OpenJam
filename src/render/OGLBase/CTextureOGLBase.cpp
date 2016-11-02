@@ -81,6 +81,26 @@ ITexture::TextureFilters CTextureOGLBase::Filter() const
     return m_Filter;
 }
 
+void CTextureOGLBase::Allocate(uint64_t width, uint64_t height)
+{
+    if (!IsValid()) {
+        glGenTextures(1, &m_Id);
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+    }
+    
+    Bind();
+    
+    GLenum glInternalFormat = GL_RGBA;
+    GLenum glFormat = GL_RGBA;
+    GLenum glType = GL_UNSIGNED_BYTE;
+    
+    glTexImage2D(GL_TEXTURE_2D, 0, glInternalFormat, width, height, 0, glFormat, glType, nullptr);
+    
+    Filter(ITexture::TextureFilters::Linear);
+    
+    Unbind();
+}
+
 bool CTextureOGLBase::AssignImage(IImagePtr image)
 {
     if (!IsValid()) {
@@ -138,6 +158,11 @@ const std::string& CTextureOGLBase::Hash()
     }
 
     return m_Hash;
+}
+
+GLuint CTextureOGLBase::TextureId() const
+{
+    return m_Id;
 }
 
 // *****************************************************************************

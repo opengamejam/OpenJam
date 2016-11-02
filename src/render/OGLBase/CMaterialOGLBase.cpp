@@ -222,7 +222,7 @@ void CMaterialOGLBase::ApplyState(IMaterial::MaterialState state, IMaterial::Mat
     }
 
     // Depth
-    if (state.depthTest.isEnabled != prevState.depthTest.isEnabled) {
+    /*if (state.depthTest.isEnabled != prevState.depthTest.isEnabled) {
         if (state.depthTest.isEnabled) {
             glEnable(GL_DEPTH_TEST);
         } else {
@@ -238,7 +238,7 @@ void CMaterialOGLBase::ApplyState(IMaterial::MaterialState state, IMaterial::Mat
     if (state.depthTest.rangeNear != prevState.depthTest.rangeNear || state.depthTest.rangeFar != prevState.depthTest.rangeFar) {
         glDepthRangef(static_cast<GLfloat>(state.depthTest.rangeNear),
             static_cast<GLfloat>(state.depthTest.rangeFar));
-    }
+    }*/
 
     // Stencil
     if (state.stencilTest.isEnabled != prevState.stencilTest.isEnabled) {

@@ -21,8 +21,11 @@
 #include "CTransformAffector.h"
 #include "CThreadPool.h"
 #include "IShaderProgram.h"
-#include "CTransformationComponent.h"
+#include "IFrameBuffer.h"
+#include "IRenderTarget.h"
+#include "IRenderer.h"
 
+#include "CTransformationComponent.h"
 #include "CEventComponent.h"
 #include "CTouchEvent.h"
 
@@ -109,14 +112,11 @@ void CGameScene::CreateMainCamera()
 {
     IRenderViewPtr renderView = Game()->RenderView();
     IRendererPtr renderer = renderView->Renderer();
-    m_UICamera = CCamera2D::Create(renderView->Width(), renderView->Height());
-    m_MainCamera = CCamera3D::Create(60.0f, renderView->Width(), renderView->Height());
+    m_UICamera = CCamera2D::Create();
+    m_MainCamera = CCamera3D::Create(75.0f);
 
     m_UICamera->RenderTarget(renderView->DefaultRenderTarget());
     m_MainCamera->RenderTarget(renderView->DefaultRenderTarget());
-
-    AddCamera(m_MainCamera);
-    AddCamera(m_UICamera);
 
     CSprite2DPtr ball = CSprite2D::Create("/ball_glitch/sprite.mpf", renderer, m_UICamera->Id());
     CTransformAffector::Translating(ball, glm::vec3(0.0f, 0.0f, 1.0f));
@@ -132,14 +132,51 @@ void CGameScene::CreateMainCamera()
         std::bind(&CGameScene::OnBallMoved, this, std::placeholders::_1));
     sprite->AddComponent(eventComponent);
 
+    
+    // Render texture
+    CRenderTargetTexturePtr renderTextureTarget = renderer->CreateTextureRenderTarget();
+    renderTextureTarget->Initialize(IRenderTarget::ColorRGBA8888);
+    renderTextureTarget->Bind();
+    
+    // Framebuffer
+    IFrameBufferPtr renderTextureFBO = renderer->CreateFrameBuffer(renderView->Width(), renderView->Height());
+    renderTextureFBO->Initialize();
+    renderTextureFBO->Bind();
+    renderTextureFBO->AttachColor(renderTextureTarget, 0);
+    renderTextureFBO->ClearColor(CColor4f(0.0f, 1.0f, 1.0f, 1.0f));
+    assert(renderTextureFBO->IsValid());
+    
+    // Cam
+    ICameraPtr renderTextureCam = CCamera3D::Create(75.0f);
+    renderTextureCam->RenderTarget(renderTextureFBO);
+    
+    
+    IModel3DPtr planeModel(new CModelObj("/plane/plane.obj"));
+    planeModel->Load();
+    
+    jam::CObject3DPtr plane = CObject3D::CreateObj("/plane/plane.obj", renderer, m_MainCamera->Id());
+    CTransformAffector::Translating(plane, glm::vec3(7.0f, 4.0f, 0.0f));
+    CTransformAffector::Rotation(plane, glm::vec3(0, 0, 0));
+    CTransformAffector::Scale(plane, glm::vec3(2.0f, 2.0f, 1.0f));
+    Root()->AddChild(plane);
+    
+    plane->Get<CRenderComponent>([&](CRenderComponentPtr component)
+    {
+        component->Texture(renderTextureTarget->Texture());
+        component->Dirty();
+    });
+    
+    AddCamera(renderTextureCam);
+    AddCamera(m_MainCamera);
+    AddCamera(m_UICamera);
+    
     std::shared_ptr<CGameScene> scene = std::static_pointer_cast<CGameScene>(shared_from_this());
-
-    CThreadPool::Get()->RunAsync(CThreadPool::Background, [scene, renderer]() {
+    CThreadPool::Get()->RunAsync(CThreadPool::Background, [scene, renderer, renderTextureCam]() {
         std::string filename = "/cube/cube.obj";
         IModel3DPtr resultModel(new CModelObj(filename));
         resultModel->Load();
 
-        CThreadPool::Get()->RunAsync(CThreadPool::Main, [scene, renderer, filename, resultModel]() {
+        CThreadPool::Get()->RunAsync(CThreadPool::Main, [scene, renderer, filename, resultModel, renderTextureCam]() {
             CResourceCache<IModel3D> resourceCache;
             resourceCache.CacheResource(filename, false, resultModel);
 
@@ -159,6 +196,11 @@ void CGameScene::CreateMainCamera()
                 //CTransformAffector::Scale(model3D, glm::vec3(10.0f, 10.0f, 10.0f));
                 scene->Root()->AddChild(model3D);
                 scene->m_Models3D.push_back(model3D);
+                
+                model3D->Get<CRenderComponent>([renderTextureCam](CRenderComponentPtr component)
+                {
+                    component->AddCameraId(renderTextureCam->Id());
+                });
 
                 x++;
             }

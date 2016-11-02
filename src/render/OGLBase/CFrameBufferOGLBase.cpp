@@ -32,6 +32,7 @@ CFrameBufferOGLBase::CFrameBufferOGLBase(uint32_t width, uint32_t height)
     , m_Width(width)
     , m_Height(height)
     , m_ClearColor(CColor4f(0.0f, 0.0f, 1.0f, 1.0f))
+    , m_ClearBits(0)
 {
 #if GL_MAX_COLOR_ATTACHMENTS
     glGetIntegerv(GL_MAX_COLOR_ATTACHMENTS, &m_NumColorAtachments);
@@ -72,12 +73,9 @@ void CFrameBufferOGLBase::Resize(uint64_t width, uint64_t height)
 
     Bind();
 
-    std::for_each(m_ColorBuffers.begin(), m_ColorBuffers.end(), [width, height](IRenderTargetPtr renderBuffer) {
-        if (renderBuffer && renderBuffer->ColorTarget()) {
-            std::static_pointer_cast<CRenderTargetColorOGLBase>(renderBuffer)->Allocate(width, height);
-        } else if (renderBuffer && renderBuffer->TextureTarget()) {
-            //std::static_pointer_cast<CRenderTargetTextureOGLBase>(renderBuffer)-> // TODO:
-        }
+    std::for_each(m_ColorBuffers.begin(), m_ColorBuffers.end(), [width, height](IRenderTargetPtr renderTarget)
+    {
+        renderTarget->Allocate(width, height);
     });
 
     if (DepthAttachement()) {
@@ -85,7 +83,7 @@ void CFrameBufferOGLBase::Resize(uint64_t width, uint64_t height)
     }
 
     if (StencilAttachement()) {
-        std::static_pointer_cast<CRenderTargetDepthOGLBase>(StencilAttachement())->Allocate(width, height);
+        std::static_pointer_cast<CRenderTargetStencilOGLBase>(StencilAttachement())->Allocate(width, height);
     }
 
     if (IsValid()) {
@@ -107,6 +105,7 @@ void CFrameBufferOGLBase::AttachColor(IRenderTargetPtr colorTarget, uint64_t ind
     if (index < MaxColorAttachements()) {
         Bind();
 
+        colorTarget->Allocate(Width(), Height());
         IRenderTargetPtr renderBuffer = colorTarget->ColorTarget();
         IRenderTargetPtr renderTexture = colorTarget->TextureTarget();
         if (renderBuffer) {
@@ -116,6 +115,7 @@ void CFrameBufferOGLBase::AttachColor(IRenderTargetPtr colorTarget, uint64_t ind
         }
 
         m_ColorBuffers[index] = colorTarget;
+        m_ClearBits |= GL_COLOR_BUFFER_BIT;
     }
 }
 
@@ -126,6 +126,8 @@ void CFrameBufferOGLBase::AttachDepth(IRenderTargetPtr depthTarget)
     }
 
     Bind();
+
+    depthTarget->Allocate(Width(), Height());
     IRenderTargetPtr renderBuffer = depthTarget->DepthTarget();
     IRenderTargetPtr renderTexture = depthTarget->TextureTarget();
     if (renderBuffer) {
@@ -135,6 +137,10 @@ void CFrameBufferOGLBase::AttachDepth(IRenderTargetPtr depthTarget)
     }
 
     m_DepthBuffer = depthTarget;
+    m_ClearBits |= GL_DEPTH_BUFFER_BIT;
+    if (depthTarget->StencilTarget()) {
+        m_ClearBits |= GL_STENCIL_BUFFER_BIT;
+    }
 }
 
 void CFrameBufferOGLBase::AttachStencil(IRenderTargetPtr stencilTarget)
@@ -144,6 +150,8 @@ void CFrameBufferOGLBase::AttachStencil(IRenderTargetPtr stencilTarget)
     }
 
     Bind();
+
+    stencilTarget->Allocate(Width(), Height());
     IRenderTargetPtr renderBuffer = stencilTarget->StencilTarget();
     IRenderTargetPtr renderTexture = stencilTarget->TextureTarget();
     if (renderBuffer) {
@@ -151,6 +159,7 @@ void CFrameBufferOGLBase::AttachStencil(IRenderTargetPtr stencilTarget)
     } else if (renderTexture) {
         std::static_pointer_cast<CRenderTargetTextureOGLBase>(renderTexture)->BindAsStencilToFrameBuffer();
     }
+    m_ClearBits |= GL_STENCIL_BUFFER_BIT;
 }
 
 void CFrameBufferOGLBase::DetachColor(uint64_t index)
@@ -164,6 +173,21 @@ void CFrameBufferOGLBase::DetachColor(uint64_t index)
             std::static_pointer_cast<CRenderTargetTextureOGLBase>(renderBuffer)->UnbindAsColorFromFrameBuffer(index);
         }
         m_ColorBuffers[index] = nullptr;
+        
+        bool haveAttachedColors = false;
+        std::all_of(m_ColorBuffers.begin(), m_ColorBuffers.end(), [&](IRenderTargetPtr colorBuffer)
+        {
+            if (colorBuffer)
+            {
+                haveAttachedColors = true;
+                return false;
+            }
+            return true;
+        });
+        if (!haveAttachedColors)
+        {
+            m_ClearBits &= ~GL_STENCIL_BUFFER_BIT;
+        }
     }
 }
 
@@ -175,6 +199,10 @@ void CFrameBufferOGLBase::DetachDepth()
         std::static_pointer_cast<CRenderTargetDepthOGLBase>(renderBuffer)->UnbindFromFrameBuffer();
     } else if (renderBuffer && renderBuffer->TextureTarget()) {
         std::static_pointer_cast<CRenderTargetTextureOGLBase>(renderBuffer)->UnbindAsDepthFromFrameBuffer();
+    }
+    m_ClearBits &= ~GL_DEPTH_BUFFER_BIT;
+    if (m_DepthBuffer->StencilTarget()) {
+        m_ClearBits &= GL_DEPTH_BUFFER_BIT;
     }
     m_DepthBuffer = nullptr;
 }
@@ -188,6 +216,7 @@ void CFrameBufferOGLBase::DetachStencil()
     } else if (renderBuffer && renderBuffer->TextureTarget()) {
         std::static_pointer_cast<CRenderTargetTextureOGLBase>(renderBuffer)->UnbindAsStencilFromFrameBuffer();
     }
+    m_ClearBits &= GL_DEPTH_BUFFER_BIT;
     m_StencilBuffer = nullptr;
 }
 
@@ -207,6 +236,10 @@ IRenderTargetPtr CFrameBufferOGLBase::DepthAttachement() const
 
 IRenderTargetPtr CFrameBufferOGLBase::StencilAttachement() const
 {
+    if (DepthAttachement() && !m_StencilBuffer) {
+        DepthAttachement()->StencilTarget();
+    }
+
     return m_StencilBuffer;
 }
 
@@ -218,6 +251,10 @@ bool CFrameBufferOGLBase::IsValid() const
 
 void CFrameBufferOGLBase::Bind() const
 {
+    if (DepthAttachement()) {
+        glEnable(GL_DEPTH_TEST);
+    }
+
     glBindFramebuffer(GL_FRAMEBUFFER, m_FrameBuffer);
 
     if (IsValid()) {
@@ -227,21 +264,17 @@ void CFrameBufferOGLBase::Bind() const
 
 void CFrameBufferOGLBase::Unbind() const
 {
+    if (DepthAttachement()) {
+        glDisable(GL_DEPTH_TEST);
+    }
+
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void CFrameBufferOGLBase::Clear() const
 {
     glClearColor(m_ClearColor.R(), m_ClearColor.G(), m_ClearColor.B(), m_ClearColor.A());
-
-    GLbitfield clearBits = GL_COLOR_BUFFER_BIT;
-    if (DepthAttachement()) {
-        clearBits |= GL_DEPTH_BUFFER_BIT;
-    }
-    if (StencilAttachement()) {
-        clearBits |= GL_STENCIL_BUFFER_BIT;
-    }
-    glClear(clearBits);
+    glClear(m_ClearBits);
 }
 
 void CFrameBufferOGLBase::ClearColor(const CColor4f& color)

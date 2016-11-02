@@ -156,6 +156,7 @@ private:
     uint32_t m_Height;
 
     CColor4f m_ClearColor;
+    GLbitfield m_ClearBits;
 };
 
 }; // namespace jam

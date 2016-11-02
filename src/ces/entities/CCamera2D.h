@@ -17,9 +17,9 @@ CLASS_PTR(CCamera2D)
 
 class CCamera2D : public ICamera {
 public:
-    static CCamera2DPtr Create(float _width, float _height, float _near = -10000.0f, float _far = 10000.0f);
+    static CCamera2DPtr Create(float _near = -10000.0f, float _far = 10000.0f);
 
-    CCamera2D(float _width, float _height, float _near = -10000.0f, float _far = 10000.0f);
+    CCamera2D(float _near = -10000.0f, float _far = 10000.0f);
     virtual ~CCamera2D();
 
     virtual uint32_t Id() const override;
@@ -32,8 +32,6 @@ public:
     virtual void FlipX() override;
 
 private:
-    float m_Width;
-    float m_Height;
     float m_Near;
     float m_Far;
     glm::mat4x4 m_ProjectionMatrix;

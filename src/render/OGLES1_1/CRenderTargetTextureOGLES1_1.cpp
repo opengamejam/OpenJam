@@ -8,6 +8,7 @@
 #if defined(RENDER_OGLES1_1)
 
 #include "CRenderTargetTextureOGLES1_1.h"
+#include "CTextureOGLES1_1.h"
 
 using namespace jam;
 
@@ -25,6 +26,12 @@ CRenderTargetTextureOGLES1_1::CRenderTargetTextureOGLES1_1()
 
 CRenderTargetTextureOGLES1_1::~CRenderTargetTextureOGLES1_1()
 {
+}
+
+ITexturePtr CRenderTargetTextureOGLES1_1::CreateTextureObject() const
+{
+    ITexturePtr texture(new CTextureOGLES1_1());
+    return texture;
 }
 
 // *****************************************************************************

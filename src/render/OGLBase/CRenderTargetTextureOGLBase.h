@@ -15,6 +15,7 @@
 #include "IRenderTarget.h"
 
 namespace jam {
+CLASS_PTR(ITexture)
 
 class CRenderTargetTextureOGLBase : public CRenderTargetTexture {
     JAM_OBJECT
@@ -36,6 +37,11 @@ public:
      * Check if render target is initialized
      */
     virtual bool IsInitialized() override;
+    
+    /*
+     * Allocate render buffer with 'width' and 'height'
+     */
+    virtual void Allocate(uint64_t width, uint64_t height) override;
 
     /*
      * Bind current render target
@@ -53,11 +59,6 @@ public:
     virtual ITexturePtr Texture() const override;
 
     /*
-     * Set render texture
-     */
-    virtual void Texture(ITexturePtr texture) override;
-
-    /*
      * OpenGL specific
      */
     virtual void BindAsColorToFrameBuffer(uint64_t colorAttachementIdx);
@@ -67,9 +68,12 @@ public:
     virtual void UnbindAsColorFromFrameBuffer(uint64_t colorAttachementIdx);
     virtual void UnbindAsDepthFromFrameBuffer();
     virtual void UnbindAsStencilFromFrameBuffer();
+    
+    virtual ITexturePtr CreateTextureObject() const = 0;
 
 private:
     uint32_t m_Id;
+    ITexturePtr m_Texture;
 };
 
 }; // namespace jam

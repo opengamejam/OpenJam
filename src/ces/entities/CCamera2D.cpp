@@ -9,6 +9,7 @@
 #include "CCamera2D.h"
 #include "CTransformationComponent.h"
 #include "glm/ext.hpp"
+#include "IFrameBuffer.h"
 
 using namespace jam;
 
@@ -20,9 +21,9 @@ using namespace jam;
 // Public Methods
 // *****************************************************************************
 
-CCamera2DPtr CCamera2D::Create(float _width, float _height, float _near, float _far)
+CCamera2DPtr CCamera2D::Create(float _near, float _far)
 {
-    CCamera2DPtr camera(new CCamera2D(_width, _height, _near, _far));
+    CCamera2DPtr camera(new CCamera2D(_near, _far));
 
     CTransformationComponentPtr transformComponent(new CTransformationComponent());
 
@@ -35,13 +36,11 @@ CCamera2DPtr CCamera2D::Create(float _width, float _height, float _near, float _
     return camera;
 }
 
-CCamera2D::CCamera2D(float _width, float _height, float _near, float _far)
+CCamera2D::CCamera2D(float _near, float _far)
     : ICamera()
-    , m_Width(_width)
-    , m_Height(_height)
     , m_Near(_near)
     , m_Far(_far)
-    , m_ProjectionMatrix(glm::ortho(0.0f, m_Width, m_Height, 0.0f, m_Near, m_Far))
+    , m_ProjectionMatrix(glm::mat4x4(1.0f))
     , m_RenderTarget(nullptr)
     , m_IsFlippedX(false)
     , m_IsFlippedY(false)
@@ -76,24 +75,32 @@ IFrameBufferPtr CCamera2D::RenderTarget() const
 void CCamera2D::RenderTarget(IFrameBufferPtr renderTarget)
 {
     m_RenderTarget = renderTarget;
+    m_ProjectionMatrix = glm::ortho(0.0f,
+                                    static_cast<float>(renderTarget->Width()),
+                                    static_cast<float>(renderTarget->Height()),
+                                    0.0f, m_Near, m_Far);
 }
 
 void CCamera2D::FlipY()
 {
+    assert(RenderTarget());
+    
     m_IsFlippedY = !m_IsFlippedY;
-    float top = (m_IsFlippedY) ? m_Height : 0;
-    float bottom = (m_IsFlippedY) ? 0 : m_Height;
+    float top = (m_IsFlippedY) ? RenderTarget()->Height() : 0;
+    float bottom = (m_IsFlippedY) ? 0 : RenderTarget()->Height();
 
-    m_ProjectionMatrix = glm::ortho(0.0f, m_Width, bottom, top, m_Near, m_Far);
+    m_ProjectionMatrix = glm::ortho(0.0f, static_cast<float>(RenderTarget()->Width()), bottom, top, m_Near, m_Far);
 }
 
 void CCamera2D::FlipX()
 {
+    assert(RenderTarget());
+    
     m_IsFlippedX = !m_IsFlippedX;
-    float left = (m_IsFlippedX) ? m_Width : 0;
-    float right = (m_IsFlippedX) ? 0 : m_Width;
+    float left = (m_IsFlippedX) ? RenderTarget()->Width() : 0;
+    float right = (m_IsFlippedX) ? 0 : RenderTarget()->Width();
 
-    m_ProjectionMatrix = glm::ortho(left, right, m_Height, 0.0f, m_Near, m_Far);
+    m_ProjectionMatrix = glm::ortho(left, right, static_cast<float>(RenderTarget()->Height()), 0.0f, m_Near, m_Far);
 }
 
 // *****************************************************************************

@@ -22,6 +22,14 @@ public:
     CTextureOGLBase();
     virtual ~CTextureOGLBase();
 
+    /*
+     * Allocate render buffer with 'width' and 'height'
+     */
+    virtual void Allocate(uint64_t width, uint64_t height) override;
+    
+    /*
+     * Assign image to texture
+     */
     virtual bool AssignImage(IImagePtr image) override;
 
     virtual void Filter(TextureFilters filter) override;
@@ -34,6 +42,7 @@ public:
     /*
      * OpenGL specific
      */
+    virtual GLuint TextureId() const;
     virtual GLfloat TextureFilterToGlFilter(ITexture::TextureFilters filter) = 0;
     virtual GLenum TexelFormatsToGlInternalFormat(TexelFormats texelFormat) = 0;
     virtual GLenum TexelFormatsToGlFormat(TexelFormats texelFormat) = 0;
@@ -46,7 +55,7 @@ private:
     void HashMe();
 
 private:
-    uint32_t m_Id;
+    GLuint m_Id;
 
     TextureFilters m_Filter;
     std::string m_Hash;

@@ -52,6 +52,11 @@ public:
      * Check if render target is initialized
      */
     virtual bool IsInitialized() = 0;
+    
+    /*
+     * Allocate render buffer with 'width' and 'height'
+     */
+    virtual void Allocate(uint64_t width, uint64_t height) = 0;
 
     /*
      * If current render buffer presents color buffer then return self
@@ -97,11 +102,6 @@ public:
     {
         return std::static_pointer_cast<CRenderTargetColor>(shared_from_this());
     }
-
-    /*
-     * Allocate render buffer with 'width' and 'height'
-     */
-    virtual void Allocate(uint64_t width, uint64_t height) = 0;
 };
 
 class CRenderTargetDepth : public IRenderTarget {
@@ -117,11 +117,6 @@ public:
     {
         return std::static_pointer_cast<CRenderTargetDepth>(shared_from_this());
     }
-
-    /*
-     * Allocate render buffer with 'width' and 'height'
-     */
-    virtual void Allocate(uint64_t width, uint64_t height) = 0;
 };
 
 class CRenderTargetStencil : public IRenderTarget {
@@ -137,11 +132,6 @@ public:
     {
         return std::static_pointer_cast<CRenderTargetStencil>(shared_from_this());
     }
-
-    /*
-     * Allocate render buffer with 'width' and 'height'
-     */
-    virtual void Allocate(uint64_t width, uint64_t height) = 0;
 };
 
 class CRenderTargetTexture : public IRenderTarget {
@@ -162,11 +152,6 @@ public:
      * Get render texture
      */
     virtual ITexturePtr Texture() const = 0;
-
-    /*
-     * Set render texture
-     */
-    virtual void Texture(ITexturePtr texture) = 0;
 };
 
 }; // namespace jam

@@ -19,6 +19,11 @@ class CRenderTargetTextureOGLES1_0 : public CRenderTargetTextureOGLBase {
 public:
     CRenderTargetTextureOGLES1_0();
     virtual ~CRenderTargetTextureOGLES1_0();
+    
+    /*
+     * OpenGL specific
+     */
+    virtual ITexturePtr CreateTextureObject() const override;
 };
 
 }; // namespace jam

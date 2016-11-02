@@ -10,6 +10,8 @@
     defined(RENDER_OGL2_0) || defined(RENDER_OGLES2_0)
 
 #include "CRenderTargetTextureOGLBase.h"
+#include "CTextureOGLBase.h"
+#include "CImageRaw.h"
 
 using namespace jam;
 
@@ -36,6 +38,7 @@ void CRenderTargetTextureOGLBase::Initialize(InternalFormats internalFormat)
         return;
     }
     glGenRenderbuffers(1, &m_Id);
+    m_Texture = CreateTextureObject();
 }
 
 void CRenderTargetTextureOGLBase::Shutdown()
@@ -44,6 +47,7 @@ void CRenderTargetTextureOGLBase::Shutdown()
         return;
     }
     glDeleteRenderbuffers(1, &m_Id);
+    m_Texture = nullptr;
 }
 
 bool CRenderTargetTextureOGLBase::IsInitialized()
@@ -51,33 +55,42 @@ bool CRenderTargetTextureOGLBase::IsInitialized()
     return (m_Id > 0);
 }
 
+void CRenderTargetTextureOGLBase::Allocate(uint64_t width, uint64_t height)
+{
+    Texture()->Allocate(width, height);
+    /*IResource::TResourceData textureData(width * height * 4);  // RGBA8888
+    memset(&textureData[0], 0, textureData.size());
+    IImagePtr image(new CImageRaw("sdfd", textureData, width, height, TexelProps(TF_RGBA8888, TT_UByte, 1)));
+    Texture()->AssignImage(image);*/
+}
+
 void CRenderTargetTextureOGLBase::Bind() const
 {
-    glBindRenderbuffer(GL_RENDERBUFFER, m_Id);
+    assert(Texture());
+    Texture()->Bind();
+    glEnable(GL_TEXTURE_2D);
 }
 
 void CRenderTargetTextureOGLBase::Unbind() const
 {
-    glBindRenderbuffer(GL_RENDERBUFFER, 0);
+    assert(Texture());
+    Texture()->Unbind();
+    glDisable(GL_TEXTURE_2D);
 }
 
 ITexturePtr CRenderTargetTextureOGLBase::Texture() const
 {
-    return nullptr; // TODO
-}
-
-void CRenderTargetTextureOGLBase::Texture(ITexturePtr texture)
-{
-    // TODO:
+    return m_Texture;
 }
 
 void CRenderTargetTextureOGLBase::BindAsColorToFrameBuffer(uint64_t colorAttachementIdx)
 {
+    GLuint id = std::static_pointer_cast<CTextureOGLBase>(Texture())->TextureId();
     glFramebufferTexture2D(GL_FRAMEBUFFER,
         GL_COLOR_ATTACHMENT0 + colorAttachementIdx,
         GL_TEXTURE_2D,
-        0, // TODO: texture id
-        m_Id);
+        id,
+        0);
 }
 
 void CRenderTargetTextureOGLBase::BindAsDepthToFrameBuffer()
@@ -85,8 +98,8 @@ void CRenderTargetTextureOGLBase::BindAsDepthToFrameBuffer()
     glFramebufferTexture2D(GL_FRAMEBUFFER,
         GL_DEPTH_ATTACHMENT,
         GL_TEXTURE_2D,
-        0, // TODO: texture id
-        m_Id);
+        std::static_pointer_cast<CTextureOGLBase>(Texture())->TextureId(),
+        0);
 }
 
 void CRenderTargetTextureOGLBase::BindAsStencilToFrameBuffer()
@@ -94,8 +107,8 @@ void CRenderTargetTextureOGLBase::BindAsStencilToFrameBuffer()
     glFramebufferTexture2D(GL_FRAMEBUFFER,
         GL_STENCIL_ATTACHMENT,
         GL_TEXTURE_2D,
-        0, // TODO: texture id
-        m_Id);
+        std::static_pointer_cast<CTextureOGLBase>(Texture())->TextureId(),
+        0);
 }
 
 void CRenderTargetTextureOGLBase::UnbindAsColorFromFrameBuffer(uint64_t colorAttachementIdx)

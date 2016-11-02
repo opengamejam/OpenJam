@@ -116,6 +116,8 @@ void CFrameBufferOGLBase::AttachColor(IRenderTargetPtr colorTarget, uint64_t ind
 
         m_ColorBuffers[index] = colorTarget;
         m_ClearBits |= GL_COLOR_BUFFER_BIT;
+        
+        Unbind();
     }
 }
 
@@ -141,6 +143,8 @@ void CFrameBufferOGLBase::AttachDepth(IRenderTargetPtr depthTarget)
     if (depthTarget->StencilTarget()) {
         m_ClearBits |= GL_STENCIL_BUFFER_BIT;
     }
+    
+    Unbind();
 }
 
 void CFrameBufferOGLBase::AttachStencil(IRenderTargetPtr stencilTarget)
@@ -160,12 +164,15 @@ void CFrameBufferOGLBase::AttachStencil(IRenderTargetPtr stencilTarget)
         std::static_pointer_cast<CRenderTargetTextureOGLBase>(renderTexture)->BindAsStencilToFrameBuffer();
     }
     m_ClearBits |= GL_STENCIL_BUFFER_BIT;
+    
+    Unbind();
 }
 
 void CFrameBufferOGLBase::DetachColor(uint64_t index)
 {
     if (index < MaxColorAttachements()) {
         Bind();
+        
         IRenderTargetPtr renderBuffer = m_ColorBuffers[index];
         if (renderBuffer && renderBuffer->ColorTarget()) {
             std::static_pointer_cast<CRenderTargetColorOGLBase>(renderBuffer)->UnbindFromFrameBuffer(index);
@@ -188,12 +195,15 @@ void CFrameBufferOGLBase::DetachColor(uint64_t index)
         {
             m_ClearBits &= ~GL_STENCIL_BUFFER_BIT;
         }
+        
+        Unbind();
     }
 }
 
 void CFrameBufferOGLBase::DetachDepth()
 {
     Bind();
+    
     IRenderTargetPtr renderBuffer = m_DepthBuffer;
     if (renderBuffer && renderBuffer->DepthTarget()) {
         std::static_pointer_cast<CRenderTargetDepthOGLBase>(renderBuffer)->UnbindFromFrameBuffer();
@@ -205,11 +215,14 @@ void CFrameBufferOGLBase::DetachDepth()
         m_ClearBits &= GL_DEPTH_BUFFER_BIT;
     }
     m_DepthBuffer = nullptr;
+    
+    Unbind();
 }
 
 void CFrameBufferOGLBase::DetachStencil()
 {
     Bind();
+    
     IRenderTargetPtr renderBuffer = m_StencilBuffer;
     if (renderBuffer && renderBuffer->StencilTarget()) {
         std::static_pointer_cast<CRenderTargetStencilOGLBase>(renderBuffer)->UnbindFromFrameBuffer();
@@ -218,6 +231,8 @@ void CFrameBufferOGLBase::DetachStencil()
     }
     m_ClearBits &= GL_DEPTH_BUFFER_BIT;
     m_StencilBuffer = nullptr;
+    
+    Unbind();
 }
 
 IRenderTargetPtr CFrameBufferOGLBase::ColorAttachement(uint64_t index) const

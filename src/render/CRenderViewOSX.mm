@@ -82,21 +82,17 @@ void CRenderViewOSX::CreateView()
 
     CRenderTargetColorPtr colorTarget = m_Renderer->CreateColorRenderTarget();
     colorTarget->Initialize(IRenderTarget::ColorRGBA8888);
-    colorTarget->Bind();
 
     CRenderTargetDepthPtr depthTarget = m_Renderer->CreateDepthRenderTarget();
     depthTarget->Initialize(IRenderTarget::Depth24);
-    depthTarget->Bind();
 
     CRenderTargetStencilPtr stencilTarget = m_Renderer->CreateStencilRenderTarget();
     stencilTarget->Initialize(IRenderTarget::Stencil8);
-    stencilTarget->Bind();
 
     m_DefaultRenderTarget = m_Renderer->CreateFrameBuffer(RealWidth(), RealHeight());
     // Use 0 for the defaultFBO which is appropriate for
     // OSX (but not iOS since iOS apps must create their own FBO)
     std::static_pointer_cast<CFrameBufferOGLBase>(m_DefaultRenderTarget)->InitializeWithFBO(0);
-    m_DefaultRenderTarget->Bind();
     m_DefaultRenderTarget->AttachColor(colorTarget, 0);
     m_DefaultRenderTarget->AttachDepth(depthTarget);
     m_DefaultRenderTarget->AttachStencil(stencilTarget);

@@ -78,11 +78,9 @@ void CRenderViewIOS::CreateView()
 
     CRenderTargetDepthPtr depthTarget = m_Renderer->CreateDepthRenderTarget();
     depthTarget->Initialize(IRenderTarget::Depth24_Stencil8);
-    depthTarget->Bind();
 
     m_DefaultRenderTarget = m_Renderer->CreateFrameBuffer(RealWidth(), RealHeight());
     m_DefaultRenderTarget->Initialize();
-    m_DefaultRenderTarget->Bind();
     m_DefaultRenderTarget->AttachColor(colorTarget, 0);
     m_DefaultRenderTarget->AttachDepth(depthTarget);
 

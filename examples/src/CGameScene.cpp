@@ -136,29 +136,26 @@ void CGameScene::CreateMainCamera()
     // Render texture
     CRenderTargetTexturePtr renderTextureTarget = renderer->CreateTextureRenderTarget();
     renderTextureTarget->Initialize(IRenderTarget::ColorRGBA8888);
-    renderTextureTarget->Bind();
     
     // Framebuffer
     IFrameBufferPtr renderTextureFBO = renderer->CreateFrameBuffer(renderView->Width(), renderView->Height());
     renderTextureFBO->Initialize();
-    renderTextureFBO->Bind();
     renderTextureFBO->AttachColor(renderTextureTarget, 0);
-    renderTextureFBO->ClearColor(CColor4f(0.0f, 1.0f, 1.0f, 1.0f));
+    renderTextureFBO->ClearColor(CColor4f(0.0f, 1.0f, 0.0f, 1.0f));
     assert(renderTextureFBO->IsValid());
     
     // Cam
     ICameraPtr renderTextureCam = CCamera3D::Create(75.0f);
     renderTextureCam->RenderTarget(renderTextureFBO);
     
-    
     IModel3DPtr planeModel(new CModelObj("/plane/plane.obj"));
     planeModel->Load();
     
     jam::CObject3DPtr plane = CObject3D::CreateObj("/plane/plane.obj", renderer, m_MainCamera->Id());
+    Root()->AddChild(plane);
     CTransformAffector::Translating(plane, glm::vec3(7.0f, 4.0f, 0.0f));
     CTransformAffector::Rotation(plane, glm::vec3(0, 0, 0));
     CTransformAffector::Scale(plane, glm::vec3(2.0f, 2.0f, 1.0f));
-    Root()->AddChild(plane);
     
     plane->Get<CRenderComponent>([&](CRenderComponentPtr component)
     {
@@ -188,18 +185,19 @@ void CGameScene::CreateMainCamera()
                     x = 0;
                 }
 
-                jam::CObject3DPtr model3D = CObject3D::CreateObj(filename, renderer, scene->m_MainCamera->Id());
-                CTransformAffector::Translating(model3D, glm::vec3(x * 2.4f - 4.0f, y * 2.4f - 4.0f, 0.0f));
-                CTransformAffector::Rotation(model3D, glm::vec3(i * 15 * 3.1415 / 180.0,
+                jam::CObject3DPtr cube = CObject3D::CreateObj(filename, renderer, scene->m_MainCamera->Id());
+                CTransformAffector::Translating(cube, glm::vec3(x * 2.4f - 4.0f, y * 2.4f - 4.0f, 0.0f));
+                CTransformAffector::Rotation(cube, glm::vec3(i * 15 * 3.1415 / 180.0,
                                                           i * 15 * 3.1415 / 180.0,
                                                           i * 15 * 3.1415 / 180.0));
-                //CTransformAffector::Scale(model3D, glm::vec3(10.0f, 10.0f, 10.0f));
-                scene->Root()->AddChild(model3D);
-                scene->m_Models3D.push_back(model3D);
+                //CTransformAffector::Scale(cube, glm::vec3(10.0f, 10.0f, 10.0f));
+                scene->Root()->AddChild(cube);
+                scene->m_Models3D.push_back(cube);
                 
-                model3D->Get<CRenderComponent>([renderTextureCam](CRenderComponentPtr component)
+                cube->Get<CRenderComponent>([renderTextureCam](CRenderComponentPtr component)
                 {
                     component->AddCameraId(renderTextureCam->Id());
+                    component->Dirty();
                 });
 
                 x++;

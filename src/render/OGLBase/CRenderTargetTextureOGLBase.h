@@ -72,7 +72,6 @@ public:
     virtual ITexturePtr CreateTextureObject() const = 0;
 
 private:
-    uint32_t m_Id;
     ITexturePtr m_Texture;
 };
 

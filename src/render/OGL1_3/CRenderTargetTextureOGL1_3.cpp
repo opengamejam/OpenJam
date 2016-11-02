@@ -8,7 +8,7 @@
 #if defined(RENDER_OGL1_3)
 
 #include "CRenderTargetTextureOGL1_3.h"
-#include "CTextureOGLES1_1.h"
+#include "CTextureOGL1_3.h"
 
 using namespace jam;
 

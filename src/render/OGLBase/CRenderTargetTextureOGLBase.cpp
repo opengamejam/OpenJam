@@ -24,7 +24,6 @@ using namespace jam;
 // *****************************************************************************
 
 CRenderTargetTextureOGLBase::CRenderTargetTextureOGLBase()
-    : m_Id(0)
 {
 }
 
@@ -37,7 +36,6 @@ void CRenderTargetTextureOGLBase::Initialize(InternalFormats internalFormat)
     if (IsInitialized()) {
         return;
     }
-    glGenRenderbuffers(1, &m_Id);
     m_Texture = CreateTextureObject();
 }
 
@@ -46,13 +44,12 @@ void CRenderTargetTextureOGLBase::Shutdown()
     if (!IsInitialized()) {
         return;
     }
-    glDeleteRenderbuffers(1, &m_Id);
     m_Texture = nullptr;
 }
 
 bool CRenderTargetTextureOGLBase::IsInitialized()
 {
-    return (m_Id > 0);
+    return (m_Texture != nullptr);
 }
 
 void CRenderTargetTextureOGLBase::Allocate(uint64_t width, uint64_t height)
@@ -68,14 +65,12 @@ void CRenderTargetTextureOGLBase::Bind() const
 {
     assert(Texture());
     Texture()->Bind();
-    glEnable(GL_TEXTURE_2D);
 }
 
 void CRenderTargetTextureOGLBase::Unbind() const
 {
     assert(Texture());
     Texture()->Unbind();
-    glDisable(GL_TEXTURE_2D);
 }
 
 ITexturePtr CRenderTargetTextureOGLBase::Texture() const
@@ -85,57 +80,81 @@ ITexturePtr CRenderTargetTextureOGLBase::Texture() const
 
 void CRenderTargetTextureOGLBase::BindAsColorToFrameBuffer(uint64_t colorAttachementIdx)
 {
+    Bind();
+    
     GLuint id = std::static_pointer_cast<CTextureOGLBase>(Texture())->TextureId();
     glFramebufferTexture2D(GL_FRAMEBUFFER,
         GL_COLOR_ATTACHMENT0 + colorAttachementIdx,
         GL_TEXTURE_2D,
         id,
         0);
+    
+    Unbind();
 }
 
 void CRenderTargetTextureOGLBase::BindAsDepthToFrameBuffer()
 {
+    Bind();
+    
     glFramebufferTexture2D(GL_FRAMEBUFFER,
         GL_DEPTH_ATTACHMENT,
         GL_TEXTURE_2D,
         std::static_pointer_cast<CTextureOGLBase>(Texture())->TextureId(),
         0);
+    
+    Unbind();
 }
 
 void CRenderTargetTextureOGLBase::BindAsStencilToFrameBuffer()
 {
+    Bind();
+    
     glFramebufferTexture2D(GL_FRAMEBUFFER,
         GL_STENCIL_ATTACHMENT,
         GL_TEXTURE_2D,
         std::static_pointer_cast<CTextureOGLBase>(Texture())->TextureId(),
         0);
+    
+    Unbind();
 }
 
 void CRenderTargetTextureOGLBase::UnbindAsColorFromFrameBuffer(uint64_t colorAttachementIdx)
 {
+    Bind();
+    
     glFramebufferTexture2D(GL_FRAMEBUFFER,
         GL_COLOR_ATTACHMENT0 + colorAttachementIdx,
         GL_TEXTURE_2D,
         0,
         0);
+    
+    Unbind();
 }
 
 void CRenderTargetTextureOGLBase::UnbindAsDepthFromFrameBuffer()
 {
+    Bind();
+    
     glFramebufferTexture2D(GL_FRAMEBUFFER,
         GL_DEPTH_ATTACHMENT,
         GL_TEXTURE_2D,
         0,
         0);
+    
+    Unbind();
 }
 
 void CRenderTargetTextureOGLBase::UnbindAsStencilFromFrameBuffer()
 {
+    Bind();
+    
     glFramebufferTexture2D(GL_FRAMEBUFFER,
         GL_STENCIL_ATTACHMENT,
         GL_TEXTURE_2D,
         0,
         0);
+    
+    Unbind();
 }
 
 // *****************************************************************************

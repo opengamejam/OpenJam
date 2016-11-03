@@ -81,9 +81,11 @@ void CRenderViewIOS::CreateView()
 
     m_DefaultRenderTarget = m_Renderer->CreateFrameBuffer(RealWidth(), RealHeight());
     m_DefaultRenderTarget->Initialize();
+    m_DefaultRenderTarget->Bind();
     m_DefaultRenderTarget->AttachColor(colorTarget, 0);
     m_DefaultRenderTarget->AttachDepth(depthTarget);
 
+    m_DefaultRenderTarget->Bind();
     assert(m_Renderer && m_DefaultRenderTarget->IsValid());
 }
 

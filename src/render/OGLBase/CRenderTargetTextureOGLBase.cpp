@@ -56,9 +56,9 @@ void CRenderTargetTextureOGLBase::Allocate(uint64_t width, uint64_t height)
 {
     Texture()->Allocate(width, height);
     /*IResource::TResourceData textureData(width * height * 4);  // RGBA8888
-    memset(&textureData[0], 0, textureData.size());
-    IImagePtr image(new CImageRaw("sdfd", textureData, width, height, TexelProps(TF_RGBA8888, TT_UByte, 1)));
-    Texture()->AssignImage(image);*/
+     memset(&textureData[0], 0, textureData.size());
+     IImagePtr image(new CImageRaw("sdfd", textureData, width, height, TexelProps(TF_RGBA8888, TT_UByte, 1)));
+     Texture()->AssignImage(image);*/
 }
 
 void CRenderTargetTextureOGLBase::Bind() const
@@ -80,81 +80,57 @@ ITexturePtr CRenderTargetTextureOGLBase::Texture() const
 
 void CRenderTargetTextureOGLBase::BindAsColorToFrameBuffer(uint64_t colorAttachementIdx)
 {
-    Bind();
-    
     GLuint id = std::static_pointer_cast<CTextureOGLBase>(Texture())->TextureId();
     glFramebufferTexture2D(GL_FRAMEBUFFER,
         GL_COLOR_ATTACHMENT0 + colorAttachementIdx,
         GL_TEXTURE_2D,
         id,
         0);
-    
-    Unbind();
 }
 
 void CRenderTargetTextureOGLBase::BindAsDepthToFrameBuffer()
 {
-    Bind();
-    
     glFramebufferTexture2D(GL_FRAMEBUFFER,
         GL_DEPTH_ATTACHMENT,
         GL_TEXTURE_2D,
         std::static_pointer_cast<CTextureOGLBase>(Texture())->TextureId(),
         0);
-    
-    Unbind();
 }
 
 void CRenderTargetTextureOGLBase::BindAsStencilToFrameBuffer()
 {
-    Bind();
-    
     glFramebufferTexture2D(GL_FRAMEBUFFER,
         GL_STENCIL_ATTACHMENT,
         GL_TEXTURE_2D,
         std::static_pointer_cast<CTextureOGLBase>(Texture())->TextureId(),
         0);
-    
-    Unbind();
 }
 
 void CRenderTargetTextureOGLBase::UnbindAsColorFromFrameBuffer(uint64_t colorAttachementIdx)
 {
-    Bind();
-    
     glFramebufferTexture2D(GL_FRAMEBUFFER,
         GL_COLOR_ATTACHMENT0 + colorAttachementIdx,
         GL_TEXTURE_2D,
         0,
         0);
-    
-    Unbind();
 }
 
 void CRenderTargetTextureOGLBase::UnbindAsDepthFromFrameBuffer()
 {
-    Bind();
-    
     glFramebufferTexture2D(GL_FRAMEBUFFER,
         GL_DEPTH_ATTACHMENT,
         GL_TEXTURE_2D,
         0,
         0);
-    
-    Unbind();
 }
 
 void CRenderTargetTextureOGLBase::UnbindAsStencilFromFrameBuffer()
 {
-    Bind();
-    
     glFramebufferTexture2D(GL_FRAMEBUFFER,
         GL_STENCIL_ATTACHMENT,
         GL_TEXTURE_2D,
         0,
         0);
-    
-    Unbind();
 }
 
 // *****************************************************************************

@@ -79,8 +79,6 @@ void CRenderTargetStencilOGLBase::Unbind() const
 
 void CRenderTargetStencilOGLBase::BindToFrameBuffer()
 {
-    Bind();
-    
     GLenum attachement = GL_STENCIL_ATTACHMENT;
     if (m_InternalFormat == Depth24_Stencil8) {
         attachement = GL_DEPTH_ATTACHMENT;
@@ -90,14 +88,10 @@ void CRenderTargetStencilOGLBase::BindToFrameBuffer()
         attachement,
         GL_RENDERBUFFER,
         m_Id);
-    
-    Unbind();
 }
 
 void CRenderTargetStencilOGLBase::UnbindFromFrameBuffer()
 {
-    Bind();
-    
     GLenum attachement = GL_STENCIL_ATTACHMENT;
     if (m_InternalFormat == Depth24_Stencil8) {
         attachement = GL_DEPTH_ATTACHMENT;
@@ -107,8 +101,6 @@ void CRenderTargetStencilOGLBase::UnbindFromFrameBuffer()
         attachement,
         GL_RENDERBUFFER,
         0);
-    
-    Unbind();
 }
 
 void CRenderTargetStencilOGLBase::InitializeWithDepthId(uint32_t depthId)

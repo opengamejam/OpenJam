@@ -91,26 +91,18 @@ CRenderTargetStencilPtr CRenderTargetDepthOGLBase::StencilTarget()
 
 void CRenderTargetDepthOGLBase::BindToFrameBuffer()
 {
-    Bind();
-    
     glFramebufferRenderbuffer(GL_FRAMEBUFFER,
         GL_DEPTH_ATTACHMENT,
         GL_RENDERBUFFER,
         m_Id);
-    
-    Unbind();
 }
 
 void CRenderTargetDepthOGLBase::UnbindFromFrameBuffer()
 {
-    Bind();
-    
     glFramebufferRenderbuffer(GL_FRAMEBUFFER,
         GL_DEPTH_ATTACHMENT,
         GL_RENDERBUFFER,
         0);
-    
-    Unbind();
 }
 
 // *****************************************************************************

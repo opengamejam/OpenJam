@@ -44,7 +44,9 @@ ITexturePtr CTextureCache::Load(const std::string& filename)
             ITexturePtr resultTexture = nullptr;
             if (image) {
                 resultTexture = renderer->CreateTexture();
+                resultTexture->Bind();
                 resultTexture->AssignImage(image);
+                resultTexture->Unbind();
             }
 
             return resultTexture;

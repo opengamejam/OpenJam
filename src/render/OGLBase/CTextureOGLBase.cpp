@@ -27,6 +27,8 @@ CTextureOGLBase::CTextureOGLBase()
     , m_Filter(ITexture::Linear)
     , m_IsDirty(true)
 {
+    glEnable(GL_TEXTURE_2D);
+    glGenTextures(1, &m_Id);
 }
 
 CTextureOGLBase::~CTextureOGLBase()
@@ -36,11 +38,6 @@ CTextureOGLBase::~CTextureOGLBase()
 
 void CTextureOGLBase::Bind()
 {
-    if (!IsValid()) {
-        return;
-    }
-
-    glEnable(GL_TEXTURE_2D);
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, m_Id); // TODO: texture type
 }
@@ -85,12 +82,7 @@ ITexture::TextureFilters CTextureOGLBase::Filter() const
 
 void CTextureOGLBase::Allocate(uint64_t width, uint64_t height)
 {
-    if (!IsValid()) {
-        glGenTextures(1, &m_Id);
-        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    }
-    
-    Bind();
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
     
     GLenum glInternalFormat = GL_RGBA;
     GLenum glFormat = GL_RGBA;
@@ -99,20 +91,13 @@ void CTextureOGLBase::Allocate(uint64_t width, uint64_t height)
     glTexImage2D(GL_TEXTURE_2D, 0, glInternalFormat, width, height, 0, glFormat, glType, nullptr);
     
     Filter(ITexture::TextureFilters::Linear);
-    
-    Unbind();
 }
 
 bool CTextureOGLBase::AssignImage(IImagePtr image)
 {
-    if (!IsValid()) {
-        glGenTextures(1, &m_Id);
-        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-    }
+    glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
     if (image) {
-        Bind();
-
         assert(image && !image->RawData().empty());
 
         GLenum glInternalFormat = TexelFormatsToGlInternalFormat(image->TexelFormat());
@@ -143,8 +128,6 @@ bool CTextureOGLBase::AssignImage(IImagePtr image)
         } else {
             Filter(ITexture::TextureFilters::Linear);
         }
-
-        Unbind();
 
         return true;
     }

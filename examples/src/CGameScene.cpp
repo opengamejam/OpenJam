@@ -140,6 +140,7 @@ void CGameScene::CreateMainCamera()
     // Framebuffer
     IFrameBufferPtr renderTextureFBO = renderer->CreateFrameBuffer(renderView->Width(), renderView->Height());
     renderTextureFBO->Initialize();
+    renderTextureFBO->Bind();
     renderTextureFBO->AttachColor(renderTextureTarget, 0);
     renderTextureFBO->ClearColor(CColor4f(0.0f, 1.0f, 0.0f, 1.0f));
     assert(renderTextureFBO->IsValid());

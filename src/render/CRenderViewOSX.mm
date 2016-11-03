@@ -93,6 +93,7 @@ void CRenderViewOSX::CreateView()
     // Use 0 for the defaultFBO which is appropriate for
     // OSX (but not iOS since iOS apps must create their own FBO)
     std::static_pointer_cast<CFrameBufferOGLBase>(m_DefaultRenderTarget)->InitializeWithFBO(0);
+    m_DefaultRenderTarget->Bind();
     m_DefaultRenderTarget->AttachColor(colorTarget, 0);
     m_DefaultRenderTarget->AttachDepth(depthTarget);
     m_DefaultRenderTarget->AttachStencil(stencilTarget);

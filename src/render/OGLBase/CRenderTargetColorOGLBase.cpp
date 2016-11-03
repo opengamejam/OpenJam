@@ -73,26 +73,18 @@ void CRenderTargetColorOGLBase::Unbind() const
 
 void CRenderTargetColorOGLBase::BindToFrameBuffer(uint64_t colorAttachementIdx)
 {
-    Bind();
-    
     glFramebufferRenderbuffer(GL_FRAMEBUFFER,
         GL_COLOR_ATTACHMENT0 + colorAttachementIdx,
         GL_RENDERBUFFER,
         m_Id);
-    
-    Unbind();
 }
 
 void CRenderTargetColorOGLBase::UnbindFromFrameBuffer(uint64_t colorAttachementIdx)
 {
-    Bind();
-    
     glFramebufferRenderbuffer(GL_FRAMEBUFFER,
         GL_COLOR_ATTACHMENT0 + colorAttachementIdx,
         GL_RENDERBUFFER,
         0);
-    
-    Unbind();
 }
 
 // *****************************************************************************

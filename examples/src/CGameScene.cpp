@@ -69,6 +69,9 @@ void CGameScene::Stop()
 {
 }
 
+CSprite2DPtr sprite;
+jam::CObject3DPtr tv;
+
 static glm::vec3 dir = glm::vec3(1.0f, 1.0f, 1.0f);
 static glm::vec3 lightPos = glm::vec3(-3.0f, -3.0f, -3.0f);
 
@@ -104,9 +107,20 @@ void CGameScene::Update(unsigned long dt)
                                                  1 * 3.14f / 180.0f,
                                                  1 * 3.14f / 180.0f));
     });
+    
+    static float tv_rot = 0;
+    static int tv_rot_dir = 1;
+    tv_rot += (tv_rot_dir * 0.5);
+    if (tv_rot > 30)
+    {
+        tv_rot_dir = -1;
+    }
+    else if (tv_rot < -30)
+    {
+        tv_rot_dir = 1;
+    }
+    //CTransformAffector::Rotation(tv, glm::vec3(10.0f * 3.14f / 180.0f, tv_rot * 3.14 / 180.0f, 0));
 }
-
-CSprite2DPtr sprite;
 
 void CGameScene::CreateMainCamera()
 {
@@ -146,24 +160,35 @@ void CGameScene::CreateMainCamera()
     renderTextureFBO->Bind();
     renderTextureFBO->AttachColor(renderTextureTarget, 0);
     renderTextureFBO->AttachDepth(depthTarget);
-    renderTextureFBO->ClearColor(CColor4f(0.0f, 1.0f, 0.0f, 1.0f));
+    renderTextureFBO->ClearColor(CColor4f(0.0f, 0.0f, 1.0f, 0.0f));
     assert(renderTextureFBO->IsValid());
     
     // Cam
     ICameraPtr renderTextureCam = CCamera3D::Create(75.0f);
     renderTextureCam->RenderTarget(renderTextureFBO);
     
-    IModel3DPtr planeModel(new CModelObj("/plane/plane.obj"));
-    planeModel->Load();
+    tv = CObject3D::CreateObj("/tv/tv.obj", renderer, m_MainCamera->Id());
+    Root()->AddChild(tv);
+    CTransformAffector::Translating(tv, glm::vec3(6.0f, 3.0f, 0.0f));
+    CTransformAffector::Rotation(tv, glm::vec3(10.0f * 3.14f / 180.0f, 0, 0));
+    CTransformAffector::Scale(tv, glm::vec3(3.0f, 3.0f, 3.0f));
+    
+    tv->Get<CRenderComponent>([&](CRenderComponentPtr component)
+    {
+        component->Batchable(false);
+        component->Texture(renderTextureTarget->Texture(), "display");
+        component->Dirty();
+    });
     
     jam::CObject3DPtr plane = CObject3D::CreateObj("/plane/plane.obj", renderer, m_MainCamera->Id());
-    Root()->AddChild(plane);
-    CTransformAffector::Translating(plane, glm::vec3(7.0f, 4.0f, 0.0f));
+    tv->AddChild(plane);
+    CTransformAffector::Translating(plane, glm::vec3(-0.50f, 1.05f, 1.4f));
     CTransformAffector::Rotation(plane, glm::vec3(0, 0, 0));
-    CTransformAffector::Scale(plane, glm::vec3(3.0f, 2.25f, 1.0f));
+    CTransformAffector::Scale(plane, glm::vec3(0.36f, 0.27f, 1.0f));
     
     plane->Get<CRenderComponent>([&](CRenderComponentPtr component)
     {
+        component->AddCameraId(renderTextureCam->Id());
         component->Batchable(false);
         component->Texture(renderTextureTarget->Texture());
         component->Dirty();

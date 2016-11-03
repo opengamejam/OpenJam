@@ -137,11 +137,15 @@ void CGameScene::CreateMainCamera()
     CRenderTargetTexturePtr renderTextureTarget = renderer->CreateTextureRenderTarget();
     renderTextureTarget->Initialize(IRenderTarget::ColorRGBA8888);
     
+    CRenderTargetDepthPtr depthTarget = renderer->CreateDepthRenderTarget();
+    depthTarget->Initialize(IRenderTarget::Depth24_Stencil8);
+    
     // Framebuffer
     IFrameBufferPtr renderTextureFBO = renderer->CreateFrameBuffer(renderView->Width(), renderView->Height());
     renderTextureFBO->Initialize();
     renderTextureFBO->Bind();
     renderTextureFBO->AttachColor(renderTextureTarget, 0);
+    renderTextureFBO->AttachDepth(depthTarget);
     renderTextureFBO->ClearColor(CColor4f(0.0f, 1.0f, 0.0f, 1.0f));
     assert(renderTextureFBO->IsValid());
     
@@ -156,10 +160,11 @@ void CGameScene::CreateMainCamera()
     Root()->AddChild(plane);
     CTransformAffector::Translating(plane, glm::vec3(7.0f, 4.0f, 0.0f));
     CTransformAffector::Rotation(plane, glm::vec3(0, 0, 0));
-    CTransformAffector::Scale(plane, glm::vec3(2.0f, 2.0f, 1.0f));
+    CTransformAffector::Scale(plane, glm::vec3(3.0f, 2.25f, 1.0f));
     
     plane->Get<CRenderComponent>([&](CRenderComponentPtr component)
     {
+        component->Batchable(false);
         component->Texture(renderTextureTarget->Texture());
         component->Dirty();
     });

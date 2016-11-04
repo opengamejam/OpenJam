@@ -64,11 +64,13 @@ void CRenderTargetColorOGLBase::Allocate(uint64_t width, uint64_t height)
 void CRenderTargetColorOGLBase::Bind() const
 {
     glBindRenderbuffer(GL_RENDERBUFFER, m_Id);
+    JAM_LOG("CRenderTargetColorOGLBase::Bind() - id: %d\n", m_Id);
 }
 
 void CRenderTargetColorOGLBase::Unbind() const
 {
     glBindRenderbuffer(GL_RENDERBUFFER, 0);
+    JAM_LOG("CRenderTargetColorOGLBase::Unbind() - id: %d\n", m_Id);
 }
 
 void CRenderTargetColorOGLBase::BindToFrameBuffer(uint64_t colorAttachementIdx)
@@ -77,6 +79,7 @@ void CRenderTargetColorOGLBase::BindToFrameBuffer(uint64_t colorAttachementIdx)
         GL_COLOR_ATTACHMENT0 + colorAttachementIdx,
         GL_RENDERBUFFER,
         m_Id);
+    JAM_LOG("CRenderTargetColorOGLBase::BindToFrameBuffer() - id: %d\n", m_Id);
 }
 
 void CRenderTargetColorOGLBase::UnbindFromFrameBuffer(uint64_t colorAttachementIdx)
@@ -85,6 +88,7 @@ void CRenderTargetColorOGLBase::UnbindFromFrameBuffer(uint64_t colorAttachementI
         GL_COLOR_ATTACHMENT0 + colorAttachementIdx,
         GL_RENDERBUFFER,
         0);
+    JAM_LOG("CRenderTargetColorOGLBase::UnbindFromFrameBuffer() - id: %d\n", m_Id);
 }
 
 // *****************************************************************************

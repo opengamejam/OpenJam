@@ -35,6 +35,8 @@ CSprite2DPtr CSprite2D::Create(const std::string& filename, IRendererPtr rendere
     if (found != std::string::npos) {
         assetName = filename.substr(0, found);
     }
+    
+    JAM_LOG("CSprite2D::CreateObj - name: %s\n", filename.c_str());
 
     IMeshPtr mesh = nullptr;
     IMaterialPtr material = nullptr;

@@ -40,6 +40,7 @@ void CTextureOGLBase::Bind()
 {
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, m_Id); // TODO: texture type
+    JAM_LOG("CTextureOGLBase::Bind() - id: %d\n", m_Id); // TODO: Log system
 }
 
 void CTextureOGLBase::Unbind()
@@ -51,6 +52,7 @@ void CTextureOGLBase::Unbind()
     glActiveTexture(GL_TEXTURE0);
     glBindTexture(GL_TEXTURE_2D, 0); // TODO: texture type
     //glDisable(GL_TEXTURE_2D);
+    JAM_LOG("CTextureOGLBase::Unbind() - id: %d\n", m_Id);  // TODO: Log system
 }
 
 void CTextureOGLBase::Filter(ITexture::TextureFilters filter)

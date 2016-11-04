@@ -118,6 +118,7 @@ void CRenderSystem::Draw(ICameraPtr camera)
                 return;
             }
 
+            JAM_LOG("CRenderSystem::Draw - Draw batch: %s\n", renderComponent->Entity()->Name().c_str());
             DrawGroup(renderComponent, CRenderComponent::kBatchingGroupName, projectionMatrix, viewMatrix, glm::mat4(1.0));
             m_ProccededBatches.insert(mesh->GetUid());
         } else {
@@ -134,7 +135,8 @@ void CRenderSystem::Draw(ICameraPtr camera)
                 if (groupName == CRenderComponent::kBatchingGroupName || !renderComponent->Visible(groupName)) {
                     return;
                 }
-
+                
+                JAM_LOG("CRenderSystem::Draw - Draw object: %s\n", renderComponent->Entity()->Name().c_str());
                 DrawGroup(renderComponent, groupName, projectionMatrix, viewMatrix, modelMatrix);
             });
         }

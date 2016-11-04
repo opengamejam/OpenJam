@@ -77,11 +77,13 @@ void CRenderTargetDepthOGLBase::Allocate(uint64_t width, uint64_t height)
 void CRenderTargetDepthOGLBase::Bind() const
 {
     glBindRenderbuffer(GL_RENDERBUFFER, m_Id);
+    JAM_LOG("CRenderTargetDepthOGLBase::Bind() - id: %d\n", m_Id);
 }
 
 void CRenderTargetDepthOGLBase::Unbind() const
 {
     glBindRenderbuffer(GL_RENDERBUFFER, 0);
+    JAM_LOG("CRenderTargetDepthOGLBase::Unbind() - id: %d\n", m_Id);
 }
 
 CRenderTargetStencilPtr CRenderTargetDepthOGLBase::StencilTarget()
@@ -95,6 +97,7 @@ void CRenderTargetDepthOGLBase::BindToFrameBuffer()
         GL_DEPTH_ATTACHMENT,
         GL_RENDERBUFFER,
         m_Id);
+    JAM_LOG("CRenderTargetDepthOGLBase::BindToFrameBuffer() - id: %d\n", m_Id);
 }
 
 void CRenderTargetDepthOGLBase::UnbindFromFrameBuffer()
@@ -103,6 +106,7 @@ void CRenderTargetDepthOGLBase::UnbindFromFrameBuffer()
         GL_DEPTH_ATTACHMENT,
         GL_RENDERBUFFER,
         0);
+    JAM_LOG("CRenderTargetDepthOGLBase::UnbindFromFrameBuffer() - id: %d\n", m_Id);
 }
 
 // *****************************************************************************

@@ -70,11 +70,13 @@ void CRenderTargetStencilOGLBase::Allocate(uint64_t width, uint64_t height)
 void CRenderTargetStencilOGLBase::Bind() const
 {
     glBindRenderbuffer(GL_RENDERBUFFER, m_Id);
+    JAM_LOG("CRenderTargetStencilOGLBase::Bind() - id: %d\n", m_Id);
 }
 
 void CRenderTargetStencilOGLBase::Unbind() const
 {
     glBindRenderbuffer(GL_RENDERBUFFER, 0);
+    JAM_LOG("CRenderTargetStencilOGLBase::Unbind() - id: %d\n", m_Id);
 }
 
 void CRenderTargetStencilOGLBase::BindToFrameBuffer()
@@ -88,6 +90,7 @@ void CRenderTargetStencilOGLBase::BindToFrameBuffer()
         attachement,
         GL_RENDERBUFFER,
         m_Id);
+    JAM_LOG("CRenderTargetStencilOGLBase::BindToFrameBuffer() - id: %d\n", m_Id);
 }
 
 void CRenderTargetStencilOGLBase::UnbindFromFrameBuffer()
@@ -101,6 +104,7 @@ void CRenderTargetStencilOGLBase::UnbindFromFrameBuffer()
         attachement,
         GL_RENDERBUFFER,
         0);
+    JAM_LOG("CRenderTargetStencilOGLBase::UnbindFromFrameBuffer() - id: %d\n", m_Id);
 }
 
 void CRenderTargetStencilOGLBase::InitializeWithDepthId(uint32_t depthId)

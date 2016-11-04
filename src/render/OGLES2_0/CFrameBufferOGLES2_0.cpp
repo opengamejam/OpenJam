@@ -8,6 +8,9 @@
 #if defined(RENDER_OGLES2_0)
 
 #include "CFrameBufferOGLES2_0.h"
+#include "CRenderTargetColorOGLES2_0.h"
+#include "CRenderTargetDepthOGLES2_0.h"
+#include "CRenderTargetStencilOGLES2_0.h"
 
 using namespace jam;
 
@@ -26,6 +29,16 @@ CFrameBufferOGLES2_0::CFrameBufferOGLES2_0(uint32_t width, uint32_t height)
 
 CFrameBufferOGLES2_0::~CFrameBufferOGLES2_0()
 {
+}
+
+void CFrameBufferOGLES2_0::Bind() const
+{
+    CFrameBufferOGLBase::Bind();
+}
+
+void CFrameBufferOGLES2_0::Unbind() const
+{
+    CFrameBufferOGLBase::Unbind();
 }
 
 // *****************************************************************************

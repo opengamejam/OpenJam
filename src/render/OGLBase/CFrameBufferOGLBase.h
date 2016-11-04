@@ -144,7 +144,7 @@ public:
     virtual void InitializeWithFBO(GLint fbo);
 
 private:
-    uint32_t m_FrameBuffer;
+    uint32_t m_Id;
 
     std::vector<IRenderTargetPtr> m_ColorBuffers;
     IRenderTargetPtr m_DepthBuffer;

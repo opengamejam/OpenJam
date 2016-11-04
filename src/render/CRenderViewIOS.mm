@@ -92,13 +92,12 @@ void CRenderViewIOS::CreateView()
 void CRenderViewIOS::Begin() const
 {
     [EAGLContext setCurrentContext:m_GLContext];
-    m_DefaultRenderTarget->ColorAttachement(0)->Bind();
 }
 
 void CRenderViewIOS::End() const
 {
+    m_DefaultRenderTarget->ColorAttachement(0)->Bind();
     [m_GLContext presentRenderbuffer:GL_RENDERBUFFER];
-    m_DefaultRenderTarget->ColorAttachement(0)->Unbind();
 }
 
 void CRenderViewIOS::UpdateEvents() const

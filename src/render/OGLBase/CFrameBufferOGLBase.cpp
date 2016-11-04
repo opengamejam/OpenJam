@@ -27,7 +27,7 @@ using namespace jam;
 // *****************************************************************************
 
 CFrameBufferOGLBase::CFrameBufferOGLBase(uint32_t width, uint32_t height)
-    : m_FrameBuffer(-1)
+    : m_Id(-1)
     , m_NumColorAtachments(1)
     , m_Width(width)
     , m_Height(height)
@@ -49,7 +49,8 @@ void CFrameBufferOGLBase::Initialize()
     if (IsInitialized()) {
         return;
     }
-    glGenFramebuffers(1, &m_FrameBuffer);
+    glGenFramebuffers(1, &m_Id);
+    JAM_LOG("CFrameBufferOGLBase::Initialize() - id: %d\n", m_Id);
 }
 
 void CFrameBufferOGLBase::Shutdown()
@@ -57,13 +58,14 @@ void CFrameBufferOGLBase::Shutdown()
     if (!IsInitialized()) {
         return;
     }
-    glDeleteFramebuffers(1, &m_FrameBuffer);
-    m_FrameBuffer = -1;
+    glDeleteFramebuffers(1, &m_Id);
+    JAM_LOG("CFrameBufferOGLBase::Shutdown() - id: %d\n", m_Id);
+    m_Id = -1;
 }
 
 bool CFrameBufferOGLBase::IsInitialized()
 {
-    return (m_FrameBuffer != -1);
+    return (m_Id != -1);
 }
 
 void CFrameBufferOGLBase::Resize(uint64_t width, uint64_t height)
@@ -71,11 +73,12 @@ void CFrameBufferOGLBase::Resize(uint64_t width, uint64_t height)
     m_Width = width;
     m_Height = height;
 
-    Bind();
-
     std::for_each(m_ColorBuffers.begin(), m_ColorBuffers.end(), [width, height](IRenderTargetPtr renderTarget)
     {
-        renderTarget->Allocate(width, height);
+        if (renderTarget)
+        {
+            renderTarget->Allocate(width, height);
+        }
     });
 
     if (DepthAttachement()) {
@@ -89,6 +92,7 @@ void CFrameBufferOGLBase::Resize(uint64_t width, uint64_t height)
     if (IsValid()) {
         glViewport(0, 0, width, height);
     }
+    JAM_LOG("CFrameBufferOGLBase::Resize() - id: %d, size: (%llu, %llu)\n", m_Id, width, height);
 }
 
 uint64_t CFrameBufferOGLBase::MaxColorAttachements() const
@@ -108,6 +112,7 @@ void CFrameBufferOGLBase::AttachColor(IRenderTargetPtr colorTarget, uint64_t ind
         colorTarget->Allocate(Width(), Height());
         IRenderTargetPtr renderBuffer = colorTarget->ColorTarget();
         IRenderTargetPtr renderTexture = colorTarget->TextureTarget();
+        assert(renderBuffer || renderTexture);
         if (renderBuffer) {
             std::static_pointer_cast<CRenderTargetColorOGLBase>(renderBuffer)->BindToFrameBuffer(index);
         } else if (renderTexture) {
@@ -132,6 +137,7 @@ void CFrameBufferOGLBase::AttachDepth(IRenderTargetPtr depthTarget)
     depthTarget->Allocate(Width(), Height());
     IRenderTargetPtr renderBuffer = depthTarget->DepthTarget();
     IRenderTargetPtr renderTexture = depthTarget->TextureTarget();
+    assert(renderBuffer || renderTexture);
     if (renderBuffer) {
         std::static_pointer_cast<CRenderTargetDepthOGLBase>(renderBuffer)->BindToFrameBuffer();
     } else if (renderTexture) {
@@ -158,6 +164,7 @@ void CFrameBufferOGLBase::AttachStencil(IRenderTargetPtr stencilTarget)
     stencilTarget->Allocate(Width(), Height());
     IRenderTargetPtr renderBuffer = stencilTarget->StencilTarget();
     IRenderTargetPtr renderTexture = stencilTarget->TextureTarget();
+    assert(renderBuffer || renderTexture);
     if (renderBuffer) {
         std::static_pointer_cast<CRenderTargetStencilOGLBase>(renderBuffer)->BindToFrameBuffer();
     } else if (renderTexture) {
@@ -266,11 +273,8 @@ bool CFrameBufferOGLBase::IsValid() const
 
 void CFrameBufferOGLBase::Bind() const
 {
-    if (DepthAttachement()) {
-        glEnable(GL_DEPTH_TEST);
-    }
-
-    glBindFramebuffer(GL_FRAMEBUFFER, m_FrameBuffer);
+    glBindFramebuffer(GL_FRAMEBUFFER, m_Id);
+    JAM_LOG("CFrameBufferOGLBase::Bind() - id: %d\n", m_Id);
 
     if (IsValid()) {
         glViewport(0, 0, Width(), Height());
@@ -279,15 +283,16 @@ void CFrameBufferOGLBase::Bind() const
 
 void CFrameBufferOGLBase::Unbind() const
 {
-    if (DepthAttachement()) {
-        glDisable(GL_DEPTH_TEST);
-    }
-
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    JAM_LOG("CFrameBufferOGLBase::Unbind() - id: %d\n", m_Id);
 }
 
 void CFrameBufferOGLBase::Clear() const
 {
+    if (DepthAttachement()) {
+        glEnable(GL_DEPTH_TEST);
+    }
+    
     glClearColor(m_ClearColor.R(), m_ClearColor.G(), m_ClearColor.B(), m_ClearColor.A());
     glClear(m_ClearBits);
 }
@@ -326,7 +331,7 @@ IFrameBuffer::TRawData CFrameBufferOGLBase::RawData()
 
 void CFrameBufferOGLBase::InitializeWithFBO(GLint fbo)
 {
-    m_FrameBuffer = fbo;
+    m_Id = fbo;
 }
 
 // *****************************************************************************

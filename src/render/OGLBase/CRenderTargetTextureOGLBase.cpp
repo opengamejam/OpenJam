@@ -64,6 +64,7 @@ void CRenderTargetTextureOGLBase::Allocate(uint64_t width, uint64_t height)
 void CRenderTargetTextureOGLBase::Bind() const
 {
     assert(Texture());
+    JAM_LOG("CRenderTargetTextureOGLBase::Bind()\n"); // TODO: Log system
     Texture()->Bind();
 }
 
@@ -71,6 +72,7 @@ void CRenderTargetTextureOGLBase::Unbind() const
 {
     assert(Texture());
     Texture()->Unbind();
+    JAM_LOG("CRenderTargetTextureOGLBase::Unbind()\n"); // TODO: Log system
 }
 
 ITexturePtr CRenderTargetTextureOGLBase::Texture() const
@@ -86,24 +88,29 @@ void CRenderTargetTextureOGLBase::BindAsColorToFrameBuffer(uint64_t colorAttache
         GL_TEXTURE_2D,
         id,
         0);
+    JAM_LOG("CRenderTargetTextureOGLBase::BindAsColorToFrameBuffer() - id: %d\n", id);
 }
 
 void CRenderTargetTextureOGLBase::BindAsDepthToFrameBuffer()
 {
+    GLuint id = std::static_pointer_cast<CTextureOGLBase>(Texture())->TextureId();
     glFramebufferTexture2D(GL_FRAMEBUFFER,
         GL_DEPTH_ATTACHMENT,
         GL_TEXTURE_2D,
-        std::static_pointer_cast<CTextureOGLBase>(Texture())->TextureId(),
+        id,
         0);
+    JAM_LOG("CRenderTargetTextureOGLBase::BindAsDepthToFrameBuffer() - id: %d\n", id);
 }
 
 void CRenderTargetTextureOGLBase::BindAsStencilToFrameBuffer()
 {
+    GLuint id = std::static_pointer_cast<CTextureOGLBase>(Texture())->TextureId();
     glFramebufferTexture2D(GL_FRAMEBUFFER,
         GL_STENCIL_ATTACHMENT,
         GL_TEXTURE_2D,
-        std::static_pointer_cast<CTextureOGLBase>(Texture())->TextureId(),
+        id,
         0);
+    JAM_LOG("CRenderTargetTextureOGLBase::BindAsStencilToFrameBuffer() - id: %d\n", id);
 }
 
 void CRenderTargetTextureOGLBase::UnbindAsColorFromFrameBuffer(uint64_t colorAttachementIdx)
@@ -113,6 +120,8 @@ void CRenderTargetTextureOGLBase::UnbindAsColorFromFrameBuffer(uint64_t colorAtt
         GL_TEXTURE_2D,
         0,
         0);
+    GLuint id = std::static_pointer_cast<CTextureOGLBase>(Texture())->TextureId();
+    JAM_LOG("CRenderTargetTextureOGLBase::UnbindAsColorFromFrameBuffer() - id: %d\n", id);
 }
 
 void CRenderTargetTextureOGLBase::UnbindAsDepthFromFrameBuffer()
@@ -122,6 +131,8 @@ void CRenderTargetTextureOGLBase::UnbindAsDepthFromFrameBuffer()
         GL_TEXTURE_2D,
         0,
         0);
+    GLuint id = std::static_pointer_cast<CTextureOGLBase>(Texture())->TextureId();
+    JAM_LOG("CRenderTargetTextureOGLBase::UnbindAsDepthFromFrameBuffer() - id: %d\n", id);
 }
 
 void CRenderTargetTextureOGLBase::UnbindAsStencilFromFrameBuffer()
@@ -131,6 +142,8 @@ void CRenderTargetTextureOGLBase::UnbindAsStencilFromFrameBuffer()
         GL_TEXTURE_2D,
         0,
         0);
+    GLuint id = std::static_pointer_cast<CTextureOGLBase>(Texture())->TextureId();
+    JAM_LOG("CRenderTargetTextureOGLBase::UnbindAsStencilFromFrameBuffer() - id: %d\n", id);
 }
 
 // *****************************************************************************

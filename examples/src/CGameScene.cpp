@@ -155,7 +155,7 @@ void CGameScene::CreateMainCamera()
     depthTarget->Initialize(IRenderTarget::Depth24_Stencil8);
     
     // Framebuffer
-    IFrameBufferPtr renderTextureFBO = renderer->CreateFrameBuffer(renderView->Width(), renderView->Height());
+    IFrameBufferPtr renderTextureFBO = renderer->CreateFrameBuffer(512, 512);
     renderTextureFBO->Initialize();
     renderTextureFBO->Bind();
     renderTextureFBO->AttachColor(renderTextureTarget, 0);
@@ -188,7 +188,6 @@ void CGameScene::CreateMainCamera()
     
     plane->Get<CRenderComponent>([&](CRenderComponentPtr component)
     {
-        component->AddCameraId(renderTextureCam->Id());
         component->Batchable(false);
         component->Texture(renderTextureTarget->Texture());
         component->Dirty();

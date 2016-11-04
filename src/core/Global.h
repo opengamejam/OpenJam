@@ -106,4 +106,12 @@
 
 #define MULTI_LINE_STRING(a) #a
 
+#define LOGS_ENABLED 1
+
+#if LOGS_ENABLED
+#   define JAM_LOG(...) printf(__VA_ARGS__)
+#else
+#   define JAM_LOG(...)
+#endif
+
 #endif // GLOBAL_H

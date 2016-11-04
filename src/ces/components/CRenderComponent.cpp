@@ -182,8 +182,8 @@ bool CRenderComponent::Batchable() const
 void CRenderComponent::Batchable(bool isBatchable)
 {
     m_IsBatchable = isBatchable;
-    if (!Batchable()) {
-        printf("Render Component with different material in groups cannot be batched"); // TODO: Log system
+    if (m_IsBatchable && !Batchable()) {
+        printf("Render Component with different material in groups cannot be batched\n"); // TODO: Log system
     }
 }
 

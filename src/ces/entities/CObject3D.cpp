@@ -59,6 +59,8 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, IRendererPtr rend
     if (!model3D) {
         return nullptr;
     }
+    
+    JAM_LOG("CObject3D::CreateObj - name: %s\n", filename.c_str());
 
     CRenderComponentPtr renderComponent(new CRenderComponent());
 
@@ -196,9 +198,9 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, IRendererPtr rend
 
     CObject3DPtr entity(new CObject3D());
     entity->Initialize(filename, { renderComponent,
-                                     transformComponent,
-                                     updateComponent,
-                                     batchComponent });
+                                   transformComponent,
+                                   updateComponent,
+                                   batchComponent });
     // Store links to components
     entity->m_RenderComponent = renderComponent;
     entity->m_TransformationComponent = transformComponent;

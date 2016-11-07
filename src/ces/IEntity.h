@@ -63,7 +63,7 @@ public:
     virtual void RemoveChild(IEntityPtr entity) = 0;
     virtual const TEntities& Childs() const = 0;
 
-    virtual IEntityWeak Parent() const = 0;
+    virtual IEntityPtr Parent() const = 0;
 
     virtual uint32_t HierarchyIndex() const = 0;
 };
@@ -94,12 +94,12 @@ public:
     void RemoveChild(IEntityPtr entity) override;
     const TEntities& Childs() const override;
 
-    IEntityWeak Parent() const override;
+    IEntityPtr Parent() const override;
 
     uint32_t HierarchyIndex() const override;
 
 protected:
-    void Parent(IEntityWeak parent);
+    void Parent(IEntityPtr parent);
     void HierarchyIndex(uint32_t hierarchyIndex);
 
 private:

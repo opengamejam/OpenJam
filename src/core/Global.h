@@ -106,7 +106,7 @@
 
 #define MULTI_LINE_STRING(a) #a
 
-#define LOGS_ENABLED 1
+#define LOGS_ENABLED 0
 
 #if LOGS_ENABLED
 #   define JAM_LOG(...) printf(__VA_ARGS__)

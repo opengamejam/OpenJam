@@ -120,7 +120,7 @@ void CEntityBase::AddChild(IEntityPtr entity)
         return;
     }
 
-    IEntityPtr prevParent = entity->Parent().lock();
+    IEntityPtr prevParent = entity->Parent();
     assert(prevParent != entity);
     if (prevParent == entity && prevParent != nullptr) {
         return;
@@ -151,7 +151,7 @@ void CEntityBase::RemoveChild(IEntityPtr entity)
     if (it != m_Entities.end()) {
         std::shared_ptr<CEntityBase> baseEntity = std::static_pointer_cast<CEntityBase>(*it);
 
-        baseEntity->Parent(IEntityWeak());
+        baseEntity->Parent(nullptr);
         baseEntity->HierarchyIndex(0);
         m_Entities.erase(it);
     }
@@ -169,9 +169,9 @@ const IEntity::TEntities& CEntityBase::Childs() const
     return m_Entities;
 }
 
-IEntityWeak CEntityBase::Parent() const
+IEntityPtr CEntityBase::Parent() const
 {
-    return m_Parent;
+    return m_Parent.lock();
 }
 
 uint32_t CEntityBase::HierarchyIndex() const
@@ -183,7 +183,7 @@ uint32_t CEntityBase::HierarchyIndex() const
 // Protected Methods
 // *****************************************************************************
 
-void CEntityBase::Parent(IEntityWeak parent)
+void CEntityBase::Parent(IEntityPtr parent)
 {
     m_Parent = parent;
 }

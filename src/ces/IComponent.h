@@ -48,7 +48,7 @@ public:
     void Entity(IEntityPtr entityWeak) override;
     IEntityPtr Entity() const override;
 
-    void Dirty() override;
+    virtual void Dirty() override;
 
 private:
     IEntityWeak m_Entity;

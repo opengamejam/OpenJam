@@ -19,9 +19,9 @@ class CTransformationComponent final : public CComponentBase {
     JAM_OBJECT
 public:
     enum TransformFlags {
-        World = 0x00,
-        Local = 0x01,
-        Animation = 0x02
+        Local = 0,
+        Parent,
+        Animation,
     };
 
     struct STransformProps {

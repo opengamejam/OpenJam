@@ -26,7 +26,7 @@ public:
     virtual void Update(unsigned long dt) override;
 
 private:
-    void UpdateTransformsRecursively(IEntityPtr entity, const CTransform3Df& parentTransform);
+    void UpdateTransformsRecursively(IEntityPtr entity);
 };
 
 } // namespace jam

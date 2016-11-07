@@ -119,7 +119,7 @@ void CGameScene::Update(unsigned long dt)
     {
         tv_rot_dir = 1;
     }
-    //CTransformAffector::Rotation(tv, glm::vec3(10.0f * 3.14f / 180.0f, tv_rot * 3.14 / 180.0f, 0));
+    CTransformAffector::Rotation(tv, glm::vec3(0.0f * 3.14f / 180.0f, 0, tv_rot * 3.14 / 180.0f));
 }
 
 void CGameScene::CreateMainCamera()
@@ -169,7 +169,7 @@ void CGameScene::CreateMainCamera()
     
     tv = CObject3D::CreateObj("/tv/tv.obj", renderer, m_MainCamera->Id());
     Root()->AddChild(tv);
-    CTransformAffector::Translating(tv, glm::vec3(6.0f, 3.0f, 0.0f));
+    CTransformAffector::Translating(tv, glm::vec3(2.0f, 3.0f, 0.0f));
     CTransformAffector::Rotation(tv, glm::vec3(10.0f * 3.14f / 180.0f, 0, 0));
     CTransformAffector::Scale(tv, glm::vec3(3.0f, 3.0f, 3.0f));
     

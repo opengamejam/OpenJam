@@ -10,7 +10,7 @@
         <Animation>
             <Name>BallSmall</Name>
             <Frames>
-                <Frame frameNumber="0" offsetX="-32.0" offsetY="-32.0" originalWidth="64" originalHeight="64" animDuration="0" />
+                <Frame frameNumber="0" offsetX="0" offsetY="0" originalWidth="64" originalHeight="64" animDuration="0" />
             </Frames>
         </Animation>
     </Animations>

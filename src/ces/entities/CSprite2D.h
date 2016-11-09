@@ -41,9 +41,6 @@ public:
     void Scale(const glm::vec3& scale);
     const glm::vec3& Scale();
 
-    void AnchorPoint(const glm::vec3& anchorPoint);
-    const glm::vec3& AnchorPoint();
-
 private:
     CRenderComponentPtr m_RenderComponent;
     CAnimation2DComponentPtr m_AnimationComponent;

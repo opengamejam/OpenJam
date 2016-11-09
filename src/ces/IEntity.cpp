@@ -134,7 +134,7 @@ void CEntityBase::AddChild(IEntityPtr entity)
 
     baseEntity->Parent(shared_from_this());
     baseEntity->HierarchyIndex(HierarchyIndex() + 1);
-    m_Entities.push_back(entity);
+    m_Children.push_back(entity);
 
     std::for_each(baseEntity->m_Components.begin(), baseEntity->m_Components.end(),
         [entity](const TComponentsMap::value_type& element) {
@@ -147,13 +147,13 @@ void CEntityBase::AddChild(IEntityPtr entity)
 
 void CEntityBase::RemoveChild(IEntityPtr entity)
 {
-    IEntity::TEntities::const_iterator it = std::find(m_Entities.begin(), m_Entities.end(), entity);
-    if (it != m_Entities.end()) {
+    IEntity::TEntities::const_iterator it = std::find(m_Children.begin(), m_Children.end(), entity);
+    if (it != m_Children.end()) {
         std::shared_ptr<CEntityBase> baseEntity = std::static_pointer_cast<CEntityBase>(*it);
 
         baseEntity->Parent(nullptr);
         baseEntity->HierarchyIndex(0);
-        m_Entities.erase(it);
+        m_Children.erase(it);
     }
 
     std::for_each(m_Components.begin(), m_Components.end(), [entity](const TComponentsMap::value_type& element) {
@@ -164,9 +164,9 @@ void CEntityBase::RemoveChild(IEntityPtr entity)
     });
 }
 
-const IEntity::TEntities& CEntityBase::Childs() const
+const IEntity::TEntities& CEntityBase::Children() const
 {
-    return m_Entities;
+    return m_Children;
 }
 
 IEntityPtr CEntityBase::Parent() const
@@ -191,7 +191,7 @@ void CEntityBase::Parent(IEntityPtr parent)
 void CEntityBase::HierarchyIndex(uint32_t hierarchyIndex)
 {
     m_HierarchyIndex = hierarchyIndex;
-    const TEntities& childs = Childs();
+    const TEntities& childs = Children();
     std::for_each(childs.begin(), childs.end(), [&](IEntityPtr entity) {
         std::shared_ptr<CEntityBase> baseEntity = std::static_pointer_cast<CEntityBase>(entity);
         baseEntity->HierarchyIndex(HierarchyIndex() + 1);

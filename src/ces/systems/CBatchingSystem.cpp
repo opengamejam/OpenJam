@@ -104,7 +104,7 @@ void CBatchingSystem::Update(unsigned long dt)
                 geometry = &m_Batches[batchComp->BatchId()];
             }
 
-            batchComp->Transform(transformComp ? transformComp->ResultTransform() : CTransform3Df());
+            batchComp->Transform(transformComp ? transformComp->AbsoluteTransformation() : CTransform3Df());
             ApplyTransform(geometry->mesh,
                 batchComp->OffsetVertex(),
                 batchComp->SizeVertex(),

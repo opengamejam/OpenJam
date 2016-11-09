@@ -61,7 +61,8 @@ glm::mat4x4 CCamera2D::ProjectionMatrix()
 {
     CTransform3Df resultTransform;
     Get<CTransformationComponent>([&](CTransformationComponentPtr transformComponent) {
-        resultTransform = transformComponent->ResultTransform();
+        transformComponent->UpdateAbsoluteTransform();
+        resultTransform = transformComponent->AbsoluteTransformation();
     });
 
     return m_ProjectionMatrix * resultTransform();

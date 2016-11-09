@@ -167,8 +167,8 @@ CSprite2DPtr CSprite2D::Create(const std::string& filename, IRendererPtr rendere
 
     CSprite2DPtr entity(new CSprite2D());
     entity->Initialize(filename, { renderComponent,
-                                     animationComponent,
-                                     transformComponent });
+                                   animationComponent,
+                                   transformComponent });
     // Store links to components
     entity->m_RenderComponent = renderComponent;
     entity->m_AnimationComponent = animationComponent;
@@ -234,22 +234,6 @@ const glm::vec3& CSprite2D::Scale()
     CTransformationComponentPtr component = TransformComponent();
     const CTransform3Df& transform = component->Transform(CTransformationComponent::Local);
     return transform.Scale();
-}
-
-void CSprite2D::AnchorPoint(const glm::vec3& anchorPoint)
-{
-    CTransformationComponentPtr component = TransformComponent();
-    CTransform3Df transform = component->Transform(CTransformationComponent::Animation);
-    transform.Position(anchorPoint);
-    component->AddTransform(CTransformationComponent::Animation, transform);
-    component->Dirty();
-}
-
-const glm::vec3& CSprite2D::AnchorPoint()
-{
-    CTransformationComponentPtr component = TransformComponent();
-    const CTransform3Df& transform = component->Transform(CTransformationComponent::Animation);
-    return transform.Position();
 }
 
 // *****************************************************************************

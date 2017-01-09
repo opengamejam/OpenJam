@@ -111,15 +111,16 @@ void CGameScene::Update(unsigned long dt)
     static float tv_rot = 0;
     static int tv_rot_dir = 1;
     tv_rot += (tv_rot_dir * 0.5);
-    if (tv_rot > 30)
+    if (tv_rot > 50)
     {
         tv_rot_dir = -1;
     }
-    else if (tv_rot < -30)
+    else if (tv_rot < -50)
     {
         tv_rot_dir = 1;
     }
-    CTransformAffector::Rotation(tv, glm::vec3(0.0f * 3.14f / 180.0f, 0, tv_rot * 3.14 / 180.0f));
+    CTransformAffector::Rotation(tv, glm::vec3(00.0f * 3.14f / 180.0f, tv_rot * 3.14 / 180.0f, 0));
+    CTransformAffector::Rotation(sprite, glm::vec3(0, 0, tv_rot * 3.14 / 180.0f));
 }
 
 void CGameScene::CreateMainCamera()
@@ -137,6 +138,8 @@ void CGameScene::CreateMainCamera()
 
     sprite = CSprite2D::Create("/bat_glitch/sprite.mpf", renderer, m_UICamera->Id());
     CTransformAffector::Translating(sprite, glm::vec3(100.0f, 100.0f, 0.0f));
+    CTransformAffector::Rotation(sprite, glm::vec3(0, 0, 45.0f * 3.14f / 180.0f));
+    //CTransformAffector::Scale(sprite, glm::vec3(3.0f, 3.0f, 3.0f));
 
     sprite->AddChild(ball);
     Root()->AddChild(sprite);
@@ -169,7 +172,7 @@ void CGameScene::CreateMainCamera()
     
     tv = CObject3D::CreateObj("/tv/tv.obj", renderer, m_MainCamera->Id());
     Root()->AddChild(tv);
-    CTransformAffector::Translating(tv, glm::vec3(2.0f, 3.0f, 0.0f));
+    CTransformAffector::Translating(tv, glm::vec3(7.0f, 3.0f, 0.0f));
     CTransformAffector::Rotation(tv, glm::vec3(10.0f * 3.14f / 180.0f, 0, 0));
     CTransformAffector::Scale(tv, glm::vec3(3.0f, 3.0f, 3.0f));
     
@@ -182,7 +185,7 @@ void CGameScene::CreateMainCamera()
     
     jam::CObject3DPtr plane = CObject3D::CreateObj("/plane/plane.obj", renderer, m_MainCamera->Id());
     tv->AddChild(plane);
-    CTransformAffector::Translating(plane, glm::vec3(-0.50f, 1.05f, 1.4f));
+    CTransformAffector::Translating(plane, glm::vec3(-0.12f, 0.43f, 0.36f));
     CTransformAffector::Rotation(plane, glm::vec3(0, 0, 0));
     CTransformAffector::Scale(plane, glm::vec3(0.36f, 0.27f, 1.0f));
     

@@ -55,24 +55,16 @@ void CTransfromationSystem::Update(unsigned long dt)
 
 void CTransfromationSystem::UpdateTransformsRecursively(IEntityPtr entity)
 {
-    CTransform3Df resultTransform;
-    CTransform3Df childTransform;
+    CTransform3Df absoluteTransform;
     entity->Get<CTransformationComponent>([&](CTransformationComponentPtr transformComponent) {
-        const CTransformationComponent::TTransformsList& transforms = transformComponent->Transforms();
-        std::for_each(transforms.begin(), transforms.end(),
-                      [&](const std::pair<int, CTransformationComponent::STransformProps>& element) {
-            const CTransformationComponent::STransformProps& transformProps = element.second;
-            if (transformProps.isAffectsOnChilds) {
-                childTransform += transformProps.transform;
-            }
-            resultTransform += transformProps.transform;
-        });
-        transformComponent->ResultTransform(resultTransform);
+        transformComponent->UpdateAbsoluteTransform();
+        absoluteTransform = transformComponent->AbsoluteTransformation();
         
-        const IEntity::TEntities& childs = entity->Childs();
+        const IEntity::TEntities& childs = entity->Children();
         std::for_each(childs.begin(), childs.end(), [&](IEntityPtr child) {
             child->Get<CTransformationComponent>([&](CTransformationComponentPtr childTransformComponent) {
-                childTransformComponent->AddTransform(CTransformationComponent::Parent, childTransform);
+                childTransformComponent->AddTransform(CTransformationComponent::Parent,
+                                                      transformComponent->ChildrenTransformation());
             });
             UpdateTransformsRecursively(child);
         });
@@ -82,10 +74,10 @@ void CTransfromationSystem::UpdateTransformsRecursively(IEntityPtr entity)
         IShaderProgramPtr shader = renderComponent->Shader();
         if (shader) {
             if (renderComponent->Batchable()) {
-                resultTransform = CTransform3Df();
+                absoluteTransform = CTransform3Df();
             }
             
-            shader->BindUniformMatrix4x4f("MainModelMatrix", resultTransform());
+            shader->BindUniformMatrix4x4f("MainModelMatrix", absoluteTransform());
             renderComponent->Shader(shader);
         }
     });

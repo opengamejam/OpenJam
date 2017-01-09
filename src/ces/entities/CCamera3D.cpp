@@ -31,8 +31,6 @@ CCamera3DPtr CCamera3D::Create(float _fov, float _near, float _far)
     transform.Position(glm::vec3(0.0f, 0.0f, -10.0f));
     transformComponent->AddTransform(CTransformationComponent::Local, transform);
 
-    transformComponent->ResultTransform(transform);
-
     camera->Initialize("camera3d", { transformComponent });
 
     return camera;
@@ -62,7 +60,8 @@ glm::mat4x4 CCamera3D::ProjectionMatrix()
 {
     CTransform3Df resultTransform;
     Get<CTransformationComponent>([&](CTransformationComponentPtr transformComponent) {
-        resultTransform = transformComponent->ResultTransform();
+        transformComponent->UpdateAbsoluteTransform();
+        resultTransform = transformComponent->AbsoluteTransformation();
     });
 
     return m_ProjectionMatrix * resultTransform();

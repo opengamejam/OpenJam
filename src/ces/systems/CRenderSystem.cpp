@@ -102,7 +102,7 @@ void CRenderSystem::Draw(ICameraPtr camera)
     glm::mat4 projectionMatrix = camera->ProjectionMatrix();
     glm::mat4 viewMatrix(1.0);
     camera->Get<CTransformationComponent>([&](CTransformationComponentPtr viewTransform) {
-        viewMatrix = viewTransform->ResultTransform()();
+        viewMatrix = viewTransform->AbsoluteTransformation()();
     });
 
     // Draw
@@ -126,7 +126,7 @@ void CRenderSystem::Draw(ICameraPtr camera)
             glm::mat4 modelMatrix(1.0);
             if (entity) {
                 entity->Get<CTransformationComponent>([&](CTransformationComponentPtr modelTransform) {
-                    modelMatrix = modelTransform->ResultTransform()();
+                    modelMatrix = modelTransform->AbsoluteTransformation()();
                 });
             }
 

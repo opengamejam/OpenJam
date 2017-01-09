@@ -18,22 +18,22 @@
         <Animation>
             <Name>Bat</Name>
             <Frames>
-                <Frame frameNumber="0" offsetX="-77.0f" offsetY="-25" originalWidth="154" originalHeight="50" animDuration="100" />
-                <Frame frameNumber="4" offsetX="-77.0f" offsetY="-25" originalWidth="154" originalHeight="50" animDuration="100" />
-                <Frame frameNumber="0" offsetX="-77.0f" offsetY="-25" originalWidth="154" originalHeight="50" animDuration="100" />
-                <Frame frameNumber="4" offsetX="-77.0f" offsetY="-25" originalWidth="154" originalHeight="50" animDuration="100" />
-                <Frame frameNumber="1" offsetX="-77.0f" offsetY="-25" originalWidth="154" originalHeight="50" animDuration="100" />
-                <Frame frameNumber="2" offsetX="-77.0f" offsetY="-25" originalWidth="154" originalHeight="50" animDuration="100" />
-                <Frame frameNumber="3" offsetX="-77.0f" offsetY="-25" originalWidth="154" originalHeight="50" animDuration="100" />
-                <Frame frameNumber="4" offsetX="-77.0f" offsetY="-25" originalWidth="154" originalHeight="50" animDuration="100" />
-                <Frame frameNumber="5" offsetX="-77.0f" offsetY="-25" originalWidth="154" originalHeight="50" animDuration="100" />
-                <Frame frameNumber="6" offsetX="-77.0f" offsetY="-25" originalWidth="154" originalHeight="50" animDuration="100" />
-                <Frame frameNumber="5" offsetX="-77.0f" offsetY="-25" originalWidth="154" originalHeight="50" animDuration="100" />
-                <Frame frameNumber="4" offsetX="-77.0f" offsetY="-25" originalWidth="154" originalHeight="50" animDuration="100" />
-                <Frame frameNumber="3" offsetX="-77.0f" offsetY="-25" originalWidth="154" originalHeight="50" animDuration="100" />
-                <Frame frameNumber="2" offsetX="-77.0f" offsetY="-25" originalWidth="154" originalHeight="50" animDuration="100" />
-                <Frame frameNumber="1" offsetX="-77.0f" offsetY="-25" originalWidth="154" originalHeight="50" animDuration="100" />
-                <Frame frameNumber="8" offsetX="-77.0f" offsetY="-25" originalWidth="154" originalHeight="50" animDuration="2000" />
+                <Frame frameNumber="0" offsetX="0" offsetY="0" originalWidth="154" originalHeight="50" animDuration="100" />
+                <Frame frameNumber="4" offsetX="0" offsetY="0" originalWidth="154" originalHeight="50" animDuration="100" />
+                <Frame frameNumber="0" offsetX="0" offsetY="0" originalWidth="154" originalHeight="50" animDuration="100" />
+                <Frame frameNumber="4" offsetX="0" offsetY="0" originalWidth="154" originalHeight="50" animDuration="100" />
+                <Frame frameNumber="1" offsetX="0" offsetY="0" originalWidth="154" originalHeight="50" animDuration="100" />
+                <Frame frameNumber="2" offsetX="0" offsetY="0" originalWidth="154" originalHeight="50" animDuration="100" />
+                <Frame frameNumber="3" offsetX="0" offsetY="0" originalWidth="154" originalHeight="50" animDuration="100" />
+                <Frame frameNumber="4" offsetX="0" offsetY="0" originalWidth="154" originalHeight="50" animDuration="100" />
+                <Frame frameNumber="5" offsetX="0" offsetY="0" originalWidth="154" originalHeight="50" animDuration="100" />
+                <Frame frameNumber="6" offsetX="0" offsetY="0" originalWidth="154" originalHeight="50" animDuration="100" />
+                <Frame frameNumber="5" offsetX="0" offsetY="0" originalWidth="154" originalHeight="50" animDuration="100" />
+                <Frame frameNumber="4" offsetX="0" offsetY="0" originalWidth="154" originalHeight="50" animDuration="100" />
+                <Frame frameNumber="3" offsetX="0" offsetY="0" originalWidth="154" originalHeight="50" animDuration="100" />
+                <Frame frameNumber="2" offsetX="0" offsetY="0" originalWidth="154" originalHeight="50" animDuration="100" />
+                <Frame frameNumber="1" offsetX="0" offsetY="0" originalWidth="154" originalHeight="50" animDuration="100" />
+                <Frame frameNumber="8" offsetX="0" offsetY="0" originalWidth="154" originalHeight="50" animDuration="2000" />
             </Frames>
         </Animation>
     </Animations>

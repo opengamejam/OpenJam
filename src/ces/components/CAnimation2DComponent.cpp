@@ -63,8 +63,9 @@ void CAnimation2DComponent::Sprite(ISpritePtr sprite)
             std::for_each(frames.begin(), frames.end(), [&](const CFrameDef& frameDef) {
                 SFrame frame;
                 // Object transform
-                frame.transform.Position(glm::vec3(frameDef.offsetX, frameDef.offsetY, 0.0f));
+                //frame.transform.Position(glm::vec3(frameDef.offsetX, frameDef.offsetY, 0.0f)); // TODO: to remove
                 frame.transform.Scale(glm::vec3(frameDef.originalWidth, frameDef.originalHeight, 1.0f));
+                frame.transform.AnchorPoint(glm::vec3(0.5f, 0.5f, 0.0f));
 
                 // Texture frame
                 frame.textureFrame.push_back(frameDef.textureFrame.u); // (0, 0)

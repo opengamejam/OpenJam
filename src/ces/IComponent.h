@@ -45,10 +45,10 @@ public:
     CComponentBase() = default;
     virtual ~CComponentBase() = default;
 
-    void Entity(IEntityPtr entityWeak) override;
+    void Entity(IEntityPtr entity) override;
     IEntityPtr Entity() const override;
 
-    void Dirty() override;
+    virtual void Dirty() override;
 
 private:
     IEntityWeak m_Entity;

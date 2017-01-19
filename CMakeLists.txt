@@ -133,8 +133,8 @@ elseif (${PLATFORM} STREQUAL "Linux")
 	# TODO
 elseif (${PLATFORM} STREQUAL "KOS")
 	# Compiler settings
-	set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fomit-frame-pointer -c -fmessage-length=0 -ml -m4-single-only -ffunction-sections -fdata-sections -fno-strict-aliasing -fno-builtin")
-	set (CMAKE_CXX_FLAGS "-std=c++11 -fno-rtti -fno-exceptions -Wall -c -fmessage-length=0 -fno-operator-names")
+	set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fomit-frame-pointer -fmessage-length=0 -ml -m4-single-only -ffunction-sections -fdata-sections -fno-strict-aliasing -fno-builtin")
+	set (CMAKE_CXX_FLAGS "-std=c++11 -fno-rtti -fno-exceptions -Wall -fmessage-length=0 -fno-operator-names")
 	set (CMAKE_LINK_FLAGS "-nodefaultlibs -L${KOS_BASE_DIR}/lib/dreamcast -L${KOS_BASE_DIR}/addons/lib/dreamcast -Wl,--gc-sections -Wl,-T${KOS_BASE_DIR}/utils/ldscripts/shlelf.xc -ml -m4-single-only -Wl,-Ttext=0x8c010000")
 
 	# KOS
@@ -258,7 +258,14 @@ if (${PLATFORM} STREQUAL "iOS")
 endif()
 get_sources(${TESTAPP_PROJECT} ${CMAKE_SOURCE_DIR}/examples/src)
 
-add_executable(${TESTAPP_PROJECT} MACOSX_BUNDLE ${${TESTAPP_PROJECT}_SRCS} ${${TESTAPP_PROJECT}_RES_DIR})
+if (${PLATFORM} STREQUAL "iOS" OR ${PLATFORM} STREQUAL "macOS")
+	add_executable(${TESTAPP_PROJECT} MACOSX_BUNDLE ${${TESTAPP_PROJECT}_SRCS} ${${TESTAPP_PROJECT}_RES_DIR})
+elseif (${PLATFORM} STREQUAL "Windows")
+	add_executable(${TESTAPP_PROJECT} WIN32 ${${TESTAPP_PROJECT}_SRCS} ${${TESTAPP_PROJECT}_RES_DIR})
+else()
+	add_executable(${TESTAPP_PROJECT} ${${TESTAPP_PROJECT}_SRCS} ${${TESTAPP_PROJECT}_RES_DIR})
+endif()
+
 add_dependencies(${TESTAPP_PROJECT} ${PROJECT_NAME})
 target_link_libraries(${TESTAPP_PROJECT} ${PROJECT_NAME})
 target_include_directories(${TESTAPP_PROJECT} PUBLIC ${GLM_DIR})
@@ -297,6 +304,14 @@ elseif (${PLATFORM} STREQUAL "macOS")
 	add_custom_command (TARGET ${TESTAPP_PROJECT} POST_BUILD
                 	  	COMMAND ${CMAKE_COMMAND} -E copy_directory ${${TESTAPP_PROJECT}_RES_DIR} "\${TARGET_BUILD_DIR}/\${FULL_PRODUCT_NAME}/media"
                 	  	COMMENT "Copying resource files and directories to OSX App Bundle...")
+elseif (${PLATFORM} STREQUAL "KOS")
+	set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fomit-frame-pointer -fmessage-length=0 -ml -m4-single-only -ffunction-sections -fdata-sections -fno-strict-aliasing -fno-builtin")
+	set (CMAKE_CXX_FLAGS "-std=c++11 -fno-rtti -fno-exceptions -Wall -fmessage-length=0 -fno-operator-names")
+	set (CMAKE_EXE_LINKER_FLAGS "-nodefaultlibs -L${KOS_BASE_DIR}/lib/dreamcast -L${KOS_BASE_DIR}/addons/lib/dreamcast -Wl,--gc-sections -Wl,-T${KOS_BASE_DIR}/utils/ldscripts/shlelf.xc -ml -m4-single-only -Wl,-Ttext=0x8c010000")
+
+	add_definitions (-D_arch_dreamcast)
+	add_definitions (-D_arch_sub_pristine)
+	add_definitions (-DOS_KOS)
 endif()
 
 

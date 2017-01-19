@@ -38,7 +38,7 @@ void CVertexBufferOGL1_3::Bind()
             if (stream.IsActive()) {
                 GLubyte* offset = nullptr;
 #if defined(OS_KOS)
-                offset = (GLubyte*)m_Buffer.data();
+                offset = (GLubyte*)LockRaw();
 #endif
                 offset += (ZeroStride() ? stream.absoluteOffset : stream.offset);
                 int type = ConvertDataType(stream.dataType);
@@ -59,6 +59,10 @@ void CVertexBufferOGL1_3::Bind()
                     glNormalPointer(type, elementSize, (GLvoid*)offset);
                 } else if (value.first == IVertexBuffer::Tangent) {
                 }
+
+#if defined(OS_KOS)
+                Unlock();
+#endif
             }
         });
 }

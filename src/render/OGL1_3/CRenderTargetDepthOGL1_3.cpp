@@ -30,6 +30,7 @@ CRenderTargetDepthOGL1_3::~CRenderTargetDepthOGL1_3()
 
 GLenum CRenderTargetDepthOGL1_3::ConvertToInternalFormat(InternalFormats internalFormat)
 {
+#if !defined(OS_KOS)
     switch (internalFormat) {
     case Depth16:
         return GL_DEPTH_COMPONENT16;
@@ -51,6 +52,10 @@ GLenum CRenderTargetDepthOGL1_3::ConvertToInternalFormat(InternalFormats interna
     }
 
     return GL_DEPTH_COMPONENT24;
+#else
+    assert(false);
+    return 0;
+#endif
 }
 
 CRenderTargetStencilPtr CRenderTargetDepthOGL1_3::CreateStencilObject()

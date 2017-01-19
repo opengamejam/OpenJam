@@ -60,9 +60,9 @@ void CRenderViewDreamcast::UpdateEvents() const
 
     cont_state_t* joy_state = (cont_state_t*)maple_dev_status(m_Joy);
     if (joy_state->joyx != 0 || joy_state->joyy != 0) {
-        CTouchEventPtr event = std::make_shared<CTouchEvent>(CTouchEvent(glm::vec2(joy_state->joyx, joy_state->joyy),
-            CTouchEvent::Move));
-        emit OnTouchSignal(event);
+        //CTouchEventPtr event = std::make_shared<CTouchEvent>(CTouchEvent(glm::vec2(joy_state->joyx, joy_state->joyy),
+        //    CTouchEvent::Move));
+        //emit OnTouchSignal(event);
     }
 }
 

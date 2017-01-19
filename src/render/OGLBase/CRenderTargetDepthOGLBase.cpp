@@ -53,14 +53,21 @@ void CRenderTargetDepthOGLBase::Initialize(InternalFormats internalFormat)
         }
         break;
     };
-
+#if GL_ARB_framebuffer_object
     glGenRenderbuffers(1, &m_Id);
+#else
+    m_Id = 1;
+#endif
 }
 
 void CRenderTargetDepthOGLBase::Shutdown()
 {
     assert(IsInitialized());
+#if GL_ARB_framebuffer_object
     glDeleteRenderbuffers(1, &m_Id);
+#else
+    m_Id = 0;
+#endif
 }
 
 bool CRenderTargetDepthOGLBase::IsInitialized()
@@ -70,19 +77,25 @@ bool CRenderTargetDepthOGLBase::IsInitialized()
 
 void CRenderTargetDepthOGLBase::Allocate(uint64_t width, uint64_t height)
 {
+#if GL_ARB_framebuffer_object
     glRenderbufferStorage(GL_RENDERBUFFER, ConvertToInternalFormat(m_InternalFormat),
         static_cast<GLsizei>(width), static_cast<GLsizei>(height));
+#endif
 }
 
 void CRenderTargetDepthOGLBase::Bind() const
 {
+#if GL_ARB_framebuffer_object
     glBindRenderbuffer(GL_RENDERBUFFER, m_Id);
+#endif
     JAM_LOG("CRenderTargetDepthOGLBase::Bind() - id: %d\n", m_Id);
 }
 
 void CRenderTargetDepthOGLBase::Unbind() const
 {
+#if GL_ARB_framebuffer_object
     glBindRenderbuffer(GL_RENDERBUFFER, 0);
+#endif
     JAM_LOG("CRenderTargetDepthOGLBase::Unbind() - id: %d\n", m_Id);
 }
 
@@ -93,19 +106,23 @@ CRenderTargetStencilPtr CRenderTargetDepthOGLBase::StencilTarget()
 
 void CRenderTargetDepthOGLBase::BindToFrameBuffer()
 {
+#if GL_ARB_framebuffer_object
     glFramebufferRenderbuffer(GL_FRAMEBUFFER,
         GL_DEPTH_ATTACHMENT,
         GL_RENDERBUFFER,
         m_Id);
+#endif
     JAM_LOG("CRenderTargetDepthOGLBase::BindToFrameBuffer() - id: %d\n", m_Id);
 }
 
 void CRenderTargetDepthOGLBase::UnbindFromFrameBuffer()
 {
+#if GL_ARB_framebuffer_object
     glFramebufferRenderbuffer(GL_FRAMEBUFFER,
         GL_DEPTH_ATTACHMENT,
         GL_RENDERBUFFER,
         0);
+#endif
     JAM_LOG("CRenderTargetDepthOGLBase::UnbindFromFrameBuffer() - id: %d\n", m_Id);
 }
 

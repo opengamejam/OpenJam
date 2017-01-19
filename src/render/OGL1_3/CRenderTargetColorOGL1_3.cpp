@@ -29,6 +29,7 @@ CRenderTargetColorOGL1_3::~CRenderTargetColorOGL1_3()
 
 GLenum CRenderTargetColorOGL1_3::ConvertInternalFormat(InternalFormats internalFormat)
 {
+#if !defined(OS_KOS)
     switch (internalFormat) {
     case ColorR8:
         return GL_R8I;
@@ -72,6 +73,10 @@ GLenum CRenderTargetColorOGL1_3::ConvertInternalFormat(InternalFormats internalF
     }
 
     return GL_RGB8;
+#else
+    assert(false);
+    return 0;
+#endif
 }
 
 // *****************************************************************************

@@ -248,6 +248,8 @@ void CMaterialOGLBase::ApplyState(IMaterial::MaterialState state, IMaterial::Mat
             glDisable(GL_STENCIL_TEST);
         }
     }
+
+#if !defined(OS_KOS)
     if (state.stencilTest.func != prevState.stencilTest.func || state.stencilTest.ref != prevState.stencilTest.ref || state.stencilTest.mask != prevState.stencilTest.mask) {
         glStencilFunc(ConvertTestFunc(state.stencilTest.func), state.stencilTest.ref, state.stencilTest.mask);
     }
@@ -256,6 +258,7 @@ void CMaterialOGLBase::ApplyState(IMaterial::MaterialState state, IMaterial::Mat
             ConvertOperation(state.stencilTest.zFailOp),
             ConvertOperation(state.stencilTest.zPassOp));
     }
+#endif
 
     if (state.opacity != prevState.opacity) {
         if (state.opacity) {

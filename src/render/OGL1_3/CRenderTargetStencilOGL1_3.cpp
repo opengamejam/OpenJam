@@ -29,6 +29,7 @@ CRenderTargetStencilOGL1_3::~CRenderTargetStencilOGL1_3()
 
 GLenum CRenderTargetStencilOGL1_3::ConvertToInternalFormat(InternalFormats internalFormat)
 {
+#if !defined(OS_KOS)
     switch (internalFormat) {
     case Stencil8:
         return GL_STENCIL_INDEX8;
@@ -41,6 +42,10 @@ GLenum CRenderTargetStencilOGL1_3::ConvertToInternalFormat(InternalFormats inter
     }
 
     return GL_STENCIL_INDEX8;
+#else
+    assert(false);
+    return 0;
+#endif
 }
 
 // *****************************************************************************

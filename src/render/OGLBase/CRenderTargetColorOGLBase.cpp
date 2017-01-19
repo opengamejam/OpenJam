@@ -36,8 +36,11 @@ void CRenderTargetColorOGLBase::Initialize(InternalFormats internalFormat)
     if (IsInitialized()) {
         return;
     }
-
+#if GL_ARB_framebuffer_object
     glGenRenderbuffers(1, &m_Id);
+#else
+    m_Id = 1;
+#endif
     m_InternalFormat = internalFormat;
 }
 
@@ -47,7 +50,11 @@ void CRenderTargetColorOGLBase::Shutdown()
         return;
     }
 
+#if GL_ARB_framebuffer_object
     glDeleteRenderbuffers(1, &m_Id);
+#else
+    m_Id = 0;
+#endif
 }
 
 bool CRenderTargetColorOGLBase::IsInitialized()
@@ -57,37 +64,47 @@ bool CRenderTargetColorOGLBase::IsInitialized()
 
 void CRenderTargetColorOGLBase::Allocate(uint64_t width, uint64_t height)
 {
+#if GL_ARB_framebuffer_object
     glRenderbufferStorage(GL_RENDERBUFFER, ConvertInternalFormat(m_InternalFormat),
         static_cast<GLsizei>(width), static_cast<GLsizei>(height));
+#endif
 }
 
 void CRenderTargetColorOGLBase::Bind() const
 {
+#if GL_ARB_framebuffer_object
     glBindRenderbuffer(GL_RENDERBUFFER, m_Id);
     JAM_LOG("CRenderTargetColorOGLBase::Bind() - id: %d\n", m_Id);
+#endif
 }
 
 void CRenderTargetColorOGLBase::Unbind() const
 {
+#if GL_ARB_framebuffer_object
     glBindRenderbuffer(GL_RENDERBUFFER, 0);
+#endif
     JAM_LOG("CRenderTargetColorOGLBase::Unbind() - id: %d\n", m_Id);
 }
 
 void CRenderTargetColorOGLBase::BindToFrameBuffer(uint64_t colorAttachementIdx)
 {
+#if GL_ARB_framebuffer_object
     glFramebufferRenderbuffer(GL_FRAMEBUFFER,
         GL_COLOR_ATTACHMENT0 + colorAttachementIdx,
         GL_RENDERBUFFER,
         m_Id);
+#endif
     JAM_LOG("CRenderTargetColorOGLBase::BindToFrameBuffer() - id: %d\n", m_Id);
 }
 
 void CRenderTargetColorOGLBase::UnbindFromFrameBuffer(uint64_t colorAttachementIdx)
 {
+#if GL_ARB_framebuffer_object
     glFramebufferRenderbuffer(GL_FRAMEBUFFER,
         GL_COLOR_ATTACHMENT0 + colorAttachementIdx,
         GL_RENDERBUFFER,
         0);
+#endif
     JAM_LOG("CRenderTargetColorOGLBase::UnbindFromFrameBuffer() - id: %d\n", m_Id);
 }
 

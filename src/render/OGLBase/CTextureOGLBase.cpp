@@ -38,7 +38,9 @@ CTextureOGLBase::~CTextureOGLBase()
 
 void CTextureOGLBase::Bind()
 {
+#if !defined(OS_KOS)
     glActiveTexture(GL_TEXTURE0);
+#endif
     glBindTexture(GL_TEXTURE_2D, m_Id); // TODO: texture type
     JAM_LOG("CTextureOGLBase::Bind() - id: %d\n", m_Id); // TODO: Log system
 }
@@ -48,8 +50,9 @@ void CTextureOGLBase::Unbind()
     if (!IsValid()) {
         return;
     }
-
+#if !defined(OS_KOS)
     glActiveTexture(GL_TEXTURE0);
+#endif
     glBindTexture(GL_TEXTURE_2D, 0); // TODO: texture type
     //glDisable(GL_TEXTURE_2D);
     JAM_LOG("CTextureOGLBase::Unbind() - id: %d\n", m_Id);  // TODO: Log system
@@ -64,15 +67,15 @@ void CTextureOGLBase::Filter(ITexture::TextureFilters filter)
     m_Filter = filter;
     m_IsDirty = true;
 
-    GLfloat parameter = TextureFilterToGlFilter(filter);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, parameter);
+    GLint parameter = TextureFilterToGlFilter(filter);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, parameter);
     if (filter == ITexture::TextureFilters::Linear) {
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     } else {
-        glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, parameter);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, parameter);
     }
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-    glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+    glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 
     //assert(glGetError() == GL_NO_ERROR);
 }

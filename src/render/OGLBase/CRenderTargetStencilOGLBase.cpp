@@ -39,7 +39,11 @@ void CRenderTargetStencilOGLBase::Initialize(InternalFormats internalFormat)
 
     m_InternalFormat = internalFormat;
     if ((internalFormat & Stencil8) == Stencil8) {
+#if GL_ARB_framebuffer_object
         glGenRenderbuffers(1, &m_Id);
+#else
+        m_Id = 1;
+#endif
     }
 }
 
@@ -49,7 +53,11 @@ void CRenderTargetStencilOGLBase::Shutdown()
         return;
     }
 
+#if GL_ARB_framebuffer_object
     glDeleteRenderbuffers(1, &m_Id);
+#else
+    m_Id = 0;
+#endif
 }
 
 bool CRenderTargetStencilOGLBase::IsInitialized()
@@ -63,24 +71,31 @@ void CRenderTargetStencilOGLBase::Allocate(uint64_t width, uint64_t height)
         return;
     }
 
+#if GL_ARB_framebuffer_object
     glRenderbufferStorage(GL_RENDERBUFFER, ConvertToInternalFormat(m_InternalFormat),
         static_cast<GLsizei>(width), static_cast<GLsizei>(height));
+#endif
 }
 
 void CRenderTargetStencilOGLBase::Bind() const
 {
+#if GL_ARB_framebuffer_object
     glBindRenderbuffer(GL_RENDERBUFFER, m_Id);
+#endif
     JAM_LOG("CRenderTargetStencilOGLBase::Bind() - id: %d\n", m_Id);
 }
 
 void CRenderTargetStencilOGLBase::Unbind() const
 {
+#if GL_ARB_framebuffer_object
     glBindRenderbuffer(GL_RENDERBUFFER, 0);
+#endif
     JAM_LOG("CRenderTargetStencilOGLBase::Unbind() - id: %d\n", m_Id);
 }
 
 void CRenderTargetStencilOGLBase::BindToFrameBuffer()
 {
+#if GL_ARB_framebuffer_object
     GLenum attachement = GL_STENCIL_ATTACHMENT;
     if (m_InternalFormat == Depth24_Stencil8) {
         attachement = GL_DEPTH_ATTACHMENT;
@@ -90,11 +105,13 @@ void CRenderTargetStencilOGLBase::BindToFrameBuffer()
         attachement,
         GL_RENDERBUFFER,
         m_Id);
+#endif
     JAM_LOG("CRenderTargetStencilOGLBase::BindToFrameBuffer() - id: %d\n", m_Id);
 }
 
 void CRenderTargetStencilOGLBase::UnbindFromFrameBuffer()
 {
+#if GL_ARB_framebuffer_object
     GLenum attachement = GL_STENCIL_ATTACHMENT;
     if (m_InternalFormat == Depth24_Stencil8) {
         attachement = GL_DEPTH_ATTACHMENT;
@@ -104,13 +121,16 @@ void CRenderTargetStencilOGLBase::UnbindFromFrameBuffer()
         attachement,
         GL_RENDERBUFFER,
         0);
+#endif
     JAM_LOG("CRenderTargetStencilOGLBase::UnbindFromFrameBuffer() - id: %d\n", m_Id);
 }
 
 void CRenderTargetStencilOGLBase::InitializeWithDepthId(uint32_t depthId)
 {
+#if GL_ARB_framebuffer_object
     m_InternalFormat = Depth24_Stencil8;
     m_Id = depthId;
+#endif
 }
 
 // *****************************************************************************

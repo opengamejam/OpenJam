@@ -49,7 +49,7 @@ void CFrameBufferOGLBase::Initialize()
     if (IsInitialized()) {
         return;
     }
-    glGenFramebuffers(1, &m_Id);
+    glGenFramebuffers(1, (GLuint *)&m_Id);
     JAM_LOG("CFrameBufferOGLBase::Initialize() - id: %d\n", m_Id);
 }
 
@@ -58,7 +58,7 @@ void CFrameBufferOGLBase::Shutdown()
     if (!IsInitialized()) {
         return;
     }
-    glDeleteFramebuffers(1, &m_Id);
+    glDeleteFramebuffers(1, (GLuint *)&m_Id);
     JAM_LOG("CFrameBufferOGLBase::Shutdown() - id: %d\n", m_Id);
     m_Id = -1;
 }

@@ -39,6 +39,7 @@ CShaderOGLBase::~CShaderOGLBase()
 
 GLenum CShaderOGLBase::ShaderTypeToGlType(IShader::ShaderType type)
 {
+#if !defined(OS_KOS)
     switch (type) {
     case IShader::Vertex:
         return GL_VERTEX_SHADER;
@@ -54,6 +55,10 @@ GLenum CShaderOGLBase::ShaderTypeToGlType(IShader::ShaderType type)
     }
 
     return GL_VERTEX_SHADER;
+#else
+    assert(0);
+    return 0;
+#endif
 }
 
 #endif /* defined(RENDER_OGL1_3) || defined(RENDER_OGLES1_0) || \

@@ -5,17 +5,13 @@
 
 #include "CSystem.h"
 
-#if !defined(OS_IPHONE) && !defined(OS_MAC)
+#if defined(OS_IPHONE) || defined(OS_MAC)
 
 unsigned long CSystem::GetTickCount()
 {
-#if defined(OS_LINUX) || defined(OS_ANDROID) || defined(OS_KOS)
     struct timeval t;
     gettimeofday(&t, 0);
     return ((t.tv_sec * 1000) + (t.tv_usec / 1000));
-#elif defined(OS_WINDOWS)
-    return (unsigned long)::GetTickCount();
-#endif
 
     return 0;
 }
@@ -23,8 +19,14 @@ unsigned long CSystem::GetTickCount()
 const std::string& CSystem::GetBundlePath()
 {
     if (g_bundlePath.empty()) {
-#if defined(OS_KOS)
-        g_bundlePath = "/rd/";
+#if defined(__OBJC__) && defined(OS_IPHONE)
+        NSString* path = [[NSBundle mainBundle] resourcePath];
+
+        g_bundlePath = std::string([path UTF8String]) + std::string("/"); // + std::string("/../Documents/");
+#elif defined(__OBJC__) && defined(OS_MAC)
+        NSString* path = [[NSBundle mainBundle] bundlePath];
+
+        g_bundlePath = std::string([path UTF8String]) + std::string("/");
 #endif
     }
 
@@ -42,4 +44,4 @@ bool CSystem::IsFileExists(const std::string& name)
     //return _access( name.c_str(), 0 ) != -1;
 }
 
-#endif // #if !defined(OS_IPHONE) && !defined(OS_MAC)
+#endif // #if defined(OS_IPHONE) || defined(OS_MAC)

@@ -196,8 +196,8 @@ void CGame::InitializeFileSystems()
     mem_fs->Initialize();
 
     CVirtualFileSystemPtr vfs = vfs_get_global();
-    vfs->AddFileSystem("/", root_fs);
-    //vfs->AddFileSystem("/", zip_fs);
+    //vfs->AddFileSystem("/", root_fs);
+    vfs->AddFileSystem("/", zip_fs);
     vfs->AddFileSystem("/memory/", mem_fs);
 }
 

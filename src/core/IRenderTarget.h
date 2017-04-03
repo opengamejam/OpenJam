@@ -11,6 +11,14 @@
 
 #include "Global.h"
 
+#if defined(RENDER_OGLES1_0) || \
+    defined(RENDER_OGLES1_1) || \
+    defined(RENDER_OGLES2_0)
+#   ifndef GL_ARB_framebuffer_object
+#       define GL_ARB_framebuffer_object 1
+#   endif
+#endif
+
 namespace jam {
 CLASS_PTR(ITexture)
 CLASS_PTR(IRenderTargetColor)

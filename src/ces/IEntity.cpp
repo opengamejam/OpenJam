@@ -7,7 +7,9 @@
 //
 
 #include "IEntity.h"
-#include "IComponent.h"
+#include "CRenderComponent.h"
+#include "CTransformationComponent.h"
+
 
 using namespace jam;
 
@@ -61,6 +63,13 @@ void CEntityBase::AddComponent(IComponentPtr component)
 
         components.push_back(component);
         component->Entity(entity);
+        
+        if (component->GetId() == CTypeId<CTransformationComponent>::Id()) {
+            m_TransformationComponent = std::static_pointer_cast<CTransformationComponent>(component);
+        }
+        if (component->GetId() == CTypeId<CRenderComponent>::Id()) {
+            m_RenderComponent = std::static_pointer_cast<CRenderComponent>(component);
+        }
 
         emit component->OnAddedSignal(entity);
     }
@@ -90,6 +99,13 @@ void CEntityBase::RemoveComponent(IComponentPtr component)
 
         component->Entity(nullptr);
         components.erase(it);
+        
+        if (component->GetId() == CTypeId<CTransformationComponent>::Id()) {
+            m_TransformationComponent = nullptr;
+        }
+        if (component->GetId() == CTypeId<CRenderComponent>::Id()) {
+            m_RenderComponent = nullptr;
+        }
     }
 }
 
@@ -179,6 +195,108 @@ uint32_t CEntityBase::HierarchyIndex() const
     return m_HierarchyIndex;
 }
 
+CRenderComponentPtr CEntityBase::RenderComponent() const
+{
+    return m_RenderComponent;
+}
+
+CTransformationComponentPtr CEntityBase::TransformationComponent() const
+{
+    return m_TransformationComponent;
+}
+
+void CEntityBase::Position(const glm::vec3& position)
+{
+    CTransformationComponentPtr component = TransformationComponent();
+    if (component) {
+        CTransform3Df transform = component->Transform(CTransformationComponent::Local);
+        transform.Position(position);
+        component->AddTransform(CTransformationComponent::Local, transform);
+        component->Dirty();
+    }
+}
+
+const glm::vec3& CEntityBase::Position()
+{
+    CTransformationComponentPtr component = TransformationComponent();
+    if (component) {
+        const CTransform3Df& transform = component->Transform(CTransformationComponent::Local);
+        return transform.Position();
+    }
+    static glm::vec3 emptyValue;
+    emptyValue = glm::vec3();
+    return emptyValue;
+}
+
+void CEntityBase::Rotation(const glm::vec3& rotation)
+{
+    CTransformationComponentPtr component = TransformationComponent();
+    if (component) {
+        CTransform3Df transform = component->Transform(CTransformationComponent::Local);
+        transform.Rotation(rotation);
+        component->AddTransform(CTransformationComponent::Local, transform);
+        component->Dirty();
+    }
+}
+
+const glm::vec3& CEntityBase::Rotation()
+{
+    CTransformationComponentPtr component = TransformationComponent();
+    if (component) {
+        const CTransform3Df& transform = component->Transform(CTransformationComponent::Local);
+        return transform.Rotation();
+    }
+    static glm::vec3 emptyValue;
+    emptyValue = glm::vec3();
+    return emptyValue;
+}
+
+void CEntityBase::Scale(const glm::vec3& scale)
+{
+    CTransformationComponentPtr component = TransformationComponent();
+    if (component) {
+        CTransform3Df transform = component->Transform(CTransformationComponent::Local);
+        transform.Scale(scale);
+        component->AddTransform(CTransformationComponent::Local, transform);
+        component->Dirty();
+    }
+}
+
+const glm::vec3& CEntityBase::Scale()
+{
+    CTransformationComponentPtr component = TransformationComponent();
+    if (component) {
+        const CTransform3Df& transform = component->Transform(CTransformationComponent::Local);
+        return transform.Scale();
+    }
+    static glm::vec3 emptyValue;
+    emptyValue = glm::vec3();
+    return emptyValue;
+}
+
+void CEntityBase::AnchorPoint(const glm::vec3& anchorPoint)
+{
+    CTransformationComponentPtr component = TransformationComponent();
+    if (component) {
+        CTransform3Df transform = component->Transform(CTransformationComponent::Animation);
+        transform.Position(anchorPoint);
+        component->AddTransform(CTransformationComponent::Animation, transform);
+        component->Dirty();
+    }
+}
+
+const glm::vec3& CEntityBase::AnchorPoint()
+{
+    CTransformationComponentPtr component = TransformationComponent();
+    if (component) {
+        const CTransform3Df& transform = component->Transform(CTransformationComponent::Animation);
+        return transform.Position();
+    }
+    static glm::vec3 emptyValue;
+    emptyValue = glm::vec3();
+    return emptyValue;
+}
+
 // *****************************************************************************
 // Protected Methods
 // *****************************************************************************
@@ -188,7 +306,7 @@ void CEntityBase::Parent(IEntityPtr parent)
     m_Parent = parent;
 }
 
-void CEntityBase::HierarchyIndex(uint32_t hierarchyIndex)
+void CEntityBase::HierarchyIndex(uint32_t hierarchyIndex) // TODO: Optimization
 {
     m_HierarchyIndex = hierarchyIndex;
     const TEntities& childs = Children();

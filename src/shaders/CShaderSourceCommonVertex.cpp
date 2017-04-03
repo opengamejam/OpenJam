@@ -17,8 +17,7 @@ const std::string CShaderSourceCommon::s_GeomentryShader;
 const std::string CShaderSourceCommon::s_VertexShader = MULTI_LINE_STRING(
 \n #ifdef OGL2_0\n
 
-        uniform mediump vec3 LightDir;
-
+    uniform mediump vec3 LightDir;
     varying mediump vec3 VaryingLightDir;
 
     void main(void) {

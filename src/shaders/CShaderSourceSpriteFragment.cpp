@@ -16,6 +16,8 @@ using namespace jam;
 const std::string CShaderSourceSprite::s_FragmentShader = MULTI_LINE_STRING(
 \n #ifdef OGL2_0\n
 
+    varying mediump vec3 VaryingLightDir;
+                                                                            
     void main() {
         vec4 color = texture2D(MainTexture0, VaryingTextureCoord);
         gl_FragColor = color;

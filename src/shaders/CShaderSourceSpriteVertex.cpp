@@ -16,11 +16,13 @@ using namespace jam;
 const std::string CShaderSourceSprite::s_GeomentryShader;
 const std::string CShaderSourceSprite::s_VertexShader = MULTI_LINE_STRING(
 \n #ifdef OGL2_0\n
-
+                                                                          
     void main(void) {
-        mat4 MVP = MainProjectionMatrix * MainModelMatrix;
-        gl_Position = MVP * MainVertexPosition;
-
+        mat4 MVMatrix = MainViewMatrix * MainModelMatrix;
+        mat4 MVPMatrix = MainProjectionMatrix * MainModelMatrix;
+        gl_Position = MVPMatrix * MainVertexPosition;
+        
+        VaryingNormal = vec3(MainNormalMatrix * vec4(MainVertexNormal, 0.0));
         VaryingTextureCoord = MainVertexUV;
         VaryingMainColor = MainVertexColor;
     }

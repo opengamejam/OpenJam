@@ -50,7 +50,7 @@ private:
 private:
     IRendererPtr m_Renderer;
 
-    std::set<IFrameBufferPtr> m_ProccededRenderTargets;
+    std::set<IFrameBufferPtr> m_ProccededFrameBuffers;
     std::set<uint64_t> m_ProccededBatches;
 
     std::list<CRenderComponentPtr> m_SortedComponents;

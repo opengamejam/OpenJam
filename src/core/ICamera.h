@@ -19,19 +19,29 @@ public:
     ICamera() = default;
     virtual ~ICamera() = default;
 
-    static uint32_t NextCameraId()
-    {
-        static uint32_t nextId;
-        return nextId++;
-    }
-
-    virtual uint32_t Id() const = 0;
-
+    /*
+     * Returns Projection View matrix
+     */
     virtual glm::mat4x4 ProjectionMatrix() = 0;
-    virtual IFrameBufferPtr RenderTarget() const = 0;
-    virtual void RenderTarget(IFrameBufferPtr renderTarget) = 0;
+    
+    /*
+     * Return attached framebuffer
+     */
+    virtual IFrameBufferPtr FrameBuffer() const = 0;
+    
+    /*
+     * Assign new framebuffer. Projection matrix will be recalculated to current framebuffer width and height
+     */
+    virtual void FrameBuffer(IFrameBufferPtr frameBuffer) = 0;
 
+    /*
+     * Flip camera vertically
+     */
     virtual void FlipY() = 0;
+    
+    /*
+     * Flip camera horizontally
+     */
     virtual void FlipX() = 0;
 };
 

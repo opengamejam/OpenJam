@@ -18,7 +18,6 @@
 #include "CTransformationComponent.h"
 #include "CResourceCache.hpp"
 #include "CTextureCache.h"
-#include "CTransformAffector.h"
 #include "CUpdateComponent.h"
 #include "CBatchComponent.h"
 
@@ -34,7 +33,7 @@ CLASS_PTR(IModel3D)
 // Public Methods
 // *****************************************************************************
 
-CObject3DPtr CObject3D::CreateObj(const std::string& filename, IRendererPtr renderer, uint32_t cameraId)
+CObject3DPtr CObject3D::CreateObj(const std::string& filename, IRendererPtr renderer)
 {
     assert(renderer);
 
@@ -57,6 +56,7 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, IRendererPtr rend
         });
 
     if (!model3D) {
+        assert("No model data" && false);
         return nullptr;
     }
     
@@ -186,9 +186,6 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, IRendererPtr rend
         renderComponent->Material(material, group);
         renderComponent->Mesh(mesh, group);
         renderComponent->Texture(texture, group);
-        if (cameraId != std::numeric_limits<uint32_t>::max()) {
-            renderComponent->AddCameraId(cameraId);
-        }
     });
 
     // Transform component
@@ -197,13 +194,11 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, IRendererPtr rend
     CBatchComponentPtr batchComponent(new CBatchComponent());
 
     CObject3DPtr entity(new CObject3D());
+    assert(entity);
     entity->Initialize(filename, { renderComponent,
                                    transformComponent,
                                    updateComponent,
                                    batchComponent });
-    // Store links to components
-    entity->m_RenderComponent = renderComponent;
-    entity->m_TransformationComponent = transformComponent;
 
     updateComponent->SetUpdateFunc(std::bind(&CObject3D::Update, entity.get(), std::placeholders::_1));
     updateComponent->Dirty();
@@ -217,68 +212,6 @@ CObject3D::CObject3D()
 
 CObject3D::~CObject3D()
 {
-}
-
-CRenderComponentPtr CObject3D::RenderComponent() const
-{
-    return m_RenderComponent;
-}
-
-CTransformationComponentPtr CObject3D::TransformComponent() const
-{
-    return m_TransformationComponent;
-}
-
-void CObject3D::Position(const glm::vec3& position)
-{
-    CTransformAffector::Position(TransformComponent(), position);
-}
-
-const glm::vec3& CObject3D::Position()
-{
-    CTransformationComponentPtr component = TransformComponent();
-    const CTransform3Df& transform = component->Transform(CTransformationComponent::Local);
-    return transform.Position();
-}
-
-void CObject3D::Rotation(const glm::vec3& rotation)
-{
-    CTransformAffector::Rotation(TransformComponent(), rotation);
-}
-
-const glm::vec3& CObject3D::Rotation()
-{
-    CTransformationComponentPtr component = TransformComponent();
-    const CTransform3Df& transform = component->Transform(CTransformationComponent::Local);
-    return transform.Rotation();
-}
-
-void CObject3D::Scale(const glm::vec3& scale)
-{
-    CTransformAffector::Scale(TransformComponent(), scale);
-}
-
-const glm::vec3& CObject3D::Scale()
-{
-    CTransformationComponentPtr component = TransformComponent();
-    const CTransform3Df& transform = component->Transform(CTransformationComponent::Local);
-    return transform.Scale();
-}
-
-void CObject3D::AnchorPoint(const glm::vec3& anchorPoint)
-{
-    CTransformationComponentPtr component = TransformComponent();
-    CTransform3Df transform = component->Transform(CTransformationComponent::Animation);
-    transform.Position(anchorPoint);
-    component->AddTransform(CTransformationComponent::Animation, transform);
-    component->Dirty();
-}
-
-const glm::vec3& CObject3D::AnchorPoint()
-{
-    CTransformationComponentPtr component = TransformComponent();
-    const CTransform3Df& transform = component->Transform(CTransformationComponent::Animation);
-    return transform.Position();
 }
 
 void CObject3D::Update(unsigned long dt)

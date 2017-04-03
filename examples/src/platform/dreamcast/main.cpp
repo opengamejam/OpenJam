@@ -6,11 +6,13 @@
  */
 #if defined(OS_KOS)
 
-#include "CRenderViewDreamcast.h"
+#include <kos.h>
+/*#include "CRenderViewDreamcast.h"
 #include "CGameScene.h"
 #include "CGame.h"
 #include "CSystem.h"
 #include "CTouchEvent.h"
+#include <unistd.h>
 
 using namespace jam;
 
@@ -20,14 +22,16 @@ CLASS_PTR(CTouchEvent)
 
 IRenderViewPtr m_RenderView;
 CGamePtr m_Game;
-IScenePtr m_MainScene;
+IScenePtr m_MainScene;*/
 
-extern uint8 romdisk[];
-KOS_INIT_ROMDISK(romdisk);
+//extern uint8 romdisk[];
+//KOS_INIT_ROMDISK(romdisk);
 
 int main()
 {
-    m_RenderView.reset(new CRenderViewDreamcast());
+    //printf("TestApp started\n");
+
+    /*m_RenderView.reset(new CRenderViewDreamcast());
     m_Game.reset(new CGame(m_RenderView));
     m_Game->Initialize();
 
@@ -42,7 +46,7 @@ int main()
 
         m_Game->Update(dt);
         m_Game->Draw();
-    }
+    }*/
 
     return 0;
 }

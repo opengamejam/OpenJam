@@ -124,30 +124,6 @@ bool CRenderComponent::HasGroup(const std::string& group) const
     return m_Groups.find(group) != m_Groups.end();
 }
 
-void CRenderComponent::AddCameraId(uint32_t cameraId)
-{
-    m_CameraIds.insert(cameraId);
-}
-
-void CRenderComponent::RemoveCameraId(uint32_t cameraId)
-{
-    m_CameraIds.erase(cameraId);
-}
-
-bool CRenderComponent::HasCameraId(uint32_t cameraId)
-{
-    if (m_CameraIds.empty()) {
-        return true;
-    }
-
-    return (m_CameraIds.find(cameraId) != m_CameraIds.end());
-}
-
-const std::set<uint32_t>& CRenderComponent::CameraIds() const
-{
-    return m_CameraIds;
-}
-
 template <class T>
 bool IsAllValuesIsEqual(const std::unordered_map<std::string, T>& map)
 {

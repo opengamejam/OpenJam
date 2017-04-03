@@ -48,11 +48,6 @@ public:
     void RemoveGroup(const std::string& group);
     bool HasGroup(const std::string& group) const;
 
-    void AddCameraId(uint32_t cameraId);
-    void RemoveCameraId(uint32_t cameraId);
-    bool HasCameraId(uint32_t cameraId);
-    const std::set<uint32_t>& CameraIds() const;
-
     bool Batchable() const;
     void Batchable(bool isBatchable);
 
@@ -68,7 +63,6 @@ private:
     std::set<std::string> m_Groups;
     std::unordered_map<std::string, bool> m_GroupsVisibility;
     bool m_IsBatchable;
-    std::set<uint32_t> m_CameraIds;
     uint32_t m_DrawOrder;
 };
 

@@ -65,8 +65,8 @@ else()
   	set(LIB_SUFFIX ".a")
 endif()
 
-macro (link_library TARGET_NAME LIB_NAME)
-	target_link_libraries(${TARGET_NAME} ${CMAKE_INSTALL_PREFIX}/${LIB_NAME}/lib/${LIB_PREFIX}${LIB_NAME}${LIB_SUFFIX})
+macro (link_library TARGET_NAME LIB_NAME DIR)
+	target_link_libraries(${TARGET_NAME} ${CMAKE_INSTALL_PREFIX}${DIR}${LIB_NAME}/lib/${LIB_PREFIX}${LIB_NAME}${LIB_SUFFIX})
 endmacro()
 
 set(OPENJAM_LIB_DIR ${CMAKE_SOURCE_DIR}/libs)
@@ -80,38 +80,15 @@ get_sources(${PROJECT_NAME} ${CMAKE_SOURCE_DIR}/src)
 add_library(${PROJECT_NAME} ${${PROJECT_NAME}_SRCS})
 target_include_directories(${PROJECT_NAME} PUBLIC ${INSTALL_INC_DIR})
 
-set (CMAKE_CXX_FLAGS "-std=c++11 -stdlib=libc++ -fno-rtti -fno-exceptions -Wall")
-if (${PLATFORM} STREQUAL "iOS")
-	# SDK
-	set(CMAKE_OSX_SYSROOT "iphoneos")
-	# Architecture
-	set (CMAKE_XCODE_EFFECTIVE_PLATFORMS "-iphoneos;-iphonesimulator")
-	# Compiler settings
-	set (CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD 	"c++11")
-	set (CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY 			"libc++")
-	set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -x objective-c")
-	set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -x objective-c++")
-	# IOS compiler cannot pass cmake compiler checking
-	set (CMAKE_C_COMPILER_WORKS 1)
-	set (CMAKE_CXX_COMPILER_WORKS 1)
-
-	set_property (TARGET ${PROJECT_NAME} PROPERTY XCODE_ATTRIBUTE_IPHONEOS_DEPLOYMENT_TARGET 	"7.0")
-	set_property (TARGET ${PROJECT_NAME} PROPERTY XCODE_ATTRIBUTE_TARGETED_DEVICE_FAMILY 		"1,2")
-
-	add_definitions (-DOS_IPHONE)
-	add_definitions (-DRENDER_OGLES1_1)
-	add_definitions (-DRENDER_OGLES2_0)
-	add_definitions (-DGL_DO_NOT_WARN_IF_MULTI_GL_VERSION_HEADERS_INCLUDED)
-
-elseif (${PLATFORM} STREQUAL "macOS")
+if (${PLATFORM} STREQUAL "macOS")
 	# SDK
 	set(XCODE_ATTRIBUTE_SDKROOT macosx)
 	set(CMAKE_OSX_SYSROOT macosx)
 	# Architecture		
 	set (CMAKE_OSX_ARCHITECTURES "$(ARCHS_STANDARD)")
 	# Compiler settings
-	set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -x objective-c")
-	set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -x objective-c++")
+	set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -stdlib=libc++ -x objective-c")
+	set (CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -stdlib=libc++ -x objective-c++")
 	set (CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LANGUAGE_STANDARD 	"c++11")
 	set (CMAKE_XCODE_ATTRIBUTE_CLANG_CXX_LIBRARY 			"libc++")
 
@@ -132,24 +109,7 @@ elseif (${PLATFORM} STREQUAL "Linux")
 
 	# TODO
 elseif (${PLATFORM} STREQUAL "KOS")
-	# Compiler settings
-	set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fomit-frame-pointer -fmessage-length=0 -ml -m4-single-only -ffunction-sections -fdata-sections -fno-strict-aliasing -fno-builtin")
-	set (CMAKE_CXX_FLAGS "-std=c++11 -fno-rtti -fno-exceptions -Wall -fmessage-length=0 -fno-operator-names")
-	set (CMAKE_LINK_FLAGS "-nodefaultlibs -L${KOS_BASE_DIR}/lib/dreamcast -L${KOS_BASE_DIR}/addons/lib/dreamcast -Wl,--gc-sections -Wl,-T${KOS_BASE_DIR}/utils/ldscripts/shlelf.xc -ml -m4-single-only -Wl,-Ttext=0x8c010000")
-
-	# KOS
-	target_include_directories(${PROJECT_NAME} PUBLIC ${KOS_BASE_DIR}/include)
-	target_include_directories(${PROJECT_NAME} PUBLIC ${KOS_BASE_DIR}/addons/include)
-	target_include_directories(${PROJECT_NAME} PUBLIC ${KOS_PORTS_BASE_DIR}/include)
-
-	find_library(KOS_LIB kallisti HINTS ${KOS_BASE_DIR}/lib/dreamcast)
-	target_link_libraries(${PROJECT_NAME} ${KOS_LIB})
-
-	find_library(GL_LIB GL HINTS ${KOS_BASE_DIR}/addons/lib/dreamcast)
-	target_link_libraries(${PROJECT_NAME} ${GL_LIB})
-
-	add_definitions (-D_arch_dreamcast)
-	add_definitions (-D_arch_sub_pristine)
+	set(CMAKE_OSX_SYSROOT /)
 	add_definitions (-DGLM_HAS_CXX11_STL=0)
 	add_definitions (-DGLM_STATIC_ASSERT_NULL=1)
 	add_definitions (-DOS_KOS)
@@ -181,16 +141,23 @@ ExternalProject_Add(tinyxml
     CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}/tinyxml
     		   -DCMAKE_C_COMPILER_WORKS=${CMAKE_C_COMPILER_WORKS} 
     		   -DCMAKE_CXX_COMPILER_WORKS=${CMAKE_CXX_COMPILER_WORKS}
+			   -DCMAKE_C_FLAGS=${CMAKE_C_FLAGS}
+    		   -DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS}
     		   -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER} 
     		   -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
     		   -DCMAKE_AR=${CMAKE_AR}
     		   -DCMAKE_RANLIB=${CMAKE_RANLIB}
     		   -DCMAKE_LINKER=${CMAKE_LINKER}
+			   -DCMAKE_OBJCOPY=${CMAKE_OBJCOPY}
+			   -DCMAKE_C_FLAGS=${CMAKE_C_FLAGS}
+    		   -DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS}
+			   -DCMAKE_OSX_SYSROOT=${CMAKE_OSX_SYSROOT}
+			   -DCMAKE_OSX_ARCHITECTURES=${CMAKE_OSX_ARCHITECTURES}
+			   -DCMAKE_CROSSCOMPILING=TRUE
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_INSTALL_PREFIX}/tinyxml/include)
 add_dependencies(${PROJECT_NAME} tinyxml)
-link_library(${PROJECT_NAME} tinyxml)
 
 #============================================================================
 # glm
@@ -206,11 +173,15 @@ ExternalProject_Add(glm
     CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}/glm
     		   -DCMAKE_C_COMPILER_WORKS=${CMAKE_C_COMPILER_WORKS} 
     		   -DCMAKE_CXX_COMPILER_WORKS=${CMAKE_CXX_COMPILER_WORKS}
+			   -DCMAKE_C_FLAGS=${CMAKE_C_FLAGS}
+    		   -DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS}
     		   -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER} 
     		   -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
     		   -DCMAKE_AR=${CMAKE_AR}
     		   -DCMAKE_RANLIB=${CMAKE_RANLIB}
     		   -DCMAKE_LINKER=${CMAKE_LINKER}
+			   -DPLATFORM=${PLATFORM}
+               -DKOS_BASE_DIR=${KOS_BASE_DIR}
 )
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_INSTALL_PREFIX}/glm/include)
@@ -227,10 +198,11 @@ ExternalProject_Add(vfspp
     SOURCE_DIR ${VFSPP_DIR}
     PREFIX ${CMAKE_INSTALL_PREFIX}
     INSTALL_DIR ${CMAKE_INSTALL_PREFIX}
-    PATCH_COMMAND COMMAND ${CMAKE_COMMAND} -E copy ${OPENJAM_LIB_DIR}/patches/vfspp/CMakeLists.txt ${OPENJAM_LIB_DIR}/vfspp/CMakeLists.txt
     CMAKE_ARGS -DCMAKE_INSTALL_PREFIX=${CMAKE_INSTALL_PREFIX}/vfspp
     		   -DCMAKE_C_COMPILER_WORKS=${CMAKE_C_COMPILER_WORKS} 
     		   -DCMAKE_CXX_COMPILER_WORKS=${CMAKE_CXX_COMPILER_WORKS}
+			   -DCMAKE_C_FLAGS=${CMAKE_C_FLAGS}
+    		   -DCMAKE_CXX_FLAGS=${CMAKE_CXX_FLAGS}
     		   -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER} 
     		   -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
     		   -DCMAKE_AR=${CMAKE_AR}
@@ -242,7 +214,6 @@ ExternalProject_Add(vfspp
 
 target_include_directories(${PROJECT_NAME} PUBLIC ${CMAKE_INSTALL_PREFIX}/vfspp/include)
 add_dependencies(${PROJECT_NAME} vfspp)
-link_library(${PROJECT_NAME} vfspp)
 
 #============================================================================
 # examples
@@ -270,7 +241,19 @@ add_dependencies(${TESTAPP_PROJECT} ${PROJECT_NAME})
 target_link_libraries(${TESTAPP_PROJECT} ${PROJECT_NAME})
 target_include_directories(${TESTAPP_PROJECT} PUBLIC ${GLM_DIR})
 
+# vfspp	
+link_library(${TESTAPP_PROJECT} vfspp /)
+link_library(${TESTAPP_PROJECT} minizip /vfspp/)
+link_library(${TESTAPP_PROJECT} z /vfspp/)
+# tinyxml
+link_library(${TESTAPP_PROJECT} tinyxml /)
+
 if (${PLATFORM} STREQUAL "iOS")
+	add_definitions (-DOS_IPHONE)
+	add_definitions (-DRENDER_OGLES1_1)
+	add_definitions (-DRENDER_OGLES2_0)
+	add_definitions (-DGL_DO_NOT_WARN_IF_MULTI_GL_VERSION_HEADERS_INCLUDED)
+
 	target_link_libraries (${TESTAPP_PROJECT} "-framework Foundation")
 	target_link_libraries (${TESTAPP_PROJECT} "-framework UIKit")
 	target_link_libraries (${TESTAPP_PROJECT} "-framework CoreGraphics")
@@ -305,12 +288,16 @@ elseif (${PLATFORM} STREQUAL "macOS")
                 	  	COMMAND ${CMAKE_COMMAND} -E copy_directory ${${TESTAPP_PROJECT}_RES_DIR} "\${TARGET_BUILD_DIR}/\${FULL_PRODUCT_NAME}/media"
                 	  	COMMENT "Copying resource files and directories to OSX App Bundle...")
 elseif (${PLATFORM} STREQUAL "KOS")
-	set (CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -fomit-frame-pointer -fmessage-length=0 -ml -m4-single-only -ffunction-sections -fdata-sections -fno-strict-aliasing -fno-builtin")
-	set (CMAKE_CXX_FLAGS "-std=c++11 -fno-rtti -fno-exceptions -Wall -fmessage-length=0 -fno-operator-names")
-	set (CMAKE_EXE_LINKER_FLAGS "-nodefaultlibs -L${KOS_BASE_DIR}/lib/dreamcast -L${KOS_BASE_DIR}/addons/lib/dreamcast -Wl,--gc-sections -Wl,-T${KOS_BASE_DIR}/utils/ldscripts/shlelf.xc -ml -m4-single-only -Wl,-Ttext=0x8c010000")
+	set(CMAKE_OSX_SYSROOT /)
+	set(CMAKE_CXX_LINK_FLAGS "")#-Wl,--start-group -lkallisti -lc -lgcc -lstdc++ -lm -Wl,--end-group") #to avoid adding Wl,-search_paths_first
+	set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -lkosutils -lstdc++ -Wl,--start-group -lkallisti -lc -lgcc -Wl,--end-group")
 
-	add_definitions (-D_arch_dreamcast)
-	add_definitions (-D_arch_sub_pristine)
+	target_link_libraries(${TESTAPP_PROJECT} libGL.a) # kos-ports/libGL
+	target_link_libraries(${TESTAPP_PROJECT} libkallisti.a) # kos
+	
+	#target_link_libraries(${TESTAPP_PROJECT} libc.a) # gcc
+	#target_link_libraries(${TESTAPP_PROJECT} libm.a)  # gcc
+
 	add_definitions (-DOS_KOS)
 endif()
 

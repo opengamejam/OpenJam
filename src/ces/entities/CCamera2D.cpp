@@ -41,20 +41,14 @@ CCamera2D::CCamera2D(float _near, float _far)
     , m_Near(_near)
     , m_Far(_far)
     , m_ProjectionMatrix(glm::mat4x4(1.0f))
-    , m_RenderTarget(nullptr)
+    , m_FrameBuffer(nullptr)
     , m_IsFlippedX(false)
     , m_IsFlippedY(false)
-    , m_Id(ICamera::NextCameraId())
 {
 }
 
 CCamera2D::~CCamera2D()
 {
-}
-
-uint32_t CCamera2D::Id() const
-{
-    return m_Id;
 }
 
 glm::mat4x4 CCamera2D::ProjectionMatrix()
@@ -68,40 +62,40 @@ glm::mat4x4 CCamera2D::ProjectionMatrix()
     return m_ProjectionMatrix * resultTransform();
 }
 
-IFrameBufferPtr CCamera2D::RenderTarget() const
+IFrameBufferPtr CCamera2D::FrameBuffer() const
 {
-    return m_RenderTarget;
+    return m_FrameBuffer;
 }
 
-void CCamera2D::RenderTarget(IFrameBufferPtr renderTarget)
+void CCamera2D::FrameBuffer(IFrameBufferPtr frameBuffer)
 {
-    m_RenderTarget = renderTarget;
+    m_FrameBuffer = frameBuffer;
     m_ProjectionMatrix = glm::ortho(0.0f,
-                                    static_cast<float>(renderTarget->Width()),
-                                    static_cast<float>(renderTarget->Height()),
+                                    static_cast<float>(frameBuffer->Width()),
+                                    static_cast<float>(frameBuffer->Height()),
                                     0.0f, m_Near, m_Far);
 }
 
 void CCamera2D::FlipY()
 {
-    assert(RenderTarget());
+    assert(FrameBuffer());
     
     m_IsFlippedY = !m_IsFlippedY;
-    float top = (m_IsFlippedY) ? RenderTarget()->Height() : 0;
-    float bottom = (m_IsFlippedY) ? 0 : RenderTarget()->Height();
+    float top = (m_IsFlippedY) ? FrameBuffer()->Height() : 0;
+    float bottom = (m_IsFlippedY) ? 0 : FrameBuffer()->Height();
 
-    m_ProjectionMatrix = glm::ortho(0.0f, static_cast<float>(RenderTarget()->Width()), bottom, top, m_Near, m_Far);
+    m_ProjectionMatrix = glm::ortho(0.0f, static_cast<float>(FrameBuffer()->Width()), bottom, top, m_Near, m_Far);
 }
 
 void CCamera2D::FlipX()
 {
-    assert(RenderTarget());
+    assert(FrameBuffer());
     
     m_IsFlippedX = !m_IsFlippedX;
-    float left = (m_IsFlippedX) ? RenderTarget()->Width() : 0;
-    float right = (m_IsFlippedX) ? 0 : RenderTarget()->Width();
+    float left = (m_IsFlippedX) ? FrameBuffer()->Width() : 0;
+    float right = (m_IsFlippedX) ? 0 : FrameBuffer()->Width();
 
-    m_ProjectionMatrix = glm::ortho(left, right, static_cast<float>(RenderTarget()->Height()), 0.0f, m_Near, m_Far);
+    m_ProjectionMatrix = glm::ortho(left, right, static_cast<float>(FrameBuffer()->Height()), 0.0f, m_Near, m_Far);
 }
 
 // *****************************************************************************

@@ -62,13 +62,13 @@ public:                                            \
 private:                                           \
     uint64_t NextUid()                             \
     {                                              \
-        std::lock_guard<std::mutex> lock(m_Mutex); \
+        std::lock_guard<std::mutex> lock(m_NextUidMutex); \
         static uint64_t nextId;                    \
         uint64_t idx = nextId;                     \
         nextId++;                                  \
         return idx;                                \
     }                                              \
-    std::mutex m_Mutex;
+    std::mutex m_NextUidMutex;
 
 /*
  * JAM_OBJECT should be declared inside class definition. It will add

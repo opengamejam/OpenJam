@@ -18,7 +18,6 @@
 #include "CModelObj.h"
 #include "CResourceCache.hpp"
 #include "CRenderComponent.h"
-#include "CTransformAffector.h"
 #include "CThreadPool.h"
 #include "IShaderProgram.h"
 #include "IFrameBuffer.h"
@@ -31,6 +30,8 @@
 
 #include "CVirtualFileSystem.h"
 #include "CZipFileSystem.h"
+#include "CShaderSourceSprite.h"
+#include "CShaderSourceCommon.h"
 
 using namespace jam;
 
@@ -73,7 +74,7 @@ CSprite2DPtr sprite;
 jam::CObject3DPtr tv;
 
 static glm::vec3 dir = glm::vec3(1.0f, 1.0f, 1.0f);
-static glm::vec3 lightPos = glm::vec3(-3.0f, -3.0f, -3.0f);
+static glm::vec3 lightPos = glm::vec3(0.0f, 0.0f, 13.0f);
 
 void CGameScene::Update(unsigned long dt)
 {
@@ -103,9 +104,10 @@ void CGameScene::Update(unsigned long dt)
             //return;
         }
 
-        CTransformAffector::Rotating(entity, glm::vec3(1 * 3.14f / 180.0f,
-                                                 1 * 3.14f / 180.0f,
-                                                 1 * 3.14f / 180.0f));
+        const glm::vec3& rotation = entity->Rotation();
+        entity->Rotation(glm::vec3(rotation.x + 1 * 3.14f / 180.0f,
+                                   rotation.y + 1 * 3.14f / 180.0f,
+                                   rotation.z + 1 * 3.14f / 180.0f));
     });
     
     static float tv_rot = 0;
@@ -119,8 +121,8 @@ void CGameScene::Update(unsigned long dt)
     {
         tv_rot_dir = 1;
     }
-    CTransformAffector::Rotation(tv, glm::vec3(00.0f * 3.14f / 180.0f, tv_rot * 3.14 / 180.0f, 0));
-    CTransformAffector::Rotation(sprite, glm::vec3(0, 0, tv_rot * 3.14 / 180.0f));
+    tv->Rotation(glm::vec3(00.0f * 3.14f / 180.0f, tv_rot * 3.14 / 180.0f, 0));
+    sprite->Rotation(glm::vec3(0, 0, tv_rot * 3.14 / 180.0f));
 }
 
 void CGameScene::CreateMainCamera()
@@ -128,18 +130,18 @@ void CGameScene::CreateMainCamera()
     IRenderViewPtr renderView = Game()->RenderView();
     IRendererPtr renderer = renderView->Renderer();
     m_UICamera = CCamera2D::Create();
-    m_MainCamera = CCamera3D::Create(75.0f);
+    m_MainCamera = CCamera3D::Create(90.0f);
 
-    m_UICamera->RenderTarget(renderView->DefaultRenderTarget());
-    m_MainCamera->RenderTarget(renderView->DefaultRenderTarget());
+    m_UICamera->FrameBuffer(renderView->DefaultRenderTarget());
+    m_MainCamera->FrameBuffer(renderView->DefaultRenderTarget());
 
-    CSprite2DPtr ball = CSprite2D::Create("/ball_glitch/sprite.mpf", renderer, m_UICamera->Id());
-    CTransformAffector::Translating(ball, glm::vec3(0.0f, 0.0f, 1.0f));
+    CSprite2DPtr ball = CSprite2D::Create("/ball_glitch/sprite.mpf", renderer);
+    ball->Position(glm::vec3(0.0f, 0.0f, 1.0f));
 
-    sprite = CSprite2D::Create("/bat_glitch/sprite.mpf", renderer, m_UICamera->Id());
-    CTransformAffector::Translating(sprite, glm::vec3(100.0f, 100.0f, 0.0f));
-    CTransformAffector::Rotation(sprite, glm::vec3(0, 0, 45.0f * 3.14f / 180.0f));
-    //CTransformAffector::Scale(sprite, glm::vec3(3.0f, 3.0f, 3.0f));
+    sprite = CSprite2D::Create("/bat_glitch/sprite.mpf", renderer);
+    sprite->Position(glm::vec3(100.0f, 100.0f, 0.0f));
+    sprite->Rotation(glm::vec3(0, 0, 45.0f * 3.14f / 180.0f));
+    //sprite->Scale(glm::vec3(3.0f, 3.0f, 3.0f));
 
     sprite->AddChild(ball);
     Root()->AddChild(sprite);
@@ -157,7 +159,7 @@ void CGameScene::CreateMainCamera()
     CRenderTargetDepthPtr depthTarget = renderer->CreateDepthRenderTarget();
     depthTarget->Initialize(IRenderTarget::Depth24_Stencil8);
     
-    // Framebuffer
+    // Render texture framebuffer
     IFrameBufferPtr renderTextureFBO = renderer->CreateFrameBuffer(512, 512);
     renderTextureFBO->Initialize();
     renderTextureFBO->Bind();
@@ -168,31 +170,44 @@ void CGameScene::CreateMainCamera()
     
     // Cam
     ICameraPtr renderTextureCam = CCamera3D::Create(75.0f);
-    renderTextureCam->RenderTarget(renderTextureFBO);
+    renderTextureCam->FrameBuffer(renderTextureFBO);
     
-    tv = CObject3D::CreateObj("/tv/tv.obj", renderer, m_MainCamera->Id());
+    // TV object
+    tv = CObject3D::CreateObj("/tv/tv.obj", renderer);
     Root()->AddChild(tv);
-    CTransformAffector::Translating(tv, glm::vec3(7.0f, 3.0f, 0.0f));
-    CTransformAffector::Rotation(tv, glm::vec3(10.0f * 3.14f / 180.0f, 0, 0));
-    CTransformAffector::Scale(tv, glm::vec3(3.0f, 3.0f, 3.0f));
+    tv->Position(glm::vec3(7.0f, 3.0f, 0.0f));
+    tv->Rotation(glm::vec3(10.0f * 3.14f / 180.0f, 0, 0));
+    tv->Scale(glm::vec3(3.0f, 3.0f, 3.0f));
     
-    tv->Get<CRenderComponent>([&](CRenderComponentPtr component)
-    {
-        component->Batchable(false);
-        component->Texture(renderTextureTarget->Texture(), "display");
-        component->Dirty();
-    });
+    tv->RenderComponent()->Batchable(false);
+    tv->RenderComponent()->Dirty();
     
-    jam::CObject3DPtr plane = CObject3D::CreateObj("/plane/plane.obj", renderer, m_MainCamera->Id());
+    // Display obj
+    jam::CObject3DPtr plane = CObject3D::CreateObj("/plane/plane.obj", renderer);
     tv->AddChild(plane);
-    CTransformAffector::Translating(plane, glm::vec3(-0.12f, 0.43f, 0.36f));
-    CTransformAffector::Rotation(plane, glm::vec3(0, 0, 0));
-    CTransformAffector::Scale(plane, glm::vec3(0.36f, 0.27f, 1.0f));
+    plane->Position(glm::vec3(-0.12f, 0.43f, 0.364f));
+    plane->Rotation(glm::vec3(0, 0, 0));
+    plane->Scale(glm::vec3(0.36f, 0.27f, 1.0f));
     
     plane->Get<CRenderComponent>([&](CRenderComponentPtr component)
     {
+        CShaderSourceSprite shaderSource;
+        IShaderPtr vertexShader = renderer->CreateShader();
+        vertexShader->Compile(shaderSource.Vertex(), IShader::Vertex);
+        assert(vertexShader);
+        
+        IShaderPtr fragmentShader = renderer->CreateShader();
+        fragmentShader->Compile(shaderSource.Fragment(), IShader::Fragment);
+        assert(fragmentShader);
+        
+        IShaderProgramPtr shaderProgram = renderer->CreateShaderProgram();
+        shaderProgram->AttachShader(vertexShader);
+        shaderProgram->AttachShader(fragmentShader);
+        shaderProgram->Link();
+        
         component->Batchable(false);
         component->Texture(renderTextureTarget->Texture());
+        component->Shader(shaderProgram);
         component->Dirty();
     });
     
@@ -218,20 +233,15 @@ void CGameScene::CreateMainCamera()
                     x = 0;
                 }
 
-                jam::CObject3DPtr cube = CObject3D::CreateObj(filename, renderer, scene->m_MainCamera->Id());
-                CTransformAffector::Translating(cube, glm::vec3(x * 2.4f - 4.0f, y * 2.4f - 4.0f, 0.0f));
-                CTransformAffector::Rotation(cube, glm::vec3(i * 15 * 3.1415 / 180.0,
+                jam::CObject3DPtr cube = CObject3D::CreateObj(filename, renderer);
+                cube->Position(glm::vec3(x * 2.4f - 4.0f, y * 2.4f - 4.0f, 0.0f));
+                cube->Rotation(glm::vec3(i * 15 * 3.1415 / 180.0,
                                                           i * 15 * 3.1415 / 180.0,
                                                           i * 15 * 3.1415 / 180.0));
-                //CTransformAffector::Scale(cube, glm::vec3(10.0f, 10.0f, 10.0f));
+                //cube->Scale(glm::vec3(10.0f, 10.0f, 10.0f));
+                
                 scene->Root()->AddChild(cube);
                 scene->m_Models3D.push_back(cube);
-                
-                cube->Get<CRenderComponent>([renderTextureCam](CRenderComponentPtr component)
-                {
-                    component->AddCameraId(renderTextureCam->Id());
-                    component->Dirty();
-                });
 
                 x++;
             }
@@ -243,9 +253,9 @@ bool CGameScene::OnBallMoved(IEventPtr event)
 {
     CTouchEventPtr touchEvent = std::static_pointer_cast<CTouchEvent>(event);
 
-    CTransformAffector::Position(sprite, glm::vec3(touchEvent->GetPosition().x,
-                                             touchEvent->GetPosition().y,
-                                             0.0));
+    sprite->Position(glm::vec3(touchEvent->GetPosition().x,
+                               touchEvent->GetPosition().y,
+                               0.0));
 
     return true;
 }

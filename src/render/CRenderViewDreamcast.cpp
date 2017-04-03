@@ -24,10 +24,10 @@ using namespace jam;
 // *****************************************************************************
 
 CRenderViewDreamcast::CRenderViewDreamcast()
-    : IRenderView(vid_mode->width, vid_mode->height, 1.0f)
+    : IRenderView(640, 480, 1.0f)
     , m_Renderer(nullptr)
     , m_DefaultRenderTarget(nullptr)
-    , m_Joy(maple_enum_type(0, MAPLE_FUNC_CONTROLLER))
+    //, m_Joy(maple_enum_type(0, MAPLE_FUNC_CONTROLLER))
 {
 }
 

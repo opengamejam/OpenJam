@@ -14,7 +14,6 @@
 #include "CSpriteXML.h"
 #include "CAnimation2DComponent.h"
 #include "CTransformationComponent.h"
-#include "CTransformAffector.h"
 #include "CResourceCache.hpp"
 #include "CTextureCache.h"
 
@@ -28,7 +27,7 @@ using namespace jam;
 // Public Methods
 // *****************************************************************************
 
-CSprite2DPtr CSprite2D::Create(const std::string& filename, IRendererPtr renderer, uint32_t cameraId)
+CSprite2DPtr CSprite2D::Create(const std::string& filename, IRendererPtr renderer)
 {
     std::string assetName = "";
     std::size_t found = filename.rfind("/");
@@ -130,9 +129,6 @@ CSprite2DPtr CSprite2D::Create(const std::string& filename, IRendererPtr rendere
     renderComponent->Shader(shaderProgram);
     renderComponent->Material(material);
     renderComponent->Mesh(mesh);
-    if (cameraId != std::numeric_limits<uint32_t>::max()) {
-        renderComponent->AddCameraId(cameraId);
-    }
 
     // Sprite component
     CAnimation2DComponentPtr animationComponent(new CAnimation2DComponent());
@@ -170,9 +166,7 @@ CSprite2DPtr CSprite2D::Create(const std::string& filename, IRendererPtr rendere
                                    animationComponent,
                                    transformComponent });
     // Store links to components
-    entity->m_RenderComponent = renderComponent;
     entity->m_AnimationComponent = animationComponent;
-    entity->m_TransformationComponent = transformComponent;
 
     return entity;
 }
@@ -185,55 +179,9 @@ CSprite2D::~CSprite2D()
 {
 }
 
-CRenderComponentPtr CSprite2D::RenderComponent() const
-{
-    return m_RenderComponent;
-}
-
 CAnimation2DComponentPtr CSprite2D::AnimationComponent() const
 {
     return m_AnimationComponent;
-}
-
-CTransformationComponentPtr CSprite2D::TransformComponent() const
-{
-    return m_TransformationComponent;
-}
-
-void CSprite2D::Position(const glm::vec3& position)
-{
-    CTransformAffector::Position(TransformComponent(), position);
-}
-
-const glm::vec3& CSprite2D::Position()
-{
-    CTransformationComponentPtr component = TransformComponent();
-    const CTransform3Df& transform = component->Transform(CTransformationComponent::Local);
-    return transform.Position();
-}
-
-void CSprite2D::Rotation(const glm::vec3& rotation)
-{
-    CTransformAffector::Rotation(TransformComponent(), rotation);
-}
-
-const glm::vec3& CSprite2D::Rotation()
-{
-    CTransformationComponentPtr component = TransformComponent();
-    const CTransform3Df& transform = component->Transform(CTransformationComponent::Local);
-    return transform.Rotation();
-}
-
-void CSprite2D::Scale(const glm::vec3& scale)
-{
-    CTransformAffector::Scale(TransformComponent(), scale);
-}
-
-const glm::vec3& CSprite2D::Scale()
-{
-    CTransformationComponentPtr component = TransformComponent();
-    const CTransform3Df& transform = component->Transform(CTransformationComponent::Local);
-    return transform.Scale();
 }
 
 // *****************************************************************************

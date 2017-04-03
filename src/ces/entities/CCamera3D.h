@@ -17,18 +17,44 @@ CLASS_PTR(CCamera3D)
 
 class CCamera3D : public ICamera {
 public:
+    /*
+     * Create new 3D camera with added transformation component
+     */
     static CCamera3DPtr Create(float _fov, float _near = 0.3f, float _far = 1000.0f);
 
+    /*
+     * Default constructor. To create new camera use static method Create() instead
+     */
     CCamera3D(float _fov, float _near = 0.3f, float _far = 1000.0f);
+    
+    /*
+     * Destructor
+     */
     virtual ~CCamera3D();
 
-    virtual uint32_t Id() const override;
-
+    /*
+     * Returns Projection View matrix
+     */
     virtual glm::mat4x4 ProjectionMatrix() override;
-    virtual IFrameBufferPtr RenderTarget() const override;
-    virtual void RenderTarget(IFrameBufferPtr renderTarget) override;
-
+    
+    /*
+     * Return attached framebuffer
+     */
+    virtual IFrameBufferPtr FrameBuffer() const override;
+    
+    /*
+     * Assign new framebuffer. Projection matrix will be recalculated to current framebuffer width and height
+     */
+    virtual void FrameBuffer(IFrameBufferPtr frameBuffer) override;
+    
+    /*
+     * Flip camera vertically
+     */
     virtual void FlipY() override;
+    
+    /*
+     * Flip camera horizontally
+     */
     virtual void FlipX() override;
 
 private:
@@ -36,9 +62,7 @@ private:
     float m_Near;
     float m_Far;
     glm::mat4x4 m_ProjectionMatrix;
-    IFrameBufferPtr m_RenderTarget;
-
-    uint32_t m_Id;
+    IFrameBufferPtr m_FrameBuffer;
 };
 
 }; // namespace jam

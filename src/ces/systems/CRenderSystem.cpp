@@ -79,7 +79,7 @@ void CRenderSystem::Update(unsigned long dt)
     });*/
 
     ClearDirtyEntities();
-    m_ProccededRenderTargets.clear();
+    m_ProccededFrameBuffers.clear();
 }
 
 void CRenderSystem::Draw(ICameraPtr camera)
@@ -88,15 +88,16 @@ void CRenderSystem::Draw(ICameraPtr camera)
         return;
     }
 
-    IFrameBufferPtr currentRenderTarget = camera->RenderTarget();
-    if (!currentRenderTarget) {
+    IFrameBufferPtr frameBuffer = camera->FrameBuffer();
+    if (!frameBuffer) {
         return;
     }
 
-    currentRenderTarget->Bind();
-    if (m_ProccededRenderTargets.find(currentRenderTarget) == m_ProccededRenderTargets.end()) {
-        currentRenderTarget->Clear();
-        m_ProccededRenderTargets.insert(currentRenderTarget);
+    // Clear render target before drawing
+    frameBuffer->Bind();
+    if (m_ProccededFrameBuffers.find(frameBuffer) == m_ProccededFrameBuffers.end()) {
+        frameBuffer->Clear();
+        m_ProccededFrameBuffers.insert(frameBuffer);
     }
 
     glm::mat4 projectionMatrix = camera->ProjectionMatrix();
@@ -106,12 +107,7 @@ void CRenderSystem::Draw(ICameraPtr camera)
     });
 
     // Draw
-    unsigned int cameraId = camera->Id();
     std::for_each(m_SortedComponents.begin(), m_SortedComponents.end(), [&](CRenderComponentPtr renderComponent) {
-        if (!renderComponent->HasCameraId(cameraId)) {
-            return;
-        }
-
         if (renderComponent->Batchable()) {
             IMeshPtr mesh = renderComponent->Mesh(CRenderComponent::kBatchingGroupName);
             if (m_ProccededBatches.find(mesh->GetUid()) != m_ProccededBatches.end()) {
@@ -142,7 +138,7 @@ void CRenderSystem::Draw(ICameraPtr camera)
         }
     });
 
-    currentRenderTarget->Unbind();
+    frameBuffer->Unbind();
     m_ProccededBatches.clear();
 }
 

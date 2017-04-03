@@ -42,18 +42,12 @@ CCamera3D::CCamera3D(float _fov, float _near, float _far)
     , m_Near(std::max(0.01f, _near))
     , m_Far(_far)
     , m_ProjectionMatrix(glm::mat4x4(1.0f))
-    , m_RenderTarget(nullptr)
-    , m_Id(ICamera::NextCameraId())
+    , m_FrameBuffer(nullptr)
 {
 }
 
 CCamera3D::~CCamera3D()
 {
-}
-
-uint32_t CCamera3D::Id() const
-{
-    return m_Id;
 }
 
 glm::mat4x4 CCamera3D::ProjectionMatrix()
@@ -67,15 +61,15 @@ glm::mat4x4 CCamera3D::ProjectionMatrix()
     return m_ProjectionMatrix * resultTransform();
 }
 
-IFrameBufferPtr CCamera3D::RenderTarget() const
+IFrameBufferPtr CCamera3D::FrameBuffer() const
 {
-    return m_RenderTarget;
+    return m_FrameBuffer;
 }
 
-void CCamera3D::RenderTarget(IFrameBufferPtr renderTarget)
+void CCamera3D::FrameBuffer(IFrameBufferPtr frameBuffer)
 {
-    m_RenderTarget = renderTarget;
-    float koeff = static_cast<float>(RenderTarget()->Width()) / static_cast<float>(RenderTarget()->Height());
+    m_FrameBuffer = frameBuffer;
+    float koeff = static_cast<float>(frameBuffer->Width()) / static_cast<float>(frameBuffer->Height());
     m_ProjectionMatrix = glm::perspective(glm::radians(m_FOV),
                                           koeff,
                                           m_Near, m_Far);

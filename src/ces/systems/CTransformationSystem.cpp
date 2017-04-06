@@ -11,6 +11,7 @@
 #include "CRenderComponent.h"
 #include "IMaterial.h"
 #include "IShaderProgram.h"
+#include "IEntity.h"
 
 using namespace jam;
 
@@ -24,7 +25,6 @@ using namespace jam;
 
 CTransfromationSystem::CTransfromationSystem()
 {
-    RegisterComponent<CTransformationComponent>();
 }
 
 CTransfromationSystem::~CTransfromationSystem()
@@ -33,52 +33,47 @@ CTransfromationSystem::~CTransfromationSystem()
 
 void CTransfromationSystem::Update(unsigned long dt)
 {
-    const ISystem::TEntities& entities = DirtyEntities();
-    std::for_each(entities.begin(), entities.end(), [&](IEntityPtr entity) {
-        if (!IsEntityAdded(entity)) {
-            return;
-        }
-
-        UpdateTransformsRecursively(entity);
+    ForEachDirtyComponents([&](CTransformationComponentPtr transformationComponent) {
+        UpdateTransformsRecursively(transformationComponent);
     });
 
-    ClearDirtyEntities();
+    ClearDirtyComponents();
 }
 
-// *****************************************************************************
-// Protected Methods
-// *****************************************************************************
-
-// *****************************************************************************
-// Private Methods
-// *****************************************************************************
-
-void CTransfromationSystem::UpdateTransformsRecursively(IEntityPtr entity)
+void CTransfromationSystem::UpdateTransformsRecursively(CTransformationComponentPtr transformationComponent)
 {
-    CTransform3Df absoluteTransform;
-    entity->Get<CTransformationComponent>([&](CTransformationComponentPtr transformComponent) {
-        transformComponent->UpdateAbsoluteTransform();
-        absoluteTransform = transformComponent->AbsoluteTransformation();
+    transformationComponent->UpdateAbsoluteTransform();
+    CTransform3Df absoluteTransform = transformationComponent->AbsoluteTransformation();
+    
+    IEntityPtr entity = transformationComponent->Entity();
+    if (!entity) { // TODO: check if need this condition
+        return;
+    }
+    
+    // Assign model transformation to shader
+    entity->Get<CRenderComponent, true>([&](CRenderComponentPtr renderComponent) {
+        IShaderProgramPtr shader = renderComponent->Shader();
+        if (!shader) {
+            return;
+        }
         
-        const IEntity::TEntities& childs = entity->Children();
-        std::for_each(childs.begin(), childs.end(), [&](IEntityPtr child) {
-            child->Get<CTransformationComponent>([&](CTransformationComponentPtr childTransformComponent) {
-                childTransformComponent->AddTransform(CTransformationComponent::Parent,
-                                                      transformComponent->ChildrenTransformation());
-            });
-            UpdateTransformsRecursively(child);
-        });
+        if (renderComponent->Batchable()) {
+            absoluteTransform = CTransform3Df();
+        }
+        
+        shader->BindUniformMatrix4x4f("MainModelMatrix", absoluteTransform());
+        renderComponent->Shader(shader);
     });
     
-    entity->Get<CRenderComponent>([&](CRenderComponentPtr renderComponent) {
-        IShaderProgramPtr shader = renderComponent->Shader();
-        if (shader) {
-            if (renderComponent->Batchable()) {
-                absoluteTransform = CTransform3Df();
-            }
-            
-            shader->BindUniformMatrix4x4f("MainModelMatrix", absoluteTransform());
-            renderComponent->Shader(shader);
-        }
+    // Update children recursively
+    const IEntity::TEntitiesList& childs = entity->Children();
+    std::for_each(childs.begin(), childs.end(), [&](IEntityPtr child) {
+        child->Get<CTransformationComponent>([&](CTransformationComponentPtr childTransformComponent) {
+            childTransformComponent->AddTransform(CTransformationComponent::Parent,
+                                                  transformationComponent->ChildrenTransformation());
+            UpdateTransformsRecursively(childTransformComponent);
+        });
+        // Some entities can be without transformation components, so children of these entities
+        // will have parent transform (0, 0, 0)
     });
 }

@@ -24,9 +24,9 @@ CLASS_PTR(CTransformationComponent)
 class IEntity : public std::enable_shared_from_this<IEntity> {
     JAM_OBJECT_BASE
 public:
-    typedef std::vector<IComponentPtr> TComponentsList;
-    typedef std::unordered_map<typeid_t, TComponentsList> TComponentsMap;
-    typedef std::vector<IEntityPtr> TEntities;
+    typedef std::vector<IComponentPtr> TComponentsArray;
+    typedef std::unordered_map<typeid_t, TComponentsArray> TComponentsMap;
+    typedef std::list<IEntityPtr> TEntitiesList;
 
 public:
     /*
@@ -42,7 +42,7 @@ public:
     /*
      * Initialize entity with 'name' and list of components
      */
-    virtual void Initialize(const std::string& name, const TComponentsList& components) = 0;
+    virtual void Initialize(const std::string& name, const TComponentsArray& components) = 0;
 
     /*
      * Get entity name
@@ -70,20 +70,24 @@ public:
     template <class T> // TODO: enable_if IComponent
     std::shared_ptr<T> Get()
     {
-        typeid_t id = CTypeId<T>::Id();
-        return std::static_pointer_cast<T>(GetComponent(id));
+        typeid_t type = CTypeId<T>::Id();
+        return std::static_pointer_cast<T>(GetComponent(type));
     }
 
     /*
      * Get component from entity by template parameter. If component exists lambda function will be called with 
-     * this component in parameter
+     * this component in parameter. Pass second template parameter as true if component was requested for modification
+     * and it will be automatically marked as Dirty after lambda execution
      */
-    template <class T>
+    template <class T, bool NeedUpdate = false>
     void Get(std::function<void(std::shared_ptr<T>)> func)
     {
         std::shared_ptr<T> component = Get<T>();
         if (component && func) {
             func(component);
+            if (NeedUpdate) {
+                component->Dirty();
+            }
         }
     }
 
@@ -120,7 +124,7 @@ public:
     /*
      * Get children entities
      */
-    virtual const TEntities& Children() const = 0;
+    virtual const TEntitiesList& Children() const = 0;
 
     /*
      * Get parent entity
@@ -204,7 +208,7 @@ public:
     /*
      * Initialize entity with 'name' and list of components
      */
-    virtual void Initialize(const std::string& name, const TComponentsList& components) override;
+    virtual void Initialize(const std::string& name, const TComponentsArray& components) override;
     
     /*
      * Get entity name
@@ -259,7 +263,7 @@ public:
     /*
      * Get children entities
      */
-    virtual const TEntities& Children() const override;
+    virtual const TEntitiesList& Children() const override;
     
     /*
      * Get parent entity
@@ -330,7 +334,7 @@ protected:
 private:
     std::string m_Name;
     TComponentsMap m_Components;
-    TEntities m_Children;
+    TEntitiesList m_Children;
     IEntityWeak m_Parent;
     uint32_t m_HierarchyIndex;
     

@@ -25,19 +25,14 @@ CLASS_PTR(ITexture)
 CLASS_PTR(IShaderProgram)
 CLASS_PTR(IRenderer)
 
-class CRenderSystem : public CSystemBase {
+class CRenderSystem : public CSystemBase<CRenderComponent> {
     JAM_OBJECT
 public:
     CRenderSystem(IRendererPtr renderer);
     virtual ~CRenderSystem();
 
     virtual void Update(unsigned long dt) override;
-    void Draw(ICameraPtr camera);
-
-protected:
-    virtual void OnAddedEntity(IEntityPtr entity) override;
-    virtual void OnRemovedEntity(IEntityPtr entity) override;
-    virtual void OnChangedComponent(IComponentPtr component) override;
+    void Draw(ICameraPtr camera, IEntityPtr root);
 
 private:
     void DrawGroup(CRenderComponentPtr renderComponent,
@@ -52,9 +47,6 @@ private:
 
     std::set<IFrameBufferPtr> m_ProccededFrameBuffers;
     std::set<uint64_t> m_ProccededBatches;
-
-    std::list<CRenderComponentPtr> m_SortedComponents;
-    std::map<CRenderComponentPtr, uint64_t> m_OrderKeys;
 };
 
 } // namespace jam

@@ -31,8 +31,8 @@ public:
     virtual void Dirty() = 0;
 
 signals:
-    static CSignal<void, IEntityPtr> OnAddedSignal;
-    static CSignal<void, IEntityPtr> OnRemovedSignal;
+    static CSignal<void, IComponentPtr> OnAddedSignal;
+    static CSignal<void, IComponentPtr> OnRemovedSignal;
     static CSignal<void, IComponentPtr> OnChangedSignal;
 };
 

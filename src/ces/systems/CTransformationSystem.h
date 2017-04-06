@@ -10,23 +10,21 @@
 #define CTRANSFORMATIONSYSTEM_H
 
 #include "ISystem.h"
-#include "IEntity.h"
-#include "CTransform.hpp"
+#include "CTransformationComponent.h"
+
 
 namespace jam {
+CLASS_PTR(IEntity)
 CLASS_PTR(CTransfromationSystem)
-CLASS_PTR(CTransformationComponent)
 
-class CTransfromationSystem : public CSystemBase {
+class CTransfromationSystem : public CSystemBase<CTransformationComponent> {
     JAM_OBJECT
 public:
     CTransfromationSystem();
     virtual ~CTransfromationSystem();
 
     virtual void Update(unsigned long dt) override;
-
-private:
-    void UpdateTransformsRecursively(IEntityPtr entity);
+    void UpdateTransformsRecursively(CTransformationComponentPtr transformationComponent);
 };
 
 } // namespace jam

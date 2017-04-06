@@ -45,29 +45,29 @@ private:
  * able retrieve its unique identifiers
  * Don't use JAM_OBJECT_BASE in derived classes, only interfaces
  */
-#define JAM_OBJECT_BASE                            \
-public:                                            \
-    virtual typeid_t GetId() const                 \
-    {                                              \
-        assert(false);                             \
-        return 0;                                  \
-    }                                              \
-                                                   \
-    uint64_t GetUid()                              \
-    {                                              \
-        static uint64_t idx = NextUid();           \
-        return idx;                                \
-    }                                              \
-                                                   \
-private:                                           \
-    uint64_t NextUid()                             \
-    {                                              \
-        std::lock_guard<std::mutex> lock(m_NextUidMutex); \
-        static uint64_t nextId;                    \
-        uint64_t idx = nextId;                     \
-        nextId++;                                  \
-        return idx;                                \
-    }                                              \
+#define JAM_OBJECT_BASE                                     \
+public:                                                     \
+    virtual typeid_t GetId() const                          \
+    {                                                       \
+        assert(false);                                      \
+        return 0;                                           \
+    }                                                       \
+                                                            \
+    uint64_t GetUid()                                       \
+    {                                                       \
+        static uint64_t idx = NextUid();                    \
+        return idx;                                         \
+    }                                                       \
+                                                            \
+private:                                                    \
+    uint64_t NextUid()                                      \
+    {                                                       \
+        std::lock_guard<std::mutex> lock(m_NextUidMutex);   \
+        static uint64_t nextId;                             \
+        uint64_t idx = nextId;                              \
+        nextId++;                                           \
+        return idx;                                         \
+    }                                                       \
     std::mutex m_NextUidMutex;
 
 /*
@@ -76,11 +76,11 @@ private:                                           \
  * This macros should be used with derived classes, don't use it in
  * interfaces
  */
-#define JAM_OBJECT                                                                                \
-public:                                                                                           \
-    virtual typeid_t GetId() const override                                                       \
-    {                                                                                             \
-        return CTypeId<std::remove_const<std::remove_pointer<decltype(this)>::type>::type>::Id(); \
+#define JAM_OBJECT                                                                                                  \
+public:                                                                                                             \
+    virtual typeid_t GetId() const override                                                                         \
+    {                                                                                                               \
+        return CTypeId<typename std::remove_const<typename std::remove_pointer<decltype(this)>::type>::type>::Id(); \
     }
 
 #endif /* CTYPEID_H */

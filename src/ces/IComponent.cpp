@@ -15,8 +15,8 @@ using namespace jam;
 // Constants
 // *****************************************************************************
 
-CSignal<void, IEntityPtr> IComponent::OnAddedSignal;
-CSignal<void, IEntityPtr> IComponent::OnRemovedSignal;
+CSignal<void, IComponentPtr> IComponent::OnAddedSignal;
+CSignal<void, IComponentPtr> IComponent::OnRemovedSignal;
 CSignal<void, IComponentPtr> IComponent::OnChangedSignal;
 
 // *****************************************************************************

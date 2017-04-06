@@ -208,7 +208,6 @@ void CGameScene::CreateMainCamera()
         component->Batchable(false);
         component->Texture(renderTextureTarget->Texture());
         component->Shader(shaderProgram);
-        component->Dirty();
     });
     
     AddCamera(renderTextureCam);

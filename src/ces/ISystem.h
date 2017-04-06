@@ -10,11 +10,11 @@
 #define ISYSTEM_H
 
 #include "Global.h"
+#include "IComponent.h"
 
 namespace jam {
 
 CLASS_PTR(IEntity)
-CLASS_PTR(IComponent)
 
 /*
  * Interface ISystem
@@ -22,78 +22,206 @@ CLASS_PTR(IComponent)
 class ISystem {
     JAM_OBJECT_BASE
 public:
-    typedef std::set<IEntityPtr> TEntities;
-    typedef std::set<typeid_t> TComponentIds;
+    typedef std::set<IEntityPtr> TEntitiesList;
 
 public:
+    /*
+     * Constructor
+     */
     ISystem() = default;
+    
+    /*
+     * Destructor
+     */
     virtual ~ISystem() = default;
 
-    virtual void AddEntity(IEntityPtr entity) = 0;
-    virtual void RemoveEntity(IEntityPtr entity) = 0;
-    virtual const TEntities& Entities() const = 0;
-    virtual bool IsEntityAdded(IEntityPtr entity) = 0;
+    /*
+     * Set of all component objects
+     */
+    virtual const std::set<IComponentPtr>& Components() const = 0;
 
-    virtual const TComponentIds& RegisteredComponents() = 0;
-    virtual bool IsComponentRegistered(typeid_t id) = 0;
-    virtual bool HaveSupportedComponents(IEntityPtr entity) = 0;
+    /*
+     * Set of all component objects
+     */
+    virtual typeid_t RequiredComponent() const = 0;
+    
+    /*
+     * Check if system supports component with 'ctype'
+     */
+    virtual bool IsSupportComponent(typeid_t id) = 0;
+    
+    /*
+     * Template version of IsSupportedComponents
+     */
+    template <typename T>
+    bool IsSupportComponent()
+    {
+        return IsSupportComponent(CTypeId<T>::Id());
+    }
 
+    /*
+     * Update method for system
+     */
     virtual void Update(unsigned long dt) = 0;
 };
 
 /*
  * Base class CSystemBase
  */
+template <typename ComponentType>
 class CSystemBase : public ISystem {
     JAM_OBJECT
 public:
-    CSystemBase();
-    virtual ~CSystemBase();
+    /*
+     * Constructor. When system is creating to corresponding component registers signals to handle adding, removing
+     * or changing components
+     */
+    CSystemBase()
+        : m_RequiredComponent(CTypeId<ComponentType>::Id())
+    {
+        ComponentType::OnAddedSignal += std::bind(&CSystemBase::OnAddedComponent, this, std::placeholders::_1);
+        ComponentType::OnRemovedSignal += std::bind(&CSystemBase::OnRemovedComponent, this, std::placeholders::_1);
+        ComponentType::OnChangedSignal += std::bind(&CSystemBase::OnChangedComponent, this, std::placeholders::_1);
+    }
+    
+    /*
+     * Destructor. All registered signals removes
+     */
+    virtual ~CSystemBase()
+    {
+        ComponentType::OnAddedSignal -= std::bind(&CSystemBase::OnAddedComponent, this, std::placeholders::_1);
+        ComponentType::OnRemovedSignal -= std::bind(&CSystemBase::OnRemovedComponent, this, std::placeholders::_1);
+        ComponentType::OnChangedSignal -= std::bind(&CSystemBase::OnChangedComponent, this, std::placeholders::_1);
+    }
 
-    void AddEntity(IEntityPtr entity) override;
-    void RemoveEntity(IEntityPtr entity) override;
-    const TEntities& Entities() const override;
-    bool IsEntityAdded(IEntityPtr entity) override;
+    /*
+     * Set of all component objects
+     */
+    const std::set<IComponentPtr>& Components() const override
+    {
+        return m_Components;
+    }
 
-    const TComponentIds& RegisteredComponents() override;
-    bool IsComponentRegistered(typeid_t id) override;
-    bool HaveSupportedComponents(IEntityPtr entity) override;
+    /*
+     * Returns typeid of required component
+     */
+    typeid_t RequiredComponent() const override
+    {
+        return m_RequiredComponent;
+    }
+    
+    /*
+     * Check if system supports component with 'ctype'
+     */
+    bool IsSupportComponent(typeid_t ctype) override
+    {
+        return ctype == m_RequiredComponent;
+    }
 
+    /*
+     * Update method for system
+     */
     virtual void Update(unsigned long dt) override = 0;
 
 protected:
-    void MarkDirtyEntity(IEntityPtr entity);
-    const TEntities& DirtyEntities() const;
-    void ClearDirtyEntities();
-
-    template <typename T>
-    void RegisterComponent()
+    /*
+     * Set of components, that was canged
+     */
+    const std::set<IComponentPtr>& DirtyComponents() const
     {
-        T::OnAddedSignal += std::bind(&CSystemBase::OnAddedEntity, this, std::placeholders::_1);
-        T::OnRemovedSignal += std::bind(&CSystemBase::OnRemovedEntity, this, std::placeholders::_1);
-        T::OnChangedSignal += std::bind(&CSystemBase::OnChangedComponent, this, std::placeholders::_1);
-
-        m_RegisteredComponents.insert(CTypeId<T>::Id());
+        return m_DirtyComponents;
+    }
+    
+    /*
+     * Clear all changed components
+     */
+    void ClearDirtyComponents()
+    {
+        m_DirtyComponents.clear();
     }
 
-    template <typename T>
-    void UnregisterComponent()
+    /*
+     * If component added to entity it notifies system by calling this method
+     */
+    virtual void OnAddedComponent(IComponentPtr component)
     {
-        T::OnAddedSignal -= std::bind(&CSystemBase::OnAddedEntity, this, std::placeholders::_1);
-        T::OnRemovedSignal -= std::bind(&CSystemBase::OnRemovedEntity, this, std::placeholders::_1);
-        T::OnChangedSignal -= std::bind(&CSystemBase::OnChangedComponent, this, std::placeholders::_1);
-
-        m_RegisteredComponents.erase(CTypeId<T>::Id());
+        if (IsSupportComponent(component->GetId())) {
+            m_Components.insert(component);
+        }
     }
-
-    virtual void OnAddedEntity(IEntityPtr entity);
-    virtual void OnRemovedEntity(IEntityPtr entity);
-    virtual void OnChangedComponent(IComponentPtr component);
+    
+    /*
+     * If component removed to entity it notifies system by calling this method
+     */
+    virtual void OnRemovedComponent(IComponentPtr component)
+    {
+        if (IsSupportComponent(component->GetId())) {
+            m_Components.erase(component);
+        }
+    }
+    
+    /*
+     * If component changed it notifies system by calling this method
+     */
+    virtual void OnChangedComponent(IComponentPtr component)
+    {
+        if (IsSupportComponent(component->GetId())) {
+            m_DirtyComponents.insert(component);
+        }
+    }
+    
+    /*
+     * Iterate over all components and stop by condition with casting component to a concrete type
+     */
+    void AllOfComponents(std::function<bool(std::shared_ptr<ComponentType>)> func)
+    {
+        const std::set<IComponentPtr>& components = Components();
+        std::all_of(components.begin(), components.end(), [&](IComponentPtr component) -> bool {
+            std::shared_ptr<ComponentType> concreteComponent = std::static_pointer_cast<ComponentType>(component);
+            return func(concreteComponent);
+        });
+    }
+    
+    /*
+     * Iterate over all components with casting component to a concrete type
+     */
+    void ForEachComponents(std::function<void(std::shared_ptr<ComponentType>)> func)
+    {
+        const std::set<IComponentPtr>& components = Components();
+        std::for_each(components.begin(), components.end(), [&](IComponentPtr component) {
+            std::shared_ptr<ComponentType> concreteComponent = std::static_pointer_cast<ComponentType>(component);
+            func(concreteComponent);
+        });
+    }
+    
+    /*
+     * Iterate over all dirty components and stop by condition with casting component to a concrete type
+     */
+    void AllOfDirtyComponents(std::function<bool(std::shared_ptr<ComponentType>)> func)
+    {
+        const std::set<IComponentPtr>& components = DirtyComponents();
+        std::all_of(components.begin(), components.end(), [&](IComponentPtr component) -> bool {
+            std::shared_ptr<ComponentType> concreteComponent = std::static_pointer_cast<ComponentType>(component);
+            return func(concreteComponent);
+        });
+    }
+    
+    /*
+     * Iterate over all dirty components with casting component to a concrete type
+     */
+    void ForEachDirtyComponents(std::function<void(std::shared_ptr<ComponentType>)> func)
+    {
+        const std::set<IComponentPtr>& components = DirtyComponents();
+        std::for_each(components.begin(), components.end(), [&](IComponentPtr component) {
+            std::shared_ptr<ComponentType> concreteComponent = std::static_pointer_cast<ComponentType>(component);
+            func(concreteComponent);
+        });
+    }
 
 private:
-    TEntities m_Entities;
-    TEntities m_DirtyEntities;
-    TComponentIds m_RegisteredComponents;
+    std::set<IComponentPtr> m_Components;
+    std::set<IComponentPtr> m_DirtyComponents;
+    typeid_t m_RequiredComponent;
 };
 
 }; // namespace jam

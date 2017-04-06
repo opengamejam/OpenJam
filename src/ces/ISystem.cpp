@@ -20,100 +20,80 @@ using namespace jam;
 // Public Methods
 // *****************************************************************************
 
-CSystemBase::CSystemBase()
+/*template<typename ComponentType>
+CSystemBase<ComponentType>::CSystemBase()
+: m_RequiredComponent(CTypeId<ComponentType>::Id())
 {
+    ComponentType::OnAddedSignal += std::bind(&CSystemBase::OnAddedComponent, this, std::placeholders::_1);
+    ComponentType::OnRemovedSignal += std::bind(&CSystemBase::OnRemovedComponent, this, std::placeholders::_1);
+    ComponentType::OnChangedSignal += std::bind(&CSystemBase::OnChangedComponent, this, std::placeholders::_1);
 }
 
-CSystemBase::~CSystemBase()
+template<typename ComponentType>
+CSystemBase<ComponentType>::~CSystemBase()
 {
+    ComponentType::OnAddedSignal -= std::bind(&CSystemBase::OnAddedComponent, this, std::placeholders::_1);
+    ComponentType::OnRemovedSignal -= std::bind(&CSystemBase::OnRemovedComponent, this, std::placeholders::_1);
+    ComponentType::OnChangedSignal -= std::bind(&CSystemBase::OnChangedComponent, this, std::placeholders::_1);
 }
 
-void CSystemBase::AddEntity(IEntityPtr entity)
+template<typename ComponentType>
+const std::set<IComponentPtr>& CSystemBase<ComponentType>::Components() const
 {
-    m_Entities.insert(entity);
+    return m_Components;
 }
 
-void CSystemBase::RemoveEntity(IEntityPtr entity)
+template<typename ComponentType>
+typeid_t CSystemBase<ComponentType>::RequiredComponent() const
 {
-    m_Entities.erase(entity);
+    return m_RequiredComponent;
 }
 
-const ISystem::TEntities& CSystemBase::Entities() const
+template<typename ComponentType>
+bool CSystemBase<ComponentType>::IsSupportComponent(typeid_t id)
 {
-    return m_Entities;
-}
-
-bool CSystemBase::IsEntityAdded(IEntityPtr entity)
-{
-    const ISystem::TEntities& entities = Entities();
-    ISystem::TEntities::const_iterator it = std::find(entities.begin(), entities.end(), entity);
-
-    return (it != entities.end());
-}
-
-const ISystem::TComponentIds& CSystemBase::RegisteredComponents()
-{
-    return m_RegisteredComponents;
-}
-
-bool CSystemBase::IsComponentRegistered(typeid_t id)
-{
-    return (m_RegisteredComponents.find(id) != m_RegisteredComponents.end());
-}
+    return id == m_RequiredComponent;
+}*/
 
 // *****************************************************************************
 // Protected Methods
 // *****************************************************************************
 
-bool CSystemBase::HaveSupportedComponents(IEntityPtr entity)
+/*template<typename ComponentType>
+const std::set<IComponentPtr>& CSystemBase<ComponentType>::DirtyComponents() const
 {
-    if (!entity) {
-        return false;
-    }
-
-    bool found = false;
-    const ISystem::TComponentIds& componentIds = RegisteredComponents();
-    std::all_of(componentIds.begin(), componentIds.end(), [&](typeid_t id) {
-        found = entity->HasComponent(id);
-        return !found;
-    });
-
-    return found;
+    return m_DirtyComponents;
 }
 
-void CSystemBase::MarkDirtyEntity(IEntityPtr entity)
+template<typename ComponentType>
+void CSystemBase<ComponentType>::ClearDirtyComponents()
 {
-    m_DirtyEntities.insert(entity);
+    m_DirtyComponents.clear();
 }
 
-const ISystem::TEntities& CSystemBase::DirtyEntities() const
+template<typename ComponentType>
+void CSystemBase<ComponentType>::OnAddedComponent(IComponentPtr component)
 {
-    return m_DirtyEntities;
-}
-
-void CSystemBase::ClearDirtyEntities()
-{
-    m_DirtyEntities.clear();
-}
-
-void CSystemBase::OnAddedEntity(IEntityPtr entity)
-{
-    if (!IsEntityAdded(entity) && HaveSupportedComponents(entity)) {
-        AddEntity(entity);
+    if (IsSupportComponent(component->GetId())) {
+        m_Components.insert(component);
     }
 }
 
-void CSystemBase::OnChangedComponent(IComponentPtr component)
+template<typename ComponentType>
+void CSystemBase<ComponentType>::OnChangedComponent(IComponentPtr component)
 {
-    MarkDirtyEntity(component->Entity());
-}
-
-void CSystemBase::OnRemovedEntity(IEntityPtr entity)
-{
-    if (IsEntityAdded(entity)) {
-        RemoveEntity(entity);
+    if (IsSupportComponent(component->GetId())) {
+        m_DirtyComponents.insert(component);
     }
 }
+
+template<typename ComponentType>
+void CSystemBase<ComponentType>::OnRemovedComponent(IComponentPtr component)
+{
+    if (IsSupportComponent(component->GetId())) {
+        m_Components.erase(component);
+    }
+}*/
 
 // *****************************************************************************
 // Private Methods

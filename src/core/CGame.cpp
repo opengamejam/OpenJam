@@ -105,7 +105,7 @@ void CGame::Draw()
         m_RenderView->Begin();
         const IScene::TCamerasList& cameras = scene->Cameras();
         std::for_each(cameras.begin(), cameras.end(), [&](ICameraPtr camera) {
-            renderSystem->Draw(camera);
+            renderSystem->Draw(camera, scene->Root());
         });
         m_RenderView->End();
     }

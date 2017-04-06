@@ -29,11 +29,9 @@ using namespace jam;
 // *****************************************************************************
 
 CBatchingSystem::CBatchingSystem(IRendererPtr renderer)
-    : m_Renderer(renderer)
+: m_Renderer(renderer)
 {
-    assert(m_Renderer);
-    RegisterComponent<CBatchComponent>();
-    RegisterComponent<CTransformationComponent>();
+    assert("Couldn't create Render System with null renderer" && m_Renderer);
 }
 
 CBatchingSystem::~CBatchingSystem()
@@ -41,18 +39,18 @@ CBatchingSystem::~CBatchingSystem()
 }
 
 void CBatchingSystem::Update(unsigned long dt)
-{
-    const ISystem::TEntities& entities = DirtyEntities();
-    std::for_each(entities.begin(), entities.end(), [&](IEntityPtr entity) {
-        CTransformationComponentPtr transformComp = entity->Get<CTransformationComponent>();
-        CBatchComponentPtr batchComp = entity->Get<CBatchComponent>();
+{    
+    ForEachDirtyComponents([&](CBatchComponentPtr batchComponent) {
+        IEntityPtr entity = batchComponent->Entity();
+        
+        CTransformationComponentPtr transformComp = entity->TransformationComponent();
         entity->Get<CRenderComponent>([&](CRenderComponentPtr renderComp) {
-            if (!batchComp || !renderComp->Batchable()) {
+            if (!batchComponent || !renderComp->Batchable()) {
                 return;
             }
 
             SGeometry* geometry = nullptr;
-            if (batchComp->BatchId() == 0) {
+            if (batchComponent->BatchId() == 0) {
                 // Copy to buffer
                 const std::set<std::string>& groups = renderComp->Groups();
                 std::for_each(groups.begin(), groups.end(), [&](const std::string& groupName) {
@@ -89,11 +87,11 @@ void CBatchingSystem::Update(unsigned long dt)
 
                     CopyToBuffer(mesh, *geometry);
 
-                    batchComp->BatchId(batchId);
-                    batchComp->OffsetVertex(offsetVertex);
-                    batchComp->OffsetIndex(offsetVertex);
-                    batchComp->SizeVertex(geometry->offsetVB - offsetVertex);
-                    batchComp->SizeIndex(geometry->offsetIB - offsetIndex);
+                    batchComponent->BatchId(batchId);
+                    batchComponent->OffsetVertex(offsetVertex);
+                    batchComponent->OffsetIndex(offsetVertex);
+                    batchComponent->SizeVertex(geometry->offsetVB - offsetVertex);
+                    batchComponent->SizeIndex(geometry->offsetIB - offsetIndex);
                 });
 
                 renderComp->Mesh(geometry->mesh, CRenderComponent::kBatchingGroupName);
@@ -101,24 +99,39 @@ void CBatchingSystem::Update(unsigned long dt)
                 renderComp->Texture(geometry->texture, CRenderComponent::kBatchingGroupName);
                 renderComp->Shader(geometry->shader, CRenderComponent::kBatchingGroupName);
             } else {
-                geometry = &m_Batches[batchComp->BatchId()];
+                geometry = &m_Batches[batchComponent->BatchId()];
             }
 
-            batchComp->Transform(transformComp ? transformComp->AbsoluteTransformation() : CTransform3Df());
+            batchComponent->Transform(transformComp ? transformComp->AbsoluteTransformation() : CTransform3Df());
             ApplyTransform(geometry->mesh,
-                batchComp->OffsetVertex(),
-                batchComp->SizeVertex(),
-                batchComp->OldTransform()(),
-                batchComp->Transform()());
+                batchComponent->OffsetVertex(),
+                batchComponent->SizeVertex(),
+                batchComponent->OldTransform()(),
+                batchComponent->Transform()());
         });
     });
 
-    ClearDirtyEntities();
+    ClearDirtyComponents();
 }
 
 // *****************************************************************************
 // Protected Methods
 // *****************************************************************************
+
+void CBatchingSystem::OnChangedComponent(IComponentPtr component)
+{
+    CSystemBase::OnChangedComponent(component);
+    
+    // Update batch component if changed transformation or rendering components
+    if (component->GetId() == CTypeId<CTransformationComponent>::Id() ||
+        component->GetId() == CTypeId<CRenderComponent>::Id())
+    {
+        IEntityPtr entity = component->Entity();
+        entity->Get<CBatchComponent>([&](CBatchComponentPtr batchComponent) {
+            CSystemBase::OnChangedComponent(batchComponent);
+        });
+    }
+}
 
 // *****************************************************************************
 // Private Methods

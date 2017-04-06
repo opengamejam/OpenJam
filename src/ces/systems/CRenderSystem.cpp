@@ -24,38 +24,10 @@ using namespace jam;
 // Public Methods
 // *****************************************************************************
 
-struct SOrderComparator {
-    bool operator()(CRenderComponentPtr rc1, CRenderComponentPtr rc2) const
-    {
-        IEntityPtr e1 = rc1->Entity();
-        IEntityPtr e2 = rc2->Entity();
-        if (!e1 || !e2) {
-            return false;
-        }
-
-        uint64_t o1 = OrderKey(rc1, e1);
-        uint64_t o2 = OrderKey(rc2, e2);
-
-#if defined(OS_KOS) // TODO: KOS render transparacy objects in other order
-        IMaterialPtr m2 = rc2->Material();
-        if (m2 && !m2->Opacity()) {
-            return o1 > o2;
-        }
-#endif
-        return o1 < o2;
-    }
-
-    INL static uint64_t OrderKey(CRenderComponentPtr rc, IEntityPtr e)
-    {
-        return (((uint64_t)e->HierarchyIndex() << 32) | rc->DrawOrder());
-    }
-};
-
 CRenderSystem::CRenderSystem(IRendererPtr renderer)
-    : m_Renderer(renderer)
+: m_Renderer(renderer)
 {
     assert(m_Renderer);
-    RegisterComponent<CRenderComponent>();
 }
 
 CRenderSystem::~CRenderSystem()
@@ -64,25 +36,11 @@ CRenderSystem::~CRenderSystem()
 
 void CRenderSystem::Update(unsigned long dt)
 {
-    /*const ISystem::TEntities& entities = Entities();
-    std::for_each(entities.begin(), entities.end(), [&](IEntityPtr entity)
-    {
-        CTransformationComponentPtr transformComponent = entity->Get<CTransformationComponent>();
-        
-        entity->Get<CRenderComponent>([&](CRenderComponentPtr renderComponent)
-        {
-            if (!IsEntityAdded(entity))
-            {
-                return;
-            }
-        });
-    });*/
-
-    ClearDirtyEntities();
+    ClearDirtyComponents();
     m_ProccededFrameBuffers.clear();
 }
 
-void CRenderSystem::Draw(ICameraPtr camera)
+void CRenderSystem::Draw(ICameraPtr camera, IEntityPtr root)
 {
     if (!camera) {
         return;
@@ -107,7 +65,7 @@ void CRenderSystem::Draw(ICameraPtr camera)
     });
 
     // Draw
-    std::for_each(m_SortedComponents.begin(), m_SortedComponents.end(), [&](CRenderComponentPtr renderComponent) {
+    root->Get<CRenderComponent>([&](CRenderComponentPtr renderComponent) {
         if (renderComponent->Batchable()) {
             IMeshPtr mesh = renderComponent->Mesh(CRenderComponent::kBatchingGroupName);
             if (m_ProccededBatches.find(mesh->GetUid()) != m_ProccededBatches.end()) {
@@ -136,6 +94,12 @@ void CRenderSystem::Draw(ICameraPtr camera)
                 DrawGroup(renderComponent, groupName, projectionMatrix, viewMatrix, modelMatrix);
             });
         }
+    });
+    
+    const IEntity::TEntitiesList& entities = root->Children();
+    std::for_each(entities.begin(), entities.end(), [&](IEntityPtr entity)
+    {
+        Draw(camera, entity);
     });
 
     frameBuffer->Unbind();
@@ -191,54 +155,3 @@ void CRenderSystem::Draw(IMeshPtr mesh, IMaterialPtr material, ITexturePtr textu
 // *****************************************************************************
 // Private Methods
 // *****************************************************************************
-
-void CRenderSystem::OnAddedEntity(IEntityPtr entity)
-{
-    CSystemBase::OnAddedEntity(entity);
-
-    entity->Get<CRenderComponent>([&](CRenderComponentPtr renderComponent) {
-        std::map<CRenderComponentPtr, uint64_t>::const_iterator it = m_OrderKeys.find(renderComponent);
-        if (it != m_OrderKeys.end()) {
-            return;
-        }
-
-        uint64_t order_key = SOrderComparator::OrderKey(renderComponent, entity);
-
-        m_OrderKeys[renderComponent] = order_key;
-        m_SortedComponents.push_back(renderComponent);
-        m_SortedComponents.sort(SOrderComparator());
-    });
-}
-
-void CRenderSystem::OnChangedComponent(IComponentPtr component)
-{
-    CSystemBase::OnChangedComponent(component);
-
-    CRenderComponentPtr renderComponent = std::static_pointer_cast<CRenderComponent>(component);
-
-    std::map<CRenderComponentPtr, uint64_t>::iterator it = m_OrderKeys.find(renderComponent);
-    if (it == m_OrderKeys.end()) {
-        return;
-    }
-
-    uint64_t order_key = SOrderComparator::OrderKey(renderComponent, renderComponent->Entity());
-    if (order_key != it->second) {
-        it->second = order_key;
-        m_SortedComponents.sort(SOrderComparator());
-    }
-}
-
-void CRenderSystem::OnRemovedEntity(IEntityPtr entity)
-{
-    CSystemBase::OnRemovedEntity(entity);
-
-    entity->Get<CRenderComponent>([&](CRenderComponentPtr renderComponent) {
-        if (m_OrderKeys.find(renderComponent) == m_OrderKeys.end()) {
-            return;
-        }
-
-        m_OrderKeys.erase(renderComponent);
-        std::list<CRenderComponentPtr>::const_iterator it = std::find(m_SortedComponents.begin(), m_SortedComponents.end(), renderComponent);
-        m_SortedComponents.erase(it);
-    });
-}

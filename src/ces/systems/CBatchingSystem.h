@@ -10,6 +10,7 @@
 #define CBATCHINGSYSTEM_H
 
 #include "ISystem.h"
+#include "CBatchComponent.h"
 
 namespace jam {
 CLASS_PTR(CBatchingSystem)
@@ -21,13 +22,16 @@ CLASS_PTR(IVertexBuffer)
 CLASS_PTR(IIndexBuffer)
 CLASS_PTR(IRenderer)
 
-class CBatchingSystem : public CSystemBase {
+class CBatchingSystem : public CSystemBase<CBatchComponent> {
     JAM_OBJECT
 public:
     CBatchingSystem(IRendererPtr renderer);
     virtual ~CBatchingSystem();
 
     virtual void Update(unsigned long dt) override;
+    
+protected:
+    virtual void OnChangedComponent(IComponentPtr component) override;
 
 private:
     struct SGeometry;

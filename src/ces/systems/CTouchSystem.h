@@ -10,6 +10,7 @@
 #define CTOUCHSYSTEM_H
 
 #include "ISystem.h"
+#include "CTouchComponent.h"
 
 namespace jam {
 CLASS_PTR(CTouchSystem)
@@ -17,7 +18,7 @@ CLASS_PTR(IRenderer)
 CLASS_PTR(IRenderView)
 CLASS_PTR(IFrameBuffer)
 
-class CTouchSystem : public CSystemBase {
+class CTouchSystem : public CSystemBase<CTouchComponent> {
     JAM_OBJECT
 public:
     CTouchSystem(IRenderViewPtr renderView);

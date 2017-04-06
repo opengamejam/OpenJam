@@ -10,12 +10,13 @@
 #define CEventSystem_hpp
 
 #include "ISystem.h"
+#include "CEventComponent.h"
 
 namespace jam {
 CLASS_PTR(CEventSystem)
 CLASS_PTR(IEvent)
 
-class CEventSystem : public CSystemBase {
+class CEventSystem : public CSystemBase<CEventComponent> {
     JAM_OBJECT
 public:
     CEventSystem();
@@ -24,9 +25,6 @@ public:
     void DispatchEvent(IEventPtr event);
 
     virtual void Update(unsigned long dt) override;
-
-protected:
-    virtual void OnChangedComponent(IComponentPtr component) override;
 };
 
 } // namespace jam

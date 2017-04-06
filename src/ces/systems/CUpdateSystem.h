@@ -10,11 +10,12 @@
 #define CUPDATESYSTEM_H
 
 #include "ISystem.h"
+#include "CUpdateComponent.h"
 
 namespace jam {
 CLASS_PTR(CUpdateSystem)
 
-class CUpdateSystem : public CSystemBase {
+class CUpdateSystem : public CSystemBase<CUpdateComponent> {
     JAM_OBJECT
 public:
     CUpdateSystem();

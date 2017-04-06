@@ -10,11 +10,12 @@
 #define CANIMATION2DSYSTEM_H
 
 #include "ISystem.h"
+#include "CAnimation2DComponent.h"
 
 namespace jam {
 CLASS_PTR(CAnimation2DSystem)
 
-class CAnimation2DSystem : public CSystemBase {
+class CAnimation2DSystem : public CSystemBase<CAnimation2DComponent> {
     JAM_OBJECT
 public:
     CAnimation2DSystem();

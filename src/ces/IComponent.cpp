@@ -41,8 +41,6 @@ void CComponentBase::Entity(IEntityPtr entity)
     if (entity) {
         entity->AddComponent(thisPtr);
     }
-
-    Dirty();
 }
 
 IEntityPtr CComponentBase::Entity() const

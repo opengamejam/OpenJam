@@ -35,7 +35,7 @@ CRenderViewIOS::CRenderViewIOS(void* glkView, RenderApi renderApi)
     , m_GLContext(nil)
     , m_RenderApi(renderApi)
     , m_Renderer(nullptr)
-    , m_DefaultRenderTarget(nullptr)
+    , m_DefaultFrameBuffer(nullptr)
 {
 }
 
@@ -79,14 +79,14 @@ void CRenderViewIOS::CreateView()
     CRenderTargetDepthPtr depthTarget = m_Renderer->CreateDepthRenderTarget();
     depthTarget->Initialize(IRenderTarget::Depth24_Stencil8);
 
-    m_DefaultRenderTarget = m_Renderer->CreateFrameBuffer(RealWidth(), RealHeight());
-    m_DefaultRenderTarget->Initialize();
-    m_DefaultRenderTarget->Bind();
-    m_DefaultRenderTarget->AttachColor(colorTarget, 0);
-    m_DefaultRenderTarget->AttachDepth(depthTarget);
+    m_DefaultFrameBuffer = m_Renderer->CreateFrameBuffer(RealWidth(), RealHeight());
+    m_DefaultFrameBuffer->Initialize();
+    m_DefaultFrameBuffer->Bind();
+    m_DefaultFrameBuffer->AttachColor(colorTarget, 0);
+    m_DefaultFrameBuffer->AttachDepth(depthTarget);
 
-    m_DefaultRenderTarget->Bind();
-    assert(m_Renderer && m_DefaultRenderTarget->IsValid());
+    m_DefaultFrameBuffer->Bind();
+    assert(m_Renderer && m_DefaultFrameBuffer->IsValid());
 }
 
 void CRenderViewIOS::Begin() const
@@ -96,7 +96,7 @@ void CRenderViewIOS::Begin() const
 
 void CRenderViewIOS::End() const
 {
-    m_DefaultRenderTarget->ColorAttachement(0)->Bind();
+    m_DefaultFrameBuffer->ColorAttachement(0)->Bind();
     [m_GLContext presentRenderbuffer:GL_RENDERBUFFER];
 }
 
@@ -109,9 +109,9 @@ IRendererPtr CRenderViewIOS::Renderer() const
     return m_Renderer;
 }
 
-IFrameBufferPtr CRenderViewIOS::DefaultRenderTarget() const
+IFrameBufferPtr CRenderViewIOS::DefaultFrameBuffer() const
 {
-    return m_DefaultRenderTarget;
+    return m_DefaultFrameBuffer;
 }
 
 // *****************************************************************************

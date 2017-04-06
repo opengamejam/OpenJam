@@ -42,36 +42,43 @@ void CRenderSystem::Update(unsigned long dt)
 
 void CRenderSystem::Draw(ICameraPtr camera, IEntityPtr root)
 {
-    if (!camera) {
+    assert("Draw cannot be performed while camera or root are nullptr" && camera && root);
+    if (!camera || !root) {
         return;
     }
 
-    IFrameBufferPtr frameBuffer = camera->FrameBuffer();
-    if (!frameBuffer) {
-        return;
+    uint64_t frameBufferCount = camera->FrameBufferCount();
+    for (uint64_t fbIdx = 0; fbIdx < frameBufferCount; ++fbIdx) {
+        IFrameBufferPtr frameBuffer = camera->FrameBuffer(fbIdx);
+        
+        // Clear render target before drawing
+        frameBuffer->Bind();
+        if (m_ProccededFrameBuffers.find(frameBuffer) == m_ProccededFrameBuffers.end()) {
+            frameBuffer->Clear();
+            m_ProccededFrameBuffers.insert(frameBuffer);
+        }
+
+        glm::mat4 projectionMatrix = camera->ProjectionMatrix();
+        glm::mat4 viewMatrix(1.0);
+        camera->Get<CTransformationComponent>([&](CTransformationComponentPtr viewTransform) {
+            viewMatrix = viewTransform->AbsoluteTransformation()();
+        });
+        Draw(root, projectionMatrix, viewMatrix);
+        
+        frameBuffer->Unbind();
+        m_ProccededBatches.clear();
     }
+}
 
-    // Clear render target before drawing
-    frameBuffer->Bind();
-    if (m_ProccededFrameBuffers.find(frameBuffer) == m_ProccededFrameBuffers.end()) {
-        frameBuffer->Clear();
-        m_ProccededFrameBuffers.insert(frameBuffer);
-    }
-
-    glm::mat4 projectionMatrix = camera->ProjectionMatrix();
-    glm::mat4 viewMatrix(1.0);
-    camera->Get<CTransformationComponent>([&](CTransformationComponentPtr viewTransform) {
-        viewMatrix = viewTransform->AbsoluteTransformation()();
-    });
-
-    // Draw
+void CRenderSystem::Draw(IEntityPtr root, const glm::mat4& projectionMatrix, const glm::mat4& viewMatrix)
+{
     root->Get<CRenderComponent>([&](CRenderComponentPtr renderComponent) {
         if (renderComponent->Batchable()) {
             IMeshPtr mesh = renderComponent->Mesh(CRenderComponent::kBatchingGroupName);
             if (m_ProccededBatches.find(mesh->GetUid()) != m_ProccededBatches.end()) {
                 return;
             }
-
+            
             JAM_LOG("CRenderSystem::Draw - Draw batch: %s\n", renderComponent->Entity()->Name().c_str());
             DrawGroup(renderComponent, CRenderComponent::kBatchingGroupName, projectionMatrix, viewMatrix, glm::mat4(1.0));
             m_ProccededBatches.insert(mesh->GetUid());
@@ -83,7 +90,7 @@ void CRenderSystem::Draw(ICameraPtr camera, IEntityPtr root)
                     modelMatrix = modelTransform->AbsoluteTransformation()();
                 });
             }
-
+            
             const std::set<std::string>& groups = renderComponent->Groups();
             std::for_each(groups.begin(), groups.end(), [&](const std::string& groupName) {
                 if (groupName == CRenderComponent::kBatchingGroupName || !renderComponent->Visible(groupName)) {
@@ -99,11 +106,8 @@ void CRenderSystem::Draw(ICameraPtr camera, IEntityPtr root)
     const IEntity::TEntitiesList& entities = root->Children();
     std::for_each(entities.begin(), entities.end(), [&](IEntityPtr entity)
     {
-        Draw(camera, entity);
+        Draw(entity, projectionMatrix, viewMatrix);
     });
-
-    frameBuffer->Unbind();
-    m_ProccededBatches.clear();
 }
 
 void CRenderSystem::DrawGroup(CRenderComponentPtr renderComponent,

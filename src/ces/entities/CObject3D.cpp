@@ -190,18 +190,13 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, IRendererPtr rend
 
     // Transform component
     CTransformationComponentPtr transformComponent(new CTransformationComponent());
-    CUpdateComponentPtr updateComponent(new CUpdateComponent());
     CBatchComponentPtr batchComponent(new CBatchComponent());
 
     CObject3DPtr entity(new CObject3D());
     assert(entity);
     entity->Initialize(filename, { renderComponent,
                                    transformComponent,
-                                   updateComponent,
                                    batchComponent });
-
-    updateComponent->SetUpdateFunc(std::bind(&CObject3D::Update, entity.get(), std::placeholders::_1));
-    updateComponent->Dirty();
 
     return entity;
 }
@@ -211,10 +206,6 @@ CObject3D::CObject3D()
 }
 
 CObject3D::~CObject3D()
-{
-}
-
-void CObject3D::Update(unsigned long dt)
 {
 }
 

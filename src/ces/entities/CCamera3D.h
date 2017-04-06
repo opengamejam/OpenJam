@@ -33,19 +33,28 @@ public:
     virtual ~CCamera3D();
 
     /*
-     * Returns Projection View matrix
+     * Returns Projection View matrix. Attribute 'frameBufferIndex' choose projection matrix for according frame buffer
+     * if there are several atached frame buffers
      */
-    virtual glm::mat4x4 ProjectionMatrix() override;
+    virtual glm::mat4x4 ProjectionMatrix(uint64_t frameBufferIndex = kDefaultFrameBuffer) override;
     
     /*
-     * Return attached framebuffer
+     * Return attached framebuffer. Attribute 'frameBufferIndex' choose required frame buffer
+     * if there are several atached frame buffers
      */
-    virtual IFrameBufferPtr FrameBuffer() const override;
+    virtual IFrameBufferPtr FrameBuffer(uint64_t frameBufferIndex = kDefaultFrameBuffer) const override;
     
     /*
-     * Assign new framebuffer. Projection matrix will be recalculated to current framebuffer width and height
+     * Assign new framebuffer. Projection matrix will be recalculated to current framebuffer width and height.
+     * Attribute 'frameBufferIndex' choose required frame buffer if there are several atached frame buffers
+     * Pass nullptr to remove framebuffer at position 'frameBufferIndex'
      */
-    virtual void FrameBuffer(IFrameBufferPtr frameBuffer) override;
+    virtual void FrameBuffer(IFrameBufferPtr frameBuffer, uint64_t frameBufferIndex = kDefaultFrameBuffer) override;
+    
+    /*
+     * Returns count of attached frame buffers
+     */
+    virtual uint64_t FrameBufferCount() const override;
     
     /*
      * Flip camera vertically
@@ -61,8 +70,8 @@ private:
     float m_FOV;
     float m_Near;
     float m_Far;
-    glm::mat4x4 m_ProjectionMatrix;
-    IFrameBufferPtr m_FrameBuffer;
+    std::vector<glm::mat4x4> m_ProjectionMatrix;
+    std::vector<IFrameBufferPtr> m_FrameBuffer;
 };
 
 }; // namespace jam

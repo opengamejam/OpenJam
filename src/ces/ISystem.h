@@ -78,6 +78,7 @@ public:
      */
     CSystemBase()
         : m_RequiredComponent(CTypeId<ComponentType>::Id())
+        , m_MainThreadId(std::this_thread::get_id())
     {
         ComponentType::OnAddedSignal += std::bind(&CSystemBase::OnAddedComponent, this, std::placeholders::_1);
         ComponentType::OnRemovedSignal += std::bind(&CSystemBase::OnRemovedComponent, this, std::placeholders::_1);
@@ -145,6 +146,9 @@ protected:
      */
     virtual void OnAddedComponent(IComponentPtr component)
     {
+        assert("Adding component from background thread is not allowed" &&
+               m_MainThreadId == std::this_thread::get_id());
+        
         if (IsSupportComponent(component->GetId())) {
             m_Components.insert(component);
         }
@@ -155,6 +159,9 @@ protected:
      */
     virtual void OnRemovedComponent(IComponentPtr component)
     {
+        assert("Removing component from background thread is not allowed" &&
+               m_MainThreadId == std::this_thread::get_id());
+        
         if (IsSupportComponent(component->GetId())) {
             m_Components.erase(component);
         }
@@ -165,6 +172,9 @@ protected:
      */
     virtual void OnChangedComponent(IComponentPtr component)
     {
+        assert("Changing component from background thread is not allowed" &&
+               m_MainThreadId == std::this_thread::get_id());
+        
         if (IsSupportComponent(component->GetId())) {
             m_DirtyComponents.insert(component);
         }
@@ -222,6 +232,7 @@ private:
     std::set<IComponentPtr> m_Components;
     std::set<IComponentPtr> m_DirtyComponents;
     typeid_t m_RequiredComponent;
+    std::thread::id m_MainThreadId;
 };
 
 }; // namespace jam

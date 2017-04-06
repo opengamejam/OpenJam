@@ -98,6 +98,7 @@ void CBatchingSystem::Update(unsigned long dt)
                 renderComp->Material(geometry->material, CRenderComponent::kBatchingGroupName);
                 renderComp->Texture(geometry->texture, CRenderComponent::kBatchingGroupName);
                 renderComp->Shader(geometry->shader, CRenderComponent::kBatchingGroupName);
+                renderComp->Dirty();
             } else {
                 geometry = &m_Batches[batchComponent->BatchId()];
             }

@@ -17,6 +17,7 @@ CLASS_PTR(IEntity)
 CLASS_PTR(IComponent)
 CLASS_PTR(CRenderComponent)
 CLASS_PTR(CTransformationComponent)
+CLASS_PTR(CUpdateComponent)
 
 /*
  * Interface IEntity
@@ -144,9 +145,14 @@ public:
     virtual CRenderComponentPtr RenderComponent() const = 0;
     
     /*
-     * Assign render component
+     * Get transformation component
      */
     virtual CTransformationComponentPtr TransformationComponent() const = 0;
+    
+    /*
+     * Get update component
+     */
+    virtual CUpdateComponentPtr UpdateComponent() const = 0;
     
     /*
      * Set entity position
@@ -283,9 +289,14 @@ public:
     virtual CRenderComponentPtr RenderComponent() const override;
     
     /*
-     * Assign render component
+     * Get transformation component
      */
     virtual CTransformationComponentPtr TransformationComponent() const override;
+    
+    /*
+     * Get update component
+     */
+    virtual CUpdateComponentPtr UpdateComponent() const override;
     
     /*
      * Set entity position
@@ -340,6 +351,7 @@ private:
     
     CRenderComponentPtr m_RenderComponent;
     CTransformationComponentPtr m_TransformationComponent;
+    CUpdateComponentPtr m_UpdateComponent;
 };
 
 }; // namespace jam

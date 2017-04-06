@@ -40,8 +40,8 @@ CCamera2D::CCamera2D(float _near, float _far)
     : ICamera()
     , m_Near(_near)
     , m_Far(_far)
-    , m_ProjectionMatrix(glm::mat4x4(1.0f))
-    , m_FrameBuffer(nullptr)
+    , m_ProjectionMatrix()
+    , m_FrameBuffer()
     , m_IsFlippedX(false)
     , m_IsFlippedY(false)
 {
@@ -51,51 +51,72 @@ CCamera2D::~CCamera2D()
 {
 }
 
-glm::mat4x4 CCamera2D::ProjectionMatrix()
+glm::mat4x4 CCamera2D::ProjectionMatrix(uint64_t frameBufferIndex)
 {
     CTransform3Df resultTransform;
     Get<CTransformationComponent>([&](CTransformationComponentPtr transformComponent) {
         transformComponent->UpdateAbsoluteTransform();
         resultTransform = transformComponent->AbsoluteTransformation();
     });
-
-    return m_ProjectionMatrix * resultTransform();
+    
+    frameBufferIndex = std::min<uint64_t>(frameBufferIndex, m_FrameBuffer.size());
+    if (frameBufferIndex >= m_FrameBuffer.size()) {
+        return glm::mat4(1.0);
+    }
+    return m_ProjectionMatrix[frameBufferIndex] * resultTransform();
 }
 
-IFrameBufferPtr CCamera2D::FrameBuffer() const
+IFrameBufferPtr CCamera2D::FrameBuffer(uint64_t frameBufferIndex) const
 {
-    return m_FrameBuffer;
+    frameBufferIndex = std::min<uint64_t>(frameBufferIndex, m_FrameBuffer.size());
+    if (frameBufferIndex >= m_FrameBuffer.size()) {
+        return nullptr;
+    }
+    return m_FrameBuffer[frameBufferIndex];
 }
 
-void CCamera2D::FrameBuffer(IFrameBufferPtr frameBuffer)
+void CCamera2D::FrameBuffer(IFrameBufferPtr frameBuffer, uint64_t frameBufferIndex)
 {
-    m_FrameBuffer = frameBuffer;
-    m_ProjectionMatrix = glm::ortho(0.0f,
-                                    static_cast<float>(frameBuffer->Width()),
-                                    static_cast<float>(frameBuffer->Height()),
-                                    0.0f, m_Near, m_Far);
+    assert("Framebuffer's dimensions cannot be zero" && frameBuffer->Width() > 0 &&  frameBuffer->Height() > 0);
+    
+    if (!frameBuffer) {
+        if (frameBufferIndex < m_FrameBuffer.size()) {
+            m_FrameBuffer.erase(m_FrameBuffer.begin() + frameBufferIndex);
+            m_ProjectionMatrix.erase(m_ProjectionMatrix.begin() + frameBufferIndex);
+        }
+        return;
+    }
+    
+    glm::mat4 ortho = Ortho(frameBuffer->Width(), frameBuffer->Height(), m_IsFlippedX, m_IsFlippedY);
+    frameBufferIndex = std::min<uint64_t>(frameBufferIndex, m_FrameBuffer.size());
+    if (frameBufferIndex >= m_FrameBuffer.size()) {
+        m_FrameBuffer.push_back(frameBuffer);
+        m_ProjectionMatrix.push_back(ortho);
+    } else {
+        m_FrameBuffer[frameBufferIndex] = frameBuffer;
+        m_ProjectionMatrix[frameBufferIndex] = ortho;
+    }
+}
+
+uint64_t CCamera2D::FrameBufferCount() const
+{
+    return m_FrameBuffer.size();
 }
 
 void CCamera2D::FlipY()
 {
-    assert(FrameBuffer());
-    
     m_IsFlippedY = !m_IsFlippedY;
-    float top = (m_IsFlippedY) ? FrameBuffer()->Height() : 0;
-    float bottom = (m_IsFlippedY) ? 0 : FrameBuffer()->Height();
-
-    m_ProjectionMatrix = glm::ortho(0.0f, static_cast<float>(FrameBuffer()->Width()), bottom, top, m_Near, m_Far);
+    for (uint64_t i = 0; i < m_FrameBuffer.size(); ++i) {
+        m_ProjectionMatrix[i] = Ortho(FrameBuffer()->Width(), FrameBuffer()->Height(), m_IsFlippedX, m_IsFlippedY);
+    }
 }
 
 void CCamera2D::FlipX()
 {
-    assert(FrameBuffer());
-    
     m_IsFlippedX = !m_IsFlippedX;
-    float left = (m_IsFlippedX) ? FrameBuffer()->Width() : 0;
-    float right = (m_IsFlippedX) ? 0 : FrameBuffer()->Width();
-
-    m_ProjectionMatrix = glm::ortho(left, right, static_cast<float>(FrameBuffer()->Height()), 0.0f, m_Near, m_Far);
+    for (uint64_t i = 0; i < m_FrameBuffer.size(); ++i) {
+        m_ProjectionMatrix[i] = Ortho(FrameBuffer()->Width(), FrameBuffer()->Height(), m_IsFlippedX, m_IsFlippedY);
+    }
 }
 
 // *****************************************************************************
@@ -105,3 +126,14 @@ void CCamera2D::FlipX()
 // *****************************************************************************
 // Private Methods
 // *****************************************************************************
+
+glm::mat4 CCamera2D::Ortho(uint32_t w, uint32_t h, bool flipX, bool flipY)
+{
+    float left = (flipX) ? w : 0;
+    float right = (flipX) ? 0 : w;
+    
+    float top = (flipY) ? h : 0;
+    float bottom = (flipY) ? 0 : h;
+    
+    return glm::ortho(left, right, bottom, top, m_Near, m_Far);
+}

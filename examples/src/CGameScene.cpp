@@ -132,8 +132,11 @@ void CGameScene::CreateMainCamera()
     m_UICamera = CCamera2D::Create();
     m_MainCamera = CCamera3D::Create(90.0f);
 
-    m_UICamera->FrameBuffer(renderView->DefaultRenderTarget());
-    m_MainCamera->FrameBuffer(renderView->DefaultRenderTarget());
+    m_UICamera->FrameBuffer(renderView->DefaultFrameBuffer());
+    m_MainCamera->FrameBuffer(renderView->DefaultFrameBuffer());
+    
+    AddCamera(m_MainCamera);
+    AddCamera(m_UICamera);
 
     CSprite2DPtr ball = CSprite2D::Create("/ball_glitch/sprite.mpf", renderer);
     ball->Position(glm::vec3(0.0f, 0.0f, 1.0f));
@@ -169,8 +172,7 @@ void CGameScene::CreateMainCamera()
     assert(renderTextureFBO->IsValid());
     
     // Cam
-    ICameraPtr renderTextureCam = CCamera3D::Create(75.0f);
-    renderTextureCam->FrameBuffer(renderTextureFBO);
+    m_MainCamera->FrameBuffer(renderTextureFBO, 1);
     
     // TV object
     tv = CObject3D::CreateObj("/tv/tv.obj", renderer);
@@ -189,7 +191,7 @@ void CGameScene::CreateMainCamera()
     plane->Rotation(glm::vec3(0, 0, 0));
     plane->Scale(glm::vec3(0.36f, 0.27f, 1.0f));
     
-    plane->Get<CRenderComponent>([&](CRenderComponentPtr component)
+    plane->Get<CRenderComponent, true>([&](CRenderComponentPtr component)
     {
         CShaderSourceSprite shaderSource;
         IShaderPtr vertexShader = renderer->CreateShader();
@@ -210,17 +212,13 @@ void CGameScene::CreateMainCamera()
         component->Shader(shaderProgram);
     });
     
-    AddCamera(renderTextureCam);
-    AddCamera(m_MainCamera);
-    AddCamera(m_UICamera);
-    
     std::shared_ptr<CGameScene> scene = std::static_pointer_cast<CGameScene>(shared_from_this());
-    CThreadPool::Get()->RunAsync(CThreadPool::Background, [scene, renderer, renderTextureCam]() {
+    CThreadPool::Get()->RunAsync(CThreadPool::Background, [scene, renderer]() {
         std::string filename = "/cube/cube.obj";
         IModel3DPtr resultModel(new CModelObj(filename));
         resultModel->Load();
 
-        CThreadPool::Get()->RunAsync(CThreadPool::Main, [scene, renderer, filename, resultModel, renderTextureCam]() {
+        CThreadPool::Get()->RunAsync(CThreadPool::Main, [scene, renderer, filename, resultModel]() {
             CResourceCache<IModel3D> resourceCache;
             resourceCache.CacheResource(filename, false, resultModel);
 

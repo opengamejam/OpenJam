@@ -25,8 +25,6 @@ public:
 
     CObject3D();
     virtual ~CObject3D();
-
-    void Update(unsigned long dt);
 };
 
 }; // namespace jam

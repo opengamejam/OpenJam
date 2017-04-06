@@ -32,7 +32,7 @@ CRenderViewOSX::CRenderViewOSX(uint32_t width, uint32_t height, void* glkView, R
     , m_GLContext(nil)
     , m_RenderApi(renderApi)
     , m_Renderer(nullptr)
-    , m_DefaultRenderTarget(nullptr)
+    , m_DefaultFrameBuffer(nullptr)
 {
 }
 
@@ -89,14 +89,14 @@ void CRenderViewOSX::CreateView()
     CRenderTargetStencilPtr stencilTarget = m_Renderer->CreateStencilRenderTarget();
     stencilTarget->Initialize(IRenderTarget::Stencil8);
 
-    m_DefaultRenderTarget = m_Renderer->CreateFrameBuffer(RealWidth(), RealHeight());
+    m_DefaultFrameBuffer = m_Renderer->CreateFrameBuffer(RealWidth(), RealHeight());
     // Use 0 for the defaultFBO which is appropriate for
     // OSX (but not iOS since iOS apps must create their own FBO)
-    std::static_pointer_cast<CFrameBufferOGLBase>(m_DefaultRenderTarget)->InitializeWithFBO(0);
-    m_DefaultRenderTarget->Bind();
-    m_DefaultRenderTarget->AttachColor(colorTarget, 0);
-    m_DefaultRenderTarget->AttachDepth(depthTarget);
-    m_DefaultRenderTarget->AttachStencil(stencilTarget);
+    std::static_pointer_cast<CFrameBufferOGLBase>(m_DefaultFrameBuffer)->InitializeWithFBO(0);
+    m_DefaultFrameBuffer->Bind();
+    m_DefaultFrameBuffer->AttachColor(colorTarget, 0);
+    m_DefaultFrameBuffer->AttachDepth(depthTarget);
+    m_DefaultFrameBuffer->AttachStencil(stencilTarget);
 
     GLint swap = 1;
     [m_GLContext setValues:&swap forParameter:NSOpenGLCPSwapInterval];
@@ -121,9 +121,9 @@ IRendererPtr CRenderViewOSX::Renderer() const
     return m_Renderer;
 }
 
-IFrameBufferPtr CRenderViewOSX::DefaultRenderTarget() const
+IFrameBufferPtr CRenderViewOSX::DefaultFrameBuffer() const
 {
-    return m_DefaultRenderTarget;
+    return m_DefaultFrameBuffer;
 }
 
 // *****************************************************************************

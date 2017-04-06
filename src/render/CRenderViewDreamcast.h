@@ -26,11 +26,11 @@ public:
     virtual void UpdateEvents() const override;
 
     virtual IRendererPtr Renderer() const override;
-    virtual IFrameBufferPtr DefaultRenderTarget() const override;
+    virtual IFrameBufferPtr DefaultFrameBuffer() const override;
 
 private:
     IRendererPtr m_Renderer;
-    IFrameBufferPtr m_DefaultRenderTarget;
+    IFrameBufferPtr m_DefaultFrameBuffer;
     maple_device_t* m_Joy;
 };
 

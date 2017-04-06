@@ -31,7 +31,7 @@ CRenderViewWindows::CRenderViewWindows(unsigned int width, unsigned int height, 
     , m_Window(0)
     , m_Instance(hInstance)
     , m_Renderer(nullptr)
-    , m_DefaultRenderTarget(nullptr)
+    , m_DefaultFrameBuffer(nullptr)
 {
 }
 
@@ -136,7 +136,7 @@ void CRenderViewWindows::CreateView()
 
     std::shared_ptr<CFrameBufferOGLES2_0> renderTarget(new CFrameBufferOGLES2_0(RealWidth(), RealHeight()));
     renderTarget->Initialize(0);
-    m_DefaultRenderTarget = renderTarget;
+    m_DefaultFrameBuffer = renderTarget;
 }
 
 void CRenderViewWindows::Begin() const
@@ -162,9 +162,9 @@ IRendererPtr CRenderViewWindows::Renderer() const
     return f;
 }
 
-IFrameBufferPtr CRenderViewWindows::DefaultRenderTarget() const
+IFrameBufferPtr CRenderViewWindows::DefaultFrameBuffer() const
 {
-    return m_DefaultRenderTarget;
+    return m_DefaultFrameBuffer;
 }
 
 LRESULT CALLBACK CRenderViewWindows::WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)

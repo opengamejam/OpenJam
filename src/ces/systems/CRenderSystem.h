@@ -35,6 +35,7 @@ public:
     void Draw(ICameraPtr camera, IEntityPtr root);
 
 private:
+    void Draw(IEntityPtr root, const glm::mat4& projectionMatrix, const glm::mat4& viewMatrix);
     void DrawGroup(CRenderComponentPtr renderComponent,
         const std::string& groupName,
         const glm::mat4& projectionMatrix,

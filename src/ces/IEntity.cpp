@@ -10,7 +10,7 @@
 #include "CRenderComponent.h"
 #include "CTransformationComponent.h"
 #include "CRenderComponent.h"
-
+#include "CUpdateComponent.h"
 
 using namespace jam;
 
@@ -79,6 +79,7 @@ void CEntityBase::Name(const std::string& name)
 
 void CEntityBase::AddComponent(IComponentPtr component)
 {
+    assert("Cannot assign nullptr as component to entity" && component);
     if (!component) {
         return;
     }
@@ -98,6 +99,9 @@ void CEntityBase::AddComponent(IComponentPtr component)
         if (component->GetId() == CTypeId<CRenderComponent>::Id()) {
             m_RenderComponent = std::static_pointer_cast<CRenderComponent>(component);
         }
+        if (component->GetId() == CTypeId<CUpdateComponent>::Id()) {
+            m_UpdateComponent = std::static_pointer_cast<CUpdateComponent>(component);
+        }
     }
 }
 
@@ -113,6 +117,7 @@ IComponentPtr CEntityBase::GetComponent(typeid_t id)
 
 void CEntityBase::RemoveComponent(IComponentPtr component)
 {
+    assert("Cannot remove nullptr as component from entity" && component);
     if (!component) {
         return;
     }
@@ -128,6 +133,9 @@ void CEntityBase::RemoveComponent(IComponentPtr component)
         }
         if (component->GetId() == CTypeId<CRenderComponent>::Id()) {
             m_RenderComponent = nullptr;
+        }
+        if (component->GetId() == CTypeId<CUpdateComponent>::Id()) {
+            m_UpdateComponent = nullptr;
         }
         
         emit component->OnRemovedSignal(component);
@@ -157,6 +165,7 @@ uint32_t CEntityBase::ComponentsNum(typeid_t id)
 
 void CEntityBase::AddChild(IEntityPtr entity)
 {
+    assert("Cannot add nullptr as child to entity" && entity);
     if (!entity) {
         return;
     }
@@ -181,6 +190,11 @@ void CEntityBase::AddChild(IEntityPtr entity)
 
 void CEntityBase::RemoveChild(IEntityPtr entity)
 {
+    assert("Cannot remove nullptr as child from entity" && entity);
+    if (!entity) {
+        return;
+    }
+    
     IEntity::TEntitiesList::const_iterator it = std::find(m_Children.begin(), m_Children.end(), entity);
     if (it != m_Children.end()) {
         std::shared_ptr<CEntityBase> baseEntity = std::static_pointer_cast<CEntityBase>(*it);
@@ -214,6 +228,11 @@ CRenderComponentPtr CEntityBase::RenderComponent() const
 CTransformationComponentPtr CEntityBase::TransformationComponent() const
 {
     return m_TransformationComponent;
+}
+
+CUpdateComponentPtr CEntityBase::UpdateComponent() const
+{
+    return m_UpdateComponent;
 }
 
 void CEntityBase::Position(const glm::vec3& position)

@@ -16,23 +16,34 @@ CLASS_PTR(IFrameBuffer)
 class ICamera : public CEntityBase {
     JAM_OBJECT_BASE
 public:
+    static const uint64_t kDefaultFrameBuffer = 0;
+    
+public:
     ICamera() = default;
     virtual ~ICamera() = default;
 
     /*
-     * Returns Projection View matrix
+     * Returns Projection View matrix. Attribute 'frameBufferIndex' choose projection matrix for according frame buffer
+     * if there are several atached frame buffers
      */
-    virtual glm::mat4x4 ProjectionMatrix() = 0;
+    virtual glm::mat4x4 ProjectionMatrix(uint64_t frameBufferIndex = kDefaultFrameBuffer) = 0;
     
     /*
-     * Return attached framebuffer
+     * Return attached framebuffer. Attribute 'frameBufferIndex' choose required frame buffer
+     * if there are several atached frame buffers
      */
-    virtual IFrameBufferPtr FrameBuffer() const = 0;
+    virtual IFrameBufferPtr FrameBuffer(uint64_t frameBufferIndex = kDefaultFrameBuffer) const = 0;
     
     /*
-     * Assign new framebuffer. Projection matrix will be recalculated to current framebuffer width and height
+     * Assign new framebuffer. Projection matrix will be recalculated to current framebuffer width and height.
+     * Attribute 'frameBufferIndex' choose required frame buffer if there are several atached frame buffers
      */
-    virtual void FrameBuffer(IFrameBufferPtr frameBuffer) = 0;
+    virtual void FrameBuffer(IFrameBufferPtr frameBuffer, uint64_t frameBufferIndex = kDefaultFrameBuffer) = 0;
+    
+    /*
+     * Returns count of attached frame buffers
+     */
+    virtual uint64_t FrameBufferCount() const = 0;
 
     /*
      * Flip camera vertically

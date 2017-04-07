@@ -15,6 +15,7 @@
 namespace jam {
 CLASS_PTR(CThreadPool)
 CLASS_PTR(CThreadExecutor)
+CLASS_PTR(CSemaphore)
 
 class CThreadPool final {
 public:
@@ -24,16 +25,49 @@ public:
     };
 
 public:
+    /*
+     * Constructor
+     */
     CThreadPool();
+    
+    /*
+     * Destructor
+     */
     ~CThreadPool();
 
+    /*
+     * Create and get instance of main thread pool. Call it first time on main thread
+     */
     static CThreadPoolPtr Get();
+    
+    /*
+     * Returns true if calling thing method thread is main thread
+     */
     static bool IsMainThread();
 
+    /*
+     * Initialize number of background threads
+     */
     void Initialize(uint32_t threadsNum = 1);
+    
+    /*
+     * Shutdown background threads
+     */
     void Shutdown();
 
-    void RunAsync(ThreadType threadType, const CThreadExecutor::TExecuteBlock& block);
+    /*
+     * Run execution block asynchronously.
+     */
+    void RunAsync(ThreadType threadType, const CTask::TExecuteBlock& block);
+    
+    /*
+     * Run execution block synchronously. Don't call it from main thread because dedalock will happened
+     */
+    void RunSync(ThreadType threadType, const CTask::TExecuteBlock& block);
+    
+    /*
+     * Call it from main thread.
+     */
     void Update(unsigned long dt);
 
 private:
@@ -45,7 +79,9 @@ private:
 
     std::mutex m_Mutex;
     std::vector<CThreadExecutorPtr> m_ThreadExecutors;
-    std::queue<CThreadExecutor::TExecuteBlock> m_MainThreadTasks;
+    std::queue<CTask> m_MainThreadTasks;
+    std::atomic_uint_fast64_t m_MainTasksCount;
+    std::queue<CSemaphorePtr> m_Semaphores;
 };
 
 }; // namespace jam

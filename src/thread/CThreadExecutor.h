@@ -10,22 +10,39 @@
 #define CTHREADEXECUTOR_H
 
 #include "Global.h"
+#include "CTask.h"
 
 namespace jam {
 CLASS_PTR(CThreadExecutor)
 
-class CThreadExecutor {
+/*
+ * Execute tasks on background thread
+ */
+class CThreadExecutor final {
 public:
-    typedef std::function<void()> TExecuteBlock;
-
-public:
-    static CThreadExecutorPtr Create();
-
+    /*
+     * Constructor
+     */
     CThreadExecutor();
-    virtual ~CThreadExecutor();
+    
+    /*
+     * Destructor
+     */
+    ~CThreadExecutor();
 
-    void AddTask(const TExecuteBlock& block);
+    /*
+     * Add task to execution
+     */
+    void AddTask(const CTask& task);
+    
+    /*
+     * Number of pending execution tasks
+     */
     uint32_t TaskCount();
+    
+    /*
+     * Returns true if no tasks to execute
+     */
     bool IsEmpty();
 
 private:
@@ -33,7 +50,7 @@ private:
 
 private:
     std::condition_variable m_ConditionVariable;
-    std::queue<TExecuteBlock> m_Tasks;
+    std::queue<CTask> m_Tasks;
     std::mutex m_Mutex;
     std::thread m_Thread;
     bool m_IsEnabled;

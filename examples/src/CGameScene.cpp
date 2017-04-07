@@ -33,6 +33,7 @@
 #include "CShaderSourceSprite.h"
 #include "CShaderSourceCommon.h"
 
+
 using namespace jam;
 
 namespace jam {
@@ -218,7 +219,7 @@ void CGameScene::CreateMainCamera()
         IModel3DPtr resultModel(new CModelObj(filename));
         resultModel->Load();
 
-        CThreadPool::Get()->RunAsync(CThreadPool::Main, [scene, renderer, filename, resultModel]() {
+        CThreadPool::Get()->RunSync(CThreadPool::Main, [scene, renderer, filename, resultModel]() {
             CResourceCache<IModel3D> resourceCache;
             resourceCache.CacheResource(filename, false, resultModel);
 

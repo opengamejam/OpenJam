@@ -10,12 +10,6 @@
 
 using namespace jam;
 
-CThreadExecutorPtr CThreadExecutor::Create()
-{
-    CThreadExecutorPtr executor(new CThreadExecutor());
-    return executor;
-}
-
 CThreadExecutor::CThreadExecutor()
     : m_Thread(&CThreadExecutor::ThreadCall, this)
     , m_IsEnabled(true)
@@ -30,10 +24,10 @@ CThreadExecutor::~CThreadExecutor()
 }
 
 // Must be called on main thread
-void CThreadExecutor::AddTask(const TExecuteBlock& block)
+void CThreadExecutor::AddTask(const CTask& task)
 {
     std::unique_lock<std::mutex> locker(m_Mutex);
-    m_Tasks.push(block);
+    m_Tasks.push(task);
     m_ConditionVariable.notify_one();
 }
 
@@ -58,11 +52,11 @@ void CThreadExecutor::ThreadCall()
         });
 
         while (!m_Tasks.empty()) {
-            TExecuteBlock block = m_Tasks.front();
+            CTask task = m_Tasks.front();
             m_Tasks.pop();
 
             locker.unlock();
-            block();
+            task.Execute();
             locker.lock();
         }
     }

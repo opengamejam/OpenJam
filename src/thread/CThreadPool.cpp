@@ -57,7 +57,7 @@ void CThreadPool::Shutdown()
     m_ThreadExecutors.clear();
 }
 
-void CThreadPool::RunAsync(ThreadType threadType, const CTask::TExecuteBlock& block)
+void CThreadPool::RunAsync(ThreadType threadType, CTask::TExecuteBlock block)
 {
     if (!block) {
         return;
@@ -79,7 +79,7 @@ void CThreadPool::RunAsync(ThreadType threadType, const CTask::TExecuteBlock& bl
     }
 }
 
-void CThreadPool::RunSync(ThreadType threadType, const CTask::TExecuteBlock& block)
+void CThreadPool::RunSync(ThreadType threadType, CTask::TExecuteBlock block)
 {
     if (!block) {
         return;

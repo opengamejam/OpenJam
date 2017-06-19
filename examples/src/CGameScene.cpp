@@ -33,17 +33,20 @@
 #include "CShaderSourceSprite.h"
 #include "CShaderSourceCommon.h"
 
+#include <unistd.h>
+
+#include "COperationQueue.h"
+#include "CBlockOperation.h"
 
 using namespace jam;
 
-namespace jam {
+namespace jam
+{
 CLASS_PTR(IModel3D)
 }
 
 CGameScene::CGameScene(CGamePtr game)
-    : CSceneBase(game)
-    , m_IsPaused(false)
-    , m_MainCamera(nullptr)
+    : CSceneBase(game), m_IsPaused(false), m_MainCamera(nullptr)
 {
 }
 
@@ -85,32 +88,35 @@ void CGameScene::Update(unsigned long dt)
 
     lightPos.x += dir.x * speed * (dt / 1000.0f);
     lightPos.y += dir.y * speed * (dt / 1000.0f);
-    if (lightPos.x > 14.0f || lightPos.x < -14.0) {
+    if (lightPos.x > 14.0f || lightPos.x < -14.0)
+    {
         dir.x *= -1;
     }
-    if (lightPos.y > 10.0f || lightPos.y < -10.0) {
+    if (lightPos.y > 10.0f || lightPos.y < -10.0)
+    {
         dir.y *= -1;
     }
 
     int k = 0;
     std::for_each(m_Models3D.begin(), m_Models3D.end(), [&](jam::IEntityPtr entity) {
         entity->Get<CRenderComponent>([&](CRenderComponentPtr c) {
-            const std::set<std::string>& groups = c->Groups();
-            std::for_each(groups.begin(), groups.end(), [&](const std::string& groupName) {
+            const std::set<std::string> &groups = c->Groups();
+            std::for_each(groups.begin(), groups.end(), [&](const std::string &groupName) {
                 //c->Shader(groupName)->BindUniformfv("LightDir", {lightPos.x, lightPos.y, lightPos.z});
             });
         });
 
-        if (k++ < 3) {
+        if (k++ < 3)
+        {
             //return;
         }
 
-        const glm::vec3& rotation = entity->Rotation();
+        const glm::vec3 &rotation = entity->Rotation();
         entity->Rotation(glm::vec3(rotation.x + 1 * 3.14f / 180.0f,
                                    rotation.y + 1 * 3.14f / 180.0f,
                                    rotation.z + 1 * 3.14f / 180.0f));
     });
-    
+
     static float tv_rot = 0;
     static int tv_rot_dir = 1;
     tv_rot += (tv_rot_dir * 0.5);
@@ -128,6 +134,23 @@ void CGameScene::Update(unsigned long dt)
 
 void CGameScene::CreateMainCamera()
 {
+    CBlockOperationPtr op1(new CBlockOperation());
+    op1->AddExecutionBlock([]() {
+        printf("Op1 completed\n");
+        sleep(3);
+    });
+
+    CBlockOperationPtr op2(new CBlockOperation());
+    op2->Asynchronous(true);
+    op2->AddExecutionBlock([]() {
+        printf("Op2 completed\n");
+        sleep(3);
+    });
+
+    COperationQueue::MainQueue()->MaxConcurrentOperationCount(3);
+    COperationQueue::MainQueue()->AddOperation(op1);
+    COperationQueue::MainQueue()->AddOperation(op2);
+
     IRenderViewPtr renderView = Game()->RenderView();
     IRendererPtr renderer = renderView->Renderer();
     m_UICamera = CCamera2D::Create();
@@ -135,7 +158,7 @@ void CGameScene::CreateMainCamera()
 
     m_UICamera->FrameBuffer(renderView->DefaultFrameBuffer());
     m_MainCamera->FrameBuffer(renderView->DefaultFrameBuffer());
-    
+
     AddCamera(m_MainCamera);
     AddCamera(m_UICamera);
 
@@ -152,17 +175,16 @@ void CGameScene::CreateMainCamera()
 
     CEventComponentPtr eventComponent(new CEventComponent());
     eventComponent->RegisterHandler(CTypeId<CTouchEvent>::Id(),
-        std::bind(&CGameScene::OnBallMoved, this, std::placeholders::_1));
+                                    std::bind(&CGameScene::OnBallMoved, this, std::placeholders::_1));
     sprite->AddComponent(eventComponent);
 
-    
     // Render texture
     CRenderTargetTexturePtr renderTextureTarget = renderer->CreateTextureRenderTarget();
     renderTextureTarget->Initialize(IRenderTarget::ColorRGBA8888);
-    
+
     CRenderTargetDepthPtr depthTarget = renderer->CreateDepthRenderTarget();
     depthTarget->Initialize(IRenderTarget::Depth24_Stencil8);
-    
+
     // Render texture framebuffer
     IFrameBufferPtr renderTextureFBO = renderer->CreateFrameBuffer(512, 512);
     renderTextureFBO->Initialize();
@@ -171,48 +193,47 @@ void CGameScene::CreateMainCamera()
     renderTextureFBO->AttachDepth(depthTarget);
     renderTextureFBO->ClearColor(CColor4f(0.0f, 0.0f, 1.0f, 0.0f));
     assert(renderTextureFBO->IsValid());
-    
+
     // Cam
     m_MainCamera->FrameBuffer(renderTextureFBO, 1);
-    
+
     // TV object
     tv = CObject3D::CreateObj("/tv/tv.obj", renderer);
     Root()->AddChild(tv);
     tv->Position(glm::vec3(7.0f, 3.0f, 0.0f));
     tv->Rotation(glm::vec3(10.0f * 3.14f / 180.0f, 0, 0));
     tv->Scale(glm::vec3(3.0f, 3.0f, 3.0f));
-    
+
     tv->RenderComponent()->Batchable(false);
     tv->RenderComponent()->Dirty();
-    
+
     // Display obj
     jam::CObject3DPtr plane = CObject3D::CreateObj("/plane/plane.obj", renderer);
     tv->AddChild(plane);
     plane->Position(glm::vec3(-0.12f, 0.43f, 0.364f));
     plane->Rotation(glm::vec3(0, 0, 0));
     plane->Scale(glm::vec3(0.36f, 0.27f, 1.0f));
-    
-    plane->Get<CRenderComponent, true>([&](CRenderComponentPtr component)
-    {
+
+    plane->Get<CRenderComponent, true>([&](CRenderComponentPtr component) {
         CShaderSourceSprite shaderSource;
         IShaderPtr vertexShader = renderer->CreateShader();
         vertexShader->Compile(shaderSource.Vertex(), IShader::Vertex);
         assert(vertexShader);
-        
+
         IShaderPtr fragmentShader = renderer->CreateShader();
         fragmentShader->Compile(shaderSource.Fragment(), IShader::Fragment);
         assert(fragmentShader);
-        
+
         IShaderProgramPtr shaderProgram = renderer->CreateShaderProgram();
         shaderProgram->AttachShader(vertexShader);
         shaderProgram->AttachShader(fragmentShader);
         shaderProgram->Link();
-        
+
         component->Batchable(false);
         component->Texture(renderTextureTarget->Texture());
         component->Shader(shaderProgram);
     });
-    
+
     std::shared_ptr<CGameScene> scene = std::static_pointer_cast<CGameScene>(shared_from_this());
     CThreadPool::Get()->RunAsync(CThreadPool::Background, [scene, renderer]() {
         std::string filename = "/cube/cube.obj";
@@ -225,8 +246,10 @@ void CGameScene::CreateMainCamera()
 
             int y = 0;
             int x = 0;
-            for (int i = 0; i < 16; ++i) {
-                if (i != 0 && i % 4 == 0) {
+            for (int i = 0; i < 16; ++i)
+            {
+                if (i != 0 && i % 4 == 0)
+                {
                     y++;
                     x = 0;
                 }
@@ -234,10 +257,10 @@ void CGameScene::CreateMainCamera()
                 jam::CObject3DPtr cube = CObject3D::CreateObj(filename, renderer);
                 cube->Position(glm::vec3(x * 2.4f - 4.0f, y * 2.4f - 4.0f, 0.0f));
                 cube->Rotation(glm::vec3(i * 15 * 3.1415 / 180.0,
-                                                          i * 15 * 3.1415 / 180.0,
-                                                          i * 15 * 3.1415 / 180.0));
+                                         i * 15 * 3.1415 / 180.0,
+                                         i * 15 * 3.1415 / 180.0));
                 //cube->Scale(glm::vec3(10.0f, 10.0f, 10.0f));
-                
+
                 scene->Root()->AddChild(cube);
                 scene->m_Models3D.push_back(cube);
 
@@ -257,6 +280,3 @@ bool CGameScene::OnBallMoved(IEventPtr event)
 
     return true;
 }
-
-
-

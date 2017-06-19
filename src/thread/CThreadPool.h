@@ -58,12 +58,12 @@ public:
     /*
      * Run execution block asynchronously.
      */
-    void RunAsync(ThreadType threadType, const CTask::TExecuteBlock& block);
+    void RunAsync(ThreadType threadType, CTask::TExecuteBlock block);
     
     /*
      * Run execution block synchronously. Don't call it from main thread because dedalock will happened
      */
-    void RunSync(ThreadType threadType, const CTask::TExecuteBlock& block);
+    void RunSync(ThreadType threadType, CTask::TExecuteBlock block);
     
     /*
      * Call it from main thread.

@@ -134,22 +134,29 @@ void CGameScene::Update(unsigned long dt)
 
 void CGameScene::CreateMainCamera()
 {
-    CBlockOperationPtr op1(new CBlockOperation());
-    op1->AddExecutionBlock([]() {
-        printf("Op1 completed\n");
-        sleep(3);
-    });
+    m_BackgroundQueue = COperationQueue::CreateOperationQueue();
+    m_BackgroundQueue->MaxConcurrentOperationCount(3);
+    
+    std::vector<IOperationPtr> ops;
+    for (int i = 0; i < 3; ++i) {
+        CBlockOperationPtr op(new CBlockOperation());
+        op->AddExecutionBlock([i]() {
+            printf("Op[%d] executing\n", i);
+            sleep(5);
+            CThreadPool::Get()->RunAsync(CThreadPool::Main, [i](){
+                printf("Op[%d] back to main\n", i);
+            });
+        });
+        
+        op->AddCompletionBlock([i]() {
+            printf("Op[%d] completed\n", i);
+        });
+        
+        ops.push_back(op);
+    }
 
-    CBlockOperationPtr op2(new CBlockOperation());
-    op2->Asynchronous(true);
-    op2->AddExecutionBlock([]() {
-        printf("Op2 completed\n");
-        sleep(3);
-    });
-
-    COperationQueue::MainQueue()->MaxConcurrentOperationCount(3);
-    COperationQueue::MainQueue()->AddOperation(op1);
-    COperationQueue::MainQueue()->AddOperation(op2);
+    m_BackgroundQueue->AddOperations(ops);
+    //COperationQueue::MainQueue()->AddOperations(ops);
 
     IRenderViewPtr renderView = Game()->RenderView();
     IRendererPtr renderer = renderView->Renderer();

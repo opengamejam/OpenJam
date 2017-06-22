@@ -10,7 +10,8 @@
 
 namespace jam {
 CLASS_PTR(CObject3D)
-CLASS_PTR(IEvent);
+CLASS_PTR(IEvent)
+CLASS_PTR(COperationQueue)
 }
 
 class CGameScene : public jam::CSceneBase {
@@ -33,6 +34,8 @@ private:
     jam::ICameraPtr m_MainCamera;
     jam::ICameraPtr m_UICamera;
     std::list<jam::CObject3DPtr> m_Models3D;
+    
+    jam::COperationQueuePtr m_BackgroundQueue;
 };
 
 #endif /* CGAMESCENE_H */

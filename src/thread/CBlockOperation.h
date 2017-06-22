@@ -68,11 +68,6 @@ public:
     virtual bool IsFinished() const override;
     
     /*
-     * Set 'isAsynchronous' to execute task asynchronously
-     */
-    virtual void Asynchronous(bool isAsynchronous) override;
-    
-    /*
      * Returns true if task performs asyncronously
      */
     virtual bool IsAsynchronous() const override;
@@ -127,11 +122,9 @@ private:
     std::atomic_int m_IsCancelled;
     std::atomic_int m_IsExecuting;
     std::atomic_int m_IsFinished;
-    std::atomic_int m_IsAsynchronous;
     
     std::string m_Name;
     mutable std::mutex m_Mutex;
-    bool m_IsStartedFromMainThread;
 };
     
 }; // namespace jam

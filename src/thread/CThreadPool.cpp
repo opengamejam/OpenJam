@@ -129,7 +129,7 @@ CThreadExecutorPtr CThreadPool::FindLeisureExecutor()
     uint32_t minTasks = std::numeric_limits<uint32_t>::max();
 
     std::all_of(m_ThreadExecutors.begin(), m_ThreadExecutors.end(), [&](CThreadExecutorPtr ex) {
-        uint32_t taskCount = ex->TaskCount();
+        uint32_t taskCount = ex->TaskCount() + static_cast<uint32_t>(ex->IsExecuting());
 
         if (taskCount == 0) {
             executor = ex;

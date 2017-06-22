@@ -16,7 +16,7 @@ namespace jam {
 CLASS_PTR(IOperation)
 CLASS_PTR(COperationQueue)
     
-class COperationQueue final
+class COperationQueue final : public std::enable_shared_from_this<COperationQueue>
 {
     friend class COperationQueueManager;
 public:
@@ -90,6 +90,7 @@ private:
     COperationQueue();
     
     void ExecuteTop();
+    void SetIsMain(bool isMain);
     
 private:
     TOperations m_Operations;
@@ -99,9 +100,8 @@ private:
     std::string m_Name;
     std::atomic_bool m_IsExecuting;
     
-    std::atomic_uint_fast64_t m_MaxConcurrent;
-    std::atomic_uint_fast64_t m_ExecutedCount;
-    
+    std::atomic_int_fast64_t m_ExecutedCount;
+    bool m_IsMain;
     
     static COperationQueuePtr s_MainOperationQueue;
 };

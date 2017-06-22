@@ -38,12 +38,17 @@ public:
     /*
      * Number of pending execution tasks
      */
-    uint32_t TaskCount();
+    uint32_t TaskCount() const;
     
     /*
      * Returns true if no tasks to execute
      */
-    bool IsEmpty();
+    bool IsEmpty() const;
+    
+    /*
+     * Returns true if task executes now
+     */
+    bool IsExecuting() const;
 
 private:
     void ThreadCall();
@@ -51,9 +56,10 @@ private:
 private:
     std::condition_variable m_ConditionVariable;
     std::queue<CTask> m_Tasks;
-    std::mutex m_Mutex;
+    mutable std::mutex m_Mutex;
     std::thread m_Thread;
     bool m_IsEnabled;
+    bool m_IsExecuting;
 };
 
 }; // namespace jam

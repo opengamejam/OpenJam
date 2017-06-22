@@ -38,3 +38,8 @@ projects/windows/*
 *.exe
 *.out
 *.app
+projects/TestApp/TestApp.xcodeproj/project.xcworkspace/contents.xcworkspacedata
+projects/TestApp/TestApp.xcodeproj/project.xcworkspace/xcshareddata/TestApp.xcscmblueprint
+projects/TestApp/TestApp.xcodeproj/project.xcworkspace/xcuserdata/evg1985.xcuserdatad/UserInterfaceState.xcuserstate
+projects/TestApp/TestApp.xcodeproj/xcuserdata/evg1985.xcuserdatad/xcdebugger/Breakpoints_v2.xcbkptlist
+projects/TestApp/TestApp.xcodeproj/xcuserdata/evg1985.xcuserdatad/xcschemes/TestApp.xcscheme

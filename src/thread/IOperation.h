@@ -59,11 +59,6 @@ public:
     virtual bool IsFinished() const = 0;
     
     /*
-     * Set 'isAsynchronous' to execute task asynchronously
-     */
-    virtual void Asynchronous(bool isAsynchronous) = 0;
-    
-    /*
      * Returns true if task performs asyncronously
      */
     virtual bool IsAsynchronous() const = 0;

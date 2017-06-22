@@ -23,8 +23,6 @@ CBlockOperation::CBlockOperation()
 : m_IsCancelled(0)
 , m_IsExecuting(0)
 , m_IsFinished(0)
-, m_IsAsynchronous(0)
-, m_IsStartedFromMainThread(true)
 {
 
 }
@@ -48,25 +46,17 @@ CBlockOperation::TExecutionBlocks CBlockOperation::ExecutionBlocks() const
 
 void CBlockOperation::Start()
 {
-    if (IsExecuting()) {
+    if (IsFinished()) {
         return;
     }
     
-    m_IsCancelled = 0;
-    m_IsExecuting = 1;
-    m_IsFinished = 0;
+    if (!IsReady()) {
+        assert("Cannot start operation when it is not ready" && false);
+        return;
+    }
     
-    CThreadPoolPtr threadPool = CThreadPool::Get();
-    m_IsStartedFromMainThread = threadPool->IsMainThread();
-    if (IsAsynchronous() != m_IsStartedFromMainThread) {
+    if (!IsExecuting()) {
         Main();
-    } else {
-        IOperationPtr thisPtr = shared_from_this();
-        bool isBackground = IsAsynchronous() && m_IsStartedFromMainThread;
-        CThreadPool::ThreadType threadType = (isBackground ? CThreadPool::Background : CThreadPool::Main);
-        threadPool->RunAsync(threadType, [&](){
-            Main();
-        });
     }
 }
 
@@ -90,16 +80,9 @@ bool CBlockOperation::IsFinished() const
     return m_IsFinished;
 }
 
-void CBlockOperation::Asynchronous(bool isAsynchronous)
-{
-    if (!IsExecuting()) {
-        m_IsAsynchronous = isAsynchronous;
-    }
-}
-
 bool CBlockOperation::IsAsynchronous() const
 {
-    return m_IsAsynchronous;
+    return false;
 }
 
 bool CBlockOperation::IsReady() const
@@ -154,40 +137,39 @@ std::string CBlockOperation::Name() const
 
 void CBlockOperation::Main()
 {
-    TDependencies dependencies;
+    m_IsExecuting = 1;
+    
+    TExecutionBlocks copyExecutions;
+    TCompletionBlocks copyCompletions;
     {
         std::lock_guard<decltype(m_Mutex)> lock(m_Mutex);
-        m_Dependencies.swap(dependencies);
+        m_ExecutionBlocks.swap(copyExecutions);
+        m_CompletionBlock.swap(copyCompletions);
     }
-    std::for_each(dependencies.begin(), dependencies.end(), [&](IOperationPtr dependencyOp) {
-        if (m_IsCancelled != 0) {
-            dependencyOp->Cancel();
-        } else {
-            dependencyOp->Asynchronous(IsAsynchronous());
-            dependencyOp->Start();
-        }
-    });
     
-    if (m_IsCancelled == 0) {
-        std::all_of(m_ExecutionBlocks.begin(), m_ExecutionBlocks.end(), [&](const TExecutionBlock& executionBlock) {
-            executionBlock();
+    CBlockOperationWeak weakPtr = std::static_pointer_cast<CBlockOperation>(shared_from_this());
+    if (!IsCancelled()) {
+        std::all_of(copyExecutions.begin(), copyExecutions.end(), [weakPtr](const TExecutionBlock& executionBlock) {
+            CBlockOperationPtr strongPtr = weakPtr.lock();
+            if (strongPtr) {
+                executionBlock();
+                
+                return strongPtr->IsCancelled();
+            }
             
-            return (m_IsCancelled != 0);
+            return true;
         });
     }
     
-    m_IsFinished = !m_IsCancelled;
-    m_IsExecuting = 0;
+    m_IsFinished = 1;
     
     // Notify that task completed
-    if (!m_IsCancelled) {
-        CThreadPoolPtr threadPool = CThreadPool::Get();
-        CThreadPool::ThreadType threadType = m_IsStartedFromMainThread ? CThreadPool::Main : CThreadPool::Background;
-        std::for_each(m_CompletionBlock.begin(), m_CompletionBlock.end(),
-                      [threadPool, threadType](const IOperation::TCompletionBlock& block) {
-            threadPool->RunAsync(threadType, block);
-        });
-    }
+    std::for_each(copyCompletions.begin(), copyCompletions.end(),
+                  [](const IOperation::TCompletionBlock& completionBlock) {
+        completionBlock();
+    });
+    
+    m_IsExecuting = 0;
 }
 
 // *****************************************************************************

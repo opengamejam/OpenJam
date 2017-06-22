@@ -13,6 +13,7 @@ using namespace jam;
 CThreadExecutor::CThreadExecutor()
     : m_Thread(&CThreadExecutor::ThreadCall, this)
     , m_IsEnabled(true)
+    , m_IsExecuting(false)
 {
 }
 
@@ -31,16 +32,22 @@ void CThreadExecutor::AddTask(const CTask& task)
     m_ConditionVariable.notify_one();
 }
 
-uint32_t CThreadExecutor::TaskCount()
+uint32_t CThreadExecutor::TaskCount() const
 {
     std::unique_lock<std::mutex> locker(m_Mutex);
     return static_cast<uint32_t>(m_Tasks.size());
 }
 
-bool CThreadExecutor::IsEmpty()
+bool CThreadExecutor::IsEmpty() const
 {
     std::unique_lock<std::mutex> locker(m_Mutex);
     return m_Tasks.empty();
+}
+
+bool CThreadExecutor::IsExecuting() const
+{
+    std::unique_lock<std::mutex> locker(m_Mutex);
+    return m_IsExecuting;
 }
 
 void CThreadExecutor::ThreadCall()
@@ -56,7 +63,9 @@ void CThreadExecutor::ThreadCall()
             m_Tasks.pop();
 
             locker.unlock();
+            m_IsExecuting = true;
             task.Execute();
+            m_IsExecuting = false;
             locker.lock();
         }
     }

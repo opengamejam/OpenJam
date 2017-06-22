@@ -8,6 +8,7 @@
 
 #include "COperationQueue.h"
 #include "IOperation.h"
+#include "CThreadPool.h"
 
 using namespace jam;
 
@@ -17,7 +18,7 @@ COperationQueue::COperationQueue()
 : m_MaxConcurrentOperationCount(1)
 , m_IsExecuting(false)
 , m_ExecutedCount(0)
-, m_MaxConcurrent(0)
+, m_IsMain(false)
 {
 
 }
@@ -110,45 +111,50 @@ COperationQueuePtr COperationQueue::MainQueue()
     if (!s_MainOperationQueue) {
         s_MainOperationQueue = COperationQueue::CreateOperationQueue();
         s_MainOperationQueue->Name("Main Operation Queue");
+        s_MainOperationQueue->SetIsMain(true);
     }
     return s_MainOperationQueue;
 }
 
 void COperationQueue::ExecuteTop()
 {
-    if (m_ExecutedCount < m_MaxConcurrent ||
-        m_OperationsSize == 0) {
+    if (m_OperationsSize == 0 || m_ExecutedCount > 0) {
         return;
     }
     
     if (m_OperationsSize > 0) {
-        m_ExecutedCount = 0;
-        m_MaxConcurrent = std::min<uint64_t>(MaxConcurrentOperationCount(), m_OperationsSize);
-        std::vector<IOperationPtr> concurrentOps(m_MaxConcurrent);
+        uint64_t concurrentCount = std::min<uint64_t>(MaxConcurrentOperationCount(), m_OperationsSize);
+        std::vector<IOperationPtr> concurrentOps(static_cast<size_t>(concurrentCount));
         {
             std::lock_guard<decltype(m_Mutex)> lock(m_Mutex);
-            for (uint64_t i = 0; i < m_MaxConcurrent; ++i) {
-                concurrentOps[i] = m_Operations.front();
+            for (uint64_t i = 0; i < concurrentCount; ++i) {
+                concurrentOps[static_cast<size_t>(i)] = m_Operations.front();
                 m_Operations.pop();
             }
             m_OperationsSize = m_Operations.size();
         }
+        m_ExecutedCount = concurrentOps.size();
         
-        std::for_each(concurrentOps.begin(), concurrentOps.end(), [&](IOperationPtr operation){
-            if (operation->IsCancelled()) {
-                m_ExecutedCount++;
-                if (m_ExecutedCount == m_MaxConcurrent) {
-                    ExecuteTop();
-                }
-            } else {
-                operation->AddCompletionBlock([&](){
-                    m_ExecutedCount++;
-                    if (m_ExecutedCount == m_MaxConcurrent) {
-                        ExecuteTop();
+        CThreadPool::ThreadType threadType = m_IsMain ? CThreadPool::Main : CThreadPool::Background;
+        COperationQueueWeak weak = shared_from_this();
+        CThreadPoolPtr threadPool = CThreadPool::Get();
+        std::for_each(concurrentOps.begin(), concurrentOps.end(), [threadType, threadPool, weak](IOperationPtr operation){
+            threadPool->RunAsync(threadType, [weak, operation](){
+                operation->AddCompletionBlock([weak](){
+                    COperationQueuePtr strong = weak.lock();
+                    if (strong) {
+                        strong->m_ExecutedCount--;
+                        strong->ExecuteTop();
                     }
                 });
+                
                 operation->Start();
-            }
+            });
         });
     }
+}
+
+void COperationQueue::SetIsMain(bool isMain)
+{
+    m_IsMain = isMain;
 }

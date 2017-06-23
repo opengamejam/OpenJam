@@ -128,8 +128,24 @@ void COperationQueue::ExecuteTop()
         {
             std::lock_guard<decltype(m_Mutex)> lock(m_Mutex);
             for (uint64_t i = 0; i < concurrentCount; ++i) {
-                concurrentOps[static_cast<size_t>(i)] = m_Operations.front();
+                IOperationPtr op = m_Operations.front();
                 m_Operations.pop();
+                if (op->IsReady()) {
+                    concurrentOps[static_cast<size_t>(i)] = op;
+                } else {
+                    // Add first not finished dependencies
+                    IOperation::TDependencies deps = op->Dependecies();
+                    std::all_of(deps.begin(), deps.end(),
+                                [&](IOperationPtr operation) {
+                        if (!operation->IsFinished()) {
+                            concurrentOps[static_cast<size_t>(i)] = operation;
+                            return false;
+                        }
+                        return true;
+                    });
+                    // Move back main operation while it not finished yet
+                    m_Operations.push(op);
+                }
             }
             m_OperationsSize = m_Operations.size();
         }

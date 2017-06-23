@@ -143,14 +143,26 @@ void CGameScene::CreateMainCamera()
         op->AddExecutionBlock([i]() {
             printf("Op[%d] executing\n", i);
             sleep(5);
-            CThreadPool::Get()->RunAsync(CThreadPool::Main, [i](){
-                printf("Op[%d] back to main\n", i);
-            });
         });
         
         op->AddCompletionBlock([i]() {
             printf("Op[%d] completed\n", i);
         });
+        
+        int size = 2 / (i + 1);
+        for (int j = 0; j < size; ++j) {
+            CBlockOperationPtr dep(new CBlockOperation());
+            dep->AddExecutionBlock([i, j]() {
+                printf("Dep[%d, %d] executing\n", i, j);
+                sleep(5);
+            });
+            
+            dep->AddCompletionBlock([i, j]() {
+                printf("Dep[%d, %d] completed\n", i, j);
+            });
+            
+            op->AddDependency(dep);
+        }
         
         ops.push_back(op);
     }

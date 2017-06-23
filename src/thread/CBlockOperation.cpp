@@ -88,7 +88,16 @@ bool CBlockOperation::IsAsynchronous() const
 bool CBlockOperation::IsReady() const
 {
     std::lock_guard<decltype(m_Mutex)> lock(m_Mutex);
-    return m_Dependencies.size() == 0;
+    if (m_Dependencies.size() == 0) {
+        return true;
+    }
+    
+    TDependencies::const_iterator it = std::find_if(m_Dependencies.begin(), m_Dependencies.end(),
+                                                    [](IOperationPtr operation) {
+        return !operation->IsFinished();
+    });
+    
+    return it == m_Dependencies.end();
 }
 
 void CBlockOperation::AddDependency(IOperationPtr operation)

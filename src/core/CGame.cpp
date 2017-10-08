@@ -188,7 +188,7 @@ void CGame::InitializeFileSystems()
     vfs_initialize();
 
     IFileSystemPtr root_fs(new CNativeFileSystem(CSystem::GetBundlePath() + "media/"));
-    IFileSystemPtr zip_fs(new CZipFileSystem(CSystem::GetBundlePath() + "media/bundle.zip", "/", false));
+    IFileSystemPtr zip_fs(new CZipFileSystem(CSystem::GetBundlePath() + "media/bundle.zip", "/"));
     IFileSystemPtr mem_fs(new CMemoryFileSystem());
 
     root_fs->Initialize();

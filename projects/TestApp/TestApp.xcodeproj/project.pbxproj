@@ -171,36 +171,18 @@
 		6E5A7C061EF80128001F41B3 /* CMemoryFileSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7BF01EF80128001F41B3 /* CMemoryFileSystem.cpp */; };
 		6E5A7C071EF80128001F41B3 /* CNativeFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7BF11EF80128001F41B3 /* CNativeFile.cpp */; };
 		6E5A7C081EF80128001F41B3 /* CNativeFileSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7BF21EF80128001F41B3 /* CNativeFileSystem.cpp */; };
-		6E5A7C091EF80128001F41B3 /* CStringUtil.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7BF31EF80128001F41B3 /* CStringUtil.cpp */; };
 		6E5A7C0A1EF80128001F41B3 /* CVirtualFileSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7BF51EF80128001F41B3 /* CVirtualFileSystem.cpp */; };
 		6E5A7C0B1EF80128001F41B3 /* CZipFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7BF61EF80128001F41B3 /* CZipFile.cpp */; };
 		6E5A7C0C1EF80128001F41B3 /* CZipFileSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7BF71EF80128001F41B3 /* CZipFileSystem.cpp */; };
 		6E5A7D1C1EF80157001F41B3 /* glm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7C291EF80156001F41B3 /* glm.cpp */; };
-		6E5A7E961EF80190001F41B3 /* adler32.c in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7D851EF8018F001F41B3 /* adler32.c */; };
-		6E5A7E9F1EF80190001F41B3 /* compress.c in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7D901EF8018F001F41B3 /* compress.c */; };
-		6E5A7EDF1EF80190001F41B3 /* ioapi.c in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7DEA1EF8018F001F41B3 /* ioapi.c */; };
-		6E5A7EEB1EF80190001F41B3 /* mztools.c in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7DF81EF8018F001F41B3 /* mztools.c */; };
-		6E5A7EEC1EF80190001F41B3 /* unzip.c in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7DFA1EF8018F001F41B3 /* unzip.c */; };
-		6E5A7EED1EF80190001F41B3 /* zip.c in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7DFC1EF8018F001F41B3 /* zip.c */; };
-		6E5A7F1F1EF80190001F41B3 /* crc32.c in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7E381EF8018F001F41B3 /* crc32.c */; };
-		6E5A7F201EF80190001F41B3 /* deflate.c in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7E3A1EF80190001F41B3 /* deflate.c */; };
-		6E5A7F311EF80190001F41B3 /* gzclose.c in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7E4F1EF80190001F41B3 /* gzclose.c */; };
-		6E5A7F321EF80190001F41B3 /* gzlib.c in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7E511EF80190001F41B3 /* gzlib.c */; };
-		6E5A7F331EF80190001F41B3 /* gzread.c in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7E521EF80190001F41B3 /* gzread.c */; };
-		6E5A7F341EF80190001F41B3 /* gzwrite.c in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7E531EF80190001F41B3 /* gzwrite.c */; };
-		6E5A7F361EF80190001F41B3 /* infback.c in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7E551EF80190001F41B3 /* infback.c */; };
-		6E5A7F371EF80190001F41B3 /* inffast.c in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7E561EF80190001F41B3 /* inffast.c */; };
-		6E5A7F381EF80190001F41B3 /* inflate.c in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7E591EF80190001F41B3 /* inflate.c */; };
-		6E5A7F391EF80190001F41B3 /* inftrees.c in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7E5B1EF80190001F41B3 /* inftrees.c */; };
-		6E5A7F511EF80190001F41B3 /* trees.c in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7E7A1EF80190001F41B3 /* trees.c */; };
-		6E5A7F521EF80190001F41B3 /* uncompr.c in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7E7C1EF80190001F41B3 /* uncompr.c */; };
-		6E5A7F681EF80B3F001F41B3 /* zutil.c in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7F671EF80B3F001F41B3 /* zutil.c */; };
 		6E5A7F6B1EF8131F001F41B3 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E5A7F6A1EF8131F001F41B3 /* Foundation.framework */; };
 		6E5A7F6D1EF81324001F41B3 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E5A7F6C1EF81324001F41B3 /* UIKit.framework */; };
 		6E5A7F6F1EF8132D001F41B3 /* CoreGraphics.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E5A7F6E1EF8132D001F41B3 /* CoreGraphics.framework */; };
 		6E5A7F711EF81333001F41B3 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E5A7F701EF81333001F41B3 /* GLKit.framework */; };
 		6E5A7F731EF8133A001F41B3 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E5A7F721EF8133A001F41B3 /* OpenGLES.framework */; };
 		6E5A7F771EF814EA001F41B3 /* media in Resources */ = {isa = PBXBuildFile; fileRef = 6E5A7F761EF814EA001F41B3 /* media */; };
+		CC3C9FE51F897C3A009E5B69 /* miniz.c in Sources */ = {isa = PBXBuildFile; fileRef = CC3C9FE41F897C3A009E5B69 /* miniz.c */; };
+		CC5DB1571F8919F00080C0E1 /* CStringUtilsVFS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CC5DB1561F8919F00080C0E1 /* CStringUtilsVFS.cpp */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -545,8 +527,6 @@
 		6E5A7BF01EF80128001F41B3 /* CMemoryFileSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CMemoryFileSystem.cpp; sourceTree = "<group>"; };
 		6E5A7BF11EF80128001F41B3 /* CNativeFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CNativeFile.cpp; sourceTree = "<group>"; };
 		6E5A7BF21EF80128001F41B3 /* CNativeFileSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CNativeFileSystem.cpp; sourceTree = "<group>"; };
-		6E5A7BF31EF80128001F41B3 /* CStringUtil.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CStringUtil.cpp; sourceTree = "<group>"; };
-		6E5A7BF41EF80128001F41B3 /* CStringUtil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CStringUtil.h; sourceTree = "<group>"; };
 		6E5A7BF51EF80128001F41B3 /* CVirtualFileSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CVirtualFileSystem.cpp; sourceTree = "<group>"; };
 		6E5A7BF61EF80128001F41B3 /* CZipFile.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CZipFile.cpp; sourceTree = "<group>"; };
 		6E5A7BF71EF80128001F41B3 /* CZipFileSystem.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CZipFileSystem.cpp; sourceTree = "<group>"; };
@@ -815,46 +795,16 @@
 		6E5A7D0F1EF80157001F41B3 /* vec3.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = vec3.hpp; sourceTree = "<group>"; };
 		6E5A7D101EF80157001F41B3 /* vec4.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = vec4.hpp; sourceTree = "<group>"; };
 		6E5A7D111EF80157001F41B3 /* vector_relational.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = vector_relational.hpp; sourceTree = "<group>"; };
-		6E5A7D851EF8018F001F41B3 /* adler32.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = adler32.c; sourceTree = "<group>"; };
-		6E5A7D901EF8018F001F41B3 /* compress.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = compress.c; sourceTree = "<group>"; };
-		6E5A7DE91EF8018F001F41B3 /* crypt.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crypt.h; sourceTree = "<group>"; };
-		6E5A7DEA1EF8018F001F41B3 /* ioapi.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ioapi.c; sourceTree = "<group>"; };
-		6E5A7DEB1EF8018F001F41B3 /* ioapi.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ioapi.h; sourceTree = "<group>"; };
-		6E5A7DF81EF8018F001F41B3 /* mztools.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = mztools.c; sourceTree = "<group>"; };
-		6E5A7DF91EF8018F001F41B3 /* mztools.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mztools.h; sourceTree = "<group>"; };
-		6E5A7DFA1EF8018F001F41B3 /* unzip.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = unzip.c; sourceTree = "<group>"; };
-		6E5A7DFB1EF8018F001F41B3 /* unzip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = unzip.h; sourceTree = "<group>"; };
-		6E5A7DFC1EF8018F001F41B3 /* zip.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zip.c; sourceTree = "<group>"; };
-		6E5A7DFD1EF8018F001F41B3 /* zip.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zip.h; sourceTree = "<group>"; };
-		6E5A7E381EF8018F001F41B3 /* crc32.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = crc32.c; sourceTree = "<group>"; };
-		6E5A7E391EF80190001F41B3 /* crc32.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = crc32.h; sourceTree = "<group>"; };
-		6E5A7E3A1EF80190001F41B3 /* deflate.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = deflate.c; sourceTree = "<group>"; };
-		6E5A7E3B1EF80190001F41B3 /* deflate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = deflate.h; sourceTree = "<group>"; };
-		6E5A7E4F1EF80190001F41B3 /* gzclose.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gzclose.c; sourceTree = "<group>"; };
-		6E5A7E501EF80190001F41B3 /* gzguts.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = gzguts.h; sourceTree = "<group>"; };
-		6E5A7E511EF80190001F41B3 /* gzlib.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gzlib.c; sourceTree = "<group>"; };
-		6E5A7E521EF80190001F41B3 /* gzread.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gzread.c; sourceTree = "<group>"; };
-		6E5A7E531EF80190001F41B3 /* gzwrite.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = gzwrite.c; sourceTree = "<group>"; };
-		6E5A7E551EF80190001F41B3 /* infback.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = infback.c; sourceTree = "<group>"; };
-		6E5A7E561EF80190001F41B3 /* inffast.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = inffast.c; sourceTree = "<group>"; };
-		6E5A7E571EF80190001F41B3 /* inffast.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = inffast.h; sourceTree = "<group>"; };
-		6E5A7E581EF80190001F41B3 /* inffixed.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = inffixed.h; sourceTree = "<group>"; };
-		6E5A7E591EF80190001F41B3 /* inflate.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = inflate.c; sourceTree = "<group>"; };
-		6E5A7E5A1EF80190001F41B3 /* inflate.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = inflate.h; sourceTree = "<group>"; };
-		6E5A7E5B1EF80190001F41B3 /* inftrees.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = inftrees.c; sourceTree = "<group>"; };
-		6E5A7E5C1EF80190001F41B3 /* inftrees.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = inftrees.h; sourceTree = "<group>"; };
-		6E5A7E7A1EF80190001F41B3 /* trees.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = trees.c; sourceTree = "<group>"; };
-		6E5A7E7B1EF80190001F41B3 /* trees.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = trees.h; sourceTree = "<group>"; };
-		6E5A7E7C1EF80190001F41B3 /* uncompr.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = uncompr.c; sourceTree = "<group>"; };
-		6E5A7E8E1EF80190001F41B3 /* zlib.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zlib.h; sourceTree = "<group>"; };
-		6E5A7F661EF80B3F001F41B3 /* zutil.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = zutil.h; sourceTree = "<group>"; };
-		6E5A7F671EF80B3F001F41B3 /* zutil.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = zutil.c; sourceTree = "<group>"; };
 		6E5A7F6A1EF8131F001F41B3 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		6E5A7F6C1EF81324001F41B3 /* UIKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = UIKit.framework; path = System/Library/Frameworks/UIKit.framework; sourceTree = SDKROOT; };
 		6E5A7F6E1EF8132D001F41B3 /* CoreGraphics.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreGraphics.framework; path = System/Library/Frameworks/CoreGraphics.framework; sourceTree = SDKROOT; };
 		6E5A7F701EF81333001F41B3 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		6E5A7F721EF8133A001F41B3 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		6E5A7F761EF814EA001F41B3 /* media */ = {isa = PBXFileReference; lastKnownFileType = folder; name = media; path = ../../examples/media; sourceTree = "<group>"; };
+		CC3C9FE41F897C3A009E5B69 /* miniz.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = miniz.c; sourceTree = "<group>"; };
+		CC3C9FE61F897D59009E5B69 /* miniz.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = miniz.h; sourceTree = "<group>"; };
+		CC5DB1561F8919F00080C0E1 /* CStringUtilsVFS.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CStringUtilsVFS.cpp; sourceTree = "<group>"; };
+		CC5DB1581F891A090080C0E1 /* CStringUtilsVFS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CStringUtilsVFS.h; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -1553,13 +1503,15 @@
 		6E5A7BED1EF80128001F41B3 /* src */ = {
 			isa = PBXGroup;
 			children = (
+				CC3C9FE61F897D59009E5B69 /* miniz.h */,
+				CC3C9FE41F897C3A009E5B69 /* miniz.c */,
+				CC5DB1581F891A090080C0E1 /* CStringUtilsVFS.h */,
+				CC5DB1561F8919F00080C0E1 /* CStringUtilsVFS.cpp */,
 				6E5A7BEE1EF80128001F41B3 /* CFileInfo.cpp */,
 				6E5A7BEF1EF80128001F41B3 /* CMemoryFile.cpp */,
 				6E5A7BF01EF80128001F41B3 /* CMemoryFileSystem.cpp */,
 				6E5A7BF11EF80128001F41B3 /* CNativeFile.cpp */,
 				6E5A7BF21EF80128001F41B3 /* CNativeFileSystem.cpp */,
-				6E5A7BF31EF80128001F41B3 /* CStringUtil.cpp */,
-				6E5A7BF41EF80128001F41B3 /* CStringUtil.h */,
 				6E5A7BF51EF80128001F41B3 /* CVirtualFileSystem.cpp */,
 				6E5A7BF61EF80128001F41B3 /* CZipFile.cpp */,
 				6E5A7BF71EF80128001F41B3 /* CZipFileSystem.cpp */,
@@ -1889,72 +1841,6 @@
 			path = simd;
 			sourceTree = "<group>";
 		};
-		6E5A7D821EF80177001F41B3 /* zlib */ = {
-			isa = PBXGroup;
-			children = (
-				6E5A7D831EF8018F001F41B3 /* zlib */,
-			);
-			name = zlib;
-			sourceTree = "<group>";
-		};
-		6E5A7D831EF8018F001F41B3 /* zlib */ = {
-			isa = PBXGroup;
-			children = (
-				6E5A7D851EF8018F001F41B3 /* adler32.c */,
-				6E5A7D901EF8018F001F41B3 /* compress.c */,
-				6E5A7D921EF8018F001F41B3 /* contrib */,
-				6E5A7E381EF8018F001F41B3 /* crc32.c */,
-				6E5A7E391EF80190001F41B3 /* crc32.h */,
-				6E5A7E3A1EF80190001F41B3 /* deflate.c */,
-				6E5A7E3B1EF80190001F41B3 /* deflate.h */,
-				6E5A7E4F1EF80190001F41B3 /* gzclose.c */,
-				6E5A7E501EF80190001F41B3 /* gzguts.h */,
-				6E5A7E511EF80190001F41B3 /* gzlib.c */,
-				6E5A7E521EF80190001F41B3 /* gzread.c */,
-				6E5A7E531EF80190001F41B3 /* gzwrite.c */,
-				6E5A7E551EF80190001F41B3 /* infback.c */,
-				6E5A7E561EF80190001F41B3 /* inffast.c */,
-				6E5A7E571EF80190001F41B3 /* inffast.h */,
-				6E5A7E581EF80190001F41B3 /* inffixed.h */,
-				6E5A7E591EF80190001F41B3 /* inflate.c */,
-				6E5A7E5A1EF80190001F41B3 /* inflate.h */,
-				6E5A7E5B1EF80190001F41B3 /* inftrees.c */,
-				6E5A7E5C1EF80190001F41B3 /* inftrees.h */,
-				6E5A7E7A1EF80190001F41B3 /* trees.c */,
-				6E5A7E7B1EF80190001F41B3 /* trees.h */,
-				6E5A7E7C1EF80190001F41B3 /* uncompr.c */,
-				6E5A7E8E1EF80190001F41B3 /* zlib.h */,
-				6E5A7F671EF80B3F001F41B3 /* zutil.c */,
-				6E5A7F661EF80B3F001F41B3 /* zutil.h */,
-			);
-			name = zlib;
-			path = ../../libs/vfspp/external/zlib;
-			sourceTree = "<group>";
-		};
-		6E5A7D921EF8018F001F41B3 /* contrib */ = {
-			isa = PBXGroup;
-			children = (
-				6E5A7DE71EF8018F001F41B3 /* minizip */,
-			);
-			path = contrib;
-			sourceTree = "<group>";
-		};
-		6E5A7DE71EF8018F001F41B3 /* minizip */ = {
-			isa = PBXGroup;
-			children = (
-				6E5A7DE91EF8018F001F41B3 /* crypt.h */,
-				6E5A7DEA1EF8018F001F41B3 /* ioapi.c */,
-				6E5A7DEB1EF8018F001F41B3 /* ioapi.h */,
-				6E5A7DF81EF8018F001F41B3 /* mztools.c */,
-				6E5A7DF91EF8018F001F41B3 /* mztools.h */,
-				6E5A7DFA1EF8018F001F41B3 /* unzip.c */,
-				6E5A7DFB1EF8018F001F41B3 /* unzip.h */,
-				6E5A7DFC1EF8018F001F41B3 /* zip.c */,
-				6E5A7DFD1EF8018F001F41B3 /* zip.h */,
-			);
-			path = minizip;
-			sourceTree = "<group>";
-		};
 		6E5A7F691EF8131F001F41B3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
@@ -1970,7 +1856,6 @@
 		6E5A7F741EF814B7001F41B3 /* externals */ = {
 			isa = PBXGroup;
 			children = (
-				6E5A7D821EF80177001F41B3 /* zlib */,
 				6E5A7C0D1EF8013F001F41B3 /* glm */,
 				6E5A7BEC1EF80113001F41B3 /* vfspp */,
 				6E5A7BDF1EF800B6001F41B3 /* tinyxml */,
@@ -2076,25 +1961,21 @@
 				6E5A7B811EF800AD001F41B3 /* CRenderTargetDepthOGL1_5.cpp in Sources */,
 				6E5A7BEB1EF80105001F41B3 /* tinyxmlparser.cpp in Sources */,
 				6E5A7B5A1EF800AC001F41B3 /* IEntity.cpp in Sources */,
-				6E5A7F381EF80190001F41B3 /* inflate.c in Sources */,
 				6E5A7BD41EF800AD001F41B3 /* CShaderSourceSpriteVertex.cpp in Sources */,
 				6E5A7B541EF800AC001F41B3 /* CUpdateComponent.cpp in Sources */,
 				6E5A7BBE1EF800AD001F41B3 /* CMaterialOGLES2_0.cpp in Sources */,
 				6E5A7B8D1EF800AD001F41B3 /* CRenderTargetColorOGL2_0.cpp in Sources */,
 				6E5A7BD61EF800AD001F41B3 /* COperationQueue.cpp in Sources */,
 				6E5A7B9A1EF800AD001F41B3 /* CRenderTargetColorOGLBase.cpp in Sources */,
-				6E5A7EED1EF80190001F41B3 /* zip.c in Sources */,
 				6E5A7B891EF800AD001F41B3 /* CIndexBufferOGL2_0.cpp in Sources */,
 				6E5A7B991EF800AD001F41B3 /* CRendererOGLBase.cpp in Sources */,
 				6E5A7BB51EF800AD001F41B3 /* CRenderTargetDepthOGLES1_1.cpp in Sources */,
 				6E5A7D1C1EF80157001F41B3 /* glm.cpp in Sources */,
 				6E5A7BA11EF800AD001F41B3 /* CVertexBufferOGLBase.cpp in Sources */,
-				6E5A7F341EF80190001F41B3 /* gzwrite.c in Sources */,
 				6E5A7B911EF800AD001F41B3 /* CShaderOGL2_0.cpp in Sources */,
 				6E5A7BC21EF800AD001F41B3 /* CRenderTargetDepthOGLES2_0.cpp in Sources */,
 				6E5A7BD21EF800AD001F41B3 /* CShaderSourceInsertVertex.cpp in Sources */,
 				6E5A7BB61EF800AD001F41B3 /* CRenderTargetStencilOGLES1_1.cpp in Sources */,
-				6E5A7F391EF80190001F41B3 /* inftrees.c in Sources */,
 				6E5A7B661EF800AD001F41B3 /* RenderGlobal.cpp in Sources */,
 				6E5A7BD01EF800AD001F41B3 /* CShaderSourceCommonVertex.cpp in Sources */,
 				6E5A79BC1EF7FF4D001F41B3 /* main.m in Sources */,
@@ -2120,11 +2001,9 @@
 				6E5A7BCE1EF800AD001F41B3 /* CSpriteXML.cpp in Sources */,
 				6E5A79B91EF7FF4D001F41B3 /* main.cpp in Sources */,
 				6E5A7BA91EF800AD001F41B3 /* CRenderTargetStencilOGLES1_0.cpp in Sources */,
-				6E5A7EEB1EF80190001F41B3 /* mztools.c in Sources */,
 				6E5A7B8B1EF800AD001F41B3 /* CMeshOGL2_0.cpp in Sources */,
 				6E5A7B711EF800AD001F41B3 /* CMeshOGL1_3.cpp in Sources */,
 				6E5A7BD91EF800AD001F41B3 /* CThreadExecutor.cpp in Sources */,
-				6E5A7F321EF80190001F41B3 /* gzlib.c in Sources */,
 				6E5A7B4F1EF800AC001F41B3 /* CBatchComponent.cpp in Sources */,
 				6E5A7C0C1EF80128001F41B3 /* CZipFileSystem.cpp in Sources */,
 				6E5A7BB71EF800AD001F41B3 /* CRenderTargetTextureOGLES1_1.cpp in Sources */,
@@ -2134,13 +2013,10 @@
 				6E5A7BB81EF800AD001F41B3 /* CShaderOGLES1_1.cpp in Sources */,
 				6E5A7BA41EF800AD001F41B3 /* CMaterialOGLES1_0.cpp in Sources */,
 				6E5A7B981EF800AD001F41B3 /* CMeshOGLBase.cpp in Sources */,
-				6E5A7F361EF80190001F41B3 /* infback.c in Sources */,
 				6E5A7B671EF800AD001F41B3 /* CTouchEvent.cpp in Sources */,
 				6E5A7B971EF800AD001F41B3 /* CMaterialOGLBase.cpp in Sources */,
 				6E5A7BAD1EF800AD001F41B3 /* CTextureOGLES1_0.cpp in Sources */,
 				6E5A7BCC1EF800AD001F41B3 /* CImageSegaPVR.cpp in Sources */,
-				6E5A7F511EF80190001F41B3 /* trees.c in Sources */,
-				6E5A7EEC1EF80190001F41B3 /* unzip.c in Sources */,
 				6E5A79BE1EF7FF4D001F41B3 /* main.cpp in Sources */,
 				6E5A7BC71EF800AD001F41B3 /* CTextureOGLES2_0.cpp in Sources */,
 				6E5A7BBF1EF800AD001F41B3 /* CMeshOGLES2_0.cpp in Sources */,
@@ -2155,11 +2031,9 @@
 				6E5A7B881EF800AD001F41B3 /* CFrameBufferOGL2_0.cpp in Sources */,
 				6E5A7BC41EF800AD001F41B3 /* CRenderTargetTextureOGLES2_0.cpp in Sources */,
 				6E5A7B871EF800AD001F41B3 /* CVertexBufferOGL1_5.cpp in Sources */,
-				6E5A7F1F1EF80190001F41B3 /* crc32.c in Sources */,
 				6E5A7C0B1EF80128001F41B3 /* CZipFile.cpp in Sources */,
 				6E5A7B8A1EF800AD001F41B3 /* CMaterialOGL2_0.cpp in Sources */,
 				6E5A7B6D1EF800AD001F41B3 /* CRenderViewX11.cpp in Sources */,
-				6E5A7F521EF80190001F41B3 /* uncompr.c in Sources */,
 				6E5A7B7B1EF800AD001F41B3 /* CFrameBufferOGL1_5.cpp in Sources */,
 				6E5A79B81EF7FF4D001F41B3 /* CGameScene.cpp in Sources */,
 				6E5A7C071EF80128001F41B3 /* CNativeFile.cpp in Sources */,
@@ -2191,24 +2065,20 @@
 				6E5A7B6C1EF800AD001F41B3 /* CRenderViewWindows.cpp in Sources */,
 				6E5A7B5D1EF800AC001F41B3 /* CBatchingSystem.cpp in Sources */,
 				6E5A7B5F1EF800AC001F41B3 /* CRenderSystem.cpp in Sources */,
-				6E5A7F681EF80B3F001F41B3 /* zutil.c in Sources */,
 				6E5A7BBA1EF800AD001F41B3 /* CTextureOGLES1_1.cpp in Sources */,
 				6E5A7B771EF800AD001F41B3 /* CShaderOGL1_3.cpp in Sources */,
 				6E5A7B751EF800AD001F41B3 /* CRenderTargetStencilOGL1_3.cpp in Sources */,
 				6E5A7C061EF80128001F41B3 /* CMemoryFileSystem.cpp in Sources */,
-				6E5A7E961EF80190001F41B3 /* adler32.c in Sources */,
 				6E5A7BC51EF800AD001F41B3 /* CShaderOGLES2_0.cpp in Sources */,
 				6E5A7BA21EF800AD001F41B3 /* CFrameBufferOGLES1_0.cpp in Sources */,
-				6E5A7F331EF80190001F41B3 /* gzread.c in Sources */,
-				6E5A7E9F1EF80190001F41B3 /* compress.c in Sources */,
 				6E5A7BC61EF800AD001F41B3 /* CShaderProgramOGLES2_0.cpp in Sources */,
 				6E5A7BDC1EF800AD001F41B3 /* CStringUtils.cpp in Sources */,
 				6E5A7B961EF800AD001F41B3 /* CIndexBufferOGLBase.cpp in Sources */,
 				6E5A79C01EF7FF4D001F41B3 /* main.m in Sources */,
 				6E5A7BAE1EF800AD001F41B3 /* CVertexBufferOGLES1_0.cpp in Sources */,
 				6E5A7BCD1EF800AD001F41B3 /* CModelObj.cpp in Sources */,
+				CC3C9FE51F897C3A009E5B69 /* miniz.c in Sources */,
 				6E5A7BA51EF800AD001F41B3 /* CMeshOGLES1_0.cpp in Sources */,
-				6E5A7C091EF80128001F41B3 /* CStringUtil.cpp in Sources */,
 				6E5A7B8F1EF800AD001F41B3 /* CRenderTargetStencilOGL2_0.cpp in Sources */,
 				6E5A7B781EF800AD001F41B3 /* CShaderProgramOGL1_3.cpp in Sources */,
 				6E5A7C0A1EF80128001F41B3 /* CVirtualFileSystem.cpp in Sources */,
@@ -2218,9 +2088,8 @@
 				6E5A7BAF1EF800AD001F41B3 /* CFrameBufferOGLES1_1.cpp in Sources */,
 				6E5A7B6E1EF800AD001F41B3 /* CFrameBufferOGL1_3.cpp in Sources */,
 				6E5A7B831EF800AD001F41B3 /* CRenderTargetTextureOGL1_5.cpp in Sources */,
-				6E5A7F371EF80190001F41B3 /* inffast.c in Sources */,
+				CC5DB1571F8919F00080C0E1 /* CStringUtilsVFS.cpp in Sources */,
 				6E5A7B741EF800AD001F41B3 /* CRenderTargetDepthOGL1_3.cpp in Sources */,
-				6E5A7F311EF80190001F41B3 /* gzclose.c in Sources */,
 				6E5A7B7E1EF800AD001F41B3 /* CMeshOGL1_5.cpp in Sources */,
 				6E5A7B601EF800AC001F41B3 /* CTouchSystem.cpp in Sources */,
 				6E5A7BBC1EF800AD001F41B3 /* CFrameBufferOGLES2_0.cpp in Sources */,
@@ -2231,12 +2100,10 @@
 				6E5A7B6A1EF800AD001F41B3 /* CRenderViewIOS.mm in Sources */,
 				6E5A7BB41EF800AD001F41B3 /* CRenderTargetColorOGLES1_1.cpp in Sources */,
 				6E5A79C11EF7FF4D001F41B3 /* main.cpp in Sources */,
-				6E5A7F201EF80190001F41B3 /* deflate.c in Sources */,
 				6E5A7BB21EF800AD001F41B3 /* CMeshOGLES1_1.cpp in Sources */,
 				6E5A7B791EF800AD001F41B3 /* CTextureOGL1_3.cpp in Sources */,
 				6E5A7BD51EF800AD001F41B3 /* CBlockOperation.cpp in Sources */,
 				6E5A7B731EF800AD001F41B3 /* CRenderTargetColorOGL1_3.cpp in Sources */,
-				6E5A7EDF1EF80190001F41B3 /* ioapi.c in Sources */,
 				6E5A7B9F1EF800AD001F41B3 /* CShaderProgramOGLBase.cpp in Sources */,
 				6E5A7B931EF800AD001F41B3 /* CTextureOGL2_0.cpp in Sources */,
 				6E5A79BF1EF7FF4D001F41B3 /* AppDelegateOSX.mm in Sources */,
@@ -2405,6 +2272,7 @@
 				6E5A795C1EF7FEED001F41B3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};

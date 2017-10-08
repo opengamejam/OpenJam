@@ -62,7 +62,7 @@ glm::mat4x4 CCamera3D::ProjectionMatrix(uint64_t frameBufferIndex)
     if (frameBufferIndex >= m_FrameBuffer.size()) {
         return glm::mat4(1.0);
     }
-    return m_ProjectionMatrix[frameBufferIndex] * resultTransform();
+    return m_ProjectionMatrix[(size_t)frameBufferIndex] * resultTransform();
 }
 
 IFrameBufferPtr CCamera3D::FrameBuffer(uint64_t frameBufferIndex) const
@@ -71,7 +71,7 @@ IFrameBufferPtr CCamera3D::FrameBuffer(uint64_t frameBufferIndex) const
     if (frameBufferIndex >= m_FrameBuffer.size()) {
         return nullptr;
     }
-    return m_FrameBuffer[frameBufferIndex];
+    return m_FrameBuffer[(size_t)frameBufferIndex];
 }
 
 void CCamera3D::FrameBuffer(IFrameBufferPtr frameBuffer, uint64_t frameBufferIndex)
@@ -80,8 +80,8 @@ void CCamera3D::FrameBuffer(IFrameBufferPtr frameBuffer, uint64_t frameBufferInd
     
     if (!frameBuffer) {
         if (frameBufferIndex < m_FrameBuffer.size()) {
-            m_FrameBuffer.erase(m_FrameBuffer.begin() + frameBufferIndex);
-            m_ProjectionMatrix.erase(m_ProjectionMatrix.begin() + frameBufferIndex);
+            m_FrameBuffer.erase(m_FrameBuffer.begin() + (size_t)frameBufferIndex);
+            m_ProjectionMatrix.erase(m_ProjectionMatrix.begin() + (size_t)frameBufferIndex);
         }
         return;
     }
@@ -95,8 +95,8 @@ void CCamera3D::FrameBuffer(IFrameBufferPtr frameBuffer, uint64_t frameBufferInd
         m_FrameBuffer.push_back(frameBuffer);
         m_ProjectionMatrix.push_back(perspective);
     } else {
-        m_FrameBuffer[frameBufferIndex] = frameBuffer;
-        m_ProjectionMatrix[frameBufferIndex] = perspective;
+        m_FrameBuffer[(size_t)frameBufferIndex] = frameBuffer;
+        m_ProjectionMatrix[(size_t)frameBufferIndex] = perspective;
     }
 }
 

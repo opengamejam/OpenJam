@@ -35,7 +35,11 @@
 #if defined(GLM_MESSAGES)
 #   undef GLM_MESSAGES
 #endif
+
+#pragma clang diagnostic push
+#pragma clang diagnostic ignored "-Wdocumentation" // Disable documentation warnings
 #include "glm/fwd.hpp"
+#pragma clang diagnostic pop
 
 #include "CTypeId.hpp"
 

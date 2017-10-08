@@ -90,7 +90,7 @@ void CRenderTargetColorOGLBase::BindToFrameBuffer(uint64_t colorAttachementIdx)
 {
 #if GL_ARB_framebuffer_object
     glFramebufferRenderbuffer(GL_FRAMEBUFFER,
-        GL_COLOR_ATTACHMENT0 + colorAttachementIdx,
+        GL_COLOR_ATTACHMENT0 + (GLenum)colorAttachementIdx,
         GL_RENDERBUFFER,
         m_Id);
 #endif
@@ -101,7 +101,7 @@ void CRenderTargetColorOGLBase::UnbindFromFrameBuffer(uint64_t colorAttachementI
 {
 #if GL_ARB_framebuffer_object
     glFramebufferRenderbuffer(GL_FRAMEBUFFER,
-        GL_COLOR_ATTACHMENT0 + colorAttachementIdx,
+        GL_COLOR_ATTACHMENT0 + (GLenum)colorAttachementIdx,
         GL_RENDERBUFFER,
         0);
 #endif

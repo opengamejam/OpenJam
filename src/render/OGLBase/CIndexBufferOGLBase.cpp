@@ -69,7 +69,7 @@ uint64_t CIndexBufferOGLBase::SizeRaw() const
 
 void CIndexBufferOGLBase::ResizeRaw(uint64_t newSize)
 {
-    m_Buffer.resize(newSize);
+    m_Buffer.resize((size_t)newSize);
 #ifdef GL_ELEMENT_ARRAY_BUFFER
     Bind();
     glBufferData(GL_ELEMENT_ARRAY_BUFFER, m_Buffer.size(), m_Buffer.data(), GL_DYNAMIC_DRAW);

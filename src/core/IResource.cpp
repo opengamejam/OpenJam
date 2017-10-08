@@ -56,8 +56,8 @@ bool IResource::Load(const std::string& filename)
         IFilePtr file = vfs->OpenFile(filename, IFile::In);
         if (file && file->IsOpened()) {
             uint64_t fileSize = file->Size();
-            m_Data.resize(fileSize + 1);
-            memset(&m_Data[0], 0, fileSize + 1);
+            m_Data.resize((size_t)(fileSize + 1));
+            memset(&m_Data[0], 0, (size_t)(fileSize + 1));
 
             result = (file->Read(&m_Data[0], fileSize) == fileSize);
 

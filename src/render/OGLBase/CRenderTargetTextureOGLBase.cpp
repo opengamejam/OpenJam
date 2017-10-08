@@ -84,7 +84,7 @@ void CRenderTargetTextureOGLBase::BindAsColorToFrameBuffer(uint64_t colorAttache
 {
     GLuint id = std::static_pointer_cast<CTextureOGLBase>(Texture())->TextureId();
     glFramebufferTexture2D(GL_FRAMEBUFFER,
-        GL_COLOR_ATTACHMENT0 + colorAttachementIdx,
+        GL_COLOR_ATTACHMENT0 + (GLenum)colorAttachementIdx,
         GL_TEXTURE_2D,
         id,
         0);
@@ -116,12 +116,12 @@ void CRenderTargetTextureOGLBase::BindAsStencilToFrameBuffer()
 void CRenderTargetTextureOGLBase::UnbindAsColorFromFrameBuffer(uint64_t colorAttachementIdx)
 {
     glFramebufferTexture2D(GL_FRAMEBUFFER,
-        GL_COLOR_ATTACHMENT0 + colorAttachementIdx,
+        GL_COLOR_ATTACHMENT0 + (GLenum)colorAttachementIdx,
         GL_TEXTURE_2D,
         0,
         0);
-    GLuint id = std::static_pointer_cast<CTextureOGLBase>(Texture())->TextureId();
-    JAM_LOG("CRenderTargetTextureOGLBase::UnbindAsColorFromFrameBuffer() - id: %d\n", id);
+    JAM_LOG("CRenderTargetTextureOGLBase::UnbindAsColorFromFrameBuffer() - id: %d\n",
+            std::static_pointer_cast<CTextureOGLBase>(Texture())->TextureId());
 }
 
 void CRenderTargetTextureOGLBase::UnbindAsDepthFromFrameBuffer()
@@ -131,8 +131,8 @@ void CRenderTargetTextureOGLBase::UnbindAsDepthFromFrameBuffer()
         GL_TEXTURE_2D,
         0,
         0);
-    GLuint id = std::static_pointer_cast<CTextureOGLBase>(Texture())->TextureId();
-    JAM_LOG("CRenderTargetTextureOGLBase::UnbindAsDepthFromFrameBuffer() - id: %d\n", id);
+    JAM_LOG("CRenderTargetTextureOGLBase::UnbindAsDepthFromFrameBuffer() - id: %d\n",
+            std::static_pointer_cast<CTextureOGLBase>(Texture())->TextureId());
 }
 
 void CRenderTargetTextureOGLBase::UnbindAsStencilFromFrameBuffer()
@@ -142,8 +142,8 @@ void CRenderTargetTextureOGLBase::UnbindAsStencilFromFrameBuffer()
         GL_TEXTURE_2D,
         0,
         0);
-    GLuint id = std::static_pointer_cast<CTextureOGLBase>(Texture())->TextureId();
-    JAM_LOG("CRenderTargetTextureOGLBase::UnbindAsStencilFromFrameBuffer() - id: %d\n", id);
+    JAM_LOG("CRenderTargetTextureOGLBase::UnbindAsStencilFromFrameBuffer() - id: %d\n",
+            std::static_pointer_cast<CTextureOGLBase>(Texture())->TextureId());
 }
 
 // *****************************************************************************

@@ -116,12 +116,12 @@ public:
     /*
      * Returns framebuffer width
      */
-    virtual uint32_t Width() const override;
+    virtual uint64_t Width() const override;
 
     /*
      * Returns framebuffer height
      */
-    virtual uint32_t Height() const override;
+    virtual uint64_t Height() const override;
 
     /*
      * Setup clear color which will fill color buffer after clear
@@ -152,8 +152,8 @@ private:
 
     int m_NumColorAtachments;
 
-    uint32_t m_Width;
-    uint32_t m_Height;
+    uint64_t m_Width;
+    uint64_t m_Height;
 
     CColor4f m_ClearColor;
     GLbitfield m_ClearBits;

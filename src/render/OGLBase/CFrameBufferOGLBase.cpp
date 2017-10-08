@@ -90,7 +90,7 @@ void CFrameBufferOGLBase::Resize(uint64_t width, uint64_t height)
     }
 
     if (IsValid()) {
-        glViewport(0, 0, width, height);
+        glViewport(0, 0, (GLsizei)width, (GLsizei)height);
     }
     JAM_LOG("CFrameBufferOGLBase::Resize() - id: %d, size: (%llu, %llu)\n", m_Id, width, height);
 }
@@ -119,7 +119,7 @@ void CFrameBufferOGLBase::AttachColor(IRenderTargetPtr colorTarget, uint64_t ind
             std::static_pointer_cast<CRenderTargetTextureOGLBase>(renderTexture)->BindAsColorToFrameBuffer(index);
         }
 
-        m_ColorBuffers[index] = colorTarget;
+        m_ColorBuffers[(size_t)index] = colorTarget;
         m_ClearBits |= GL_COLOR_BUFFER_BIT;
         
         colorTarget->Unbind();
@@ -178,7 +178,7 @@ void CFrameBufferOGLBase::AttachStencil(IRenderTargetPtr stencilTarget)
 void CFrameBufferOGLBase::DetachColor(uint64_t index)
 {
     if (index < MaxColorAttachements()) {
-        IRenderTargetPtr renderBuffer = m_ColorBuffers[index];
+        IRenderTargetPtr renderBuffer = m_ColorBuffers[(size_t)index];
         renderBuffer->Bind();
         
         if (renderBuffer && renderBuffer->ColorTarget()) {
@@ -186,7 +186,7 @@ void CFrameBufferOGLBase::DetachColor(uint64_t index)
         } else if (renderBuffer && renderBuffer->TextureTarget()) {
             std::static_pointer_cast<CRenderTargetTextureOGLBase>(renderBuffer)->UnbindAsColorFromFrameBuffer(index);
         }
-        m_ColorBuffers[index] = nullptr;
+        m_ColorBuffers[(size_t)index] = nullptr;
         
         bool haveAttachedColors = false;
         std::all_of(m_ColorBuffers.begin(), m_ColorBuffers.end(), [&](IRenderTargetPtr colorBuffer)
@@ -245,7 +245,7 @@ void CFrameBufferOGLBase::DetachStencil()
 IRenderTargetPtr CFrameBufferOGLBase::ColorAttachement(uint64_t index) const
 {
     if (index < MaxColorAttachements()) {
-        return m_ColorBuffers[index];
+        return m_ColorBuffers[(size_t)index];
     }
 
     return nullptr;
@@ -277,7 +277,7 @@ void CFrameBufferOGLBase::Bind() const
     JAM_LOG("CFrameBufferOGLBase::Bind() - id: %d\n", m_Id);
 
     if (IsValid()) {
-        glViewport(0, 0, Width(), Height());
+        glViewport(0, 0, (GLsizei)Width(), (GLsizei)Height());
     }
 }
 
@@ -307,20 +307,20 @@ const CColor4f& CFrameBufferOGLBase::ClearColor() const
     return m_ClearColor;
 }
 
-uint32_t CFrameBufferOGLBase::Width() const
+uint64_t CFrameBufferOGLBase::Width() const
 {
     return m_Width;
 }
 
-uint32_t CFrameBufferOGLBase::Height() const
+uint64_t CFrameBufferOGLBase::Height() const
 {
     return m_Height;
 }
 
 IFrameBuffer::TRawData CFrameBufferOGLBase::RawData()
 {
-    uint32_t rawdataSize = Width() * Height() * 4;
-    IFrameBuffer::TRawData data(rawdataSize, 0);
+    uint64_t rawdataSize = Width() * Height() * 4;
+    IFrameBuffer::TRawData data((size_t)rawdataSize, 0);
 
 #ifdef GL3_PROTOTYPES // TODO
     glReadPixels(0, 0, Width(), Height(), GL_RGBA, GL_UNSIGNED_BYTE, &data[0]);

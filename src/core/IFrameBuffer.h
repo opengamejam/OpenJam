@@ -116,12 +116,12 @@ public:
     /*
      * Returns framebuffer width
      */
-    virtual uint32_t Width() const = 0;
+    virtual uint64_t Width() const = 0;
 
     /*
      * Returns framebuffer height
      */
-    virtual uint32_t Height() const = 0;
+    virtual uint64_t Height() const = 0;
 
     /*
      * Setup clear color which will fill color buffer after clear

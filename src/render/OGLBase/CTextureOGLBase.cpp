@@ -93,7 +93,7 @@ void CTextureOGLBase::Allocate(uint64_t width, uint64_t height)
     GLenum glFormat = GL_RGBA;
     GLenum glType = GL_UNSIGNED_BYTE;
     
-    glTexImage2D(GL_TEXTURE_2D, 0, glInternalFormat, width, height, 0, glFormat, glType, nullptr);
+    glTexImage2D(GL_TEXTURE_2D, 0, glInternalFormat, (GLsizei)width, (GLsizei)height, 0, glFormat, glType, nullptr);
     
     Filter(ITexture::TextureFilters::Linear);
 }

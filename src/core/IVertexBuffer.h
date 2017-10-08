@@ -138,7 +138,7 @@ struct IVertexBuffer::SVertexStream {
         for (uint64_t i = 0; i < size; ++i) {
             uint8_t* dst = Map<uint8_t>(dstVB, dstIndex + i);
             const uint8_t* src = Map<const uint8_t>(srcVB, srcIndex + i);
-            memcpy(dst, src, srcStream.DataSize());
+            memcpy(dst, src, (size_t)srcStream.DataSize());
         }
 
         if (needRestoreLockSourceVB) {

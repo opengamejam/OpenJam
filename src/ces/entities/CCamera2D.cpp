@@ -63,7 +63,7 @@ glm::mat4x4 CCamera2D::ProjectionMatrix(uint64_t frameBufferIndex)
     if (frameBufferIndex >= m_FrameBuffer.size()) {
         return glm::mat4(1.0);
     }
-    return m_ProjectionMatrix[frameBufferIndex] * resultTransform();
+    return m_ProjectionMatrix[(size_t)frameBufferIndex] * resultTransform();
 }
 
 IFrameBufferPtr CCamera2D::FrameBuffer(uint64_t frameBufferIndex) const
@@ -72,7 +72,7 @@ IFrameBufferPtr CCamera2D::FrameBuffer(uint64_t frameBufferIndex) const
     if (frameBufferIndex >= m_FrameBuffer.size()) {
         return nullptr;
     }
-    return m_FrameBuffer[frameBufferIndex];
+    return m_FrameBuffer[(size_t)frameBufferIndex];
 }
 
 void CCamera2D::FrameBuffer(IFrameBufferPtr frameBuffer, uint64_t frameBufferIndex)
@@ -81,20 +81,23 @@ void CCamera2D::FrameBuffer(IFrameBufferPtr frameBuffer, uint64_t frameBufferInd
     
     if (!frameBuffer) {
         if (frameBufferIndex < m_FrameBuffer.size()) {
-            m_FrameBuffer.erase(m_FrameBuffer.begin() + frameBufferIndex);
-            m_ProjectionMatrix.erase(m_ProjectionMatrix.begin() + frameBufferIndex);
+            m_FrameBuffer.erase(m_FrameBuffer.begin() + (size_t)frameBufferIndex);
+            m_ProjectionMatrix.erase(m_ProjectionMatrix.begin() + (size_t)frameBufferIndex);
         }
         return;
     }
     
-    glm::mat4 ortho = Ortho(frameBuffer->Width(), frameBuffer->Height(), m_IsFlippedX, m_IsFlippedY);
+    glm::mat4 ortho = Ortho((uint32_t)frameBuffer->Width(),
+                            (uint32_t)frameBuffer->Height(),
+                            m_IsFlippedX,
+                            m_IsFlippedY);
     frameBufferIndex = std::min<uint64_t>(frameBufferIndex, m_FrameBuffer.size());
     if (frameBufferIndex >= m_FrameBuffer.size()) {
         m_FrameBuffer.push_back(frameBuffer);
         m_ProjectionMatrix.push_back(ortho);
     } else {
-        m_FrameBuffer[frameBufferIndex] = frameBuffer;
-        m_ProjectionMatrix[frameBufferIndex] = ortho;
+        m_FrameBuffer[(size_t)frameBufferIndex] = frameBuffer;
+        m_ProjectionMatrix[(size_t)frameBufferIndex] = ortho;
     }
 }
 
@@ -107,7 +110,10 @@ void CCamera2D::FlipY()
 {
     m_IsFlippedY = !m_IsFlippedY;
     for (uint64_t i = 0; i < m_FrameBuffer.size(); ++i) {
-        m_ProjectionMatrix[i] = Ortho(FrameBuffer()->Width(), FrameBuffer()->Height(), m_IsFlippedX, m_IsFlippedY);
+        m_ProjectionMatrix[(size_t)i] = Ortho((uint32_t)FrameBuffer()->Width(),
+                                              (uint32_t)FrameBuffer()->Height(),
+                                              m_IsFlippedX,
+                                              m_IsFlippedY);
     }
 }
 
@@ -115,7 +121,10 @@ void CCamera2D::FlipX()
 {
     m_IsFlippedX = !m_IsFlippedX;
     for (uint64_t i = 0; i < m_FrameBuffer.size(); ++i) {
-        m_ProjectionMatrix[i] = Ortho(FrameBuffer()->Width(), FrameBuffer()->Height(), m_IsFlippedX, m_IsFlippedY);
+        m_ProjectionMatrix[(size_t)i] = Ortho((uint32_t)FrameBuffer()->Width(),
+                                              (uint32_t)FrameBuffer()->Height(),
+                                              m_IsFlippedX,
+                                              m_IsFlippedY);
     }
 }
 

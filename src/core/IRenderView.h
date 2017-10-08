@@ -38,8 +38,10 @@ public:
     INL uint32_t Width() const { return m_Width; }
     INL uint32_t Height() const { return m_Height; }
 
-    INL uint32_t RealWidth() const { return m_Width * m_ScaleFactor; }
-    INL uint32_t RealHeight() const { return m_Height * m_ScaleFactor; }
+    INL uint32_t RealWidth() const { return m_Width * ScaleFactor(); }
+    INL uint32_t RealHeight() const { return m_Height * ScaleFactor(); }
+    
+    INL float ScaleFactor() const { return m_ScaleFactor; }
 
     CSignal<void, CTouchEventPtr> OnTouchSignal;
 

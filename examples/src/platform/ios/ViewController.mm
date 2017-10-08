@@ -86,7 +86,8 @@ CLASS_PTR(IScene)
     UITouch* uitouch = [[[event allTouches] allObjects] objectAtIndex:0];
     CGPoint point = [uitouch locationInView:self.view];
 
-    CTouchEventPtr touchevent(new CTouchEvent(glm::vec2(point.x, point.y), CTouchEvent::Down));
+    float scale = m_RenderView->ScaleFactor();
+    CTouchEventPtr touchevent(new CTouchEvent(glm::vec2(point.x * scale, point.y * scale), CTouchEvent::Down));
     emit m_RenderView->OnTouchSignal(touchevent);
 }
 
@@ -95,7 +96,8 @@ CLASS_PTR(IScene)
     UITouch* uitouch = [[[event allTouches] allObjects] objectAtIndex:0];
     CGPoint point = [uitouch locationInView:self.view];
 
-    CTouchEventPtr touchevent(new CTouchEvent(glm::vec2(point.x, point.y), CTouchEvent::Move));
+    float scale = m_RenderView->ScaleFactor();
+    CTouchEventPtr touchevent(new CTouchEvent(glm::vec2(point.x * scale, point.y * scale), CTouchEvent::Move));
     emit m_RenderView->OnTouchSignal(touchevent);
 }
 
@@ -104,7 +106,8 @@ CLASS_PTR(IScene)
     UITouch* uitouch = [[[event allTouches] allObjects] objectAtIndex:0];
     CGPoint point = [uitouch locationInView:self.view];
 
-    CTouchEventPtr touchevent(new CTouchEvent(glm::vec2(point.x, point.y), CTouchEvent::Up));
+    float scale = m_RenderView->ScaleFactor();
+    CTouchEventPtr touchevent(new CTouchEvent(glm::vec2(point.x * scale, point.y * scale), CTouchEvent::Up));
     emit m_RenderView->OnTouchSignal(touchevent);
 }
 
@@ -113,7 +116,8 @@ CLASS_PTR(IScene)
     UITouch* uitouch = [[[event allTouches] allObjects] objectAtIndex:0];
     CGPoint point = [uitouch locationInView:self.view];
 
-    CTouchEventPtr touchevent(new CTouchEvent(glm::vec2(point.x, point.y), CTouchEvent::Reset));
+    float scale = m_RenderView->ScaleFactor();
+    CTouchEventPtr touchevent(new CTouchEvent(glm::vec2(point.x * scale, point.y * scale), CTouchEvent::Reset));
     emit m_RenderView->OnTouchSignal(touchevent);
 }
 

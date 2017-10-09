@@ -45,7 +45,7 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, IRendererPtr rend
 
     CTextureCache textureCache(renderer);
     CResourceCache<IModel3D> resourceCache;
-    IModel3DPtr model3D = resourceCache.AcquireResource(filename, false,
+    IModel3DPtr model3D = resourceCache.AcquireResource(filename,
         [](const std::string& filename) -> IModel3DPtr {
             IModel3DPtr resultModel(new CModelObj(filename));
             if (!resultModel->Load()) {

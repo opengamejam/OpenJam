@@ -21,17 +21,14 @@ public:
     virtual ~CResourceCache() = default;
 
     std::shared_ptr<T> AcquireResource(const std::string& filename,
-        bool isUnique,
         std::function<std::shared_ptr<T>(const std::string&)> instantiationFunc)
     {
-        std::shared_ptr<T> resource = nullptr;
-        if (!isUnique) {
-            resource = FindResource(filename);
-        }
-
+        std::lock_guard<decltype(s_Mutex)> lock(s_Mutex);
+        
+        std::shared_ptr<T> resource = FindResourceInternal(filename);
         if (!resource) {
             resource = instantiationFunc(filename);
-            CacheResource(filename, isUnique, resource);
+            CacheResourceInternal(filename, resource);
         }
 
         return resource;
@@ -40,24 +37,39 @@ public:
     std::shared_ptr<T> FindResource(const std::string& filename)
     {
         std::shared_ptr<T> resource = nullptr;
-        std::string key = filename + CTypeId<T>::Name();
-        if (s_CachedResources.find(key) != s_CachedResources.end()) {
-            resource = std::dynamic_pointer_cast<T>(s_CachedResources[key]);
+        {
+            std::lock_guard<decltype(s_Mutex)> lock(s_Mutex);
+            resource = FindResourceInternal(filename);
         }
 
         return resource;
     }
 
-    void CacheResource(const std::string& filename, bool isUnique, std::shared_ptr<T> resource)
+    void CacheResource(const std::string& filename, std::shared_ptr<T> resource)
     {
         if (!resource) {
             return;
         }
 
-        std::stringstream key(filename + CTypeId<T>::Name());
-        if (isUnique) {
-            key << "unique" << s_UniqIndex++;
+        std::lock_guard<decltype(s_Mutex)> lock(s_Mutex);
+        CacheResourceInternal(filename, resource);
+    }
+    
+private:
+    std::shared_ptr<T> FindResourceInternal(const std::string& filename)
+    {
+        std::shared_ptr<T> resource = nullptr;
+        std::string key = filename + CTypeId<T>::Name();
+        if (s_CachedResources.find(key) != s_CachedResources.end()) {
+            resource = std::dynamic_pointer_cast<T>(s_CachedResources[key]);
         }
+        
+        return resource;
+    }
+    
+    void CacheResourceInternal(const std::string& filename, std::shared_ptr<T> resource)
+    {
+        std::stringstream key(filename + CTypeId<T>::Name());
         if (s_CachedResources.find(key.str()) == s_CachedResources.end()) {
             s_CachedResources[key.str()] = resource;
         }
@@ -65,15 +77,15 @@ public:
 
 private:
     typedef std::unordered_map<std::string, std::shared_ptr<T> > TResourcesMap;
+    static std::mutex s_Mutex;
     static TResourcesMap s_CachedResources;
-    static unsigned int s_UniqIndex;
 };
 
 template <class T>
 typename CResourceCache<T>::TResourcesMap CResourceCache<T>::s_CachedResources;
-
+    
 template <class T>
-unsigned int CResourceCache<T>::s_UniqIndex = 0;
+typename std::mutex CResourceCache<T>::s_Mutex;
 
 }; // namespace jam
 

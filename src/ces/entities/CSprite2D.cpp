@@ -134,7 +134,7 @@ CSprite2DPtr CSprite2D::Create(const std::string& filename, IRendererPtr rendere
     CAnimation2DComponentPtr animationComponent(new CAnimation2DComponent());
 
     CResourceCache<ISprite> resourceCache;
-    ISpritePtr sprite = resourceCache.AcquireResource(filename, false,
+    ISpritePtr sprite = resourceCache.AcquireResource(filename,
         [](const std::string& filename) -> ISpritePtr {
             ISpritePtr resultSprite(new CSpriteXML(filename));
             if (!resultSprite->Load()) {

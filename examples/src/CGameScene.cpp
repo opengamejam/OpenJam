@@ -134,42 +134,6 @@ void CGameScene::Update(unsigned long dt)
 
 void CGameScene::CreateMainCamera()
 {
-    m_BackgroundQueue = COperationQueue::CreateOperationQueue();
-    m_BackgroundQueue->MaxConcurrentOperationCount(3);
-    
-    std::vector<IOperationPtr> ops;
-    for (int i = 0; i < 3; ++i) {
-        CBlockOperationPtr op(new CBlockOperation());
-        op->AddExecutionBlock([i]() {
-            printf("Op[%d] executing\n", i);
-            sleep(5);
-        });
-        
-        op->AddCompletionBlock([i]() {
-            printf("Op[%d] completed\n", i);
-        });
-        
-        int size = 2 / (i + 1);
-        for (int j = 0; j < size; ++j) {
-            CBlockOperationPtr dep(new CBlockOperation());
-            dep->AddExecutionBlock([i, j]() {
-                printf("Dep[%d, %d] executing\n", i, j);
-                sleep(5);
-            });
-            
-            dep->AddCompletionBlock([i, j]() {
-                printf("Dep[%d, %d] completed\n", i, j);
-            });
-            
-            op->AddDependency(dep);
-        }
-        
-        ops.push_back(op);
-    }
-
-    m_BackgroundQueue->AddOperations(ops);
-    //COperationQueue::MainQueue()->AddOperations(ops);
-
     IRenderViewPtr renderView = Game()->RenderView();
     IRendererPtr renderer = renderView->Renderer();
     m_UICamera = CCamera2D::Create();
@@ -253,16 +217,20 @@ void CGameScene::CreateMainCamera()
         component->Shader(shaderProgram);
     });
 
+    std::string filename = "/cube/cube.obj";
     std::shared_ptr<CGameScene> scene = std::static_pointer_cast<CGameScene>(shared_from_this());
-    CThreadPool::Get()->RunAsync(CThreadPool::Background, [scene, renderer]() {
-        std::string filename = "/cube/cube.obj";
-        IModel3DPtr resultModel(new CModelObj(filename));
-        resultModel->Load();
-
-        CThreadPool::Get()->RunSync(CThreadPool::Main, [scene, renderer, filename, resultModel]() {
-            CResourceCache<IModel3D> resourceCache;
-            resourceCache.CacheResource(filename, false, resultModel);
-
+    
+    CBlockOperationPtr makeSceneOp(new CBlockOperation());
+    makeSceneOp->AddExecutionBlock([scene, renderer, filename]() {
+        IModel3DPtr model3D(new CModelObj(filename));
+        model3D->Load();
+        
+        CResourceCache<IModel3D> resourceCache;
+        resourceCache.CacheResource(filename, model3D);
+        
+        sleep(3);
+        
+        CThreadPool::Get()->RunSync(CThreadPool::Main, [scene, renderer, model3D]() {
             int y = 0;
             int x = 0;
             for (int i = 0; i < 16; ++i)
@@ -272,21 +240,25 @@ void CGameScene::CreateMainCamera()
                     y++;
                     x = 0;
                 }
-
-                jam::CObject3DPtr cube = CObject3D::CreateObj(filename, renderer);
+                
+                jam::CObject3DPtr cube = CObject3D::CreateObj(model3D->Filename(), renderer);
                 cube->Position(glm::vec3(x * 2.4f - 4.0f, y * 2.4f - 4.0f, 0.0f));
                 cube->Rotation(glm::vec3(i * 15 * 3.1415 / 180.0,
                                          i * 15 * 3.1415 / 180.0,
                                          i * 15 * 3.1415 / 180.0));
                 //cube->Scale(glm::vec3(10.0f, 10.0f, 10.0f));
-
+                
                 scene->Root()->AddChild(cube);
                 scene->m_Models3D.push_back(cube);
-
+                
                 x++;
             }
         });
     });
+    
+    m_BackgroundQueue = COperationQueue::CreateOperationQueue();
+    m_BackgroundQueue->MaxConcurrentOperationCount(1);
+    m_BackgroundQueue->AddOperation(makeSceneOp);
 }
 
 bool CGameScene::OnBallMoved(IEventPtr event)

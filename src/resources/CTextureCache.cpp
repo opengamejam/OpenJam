@@ -24,10 +24,10 @@ ITexturePtr CTextureCache::Load(const std::string& filename)
 {
     IRendererPtr renderer = m_Renderer;
 
-    ITexturePtr texture = AcquireResource(filename, false,
+    ITexturePtr texture = AcquireResource(filename,
         [renderer](const std::string& filename) -> ITexturePtr {
             CResourceCache<IImage> imageCache;
-            IImagePtr image = imageCache.AcquireResource(filename, false,
+            IImagePtr image = imageCache.AcquireResource(filename, 
                 [renderer](const std::string& filename) -> IImagePtr {
 #ifdef OS_KOS
                     IImagePtr resultImage(new CImageDreamPVR(filename));

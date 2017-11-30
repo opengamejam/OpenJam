@@ -13,12 +13,15 @@
 #include "IRenderView.h"
 
 namespace jam {
-class CRenderViewIOS : public IRenderView {
+class CRenderViewIOS : public IRenderView
+{
+    JAM_OBJECT
 public:
     enum RenderApi {
         OGLES1_1,
         OGLES2_0,
-        OGLES3_0
+        OGLES3_0,
+        Vulkan
     };
 
 public:
@@ -30,17 +33,34 @@ public:
     virtual void End() const override;
     virtual void UpdateEvents() const override;
 
+    virtual IRenderInstancePtr RenderInstance() const override;
     virtual IRendererPtr Renderer() const override;
     virtual IFrameBufferPtr DefaultFrameBuffer() const override;
 
+    /*
+     * Vulkan specific
+     */
+    const VkSurfaceKHR& VulkanSurface() const;
+    const std::vector<VkSurfaceFormatKHR>& VulkanSurfaceFormats() const;
+    
+    std::tuple<VkResult, VkInstance> CreateInstance(const std::string& appName, const std::string& engineName);
+    std::tuple<VkResult, std::vector<VkPhysicalDevice> > GetPhysicalDevices(const VkInstance& instance);
+    std::tuple<VkResult, VkSurfaceKHR, std::vector<VkSurfaceFormatKHR> > CreateSurface(const VkInstance& instance,
+                                                                                       const VkPhysicalDevice& physicalDevice,
+                                                                                       void* view);
+private:
+    void InitOGLES(RenderApi oglesVersion);
+    void InitVulkan();
+    
 private:
 #if defined(__OBJC__)
     UIView* m_GLKView;
     EAGLContext* m_GLContext;
 #endif
     RenderApi m_RenderApi;
+    IRenderInstancePtr m_RenderInstance;
     IRendererPtr m_Renderer;
-    IFrameBufferPtr m_DefaultFrameBuffer;
+    IFrameBufferPtr m_DefaultFrameBuffer;    
 };
 
 }; // namespace jam

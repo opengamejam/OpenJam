@@ -99,6 +99,10 @@
 #	include <sys/time.h>
 #endif
 
+//#if defined(RENDER_VULKAN)
+#   include <vulkan/vulkan.h>
+//#endif
+
 #define CLASS_PTR(_class) typedef std::shared_ptr<class _class> _class##Ptr;\
                           typedef std::weak_ptr<class _class> _class##Weak;
 

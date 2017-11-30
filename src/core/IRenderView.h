@@ -10,11 +10,13 @@
 
 #include "Global.h"
 #include "CSignal.hpp"
+#include "IRenderInstance.h"
+#include "IRenderer.h"
+#include "IFrameBuffer.h"
 
 namespace jam {
-
-CLASS_PTR(IFrameBuffer)
-CLASS_PTR(IRenderer)
+    
+CLASS_PTR(IRenderView)
 CLASS_PTR(CTouchEvent)
 
 class IRenderView : public std::enable_shared_from_this<IRenderView> {
@@ -33,13 +35,53 @@ public:
     virtual void End() const = 0;
     virtual void UpdateEvents() const = 0;
 
+    virtual IRenderInstancePtr RenderInstance() const = 0;
+    
+    template<class T, class = typename std::enable_if<std::is_base_of<IRenderInstance, T>::value, T>::type>
+    std::shared_ptr<T> GetRenderInstance() const
+    {
+        IRenderInstancePtr instance = RenderInstance();
+        if (instance->GetId() == CTypeId<T>::Id()) {
+            return std::static_pointer_cast<T>(instance);
+        }
+        
+        assert(false && "Trying to retrieve incorrect type of render instance");
+        return nullptr;
+    }
+    
     virtual IRendererPtr Renderer() const = 0;
+    
+    template<class T, class = typename std::enable_if<std::is_base_of<IRenderer, T>::value, T>::type>
+    std::shared_ptr<T> GetRenderer() const
+    {
+        IRendererPtr renderer = Renderer();
+        if (renderer->GetId() == CTypeId<T>::Id()) {
+            return std::static_pointer_cast<T>(renderer);
+        }
+        
+        assert(false && "Trying to retrieve incorrect type of renderer");
+        return nullptr;
+    }
+    
     virtual IFrameBufferPtr DefaultFrameBuffer() const = 0;
+    
+    template<class T>
+    std::shared_ptr<T> GetDefaultFrameBuffer() const
+    {
+        IFrameBufferPtr frameBuffer = DefaultFrameBuffer();
+        if (frameBuffer->GetId() == CTypeId<T>::Id()) {
+            return std::static_pointer_cast<T>(frameBuffer);
+        }
+        
+        assert(false && "Trying to retrieve incorrect type of default frame buffer");
+        return nullptr;
+    }
+    
     INL uint32_t Width() const { return m_Width; }
     INL uint32_t Height() const { return m_Height; }
 
-    INL uint32_t RealWidth() const { return m_Width * ScaleFactor(); }
-    INL uint32_t RealHeight() const { return m_Height * ScaleFactor(); }
+    INL uint32_t RealWidth() const { return Width() * ScaleFactor(); }
+    INL uint32_t RealHeight() const { return Height() * ScaleFactor(); }
     
     INL float ScaleFactor() const { return m_ScaleFactor; }
 

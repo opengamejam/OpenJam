@@ -12,6 +12,7 @@
 
 namespace jam {
 
+CLASS_PTR(IMesh)
 CLASS_PTR(IVertexBuffer)
 CLASS_PTR(IIndexBuffer)
 

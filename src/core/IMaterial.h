@@ -12,6 +12,8 @@
 #include "CColor.hpp"
 
 namespace jam {
+    
+CLASS_PTR(IMaterial)
 
 class IMaterial {
     JAM_OBJECT_BASE

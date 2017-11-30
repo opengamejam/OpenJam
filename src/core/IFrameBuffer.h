@@ -13,6 +13,7 @@
 #include "CColor.hpp"
 
 namespace jam {
+CLASS_PTR(IFrameBuffer)
 CLASS_PTR(IRenderTarget)
 
 class IFrameBuffer {

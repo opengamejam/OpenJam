@@ -16,6 +16,7 @@ namespace jam
 {
 class CRenderViewOSX : public IRenderView
 {
+    JAM_OBJECT
 public:
     enum RenderApi
     {

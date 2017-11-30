@@ -14,6 +14,7 @@
 namespace jam {
 
 CLASS_PTR(IShader)
+CLASS_PTR(IShaderProgram)
 
 class IShaderProgram {
     JAM_OBJECT_BASE

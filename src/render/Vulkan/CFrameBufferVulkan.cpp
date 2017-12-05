@@ -206,6 +206,16 @@ IFrameBuffer::TRawData CFrameBufferVulkan::RawData()
     return data;
 }
 
+const std::vector<VkFramebuffer>& CFrameBufferVulkan::FrameBuffers() const
+{
+    return m_Framebuffers;
+}
+
+const VkRenderPass& CFrameBufferVulkan::RenderPass() const
+{
+    return m_RenderPass;
+}
+
 // *****************************************************************************
 // Protected Methods
 // *****************************************************************************

@@ -113,11 +113,15 @@ private:
     std::vector<VkQueueFamilyProperties> GetPhysicalDeviceQueueProps(const VkInstance& instance,
                                                                      const VkPhysicalDevice physicalDevice);
     std::tuple<VkResult, VkDevice> CreateLogicalDevice(const VkPhysicalDevice& physicalDevice /* debug layer */);
+    std::tuple<bool, VkQueueFamilyProperties, uint32_t> FindQueueProperties(VkQueueFlags flag,
+                                                                            const std::vector<VkBool32>& supportsPresent);
     
 private:
     IRenderViewPtr m_RenderView;
     std::vector<VkQueueFamilyProperties> m_QueueProperties;
     VkDevice m_LogicalDevice;
+    VkCommandPool m_CommandPool;
+    std::vector<VkCommandBuffer> m_CommandBuffers;
 };
 
 }; // namespace jam

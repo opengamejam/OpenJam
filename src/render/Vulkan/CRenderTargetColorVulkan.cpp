@@ -132,6 +132,11 @@ void CRenderTargetColorVulkan::InitializeWithImages(const std::vector<VkImage>& 
     m_Images = images;
 }
 
+const std::vector<VkImage>& CRenderTargetColorVulkan::Images() const
+{
+    return m_Images;
+}
+
 const std::vector<VkImageView>& CRenderTargetColorVulkan::ImageViews() const
 {
     return m_ImageViews;

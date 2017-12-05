@@ -23,6 +23,7 @@
 #include "CRenderTargetStencilVulkan.h"
 #include "CRenderTargetTextureVulkan.h"
 #include "CRenderInstanceVulkan.h"
+#include "CRenderTargetColorVulkan.h"
 
 using namespace jam;
 
@@ -45,11 +46,6 @@ CRendererVulkan::CRendererVulkan(IRenderViewPtr renderView)
         vkGetPhysicalDeviceProperties(instance->PhysicalDevice(), &pProperties);
     }
     
-    // GPU Queue Props
-    {
-        m_QueueProperties = GetPhysicalDeviceQueueProps(instance->Instance(), instance->PhysicalDevice());
-    }
-    
     // Logical device
     {
         std::tuple<VkResult, VkDevice> logicalDeviceData = CreateLogicalDevice(instance->PhysicalDevice());
@@ -59,6 +55,130 @@ CRendererVulkan::CRendererVulkan(IRenderViewPtr renderView)
             return;
         }
         m_LogicalDevice = std::get<1>(logicalDeviceData);
+    }
+    
+    // GPU Queue Props
+    {
+        m_QueueProperties = GetPhysicalDeviceQueueProps(instance->Instance(), instance->PhysicalDevice());
+    }
+    
+    // Command pool
+    uint32_t graphicQueuePropsIndex = 0;
+    {
+        std::vector<VkBool32> supportsPresent(m_QueueProperties.size());
+        for (int i = 0; i < m_QueueProperties.size(); i++) {
+            vkGetPhysicalDeviceSurfaceSupportKHR(instance->PhysicalDevice(), i, instance->Surface(), &supportsPresent[i]);
+        }
+        
+        std::tuple<bool, VkQueueFamilyProperties, uint32_t> graphicQueuePropsData = FindQueueProperties(VK_QUEUE_GRAPHICS_BIT,
+                                                                                                        supportsPresent);
+        bool found = std::get<0>(graphicQueuePropsData);
+        if (!found) {
+            JAM_LOG("Can't find Vulksn graphics queue\n");
+            return;
+        }
+        graphicQueuePropsIndex = std::get<2>(graphicQueuePropsData);
+    }
+    
+    const VkCommandPoolCreateInfo cmdPoolInfo = {
+        .sType = VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO,
+        .pNext = nullptr,
+        .queueFamilyIndex = graphicQueuePropsIndex,
+        .flags = VK_COMMAND_POOL_CREATE_RESET_COMMAND_BUFFER_BIT,
+    };
+    
+    VkResult result = vkCreateCommandPool(m_LogicalDevice, &cmdPoolInfo, nullptr, &m_CommandPool);
+    if (result != VK_SUCCESS) {
+        JAM_LOG("Can't create command pool");
+        return;
+    }
+    result = vkResetCommandPool(m_LogicalDevice, m_CommandPool,
+                                VkCommandPoolResetFlagBits::VK_COMMAND_POOL_RESET_RELEASE_RESOURCES_BIT);
+    if (result != VK_SUCCESS) {
+        JAM_LOG("Invalid command pool");
+        return;
+    }
+    
+    CFrameBufferVulkanPtr frameBuffer = std::static_pointer_cast<CFrameBufferVulkan>(RenderView()->DefaultFrameBuffer());
+    const VkRenderPass& renderPass = frameBuffer->RenderPass();
+    for (uint32_t i = 0; i < frameBuffer->FrameBuffers().size(); ++i) {
+        const VkFramebuffer& fb = frameBuffer->FrameBuffers()[i];
+        
+        VkCommandBufferInheritanceInfo commandBufferInheritanceInfo = {
+            .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO,
+            .pNext = nullptr,
+            .renderPass = renderPass,
+            .subpass = 0,
+            .framebuffer = fb,
+            .occlusionQueryEnable = VK_FALSE,
+            .queryFlags = 0,
+            .pipelineStatistics = 0
+        };
+        
+        VkCommandBufferBeginInfo commandBufferBeginInfo = {
+            .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
+            .pNext = nullptr,
+            .flags = 0,
+            .pInheritanceInfo = nullptr //&commandBufferInheritanceInfo
+        };
+        
+        vkBeginCommandBuffer(m_CommandBuffers[i], &commandBufferBeginInfo);
+        {
+            VkClearValue clearValue = {
+                .color.float32[0] = 1.0f,
+                .color.float32[1] = 0.0f,
+                .color.float32[2] = 0.0f,
+                .color.float32[3] = 1.0f
+            };
+            
+            VkRenderPassBeginInfo renderPassBeginInfo = {
+                .sType = VkStructureType::VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO,
+                .pNext = nullptr,
+                .renderPass = renderPass,
+                .framebuffer = fb,
+                .renderArea = VkRect2D{
+                    VkOffset2D{ 0, 0 },
+                    VkExtent2D{
+                        RenderView()->Width(),
+                        RenderView()->Height()
+                        
+                    }
+                    
+                },
+                .clearValueCount = 1,
+                .pClearValues = &clearValue
+            };
+            
+            vkCmdBeginRenderPass(m_CommandBuffers[i],
+                                 &renderPassBeginInfo,
+                                 VkSubpassContents::VK_SUBPASS_CONTENTS_INLINE);
+            //vkCmdBindPipeline(m_CommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_Pip);
+            vkCmdEndRenderPass(m_CommandBuffers[i]);
+            
+            CRenderTargetColorVulkanPtr colorTarget = std::static_pointer_cast<CRenderTargetColorVulkan>(frameBuffer->ColorAttachement(0));
+            
+            VkImageMemoryBarrier imageMemoryBarrier = {
+                .sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER,
+                .pNext = nullptr,
+                .srcAccessMask = 0,
+                .dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT,
+                .oldLayout = VK_IMAGE_LAYOUT_UNDEFINED,
+                .newLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+                .srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
+                .dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
+                .image = colorTarget->Images()[i],
+                .subresourceRange = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1 }
+            };
+            
+            vkCmdPipelineBarrier(m_CommandBuffers[i],
+                                 VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
+                                 VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
+                                 0,
+                                 0, nullptr,
+                                 0, nullptr,
+                                 1, &imageMemoryBarrier);
+        }
+        vkEndCommandBuffer(m_CommandBuffers[i]);
     }
 }
 
@@ -235,6 +355,32 @@ std::tuple<VkResult, VkDevice> CRendererVulkan::CreateLogicalDevice(const VkPhys
     
     std::tuple<VkResult, VkDevice> logicalDeviceData(result, logicalDevice);
     return logicalDeviceData;
+}
+
+std::tuple<bool, VkQueueFamilyProperties, uint32_t> CRendererVulkan::FindQueueProperties(VkQueueFlags flag,
+                                                                                         const std::vector<VkBool32>& supportsPresent)
+{
+    std::tuple<bool, VkQueueFamilyProperties, uint32_t> queueProps;
+    std::get<0>(queueProps) = false;
+    
+    int index = 0;
+    std::all_of(m_QueueProperties.begin(), m_QueueProperties.end(), [&](VkQueueFamilyProperties props) {
+        if (index < supportsPresent.size() && !supportsPresent[index]) {
+            ++index;
+            return false;
+        }
+        
+        if (props.queueFlags & flag) {
+            std::get<0>(queueProps) = true;
+            std::get<1>(queueProps) = props;
+            std::get<2>(queueProps) = index;
+            return true;
+        }
+        ++index;
+        
+        return false;
+    });
+    return queueProps;
 }
 
 //#endif /* defined(RENDER_VULKAN) */

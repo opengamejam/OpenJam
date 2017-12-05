@@ -13,6 +13,8 @@
 #include "CRenderTargetColorOGLBase.h"
 
 namespace jam {
+    
+CLASS_PTR(CRenderTargetColorVulkan)
 
 class CRenderTargetColorVulkan : public CRenderTargetColor
 {
@@ -55,6 +57,7 @@ public:
      * Vulkan specific
      */
     virtual void InitializeWithImages(const std::vector<VkImage>& images);
+    const std::vector<VkImage>& Images() const;
     const std::vector<VkImageView>& ImageViews() const;
     VkFormat ConvertInternalFormat(InternalFormats internalFormat);
     

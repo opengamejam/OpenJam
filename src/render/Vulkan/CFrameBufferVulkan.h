@@ -14,6 +14,7 @@
 
 namespace jam {
 
+CLASS_PTR(CFrameBufferVulkan)
 CLASS_PTR(CRenderInstanceVulkan)
     
 class CFrameBufferVulkan : public IFrameBuffer
@@ -141,6 +142,12 @@ public:
      * Extract framebuffer raw image data (TODO: format)
      */
     virtual TRawData RawData() override;
+    
+    /*
+     * Vulkan specific
+     */
+    const std::vector<VkFramebuffer>& FrameBuffers() const;
+    const VkRenderPass& RenderPass() const;
     
 protected:
     void Rebuild();

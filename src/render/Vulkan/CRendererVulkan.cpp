@@ -78,6 +78,7 @@ CRendererVulkan::CRendererVulkan(IRenderViewPtr renderView)
             return;
         }
         graphicQueuePropsIndex = std::get<2>(graphicQueuePropsData);
+        vkGetDeviceQueue(m_LogicalDevice, graphicQueuePropsIndex, 0, &m_Queue);
     }
     
     const VkCommandPoolCreateInfo cmdPoolInfo = {
@@ -98,8 +99,28 @@ CRendererVulkan::CRendererVulkan(IRenderViewPtr renderView)
         JAM_LOG("Invalid command pool");
         return;
     }
-    
+}
+
+CRendererVulkan::~CRendererVulkan()
+{
+}
+
+void CRendererVulkan::Initialize()
+{
     CFrameBufferVulkanPtr frameBuffer = std::static_pointer_cast<CFrameBufferVulkan>(RenderView()->DefaultFrameBuffer());
+    uint32_t count = (uint32_t)frameBuffer->FrameBuffers().size();
+    const VkCommandBufferAllocateInfo cmd = {
+        .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
+        .pNext = nullptr,
+        .commandPool = m_CommandPool,
+        .level = VK_COMMAND_BUFFER_LEVEL_PRIMARY,
+        .commandBufferCount = count,
+    };
+    
+    m_CommandBuffers.resize(count);
+    VkResult result = vkAllocateCommandBuffers(m_LogicalDevice, &cmd, &m_CommandBuffers[0]);
+    assert(result == VK_SUCCESS);
+    
     const VkRenderPass& renderPass = frameBuffer->RenderPass();
     for (uint32_t i = 0; i < frameBuffer->FrameBuffers().size(); ++i) {
         const VkFramebuffer& fb = frameBuffer->FrameBuffers()[i];
@@ -180,10 +201,6 @@ CRendererVulkan::CRendererVulkan(IRenderViewPtr renderView)
         }
         vkEndCommandBuffer(m_CommandBuffers[i]);
     }
-}
-
-CRendererVulkan::~CRendererVulkan()
-{
 }
 
 IRenderViewPtr CRendererVulkan::RenderView() const
@@ -302,6 +319,16 @@ void CRendererVulkan::Draw(IVertexBufferPtr vertexBuffer, IIndexBufferPtr indexB
 const VkDevice& CRendererVulkan::LogicalDevice() const
 {
     return m_LogicalDevice;
+}
+
+const VkQueue& CRendererVulkan::Queue() const
+{
+    return m_Queue;
+}
+
+const std::vector<VkCommandBuffer>& CRendererVulkan::CommandBuffers() const
+{
+    return m_CommandBuffers;
 }
 
 // *****************************************************************************

@@ -40,8 +40,7 @@ public:
     /*
      * Vulkan specific
      */
-    const VkSurfaceKHR& VulkanSurface() const;
-    const std::vector<VkSurfaceFormatKHR>& VulkanSurfaceFormats() const;
+    const VkSwapchainKHR& Swapchain() const;
     
     std::tuple<VkResult, VkInstance> CreateInstance(const std::string& appName, const std::string& engineName);
     std::tuple<VkResult, std::vector<VkPhysicalDevice> > GetPhysicalDevices(const VkInstance& instance);
@@ -60,7 +59,10 @@ private:
     RenderApi m_RenderApi;
     IRenderInstancePtr m_RenderInstance;
     IRendererPtr m_Renderer;
-    IFrameBufferPtr m_DefaultFrameBuffer;    
+    IFrameBufferPtr m_DefaultFrameBuffer;
+    VkSwapchainKHR m_Swapchain;
+    uint32_t m_SwapchainIndex;
+    VkFence m_Fence;
 };
 
 }; // namespace jam

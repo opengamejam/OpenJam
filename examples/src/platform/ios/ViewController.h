@@ -10,6 +10,7 @@
 
 #import <UIKit/UIKit.h>
 #import <GLKit/GLKit.h>
+#import <MetalKit/MetalKit.h>
 
 @interface ViewController : GLKViewController
 

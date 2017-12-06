@@ -31,6 +31,7 @@ CFrameBufferVulkan::CFrameBufferVulkan(uint32_t width, uint32_t height,
 , m_Height(height)
 , m_LogicalDevice(logicalDevice)
 , m_RenderInstance(renderInstance)
+, m_NumColorAtachments(1)
 {
 }
 
@@ -97,7 +98,7 @@ void CFrameBufferVulkan::AttachColor(IRenderTargetPtr colorTarget, uint64_t inde
     }
     
     if (index >= m_ColorBuffers.size()) {
-        m_ColorBuffers.resize(index);
+        m_ColorBuffers.resize(index + 1);
     }
     m_ColorBuffers[index] = colorTarget;
     Rebuild();
@@ -259,9 +260,7 @@ void CFrameBufferVulkan::Rebuild()
             
             if (renderTarget->ColorTarget()) {
                 const std::vector<VkImageView>& views = std::static_pointer_cast<CRenderTargetColorVulkan>(renderTarget)->ImageViews();
-                std::for_each(views.begin(), views.end(), [&](const VkImageView& imageView){
-                    imageViews.push_back(imageView);
-                });
+                std::copy (views.begin(), views.end(), std::back_inserter(imageViews));
             } else if (renderTarget->DepthTarget()) {
                 // TODO:
             }

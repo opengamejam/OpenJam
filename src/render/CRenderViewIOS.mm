@@ -235,42 +235,105 @@ void CRenderViewIOS::InitVulkan()
     
     const VkDevice& logicalDevice = std::static_pointer_cast<CRendererVulkan>(m_Renderer)->LogicalDevice();
     
-    VkSwapchainKHR swapchain;
-    result = vkCreateSwapchainKHR(logicalDevice, &swapchainInfo, nullptr, &swapchain);
+    result = vkCreateSwapchainKHR(logicalDevice, &swapchainInfo, nullptr, &m_Swapchain);
     
     uint32_t swapchainImageCount;
-    result = vkGetSwapchainImagesKHR(logicalDevice, swapchain, &swapchainImageCount, nullptr);
+    result = vkGetSwapchainImagesKHR(logicalDevice, m_Swapchain, &swapchainImageCount, nullptr);
     
     std::vector<VkImage> swapchainImages(swapchainImageCount);
     assert(swapchainImageCount > 0);
-    result = vkGetSwapchainImagesKHR(logicalDevice, swapchain, &swapchainImageCount, &swapchainImages[0]);
+    result = vkGetSwapchainImagesKHR(logicalDevice, m_Swapchain, &swapchainImageCount, &swapchainImages[0]);
     
+    VkFenceCreateInfo fenceCreateInfo = {
+        .sType = VkStructureType::VK_STRUCTURE_TYPE_FENCE_CREATE_INFO,
+        .pNext = nullptr,
+        .flags = 0
+    };
+    
+    result = vkCreateFence(logicalDevice, &fenceCreateInfo, nullptr, &m_Fence);
+    assert(result == VK_SUCCESS);
     
     // Render targets
     CRenderTargetColorPtr colorTarget = m_Renderer->CreateColorRenderTarget();
-    std::static_pointer_cast<CRenderTargetColorVulkan>(colorTarget)->InitializeWithImages(swapchainImages);
+    std::static_pointer_cast<CRenderTargetColorVulkan>(colorTarget)->InitializeWithImages(swapchainImages, Width(), Height());
     colorTarget->Initialize(IRenderTarget::ColorRGBA8888);
     
-    CRenderTargetDepthPtr depthTarget = m_Renderer->CreateDepthRenderTarget();
-    depthTarget->Initialize(IRenderTarget::Depth24_Stencil8);
+    //CRenderTargetDepthPtr depthTarget = m_Renderer->CreateDepthRenderTarget();
+    //depthTarget->Initialize(IRenderTarget::Depth24_Stencil8);
     
     m_DefaultFrameBuffer = m_Renderer->CreateFrameBuffer(RealWidth(), RealHeight());
     m_DefaultFrameBuffer->Initialize();
     m_DefaultFrameBuffer->AttachColor(colorTarget, 0);
-    m_DefaultFrameBuffer->AttachDepth(depthTarget);
+    //m_DefaultFrameBuffer->AttachDepth(depthTarget);
     
+    std::static_pointer_cast<CRendererVulkan>(m_Renderer)->Initialize();
     assert(m_Renderer && m_DefaultFrameBuffer->IsValid());
 }
 
 void CRenderViewIOS::Begin() const
 {
-    [EAGLContext setCurrentContext:m_GLContext];
+    if (m_RenderApi == Vulkan) {
+        const VkDevice& logicalDevice = std::static_pointer_cast<CRendererVulkan>(m_Renderer)->LogicalDevice();
+        
+        VkResult result = vkAcquireNextImageKHR(logicalDevice, m_Swapchain,
+                                                UINT64_MAX, VK_NULL_HANDLE,
+                                                m_Fence, (uint32_t*)&m_SwapchainIndex);
+        assert(result == VK_SUCCESS);
+        
+        result = vkWaitForFences(logicalDevice, 1, &m_Fence, VK_TRUE, UINT64_MAX);
+        assert(result == VK_SUCCESS);
+        
+        result = vkResetFences(logicalDevice, 1, &m_Fence);
+        assert(result == VK_SUCCESS);
+    } else {
+        [EAGLContext setCurrentContext:m_GLContext];
+    }
 }
 
 void CRenderViewIOS::End() const
 {
-    m_DefaultFrameBuffer->ColorAttachement(0)->Bind();
-    [m_GLContext presentRenderbuffer:GL_RENDERBUFFER];
+    if (m_RenderApi == Vulkan) {
+        VkResult result;
+        CRendererVulkanPtr vulkanRender = std::static_pointer_cast<CRendererVulkan>(m_Renderer);
+        const VkQueue& queue = vulkanRender->Queue();
+        const std::vector<VkCommandBuffer>& commandBuffers = vulkanRender->CommandBuffers();
+        
+        VkPresentInfoKHR presentInfoKHR = {
+            .sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,
+            .pNext = nullptr,
+            .waitSemaphoreCount = 0,
+            .pWaitSemaphores = nullptr,
+            .swapchainCount = 1,
+            .pSwapchains = &m_Swapchain,
+            .pImageIndices = &m_SwapchainIndex,
+            .pResults = &result
+        };
+        
+        VkPipelineStageFlags waitMask = VkPipelineStageFlagBits::VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
+        VkSubmitInfo submitInfo = {
+            .sType = VK_STRUCTURE_TYPE_SUBMIT_INFO,
+            .pNext = nullptr,
+            .waitSemaphoreCount = 0,
+            .pWaitSemaphores = nullptr,
+            .pWaitDstStageMask = &waitMask,
+            .commandBufferCount = 1,
+            .pCommandBuffers = &commandBuffers[m_SwapchainIndex],
+            .signalSemaphoreCount = 0,
+            .pSignalSemaphores = nullptr
+        };
+        
+        result = vkQueueSubmit(queue, 1, &submitInfo, VK_NULL_HANDLE);
+        assert(result == VK_SUCCESS);
+        
+        result = vkQueueWaitIdle(queue);
+        assert(result == VK_SUCCESS);
+        
+        result = vkQueuePresentKHR(queue, &presentInfoKHR);
+        assert(result == VK_SUCCESS);
+    } else {
+        m_DefaultFrameBuffer->ColorAttachement(0)->Bind();
+        [m_GLContext presentRenderbuffer:GL_RENDERBUFFER];
+    }
 }
 
 void CRenderViewIOS::UpdateEvents() const
@@ -293,6 +356,11 @@ IFrameBufferPtr CRenderViewIOS::DefaultFrameBuffer() const
 }
 
 // Vulkan
+
+const VkSwapchainKHR& CRenderViewIOS::Swapchain() const
+{
+    return m_Swapchain;
+}
 
 std::tuple<VkResult, VkInstance> CRenderViewIOS::CreateInstance(const std::string& appName, const std::string& engineName)
 {

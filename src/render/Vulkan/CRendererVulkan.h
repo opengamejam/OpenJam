@@ -13,6 +13,8 @@
 #include "IRenderer.h"
 
 namespace jam {
+    
+CLASS_PTR(CRendererVulkan)
 
 class CRendererVulkan : public IRenderer
 {
@@ -21,6 +23,11 @@ public:
     CRendererVulkan(IRenderViewPtr renderView);
     virtual ~CRendererVulkan();
 
+    /*
+     *
+     */
+    virtual void Initialize();
+    
     /*
      * Returns render view
      */
@@ -105,6 +112,8 @@ public:
      * Vulkan specific
      */
     const VkDevice& LogicalDevice() const;
+    const VkQueue& Queue() const;
+    const std::vector<VkCommandBuffer>& CommandBuffers() const;
     
 private:
     /*
@@ -122,6 +131,7 @@ private:
     VkDevice m_LogicalDevice;
     VkCommandPool m_CommandPool;
     std::vector<VkCommandBuffer> m_CommandBuffers;
+    VkQueue m_Queue;
 };
 
 }; // namespace jam

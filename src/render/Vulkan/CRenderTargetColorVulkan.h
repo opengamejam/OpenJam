@@ -56,7 +56,7 @@ public:
     /*
      * Vulkan specific
      */
-    virtual void InitializeWithImages(const std::vector<VkImage>& images);
+    virtual void InitializeWithImages(const std::vector<VkImage>& images, uint64_t width, uint64_t height);
     const std::vector<VkImage>& Images() const;
     const std::vector<VkImageView>& ImageViews() const;
     VkFormat ConvertInternalFormat(InternalFormats internalFormat);

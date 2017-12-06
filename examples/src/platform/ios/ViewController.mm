@@ -49,7 +49,7 @@ CLASS_PTR(IScene)
 {
     [super loadView];
 
-    self.view = [[GLKView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
+    self.view = [[MTKView alloc] initWithFrame:[[UIScreen mainScreen] bounds]];
 }
 
 - (void)viewDidLoad
@@ -58,7 +58,7 @@ CLASS_PTR(IScene)
 
     self.preferredFramesPerSecond = 60;
 
-    m_RenderView.reset(new CRenderViewIOS((__bridge void*)(self.view), CRenderViewIOS::OGLES2_0));
+    m_RenderView.reset(new CRenderViewIOS((__bridge void*)(self.view), CRenderViewIOS::Vulkan));
     m_Game.reset(new CGame(m_RenderView));
     m_Game->Initialize();
 

@@ -64,21 +64,6 @@ CLASS_PTR(IScene)
     m_Game->PushScene(m_MainScene);
     
     ((MTKView*)self.view).delegate = self;
-    
-    uint32_t fps = 120;
-    _displayLink = [CADisplayLink displayLinkWithTarget:self selector:@selector(update)];
-    [_displayLink setPreferredFramesPerSecond:fps];
-    [_displayLink addToRunLoop:NSRunLoop.currentRunLoop forMode:NSDefaultRunLoopMode];
-}
-
-- (void)update
-{
-    static NSTimeInterval lastTime = 0;
-    NSTimeInterval nowTime = [[NSDate date] timeIntervalSince1970];
-    unsigned long dt = (nowTime - lastTime) * 1000.0f;
-    lastTime = nowTime;
-    
-    m_Game->Update(dt);
 }
 
 - (void)didReceiveMemoryWarning
@@ -96,6 +81,12 @@ CLASS_PTR(IScene)
 // Called whenever the view needs to render
 - (void)drawInMTKView:(nonnull MTKView*)view
 {
+    static NSTimeInterval lastTime = 0;
+    NSTimeInterval nowTime = [[NSDate date] timeIntervalSince1970];
+    unsigned long dt = (nowTime - lastTime) * 1000.0f;
+    lastTime = nowTime;
+    
+    m_Game->Update(dt);
     m_Game->Draw();
 }
 

@@ -19,8 +19,7 @@ CLASS_PTR(IEntity)
 /*
  * Interface ISystem
  */
-class ISystem {
-    JAM_OBJECT_BASE
+class ISystem : public IObject<ISystem> {
 public:
     typedef std::set<IEntityPtr> TEntitiesList;
 
@@ -68,7 +67,7 @@ public:
 /*
  * Base class CSystemBase
  */
-template <typename ComponentType>
+template <class ComponentType, class = typename std::enable_if<std::is_base_of<IComponent, ComponentType>::value, ComponentType>::type>
 class CSystemBase : public ISystem {
     JAM_OBJECT
 public:

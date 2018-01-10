@@ -12,6 +12,7 @@
 namespace jam {
 
 class CImagePVR : public IImage {
+    JAM_OBJECT
 public:
     CImagePVR(const std::string& filename);
     virtual ~CImagePVR();

@@ -10,14 +10,14 @@
 #define IFrameBuffer_H
 
 #include "Global.h"
+#include "IObject.h"
 #include "CColor.hpp"
 
 namespace jam {
 CLASS_PTR(IFrameBuffer)
 CLASS_PTR(IRenderTarget)
 
-class IFrameBuffer {
-    JAM_OBJECT_BASE
+class IFrameBuffer : public IObject<IFrameBuffer> {
 public:
     typedef std::vector<uint8_t> TRawData;
 

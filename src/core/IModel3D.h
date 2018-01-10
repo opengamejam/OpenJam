@@ -15,7 +15,6 @@
 namespace jam {
 
 class IModel3D : public IResource {
-    JAM_OBJECT_BASE
 public:
     IModel3D(const std::string& filename)
         : IResource(filename)

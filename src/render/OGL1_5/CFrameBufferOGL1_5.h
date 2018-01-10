@@ -15,6 +15,7 @@
 namespace jam {
 
 class CFrameBufferOGL1_5 : public CFrameBufferOGLBase {
+    JAM_OBJECT
 public:
     CFrameBufferOGL1_5(uint32_t width, uint32_t height);
     virtual ~CFrameBufferOGL1_5();

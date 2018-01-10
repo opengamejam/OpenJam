@@ -140,7 +140,7 @@ void CRenderTargetDepthOGLBase::CreateStencil()
 
     m_Stencil = CreateStencilObject();
     if (m_Stencil) {
-        std::static_pointer_cast<CRenderTargetStencilOGLBase>(m_Stencil)->InitializeWithDepthId(m_Id);
+        m_Stencil->Ptr<CRenderTargetStencilOGLBase>()->InitializeWithDepthId(m_Id);
     }
 }
 
@@ -148,7 +148,7 @@ void CRenderTargetDepthOGLBase::DeleteStencil()
 {
     assert(m_Stencil);
 
-    std::static_pointer_cast<CRenderTargetStencilOGLBase>(m_Stencil)->InitializeWithDepthId(0);
+    m_Stencil->Ptr<CRenderTargetStencilOGLBase>()->InitializeWithDepthId(0);
     m_Stencil = nullptr;
 }
 

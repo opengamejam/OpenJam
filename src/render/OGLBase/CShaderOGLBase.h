@@ -17,6 +17,7 @@
 namespace jam {
 
 class CShaderOGLBase : public IShader {
+    JAM_OBJECT
 public:
     CShaderOGLBase();
     virtual ~CShaderOGLBase();

@@ -15,6 +15,7 @@
 namespace jam {
 
 class CShaderProgramOGLES1_1 : public CShaderProgramOGLBase {
+    JAM_OBJECT
 public:
     CShaderProgramOGLES1_1();
     virtual ~CShaderProgramOGLES1_1();

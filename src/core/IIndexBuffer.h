@@ -9,13 +9,13 @@
 #define IINDEXBUFFER_H
 
 #include "Global.h"
+#include "IObject.h"
 
 namespace jam {
 
 CLASS_PTR(IIndexBuffer)
 
-class IIndexBuffer : public std::enable_shared_from_this<IIndexBuffer> {
-    JAM_OBJECT_BASE
+class IIndexBuffer : public IObject<IIndexBuffer> {
 public:
     enum DataTypes {
         Unknown = -1,

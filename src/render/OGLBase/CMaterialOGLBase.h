@@ -17,6 +17,7 @@
 namespace jam {
 
 class CMaterialOGLBase : public IMaterial {
+    JAM_OBJECT
 public:
     CMaterialOGLBase();
     virtual ~CMaterialOGLBase();

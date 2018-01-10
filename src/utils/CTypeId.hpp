@@ -9,13 +9,15 @@
 #ifndef CTYPEID_H
 #define CTYPEID_H
 
+#include "Global.h"
+
 typedef uintptr_t typeid_t;
 
 template <typename T>
-class CTypeId {
+class CTypeId final {
 public:
-    CTypeId(){};
-    ~CTypeId(){};
+    CTypeId() = default;
+    ~CTypeId() = default;
 
     static typeid_t Id()
     {
@@ -38,50 +40,6 @@ private:
         return ss.str();
     }
 };
-
-/* 
- * JAM_OBJECT_BASE add meta info to retrieve unique id to basic class,
- * but return nothing. All derived classes should use JAM_OBJECT to be 
- * able retrieve its unique identifiers
- * Don't use JAM_OBJECT_BASE in derived classes, only interfaces
- */
-#define JAM_OBJECT_BASE                                     \
-public:                                                     \
-    virtual typeid_t GetId() const                          \
-    {                                                       \
-        assert(false);                                      \
-        return 0;                                           \
-    }                                                       \
-                                                            \
-    uint64_t GetUid()                                       \
-    {                                                       \
-        static uint64_t idx = NextUid();                    \
-        return idx;                                         \
-    }                                                       \
-                                                            \
-private:                                                    \
-    uint64_t NextUid()                                      \
-    {                                                       \
-        std::lock_guard<std::mutex> lock(m_NextUidMutex);   \
-        static uint64_t nextId;                             \
-        uint64_t idx = nextId;                              \
-        nextId++;                                           \
-        return idx;                                         \
-    }                                                       \
-    std::mutex m_NextUidMutex;
-
-/*
- * JAM_OBJECT should be declared inside class definition. It will add
- * to class some meta information to determine unique id for this class.
- * This macros should be used with derived classes, don't use it in
- * interfaces
- */
-#define JAM_OBJECT                                                                                                  \
-public:                                                                                                             \
-    virtual typeid_t GetId() const override                                                                         \
-    {                                                                                                               \
-        return CTypeId<typename std::remove_const<typename std::remove_pointer<decltype(this)>::type>::type>::Id(); \
-    }
 
 #endif /* CTYPEID_H */
 

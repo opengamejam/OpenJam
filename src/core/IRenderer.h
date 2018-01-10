@@ -23,8 +23,7 @@ namespace jam {
 CLASS_PTR(IRenderer)
 CLASS_PTR(IRenderView)
 
-class IRenderer {
-    JAM_OBJECT_BASE
+class IRenderer : public IObject<IRenderer> {
 public:
     IRenderer() = default;
     virtual ~IRenderer() = default;
@@ -43,12 +42,7 @@ public:
     std::shared_ptr<T> NewFrameBuffer(uint32_t width, uint32_t height)
     {
         IFrameBufferPtr frameBuffer = CreateFrameBuffer(width, height);
-        if (frameBuffer->GetId() == CTypeId<T>::Id()) {
-            return std::static_pointer_cast<T>(frameBuffer);
-        }
-        
-        assert(false && "Trying to create framebuffer with incorrect type");
-        return nullptr;
+        return frameBuffer->Ptr<T>();
     }
 
     /*
@@ -60,12 +54,7 @@ public:
     std::shared_ptr<T> NewColorRenderTarget()
     {
         CRenderTargetColorPtr colorTarget = CreateColorRenderTarget();
-        if (colorTarget->GetId() == CTypeId<T>::Id()) {
-            return std::static_pointer_cast<T>(colorTarget);
-        }
-        
-        assert(false && "Trying to create color target with incorrect type");
-        return nullptr;
+        return colorTarget->Ptr<T>();
     }
 
     /*
@@ -77,12 +66,7 @@ public:
     std::shared_ptr<T> NewDepthRenderTarget()
     {
         CRenderTargetDepthPtr depthTarget = CreateDepthRenderTarget();
-        if (depthTarget->GetId() == CTypeId<T>::Id()) {
-            return std::static_pointer_cast<T>(depthTarget);
-        }
-        
-        assert(false && "Trying to create depth target with incorrect type");
-        return nullptr;
+        return depthTarget->Ptr<T>();
     }
     
     /*
@@ -94,12 +78,7 @@ public:
     std::shared_ptr<T> NewStencilRenderTarget()
     {
         CRenderTargetStencilPtr stencilTarget = CreateStencilRenderTarget();
-        if (stencilTarget->GetId() == CTypeId<T>::Id()) {
-            return std::static_pointer_cast<T>(stencilTarget);
-        }
-        
-        assert(false && "Trying to create stencil target with incorrect type");
-        return nullptr;
+        return stencilTarget->Ptr<T>();
     }
 
     /*
@@ -111,12 +90,7 @@ public:
     std::shared_ptr<T> NewTextureRenderTarget()
     {
         CRenderTargetTexturePtr textureTarget = CreateTextureRenderTarget();
-        if (textureTarget->GetId() == CTypeId<T>::Id()) {
-            return std::static_pointer_cast<T>(textureTarget);
-        }
-        
-        assert(false && "Trying to create texture target with incorrect type");
-        return nullptr;
+        return textureTarget->Ptr<T>();
     }
 
     /*
@@ -128,12 +102,7 @@ public:
     std::shared_ptr<T> NewVertexBuffer()
     {
         IVertexBufferPtr vertexBuffer = CreateVertexBuffer();
-        if (vertexBuffer->GetId() == CTypeId<T>::Id()) {
-            return std::static_pointer_cast<T>(vertexBuffer);
-        }
-        
-        assert(false && "Trying to create vertex buffer with incorrect type");
-        return nullptr;
+        return vertexBuffer->Ptr<T>();
     }
 
     /*
@@ -145,12 +114,7 @@ public:
     std::shared_ptr<T> NewIndexBuffer()
     {
         IIndexBufferPtr indexBuffer = CreateIndexBuffer();
-        if (indexBuffer->GetId() == CTypeId<T>::Id()) {
-            return std::static_pointer_cast<T>(indexBuffer);
-        }
-        
-        assert(false && "Trying to create index buffer with incorrect type");
-        return nullptr;
+        return indexBuffer->Ptr<T>();
     }
 
     /*
@@ -162,12 +126,7 @@ public:
     std::shared_ptr<T> NewTexture()
     {
         ITexturePtr texture = CreateTexture();
-        if (texture->GetId() == CTypeId<T>::Id()) {
-            return std::static_pointer_cast<T>(texture);
-        }
-        
-        assert(false && "Trying to create texture with incorrect type");
-        return nullptr;
+        return texture->Ptr<T>();
     }
 
     /*
@@ -179,12 +138,7 @@ public:
     std::shared_ptr<T> NewMaterial()
     {
         IMaterialPtr material = CreateMaterial();
-        if (material->GetId() == CTypeId<T>::Id()) {
-            return std::static_pointer_cast<T>(material);
-        }
-        
-        assert(false && "Trying to create material with incorrect type");
-        return nullptr;
+        return material->Ptr<T>();
     }
 
     /*
@@ -196,12 +150,7 @@ public:
     std::shared_ptr<T> NewMesh()
     {
         IMeshPtr mesh = CreateMesh();
-        if (mesh->GetId() == CTypeId<T>::Id()) {
-            return std::static_pointer_cast<T>(mesh);
-        }
-        
-        assert(false && "Trying to create mesh with incorrect type");
-        return nullptr;
+        return mesh->Ptr<T>();
     }
 
     /*
@@ -213,12 +162,7 @@ public:
     std::shared_ptr<T> NewShader()
     {
         IShaderPtr shader = CreateShader();
-        if (shader->GetId() == CTypeId<T>::Id()) {
-            return std::static_pointer_cast<T>(shader);
-        }
-        
-        assert(false && "Trying to create shader with incorrect type");
-        return nullptr;
+        return shader->Ptr<T>();
     }
 
     /*
@@ -230,12 +174,7 @@ public:
     std::shared_ptr<T> NewShaderProgram()
     {
         IShaderProgramPtr shaderProgram = CreateShaderProgram();
-        if (shaderProgram->GetId() == CTypeId<T>::Id()) {
-            return std::static_pointer_cast<T>(shaderProgram);
-        }
-        
-        assert(false && "Trying to create shader program with incorrect type");
-        return nullptr;
+        return shaderProgram->Ptr<T>();
     }
 
     /*

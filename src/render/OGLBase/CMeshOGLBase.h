@@ -17,6 +17,7 @@
 namespace jam {
 
 class CMeshOGLBase : public IMesh {
+    JAM_OBJECT
 public:
     CMeshOGLBase();
     virtual ~CMeshOGLBase();

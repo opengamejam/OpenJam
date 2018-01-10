@@ -59,7 +59,6 @@ struct TexelProps {
 };
 
 class IImage : public IResource {
-    JAM_OBJECT_BASE
 public:
     IImage(const std::string& filename)
         : IResource(filename)

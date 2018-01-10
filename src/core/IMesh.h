@@ -9,6 +9,7 @@
 #define IMESH_H
 
 #include "Global.h"
+#include "IObject.h"
 
 namespace jam {
 
@@ -16,8 +17,7 @@ CLASS_PTR(IMesh)
 CLASS_PTR(IVertexBuffer)
 CLASS_PTR(IIndexBuffer)
 
-class IMesh {
-    JAM_OBJECT_BASE
+class IMesh : public IObject<IMesh> {
 public:
     IMesh() = default;
     virtual ~IMesh() = default;

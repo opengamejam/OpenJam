@@ -15,6 +15,7 @@
 namespace jam {
 
 class CIndexBufferOGL1_3 : public CIndexBufferOGLBase {
+    JAM_OBJECT
 public:
     CIndexBufferOGL1_3();
     virtual ~CIndexBufferOGL1_3();

@@ -65,7 +65,7 @@ void CRenderViewIOS::InitOGLES(RenderApi oglesVersion)
             EAGLContext* m_GLContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1];
             [EAGLContext setCurrentContext:m_GLContext];
             
-            m_Renderer.reset(new CRendererOGLES1_1(shared_from_this()));
+            m_Renderer.reset(new CRendererOGLES1_1(Ptr<IRenderView>()));
         }
         break;
             
@@ -73,7 +73,7 @@ void CRenderViewIOS::InitOGLES(RenderApi oglesVersion)
             m_GLContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
             [EAGLContext setCurrentContext:m_GLContext];
             
-            m_Renderer.reset(new CRendererOGLES2_0(shared_from_this()));
+            m_Renderer.reset(new CRendererOGLES2_0(Ptr<IRenderView>()));
         }
         break;
             
@@ -81,7 +81,7 @@ void CRenderViewIOS::InitOGLES(RenderApi oglesVersion)
             m_GLContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1];
             [EAGLContext setCurrentContext:m_GLContext];
             
-            //m_Renderer.reset(new CRendererOGLES1_1(shared_from_this()));
+            //m_Renderer.reset(new CRendererOGLES1_1(Ptr<IRenderView>()));
         }
         break;
             
@@ -155,7 +155,7 @@ void CRenderViewIOS::InitVulkan()
     }
     
     m_RenderInstance.reset(new CRenderInstanceVulkan(instance, physicalDevices[0], surface, surfaceFormats));
-    m_Renderer.reset(new CRendererVulkan(shared_from_this()));
+    m_Renderer.reset(new CRendererVulkan(Ptr<IRenderView>()));
     
     
     // Swapchain
@@ -233,7 +233,7 @@ void CRenderViewIOS::InitVulkan()
         .clipped = true,
     };
     
-    const VkDevice& logicalDevice = std::static_pointer_cast<CRendererVulkan>(m_Renderer)->LogicalDevice();
+    const VkDevice& logicalDevice = m_Renderer->Ptr<CRendererVulkan>()->LogicalDevice();
     
     result = vkCreateSwapchainKHR(logicalDevice, &swapchainInfo, nullptr, &m_Swapchain);
     

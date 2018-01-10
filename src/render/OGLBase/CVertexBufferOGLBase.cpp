@@ -62,7 +62,7 @@ IVertexBuffer::SVertexStream& CVertexBufferOGLBase::Lock(IVertexBuffer::VertexTy
             absoluteOffset += (stream.DataSize() * Size());
         });
 
-        SVertexStream stream = SVertexStream(shared_from_this());
+        SVertexStream stream = SVertexStream(Ptr<IVertexBuffer>());
         stream.streamIndex = (unsigned int)m_VertexStreamers.size();
         stream.absoluteOffset = absoluteOffset;
 

@@ -15,6 +15,7 @@
 namespace jam {
 
 class CModelObj : public IModel3D {
+    JAM_OBJECT
 public:
     CModelObj(const std::string& filename);
     virtual ~CModelObj();

@@ -15,6 +15,7 @@
 namespace jam {
 
 class CRendererOGL1_3 : public CRendererOGLBase {
+    JAM_OBJECT
 public:
     CRendererOGL1_3(IRenderViewPtr renderView);
     virtual ~CRendererOGL1_3();

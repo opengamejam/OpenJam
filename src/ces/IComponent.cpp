@@ -30,7 +30,7 @@ void CComponentBase::Entity(IEntityPtr entity)
         return;
     }
 
-    IComponentPtr thisPtr = shared_from_this();
+    IComponentPtr thisPtr = Ptr<IComponent>();
 
     if (prevEntity) {
         prevEntity->RemoveComponent(thisPtr);
@@ -50,7 +50,7 @@ IEntityPtr CComponentBase::Entity() const
 
 void CComponentBase::Dirty()
 {
-    IComponentPtr thisPtr = shared_from_this();
+    IComponentPtr thisPtr = Ptr<IComponent>();
     emit OnChangedSignal(thisPtr);
 }
 

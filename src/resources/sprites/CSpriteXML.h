@@ -14,6 +14,7 @@ class TiXmlElement;
 namespace jam {
 
 class CSpriteXML : public ISprite {
+    JAM_OBJECT
 public:
     CSpriteXML(const std::string& filename);
     virtual ~CSpriteXML();

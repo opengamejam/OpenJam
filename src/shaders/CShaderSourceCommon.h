@@ -15,6 +15,7 @@
 namespace jam {
 
 class CShaderSourceCommon : public IShaderSource {
+    JAM_OBJECT
 public:
     virtual const std::string& Vertex() const override;
     virtual const std::string& Fragment() const override;

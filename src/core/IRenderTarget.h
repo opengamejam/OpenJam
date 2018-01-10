@@ -10,6 +10,7 @@
 #define IRENDERTARGET_H
 
 #include "Global.h"
+#include "IObject.h"
 
 #if defined(RENDER_OGLES1_0) || \
     defined(RENDER_OGLES1_1) || \
@@ -27,8 +28,7 @@ CLASS_PTR(CRenderTargetDepth)
 CLASS_PTR(CRenderTargetStencil)
 CLASS_PTR(CRenderTargetTexture)
 
-class IRenderTarget : public std::enable_shared_from_this<IRenderTarget> {
-    JAM_OBJECT_BASE
+class IRenderTarget : public IObject<IRenderTarget> {
 public:
     enum InternalFormats {
         ColorR8 = 0x10,

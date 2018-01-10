@@ -823,6 +823,7 @@
 		6E5A7F701EF81333001F41B3 /* GLKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = GLKit.framework; path = System/Library/Frameworks/GLKit.framework; sourceTree = SDKROOT; };
 		6E5A7F721EF8133A001F41B3 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		6E5A7F761EF814EA001F41B3 /* media */ = {isa = PBXFileReference; lastKnownFileType = folder; name = media; path = ../../examples/media; sourceTree = "<group>"; };
+		CC140120200673F100748ABD /* IObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IObject.h; sourceTree = "<group>"; };
 		CC3C9FE41F897C3A009E5B69 /* miniz.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = miniz.c; sourceTree = "<group>"; };
 		CC3C9FE61F897D59009E5B69 /* miniz.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = miniz.h; sourceTree = "<group>"; };
 		CC3FCB8C1FDAE3DA00261F7F /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
@@ -1140,6 +1141,7 @@
 				6E5A7A431EF800AC001F41B3 /* IVertexBuffer.h */,
 				6E5A7A441EF800AC001F41B3 /* RenderGlobal.cpp */,
 				6E5A7A451EF800AC001F41B3 /* RenderGlobal.h */,
+				CC140120200673F100748ABD /* IObject.h */,
 			);
 			path = core;
 			sourceTree = "<group>";

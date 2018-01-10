@@ -38,6 +38,8 @@
 #include "COperationQueue.h"
 #include "CBlockOperation.h"
 
+#include "CRendererVulkan.h"
+
 using namespace jam;
 
 namespace jam
@@ -84,6 +86,10 @@ void CGameScene::Update(unsigned long dt)
 {
     CSceneBase::Update(dt);
 
+    if (Game()->RenderView()->Renderer()->GetId() == CTypeId<CRendererVulkan>::Id()) {
+        return;
+    }
+    
     const float speed = 10.0f;
 
     lightPos.x += dir.x * speed * (dt / 1000.0f);
@@ -145,6 +151,10 @@ void CGameScene::CreateMainCamera()
     AddCamera(m_MainCamera);
     AddCamera(m_UICamera);
 
+    if (Game()->RenderView()->Renderer()->GetId() == CTypeId<CRendererVulkan>::Id()) {
+        return;
+    }
+    
     CSprite2DPtr ball = CSprite2D::Create("/ball_glitch/sprite.mpf", renderer);
     ball->Position(glm::vec3(0.0f, 0.0f, 1.0f));
 
@@ -263,7 +273,7 @@ void CGameScene::CreateMainCamera()
 
 bool CGameScene::OnBallMoved(IEventPtr event)
 {
-    CTouchEventPtr touchEvent = std::static_pointer_cast<CTouchEvent>(event);
+    CTouchEventPtr touchEvent = event->Ptr<CTouchEvent>();
 
     sprite->Position(glm::vec3(touchEvent->GetPosition().x,
                                touchEvent->GetPosition().y,

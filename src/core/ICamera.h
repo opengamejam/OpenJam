@@ -14,7 +14,6 @@ namespace jam {
 CLASS_PTR(IFrameBuffer)
 
 class ICamera : public CEntityBase {
-    JAM_OBJECT_BASE
 public:
     static const uint64_t kDefaultFrameBuffer = 0;
     

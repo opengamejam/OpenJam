@@ -15,6 +15,7 @@
 namespace jam {
 
 class CVertexBufferOGLES1_1 : public CVertexBufferOGLBase {
+    JAM_OBJECT
 public:
     CVertexBufferOGLES1_1();
     virtual ~CVertexBufferOGLES1_1();

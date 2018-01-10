@@ -10,12 +10,12 @@
 #define IRENDERINSTANCE_H
 
 #include "Global.h"
+#include "IObject.h"
 
 namespace jam {
 CLASS_PTR(IRenderInstance)
 
-class IRenderInstance : public std::enable_shared_from_this<IRenderInstance> {
-    JAM_OBJECT_BASE
+class IRenderInstance : public IObject<IRenderInstance> {
 public:
     IRenderInstance() = default;
     virtual ~IRenderInstance() = default;

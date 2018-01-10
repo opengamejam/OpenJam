@@ -18,6 +18,7 @@
 namespace jam {
 
 class CRendererOGLBase : public IRenderer {
+    JAM_OBJECT
 public:
     CRendererOGLBase(IRenderViewPtr renderView);
     virtual ~CRendererOGLBase();

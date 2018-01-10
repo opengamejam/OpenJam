@@ -79,7 +79,6 @@ public:
 };
 
 class ISprite : public IResource {
-    JAM_OBJECT_BASE
 public:
     ISprite(const std::string& filename)
         : IResource(filename)

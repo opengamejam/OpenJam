@@ -15,6 +15,7 @@
 namespace jam {
 
 class CMeshOGL1_5 : public CMeshOGLBase {
+    JAM_OBJECT
 public:
     CMeshOGL1_5();
     virtual ~CMeshOGL1_5();

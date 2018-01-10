@@ -9,14 +9,14 @@
 #define ITEXTURE_H
 
 #include "Global.h"
+#include "IObject.h"
 
 namespace jam {
 
 CLASS_PTR(ITexture)
 CLASS_PTR(IImage)
 
-class ITexture {
-    JAM_OBJECT_BASE
+class ITexture : public IObject<ITexture> {
 public:
     enum TextureType {
         TwoD = 0,

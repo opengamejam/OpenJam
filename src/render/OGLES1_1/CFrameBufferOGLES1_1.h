@@ -15,12 +15,13 @@
 namespace jam
 {
     
-    class CFrameBufferOGLES1_1 : public CFrameBufferOGLBase
-    {
-    public:
-        CFrameBufferOGLES1_1(uint32_t width, uint32_t height);
-        virtual ~CFrameBufferOGLES1_1();
-    };
+class CFrameBufferOGLES1_1 : public CFrameBufferOGLBase
+{
+    JAM_OBJECT
+public:
+    CFrameBufferOGLES1_1(uint32_t width, uint32_t height);
+    virtual ~CFrameBufferOGLES1_1();
+};
     
 }; // namespace jam
 

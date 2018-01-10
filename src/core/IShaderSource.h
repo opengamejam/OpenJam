@@ -9,10 +9,11 @@
 #ifndef ISHADERSOURCE_H
 #define ISHADERSOURCE_H
 
+#include "IObject.h"
+
 namespace jam {
 
-class IShaderSource {
-    JAM_OBJECT_BASE
+class IShaderSource : public IObject<IShaderSource> {
 public:
     virtual const std::string& Vertex() const = 0;
     virtual const std::string& Fragment() const = 0;

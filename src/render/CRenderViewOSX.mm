@@ -92,7 +92,7 @@ void CRenderViewOSX::CreateView()
     m_DefaultFrameBuffer = m_Renderer->CreateFrameBuffer(RealWidth(), RealHeight());
     // Use 0 for the defaultFBO which is appropriate for
     // OSX (but not iOS since iOS apps must create their own FBO)
-    std::static_pointer_cast<CFrameBufferOGLBase>(m_DefaultFrameBuffer)->InitializeWithFBO(0);
+    m_DefaultFrameBuffer->Ptr<CFrameBufferOGLBase>()->InitializeWithFBO(0);
     m_DefaultFrameBuffer->Bind();
     m_DefaultFrameBuffer->AttachColor(colorTarget, 0);
     m_DefaultFrameBuffer->AttachDepth(depthTarget);

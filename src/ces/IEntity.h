@@ -10,6 +10,7 @@
 #define IENTITY_H
 
 #include "Global.h"
+#include "IObject.h"
 
 namespace jam {
 
@@ -22,8 +23,7 @@ CLASS_PTR(CUpdateComponent)
 /*
  * Interface IEntity
  */
-class IEntity : public std::enable_shared_from_this<IEntity> {
-    JAM_OBJECT_BASE
+class IEntity : public IObject<IEntity> {
 public:
     typedef std::vector<IComponentPtr> TComponentsArray;
     typedef std::unordered_map<typeid_t, TComponentsArray> TComponentsMap;

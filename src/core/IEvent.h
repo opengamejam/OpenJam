@@ -10,11 +10,11 @@
 #define IEVENT_H
 
 #include "Global.h"
+#include "IObject.h"
 
 namespace jam {
 
-class IEvent {
-    JAM_OBJECT_BASE
+class IEvent : public IObject<IEvent> {
 public:
     IEvent() = default;
     virtual ~IEvent() = default;

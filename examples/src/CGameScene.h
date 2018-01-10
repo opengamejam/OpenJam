@@ -15,6 +15,7 @@ CLASS_PTR(COperationQueue)
 }
 
 class CGameScene : public jam::CSceneBase {
+    JAM_OBJECT
 public:
     CGameScene(jam::CGamePtr game);
     virtual ~CGameScene();

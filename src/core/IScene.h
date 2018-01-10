@@ -9,6 +9,7 @@
 #define ISCENE_H
 
 #include "Global.h"
+#include "IObject.h"
 
 namespace jam {
 CLASS_PTR(ICamera)
@@ -18,8 +19,7 @@ CLASS_PTR(CGame)
 /*
  * Interface IScene
  */
-class IScene : public std::enable_shared_from_this<IScene> {
-    JAM_OBJECT_BASE
+class IScene : public IObject<IScene> {
 public:
     typedef std::vector<ICameraPtr> TCamerasList;
 

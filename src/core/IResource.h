@@ -7,11 +7,11 @@
 #define IRESOURCE_H
 
 #include "Global.h"
+#include "IObject.h"
 
 namespace jam {
 
-class IResource : public std::enable_shared_from_this<IResource> {
-    JAM_OBJECT_BASE
+class IResource : public IObject<IResource> {
 public:
     typedef std::vector<uint8_t> TResourceData;
 

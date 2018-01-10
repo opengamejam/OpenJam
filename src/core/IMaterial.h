@@ -9,14 +9,14 @@
 #define IMATERIAL_H
 
 #include "Global.h"
+#include "IObject.h"
 #include "CColor.hpp"
 
 namespace jam {
     
 CLASS_PTR(IMaterial)
 
-class IMaterial {
-    JAM_OBJECT_BASE
+class IMaterial : public IObject<IMaterial> {
 public:
     enum TextureSamples {
         DiffuseTexture = 0,

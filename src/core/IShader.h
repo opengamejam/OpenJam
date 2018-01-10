@@ -11,14 +11,14 @@
 #define ISHADER_H
 
 #include "Global.h"
+#include "IObject.h"
 
 namespace jam {
 
 CLASS_PTR(IShader)
 CLASS_PTR(IShaderSource)
 
-class IShader {
-    JAM_OBJECT_BASE
+class IShader : public IObject<IShader> {
 public:
     enum ShaderType {
         Vertex = 0,

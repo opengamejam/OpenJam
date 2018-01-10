@@ -17,6 +17,7 @@
 namespace jam {
 
 class CVertexBufferOGLBase : public IVertexBuffer {
+    JAM_OBJECT
 public:
     CVertexBufferOGLBase();
     virtual ~CVertexBufferOGLBase();

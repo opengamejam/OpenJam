@@ -77,11 +77,11 @@ void CFrameBufferVulkan::Resize(uint64_t width, uint64_t height)
     });
     
     if (DepthAttachement()) {
-       // std::static_pointer_cast<CRenderTargetDepthVulkan>(DepthAttachement())->Allocate(width, height);
+       //DepthAttachement()->Ptr<CFrameBufferDepthVulkan>()->Allocate(width, height);
     }
     
     if (StencilAttachement()) {
-     //   std::static_pointer_cast<CRenderTargetStencilVulkan>(StencilAttachement())->Allocate(width, height);
+        //StencilAttachement()->Ptr<CRenderTargetStencilVulkan>()->Allocate(width, height);
     }
 
     JAM_LOG("CFrameBufferVulkan::Resize() - id: %d, size: (%llu, %llu)\n", m_Id, width, height);
@@ -260,7 +260,7 @@ void CFrameBufferVulkan::Rebuild()
             attachementDescription.push_back(desc);
             
             if (renderTarget->ColorTarget()) {
-                const std::vector<VkImageView>& views = std::static_pointer_cast<CRenderTargetColorVulkan>(renderTarget)->ImageViews();
+                const std::vector<VkImageView>& views = renderTarget->Ptr<CRenderTargetColorVulkan>()->ImageViews();
                 std::copy (views.begin(), views.end(), std::back_inserter(imageViews));
             } else if (renderTarget->DepthTarget()) {
                 // TODO:

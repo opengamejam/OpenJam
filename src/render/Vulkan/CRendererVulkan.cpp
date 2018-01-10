@@ -38,7 +38,7 @@ using namespace jam;
 CRendererVulkan::CRendererVulkan(IRenderViewPtr renderView)
     : m_RenderView(renderView)
 {
-    CRenderInstanceVulkanPtr instance = RenderView()->GetRenderInstance<CRenderInstanceVulkan>();
+    CRenderInstanceVulkanPtr instance = RenderView()->RenderInstance()->Ptr<CRenderInstanceVulkan>();
     // GPU Props
     VkPhysicalDeviceProperties pProperties;
     {
@@ -107,7 +107,8 @@ CRendererVulkan::~CRendererVulkan()
 
 void CRendererVulkan::Initialize()
 {
-    CFrameBufferVulkanPtr frameBuffer = std::static_pointer_cast<CFrameBufferVulkan>(RenderView()->DefaultFrameBuffer());
+    IFrameBufferPtr defaultFrameBuffer = RenderView()->DefaultFrameBuffer();
+    CFrameBufferVulkanPtr frameBuffer = defaultFrameBuffer->Ptr<CFrameBufferVulkan>();
     uint32_t count = (uint32_t)frameBuffer->FrameBuffers().size();
     const VkCommandBufferAllocateInfo cmd = {
         .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO,
@@ -175,7 +176,7 @@ void CRendererVulkan::Initialize()
             //vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_Pip);
             vkCmdEndRenderPass(commandBuffer);
             
-            CRenderTargetColorVulkanPtr colorTarget = std::static_pointer_cast<CRenderTargetColorVulkan>(frameBuffer->ColorAttachement(0));
+            CRenderTargetColorVulkanPtr colorTarget = frameBuffer->ColorAttachement(0)->Ptr<CRenderTargetColorVulkan>();
             
             VkImageMemoryBarrier imageMemoryBarrier = {
                 .sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER,
@@ -209,7 +210,7 @@ IRenderViewPtr CRendererVulkan::RenderView() const
 
 IFrameBufferPtr CRendererVulkan::CreateFrameBuffer(uint32_t width, uint32_t height)
 {
-    CRenderInstanceVulkanPtr instance = RenderView()->GetRenderInstance<CRenderInstanceVulkan>();
+    CRenderInstanceVulkanPtr instance = RenderView()->RenderInstance()->Ptr<CRenderInstanceVulkan>();
     IFrameBufferPtr frameBuffer(new CFrameBufferVulkan(width, height,
                                                        m_LogicalDevice,
                                                        instance));

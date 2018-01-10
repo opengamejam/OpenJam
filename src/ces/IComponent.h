@@ -10,6 +10,7 @@
 #define ICOMPONENT_H
 
 #include "CSignal.hpp"
+#include "IObject.h"
 
 namespace jam {
 
@@ -19,8 +20,7 @@ CLASS_PTR(IEntity)
 /*
  * Interface IComponent
  */
-class IComponent : public std::enable_shared_from_this<IComponent> {
-    JAM_OBJECT_BASE
+class IComponent : public IObject<IComponent> {
 public:
     /*
      * Constructor

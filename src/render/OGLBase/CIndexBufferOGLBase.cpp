@@ -41,7 +41,7 @@ void CIndexBufferOGLBase::Initialize(DataTypes dataType)
 #else
         m_Id = 1;
 #endif
-        m_Stream = IIndexBuffer::SIndexStream(shared_from_this());
+        m_Stream = IIndexBuffer::SIndexStream(Ptr<IIndexBuffer>());
         m_Stream.dataType = dataType;
     }
     ElementSize(IIndexBuffer::SIndexStream::SizeForType(dataType));

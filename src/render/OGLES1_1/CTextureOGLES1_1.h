@@ -15,6 +15,7 @@
 namespace jam {
 
 class CTextureOGLES1_1 : public CTextureOGLBase {
+    JAM_OBJECT
 public:
     CTextureOGLES1_1();
     virtual ~CTextureOGLES1_1();

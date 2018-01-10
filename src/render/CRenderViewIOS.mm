@@ -33,11 +33,11 @@ using namespace jam;
 // Public Methods
 // *****************************************************************************
 
-CRenderViewIOS::CRenderViewIOS(void* glkView, RenderApi renderApi)
-    : IRenderView(((__bridge UIView*)glkView).frame.size.width,
-          ((__bridge UIView*)glkView).frame.size.height,
-          ((__bridge UIView*)glkView).contentScaleFactor)
-    , m_GLKView((__bridge UIView*)glkView)
+CRenderViewIOS::CRenderViewIOS(void* view, RenderApi renderApi)
+    : IRenderView(((__bridge UIView*)view).frame.size.width,
+          ((__bridge UIView*)view).frame.size.height,
+          ((__bridge UIView*)view).contentScaleFactor)
+    , m_GLKView((__bridge UIView*)view)
     , m_GLContext(nil)
     , m_RenderApi(renderApi)
     , m_Renderer(nullptr)
@@ -255,13 +255,15 @@ void CRenderViewIOS::InitVulkan()
     
     // Render targets
     CRenderTargetColorPtr colorTarget = m_Renderer->CreateColorRenderTarget();
-    std::static_pointer_cast<CRenderTargetColorVulkan>(colorTarget)->InitializeWithImages(swapchainImages, Width(), Height());
+    std::static_pointer_cast<CRenderTargetColorVulkan>(colorTarget)->InitializeWithImages(swapchainImages,
+                                                                                          surfaceFormats[0].format,
+                                                                                          Width(), Height());
     colorTarget->Initialize(IRenderTarget::ColorRGBA8888);
     
     //CRenderTargetDepthPtr depthTarget = m_Renderer->CreateDepthRenderTarget();
     //depthTarget->Initialize(IRenderTarget::Depth24_Stencil8);
     
-    m_DefaultFrameBuffer = m_Renderer->CreateFrameBuffer(RealWidth(), RealHeight());
+    m_DefaultFrameBuffer = m_Renderer->CreateFrameBuffer(Width(), Height());
     m_DefaultFrameBuffer->Initialize();
     m_DefaultFrameBuffer->AttachColor(colorTarget, 0);
     //m_DefaultFrameBuffer->AttachDepth(depthTarget);
@@ -293,10 +295,11 @@ void CRenderViewIOS::Begin() const
 void CRenderViewIOS::End() const
 {
     if (m_RenderApi == Vulkan) {
-        VkResult result;
+        VkResult result = VK_SUCCESS;
         CRendererVulkanPtr vulkanRender = std::static_pointer_cast<CRendererVulkan>(m_Renderer);
         const VkQueue& queue = vulkanRender->Queue();
         const std::vector<VkCommandBuffer>& commandBuffers = vulkanRender->CommandBuffers();
+        const VkCommandBuffer& commandBuffer = commandBuffers[m_SwapchainIndex];
         
         VkPresentInfoKHR presentInfoKHR = {
             .sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,
@@ -317,7 +320,7 @@ void CRenderViewIOS::End() const
             .pWaitSemaphores = nullptr,
             .pWaitDstStageMask = &waitMask,
             .commandBufferCount = 1,
-            .pCommandBuffers = &commandBuffers[m_SwapchainIndex],
+            .pCommandBuffers = &commandBuffer,
             .signalSemaphoreCount = 0,
             .pSignalSemaphores = nullptr
         };

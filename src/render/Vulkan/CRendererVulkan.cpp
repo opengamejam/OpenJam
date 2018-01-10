@@ -118,12 +118,13 @@ void CRendererVulkan::Initialize()
     };
     
     m_CommandBuffers.resize(count);
-    VkResult result = vkAllocateCommandBuffers(m_LogicalDevice, &cmd, &m_CommandBuffers[0]);
+    VkResult result = vkAllocateCommandBuffers(m_LogicalDevice, &cmd, m_CommandBuffers.data());
     assert(result == VK_SUCCESS);
     
     const VkRenderPass& renderPass = frameBuffer->RenderPass();
     for (uint32_t i = 0; i < frameBuffer->FrameBuffers().size(); ++i) {
         const VkFramebuffer& fb = frameBuffer->FrameBuffers()[i];
+        const VkCommandBuffer& commandBuffer = m_CommandBuffers[i];
         
         VkCommandBufferInheritanceInfo commandBufferInheritanceInfo = {
             .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_INHERITANCE_INFO,
@@ -140,10 +141,10 @@ void CRendererVulkan::Initialize()
             .sType = VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO,
             .pNext = nullptr,
             .flags = 0,
-            .pInheritanceInfo = nullptr //&commandBufferInheritanceInfo
+            .pInheritanceInfo = &commandBufferInheritanceInfo
         };
         
-        vkBeginCommandBuffer(m_CommandBuffers[i], &commandBufferBeginInfo);
+        vkBeginCommandBuffer(commandBuffer, &commandBufferBeginInfo);
         {
             VkClearValue clearValue = {
                 .color.float32[0] = 1.0f,
@@ -162,19 +163,17 @@ void CRendererVulkan::Initialize()
                     VkExtent2D{
                         RenderView()->Width(),
                         RenderView()->Height()
-                        
                     }
-                    
                 },
                 .clearValueCount = 1,
                 .pClearValues = &clearValue
             };
             
-            vkCmdBeginRenderPass(m_CommandBuffers[i],
+            vkCmdBeginRenderPass(commandBuffer,
                                  &renderPassBeginInfo,
                                  VkSubpassContents::VK_SUBPASS_CONTENTS_INLINE);
-            //vkCmdBindPipeline(m_CommandBuffers[i], VK_PIPELINE_BIND_POINT_GRAPHICS, m_Pip);
-            vkCmdEndRenderPass(m_CommandBuffers[i]);
+            //vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_Pip);
+            vkCmdEndRenderPass(commandBuffer);
             
             CRenderTargetColorVulkanPtr colorTarget = std::static_pointer_cast<CRenderTargetColorVulkan>(frameBuffer->ColorAttachement(0));
             
@@ -182,24 +181,24 @@ void CRendererVulkan::Initialize()
                 .sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER,
                 .pNext = nullptr,
                 .srcAccessMask = 0,
-                .dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT,
+                .dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_MEMORY_READ_BIT,
                 .oldLayout = VK_IMAGE_LAYOUT_UNDEFINED,
-                .newLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+                .newLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
                 .srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
                 .dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
                 .image = colorTarget->Images()[i],
                 .subresourceRange = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1 }
             };
             
-            vkCmdPipelineBarrier(m_CommandBuffers[i],
-                                 VK_PIPELINE_STAGE_ALL_COMMANDS_BIT,
-                                 VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT,
+            vkCmdPipelineBarrier(commandBuffer,
+                                 VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+                                 VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
                                  0,
                                  0, nullptr,
                                  0, nullptr,
                                  1, &imageMemoryBarrier);
         }
-        vkEndCommandBuffer(m_CommandBuffers[i]);
+        vkEndCommandBuffer(commandBuffer);
     }
 }
 

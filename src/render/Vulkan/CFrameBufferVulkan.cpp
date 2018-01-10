@@ -32,6 +32,7 @@ CFrameBufferVulkan::CFrameBufferVulkan(uint32_t width, uint32_t height,
 , m_LogicalDevice(logicalDevice)
 , m_RenderInstance(renderInstance)
 , m_NumColorAtachments(1)
+, m_RenderPass(nullptr)
 {
 }
 
@@ -319,8 +320,8 @@ void CFrameBufferVulkan::Rebuild()
             .sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO,
             .pNext = NULL,
             .renderPass = m_RenderPass,
-            .attachmentCount = (uint32_t)imageViews.size(),
-            .pAttachments = imageViews.data(),
+            .attachmentCount = 1,
+            .pAttachments = &imageView,
             .width = (uint32_t)Width(),
             .height = (uint32_t)Height(),
             .layers = 1,

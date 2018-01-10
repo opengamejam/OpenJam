@@ -127,9 +127,12 @@ void CRenderTargetColorVulkan::Unbind() const
 {
 }
 
-void CRenderTargetColorVulkan::InitializeWithImages(const std::vector<VkImage>& images, uint64_t width, uint64_t height)
+void CRenderTargetColorVulkan::InitializeWithImages(const std::vector<VkImage>& images,
+                                                    const VkFormat& format,
+                                                    uint64_t width, uint64_t height)
 {
     m_Images = images;
+    m_Format = format;
     Allocate(width, height);
 }
 

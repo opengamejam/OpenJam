@@ -413,13 +413,13 @@ CRenderTargetTexturePtr CRendererVulkan::CreateTextureRenderTarget()
 
 IVertexBufferPtr CRendererVulkan::CreateVertexBuffer()
 {
-    IVertexBufferPtr vertexBuffer(new CVertexBufferVulkan(m_LogicalDevice));
+    IVertexBufferPtr vertexBuffer(new CVertexBufferVulkan(Ptr<CRendererVulkan>()));
     return vertexBuffer;
 }
 
 IIndexBufferPtr CRendererVulkan::CreateIndexBuffer()
 {
-    IIndexBufferPtr indexBuffer(new CIndexBufferVulkan(m_LogicalDevice));
+    IIndexBufferPtr indexBuffer(new CIndexBufferVulkan(Ptr<CRendererVulkan>()));
     return indexBuffer;
 }
 

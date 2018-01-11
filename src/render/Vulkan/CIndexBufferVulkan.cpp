@@ -8,6 +8,9 @@
 //#if defined(RENDER_VULKAN)
 
 #include "CIndexBufferVulkan.h"
+#include "CRendererVulkan.h"
+#include "CRenderInstanceVulkan.h"
+#include "IRenderView.h"
 
 using namespace jam;
 
@@ -19,10 +22,10 @@ using namespace jam;
 // Public Methods
 // *****************************************************************************
 
-CIndexBufferVulkan::CIndexBufferVulkan(const VkDevice& logicalDevice)
+CIndexBufferVulkan::CIndexBufferVulkan(CRendererVulkanPtr renderer)
 : m_ElementSize(0)
 , m_Size(0)
-, m_LogicalDevice(logicalDevice)
+, m_Renderer(renderer)
 , m_Buffer(nullptr)
 , m_DeviceMemory(nullptr)
 , m_MappedData(nullptr)
@@ -58,13 +61,19 @@ void CIndexBufferVulkan::ResizeRaw(uint64_t newSize)
 {
     m_Size = newSize;
     
+    CRendererVulkanPtr renderer = m_Renderer.lock();
+    CRenderInstanceVulkanPtr instance = renderer->RenderView()->RenderInstance()->Ptr<CRenderInstanceVulkan>();
+    
+    VkPhysicalDeviceMemoryProperties vk_physicalDeviceMemoryProperties;
+    vkGetPhysicalDeviceMemoryProperties(instance->PhysicalDevice(), &vk_physicalDeviceMemoryProperties);
+    
     if (m_Buffer) {
-        vkDestroyBuffer(m_LogicalDevice, m_Buffer, nullptr);
+        vkDestroyBuffer(renderer->LogicalDevice(), m_Buffer, nullptr);
         m_Buffer = nullptr;
     }
     
     if (m_DeviceMemory) {
-        vkFreeMemory(m_LogicalDevice, m_DeviceMemory, nullptr);
+        vkFreeMemory(renderer->LogicalDevice(), m_DeviceMemory, nullptr);
         m_DeviceMemory = nullptr;
     }
     
@@ -79,34 +88,40 @@ void CIndexBufferVulkan::ResizeRaw(uint64_t newSize)
         .pQueueFamilyIndices = nullptr
     };
     
-    VkResult result = vkCreateBuffer(m_LogicalDevice, &vk_bufferCreateInfo, nullptr, &m_Buffer);
+    VkResult result = vkCreateBuffer(renderer->LogicalDevice(), &vk_bufferCreateInfo, nullptr, &m_Buffer);
     if (result != VK_SUCCESS) {
         JAM_LOG("Can't create Vulkan index buffer");
     }
     
     VkMemoryRequirements vk_memoryRequirements;
-    vkGetBufferMemoryRequirements(m_LogicalDevice, m_Buffer, &vk_memoryRequirements);
+    vkGetBufferMemoryRequirements(renderer->LogicalDevice(), m_Buffer, &vk_memoryRequirements);
     
-    /*for(size_t i = 0; i < vk_physicalDeviceMemoryProperties.memoryTypeCount; ++i)
+    uint32_t memoryDeviceIndex = UINT32_MAX;
+    for(uint32_t i = 0; i < vk_physicalDeviceMemoryProperties.memoryTypeCount; ++i)
     {
         auto bit = ((uint32_t)1 << i);
         if((vk_memoryRequirements.memoryTypeBits & bit) != 0)
         {
-            if((vk_physicalDeviceMemoryProperties.memoryTypes[i].propertyFlags & VkMemoryPropertyFlagBits::VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT) != 0)
+            if((vk_physicalDeviceMemoryProperties.memoryTypes[i].propertyFlags & VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT) != 0)
             {
-                return i;
+                memoryDeviceIndex = i;
             }
         }
-    }*/
+    }
+    
+    if (memoryDeviceIndex == UINT32_MAX) {
+        JAM_LOG("Can't find appropriate Vulkan device memory for index buffer");
+        return;
+    }
     
     VkMemoryAllocateInfo vk_memoryAllocateInfo = {
         vk_memoryAllocateInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
         vk_memoryAllocateInfo.pNext = nullptr,
         vk_memoryAllocateInfo.allocationSize = vk_memoryRequirements.size,
-        vk_memoryAllocateInfo.memoryTypeIndex = 0 // TODO:
+        vk_memoryAllocateInfo.memoryTypeIndex = memoryDeviceIndex
     };
     
-    result = vkAllocateMemory(m_LogicalDevice, &vk_memoryAllocateInfo, nullptr, &m_DeviceMemory);
+    result = vkAllocateMemory(renderer->LogicalDevice(), &vk_memoryAllocateInfo, nullptr, &m_DeviceMemory);
     if (result != VK_SUCCESS) {
         JAM_LOG("Can't allocate Vulkan device memory for index buffer");
     }
@@ -123,7 +138,10 @@ void* CIndexBufferVulkan::LockRaw()
         return m_MappedData;
     }
     
-    VkResult result = vkMapMemory(m_LogicalDevice, m_DeviceMemory, 0, Size(), 0, &m_MappedData);
+    CRendererVulkanPtr renderer = m_Renderer.lock();
+    assert(renderer);
+    
+    VkResult result = vkMapMemory(renderer->LogicalDevice(), m_DeviceMemory, 0, Size(), 0, &m_MappedData);
     if (result == VK_SUCCESS) {
         JAM_LOG("Can't map device memory for index buffer")
     }
@@ -147,10 +165,13 @@ void CIndexBufferVulkan::Unlock(bool isNeedCommit)
         return;
     }
     
-    vkUnmapMemory(m_LogicalDevice, m_DeviceMemory);
+    CRendererVulkanPtr renderer = m_Renderer.lock();
+    assert(renderer);
+    
+    vkUnmapMemory(renderer->LogicalDevice(), m_DeviceMemory);
     m_MappedData = nullptr;
     
-    VkResult result = vkBindBufferMemory(m_LogicalDevice, m_Buffer, m_DeviceMemory, 0);
+    VkResult result = vkBindBufferMemory(renderer->LogicalDevice(), m_Buffer, m_DeviceMemory, 0);
     if (result == VK_SUCCESS) {
         JAM_LOG("Can't bind index buffer with device memory")
     }

@@ -13,12 +13,14 @@
 #include "IVertexBuffer.h"
 
 namespace jam {
+    
+CLASS_PTR(CRendererVulkan)
 
 class CVertexBufferVulkan : public IVertexBuffer
 {
     JAM_OBJECT
 public:
-    CVertexBufferVulkan(const VkDevice& logicalDevice);
+    CVertexBufferVulkan(CRendererVulkanPtr renderer);
     virtual ~CVertexBufferVulkan();
     
     virtual const TVertexStreamMap& VertexStreams() const override;
@@ -53,7 +55,7 @@ private:
     bool m_ZeroStride;
     uint64_t m_Size;
     
-    VkDevice m_LogicalDevice;
+    CRendererVulkanWeak m_Renderer;
     VkBuffer m_Buffer;
     VkDeviceMemory m_DeviceMemory;
     void* m_MappedData;

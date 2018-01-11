@@ -14,11 +14,13 @@
 
 namespace jam {
 
+CLASS_PTR(CRendererVulkan)
+    
 class CIndexBufferVulkan : public IIndexBuffer
 {
     JAM_OBJECT
 public:
-    CIndexBufferVulkan(const VkDevice& logicalDevice);
+    CIndexBufferVulkan(CRendererVulkanPtr renderer);
     virtual ~CIndexBufferVulkan();
     
     virtual void Initialize(DataTypes dataType) override;
@@ -46,7 +48,7 @@ private:
     SIndexStream m_Stream;
     uint64_t m_Size;
     
-    VkDevice m_LogicalDevice;
+    CRendererVulkanWeak m_Renderer;
     VkBuffer m_Buffer;
     VkDeviceMemory m_DeviceMemory;
     void* m_MappedData;

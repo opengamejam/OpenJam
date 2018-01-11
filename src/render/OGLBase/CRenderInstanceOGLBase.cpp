@@ -7,11 +7,15 @@
 //
 
 #include "CRenderInstanceOGLBase.h"
-#import <OpenGLES/EAGL.h>
+#if defined(OS_IPHONE)
+#   import <OpenGLES/EAGL.h>
+#endif
 #import "GLKit/GLKit.h"
 
 using namespace jam;
 
+
+#if defined(OS_IPHONE)
 CRenderInstanceOGLBase::CRenderInstanceOGLBase(UIView* glkView,
                                                EAGLContext* glContext)
 : m_GLKView(glkView)
@@ -19,6 +23,17 @@ CRenderInstanceOGLBase::CRenderInstanceOGLBase(UIView* glkView,
 {
     
 }
+#endif
+
+#if defined(OS_MAC)
+CRenderInstanceOGLBase::CRenderInstanceOGLBase(NSView* glView,
+                                               NSOpenGLContext* glContext)
+: m_GLView(glView)
+, m_GLContext(glContext)
+{
+    
+}
+#endif
 
 #if defined(EGLAPI)
 CRenderInstanceOGLBase::CRenderInstanceOGLBase(EGLNativeWindowType eglWindow,
@@ -64,13 +79,25 @@ bool CRenderInstanceOGLBase::IsInitialized() const
     return m_IsInitialized;
 }
 
-#if defined(__OBJC__)
+#if defined(OS_IPHONE)
 UIView* CRenderInstanceOGLBase::View() const
 {
     return m_GLKView;
 }
 
 EAGLContext* CRenderInstanceOGLBase::Context() const
+{
+    return m_GLContext;
+}
+#endif
+
+#if defined(OS_MAC)
+NSView* CRenderInstanceOGLBase::View() const
+{
+    return m_GLView;
+}
+
+NSOpenGLContext* CRenderInstanceOGLBase::Context() const
 {
     return m_GLContext;
 }

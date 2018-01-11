@@ -33,7 +33,8 @@ public:
     virtual void Begin() const override;
     virtual void End() const override;
     virtual void UpdateEvents() const override;
-    
+
+    virtual IRenderInstancePtr RenderInstance() const override;
     virtual IRendererPtr Renderer() const override;
     virtual IFrameBufferPtr DefaultFrameBuffer() const override;
 
@@ -43,6 +44,7 @@ private:
     NSOpenGLContext* m_GLContext;
 #endif
     RenderApi m_RenderApi;
+    IRenderInstancePtr m_RenderInstance;
     IRendererPtr m_Renderer;
     IFrameBufferPtr m_DefaultFrameBuffer;
 };

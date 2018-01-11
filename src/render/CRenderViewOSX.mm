@@ -116,6 +116,11 @@ void CRenderViewOSX::UpdateEvents() const
 {
 }
 
+IRenderInstancePtr CRenderViewOSX::RenderInstance() const
+{
+    return nullptr; // TODO:
+}
+
 IRendererPtr CRenderViewOSX::Renderer() const
 {
     return m_Renderer;

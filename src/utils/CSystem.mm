@@ -24,7 +24,7 @@ const std::string& CSystem::GetBundlePath()
 
         g_bundlePath = std::string([path UTF8String]) + std::string("/"); // + std::string("/../Documents/");
 #elif defined(__OBJC__) && defined(OS_MAC)
-        NSString* path = [[NSBundle mainBundle] bundlePath];
+        NSString* path = [[NSBundle mainBundle] resourcePath];
 
         g_bundlePath = std::string([path UTF8String]) + std::string("/");
 #endif

@@ -14,8 +14,6 @@
 		6E5A79BC1EF7FF4D001F41B3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A79681EF7FF4C001F41B3 /* main.m */; };
 		6E5A79BD1EF7FF4D001F41B3 /* VulkanViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A796A1EF7FF4C001F41B3 /* VulkanViewController.mm */; };
 		6E5A79BE1EF7FF4D001F41B3 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A796C1EF7FF4C001F41B3 /* main.cpp */; };
-		6E5A79BF1EF7FF4D001F41B3 /* AppDelegateOSX.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A796F1EF7FF4C001F41B3 /* AppDelegateOSX.mm */; };
-		6E5A79C01EF7FF4D001F41B3 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A79701EF7FF4C001F41B3 /* main.m */; };
 		6E5A79C11EF7FF4D001F41B3 /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A79721EF7FF4C001F41B3 /* main.cpp */; };
 		6E5A7B4E1EF800AC001F41B3 /* CAnimation2DComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A79FF1EF800AC001F41B3 /* CAnimation2DComponent.cpp */; };
 		6E5A7B4F1EF800AC001F41B3 /* CBatchComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A011EF800AC001F41B3 /* CBatchComponent.cpp */; };
@@ -43,12 +41,7 @@
 		6E5A7B651EF800AD001F41B3 /* IScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A3C1EF800AC001F41B3 /* IScene.cpp */; };
 		6E5A7B661EF800AD001F41B3 /* RenderGlobal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A441EF800AC001F41B3 /* RenderGlobal.cpp */; };
 		6E5A7B671EF800AD001F41B3 /* CTouchEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A481EF800AC001F41B3 /* CTouchEvent.cpp */; };
-		6E5A7B681EF800AD001F41B3 /* CRenderViewAndroid.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A531EF800AC001F41B3 /* CRenderViewAndroid.cpp */; };
-		6E5A7B691EF800AD001F41B3 /* CRenderViewDreamcast.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A551EF800AC001F41B3 /* CRenderViewDreamcast.cpp */; };
 		6E5A7B6A1EF800AD001F41B3 /* CRenderViewIOS.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A581EF800AC001F41B3 /* CRenderViewIOS.mm */; };
-		6E5A7B6B1EF800AD001F41B3 /* CRenderViewOSX.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A5A1EF800AC001F41B3 /* CRenderViewOSX.mm */; };
-		6E5A7B6C1EF800AD001F41B3 /* CRenderViewWindows.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A5B1EF800AC001F41B3 /* CRenderViewWindows.cpp */; };
-		6E5A7B6D1EF800AD001F41B3 /* CRenderViewX11.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A5D1EF800AC001F41B3 /* CRenderViewX11.cpp */; };
 		6E5A7B6E1EF800AD001F41B3 /* CFrameBufferOGL1_3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A601EF800AC001F41B3 /* CFrameBufferOGL1_3.cpp */; };
 		6E5A7B6F1EF800AD001F41B3 /* CIndexBufferOGL1_3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A621EF800AC001F41B3 /* CIndexBufferOGL1_3.cpp */; };
 		6E5A7B701EF800AD001F41B3 /* CMaterialOGL1_3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A641EF800AC001F41B3 /* CMaterialOGL1_3.cpp */; };
@@ -181,6 +174,188 @@
 		6E5A7F711EF81333001F41B3 /* GLKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E5A7F701EF81333001F41B3 /* GLKit.framework */; };
 		6E5A7F731EF8133A001F41B3 /* OpenGLES.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6E5A7F721EF8133A001F41B3 /* OpenGLES.framework */; };
 		6E5A7F771EF814EA001F41B3 /* media in Resources */ = {isa = PBXBuildFile; fileRef = 6E5A7F761EF814EA001F41B3 /* media */; };
+		CC1401542007878700748ABD /* AppDelegate.m in Sources */ = {isa = PBXBuildFile; fileRef = CC1401532007878700748ABD /* AppDelegate.m */; };
+		CC14015A2007878700748ABD /* OpenGLViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC1401592007878700748ABD /* OpenGLViewController.mm */; };
+		CC14015F2007878700748ABD /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CC14015E2007878700748ABD /* Assets.xcassets */; };
+		CC1401622007878700748ABD /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CC1401602007878700748ABD /* Main.storyboard */; };
+		CC1401652007878700748ABD /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = CC1401642007878700748ABD /* main.m */; };
+		CC14016A20078C4B00748ABD /* CAnimation2DComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A79FF1EF800AC001F41B3 /* CAnimation2DComponent.cpp */; };
+		CC14016B20078C4B00748ABD /* CBatchComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A011EF800AC001F41B3 /* CBatchComponent.cpp */; };
+		CC14016C20078C4B00748ABD /* CEventComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A031EF800AC001F41B3 /* CEventComponent.cpp */; };
+		CC14016D20078C4B00748ABD /* CRenderComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A051EF800AC001F41B3 /* CRenderComponent.cpp */; };
+		CC14016E20078C4B00748ABD /* CTouchComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A071EF800AC001F41B3 /* CTouchComponent.cpp */; };
+		CC14016F20078C4B00748ABD /* CTransformationComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A091EF800AC001F41B3 /* CTransformationComponent.cpp */; };
+		CC14017020078C4B00748ABD /* CUpdateComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A0B1EF800AC001F41B3 /* CUpdateComponent.cpp */; };
+		CC14017120078C5100748ABD /* CCamera2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A0E1EF800AC001F41B3 /* CCamera2D.cpp */; };
+		CC14017220078C5100748ABD /* CCamera3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A101EF800AC001F41B3 /* CCamera3D.cpp */; };
+		CC14017320078C5100748ABD /* CObject3D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A121EF800AC001F41B3 /* CObject3D.cpp */; };
+		CC14017420078C5100748ABD /* CSprite2D.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A141EF800AC001F41B3 /* CSprite2D.cpp */; };
+		CC14017520078C5700748ABD /* IComponent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A161EF800AC001F41B3 /* IComponent.cpp */; };
+		CC14017620078C5700748ABD /* IEntity.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A181EF800AC001F41B3 /* IEntity.cpp */; };
+		CC14017720078C5700748ABD /* ISystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A1A1EF800AC001F41B3 /* ISystem.cpp */; };
+		CC14017820078C5F00748ABD /* CAnimation2DSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A1D1EF800AC001F41B3 /* CAnimation2DSystem.cpp */; };
+		CC14017920078C5F00748ABD /* CBatchingSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A1F1EF800AC001F41B3 /* CBatchingSystem.cpp */; };
+		CC14017A20078C5F00748ABD /* CEventSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A211EF800AC001F41B3 /* CEventSystem.cpp */; };
+		CC14017B20078C5F00748ABD /* CRenderSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A231EF800AC001F41B3 /* CRenderSystem.cpp */; };
+		CC14017C20078C5F00748ABD /* CTouchSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A251EF800AC001F41B3 /* CTouchSystem.cpp */; };
+		CC14017D20078C5F00748ABD /* CTransformationSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A271EF800AC001F41B3 /* CTransformationSystem.cpp */; };
+		CC14017E20078C5F00748ABD /* CUpdateSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A291EF800AC001F41B3 /* CUpdateSystem.cpp */; };
+		CC14017F20078C6900748ABD /* CGame.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A2C1EF800AC001F41B3 /* CGame.cpp */; };
+		CC14018020078C6900748ABD /* RenderGlobal.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A441EF800AC001F41B3 /* RenderGlobal.cpp */; };
+		CC14018120078C7000748ABD /* CTouchEvent.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A481EF800AC001F41B3 /* CTouchEvent.cpp */; };
+		CC14018420078C8000748ABD /* CRenderViewOSX.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A5A1EF800AC001F41B3 /* CRenderViewOSX.mm */; };
+		CC14018520078CA900748ABD /* CFrameBufferVulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCF701C01FB0939B003850F6 /* CFrameBufferVulkan.cpp */; };
+		CC14018620078CA900748ABD /* CIndexBufferVulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCF701AD1FB09399003850F6 /* CIndexBufferVulkan.cpp */; };
+		CC14018720078CA900748ABD /* CMaterialVulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCF701AB1FB09399003850F6 /* CMaterialVulkan.cpp */; };
+		CC14018820078CA900748ABD /* CMeshVulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCF701BF1FB0939B003850F6 /* CMeshVulkan.cpp */; };
+		CC14018920078CA900748ABD /* CRendererVulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCF701B31FB0939A003850F6 /* CRendererVulkan.cpp */; };
+		CC14018A20078CA900748ABD /* CRenderTargetColorVulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCF701B51FB0939A003850F6 /* CRenderTargetColorVulkan.cpp */; };
+		CC14018B20078CA900748ABD /* CRenderTargetDepthVulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCF701B61FB0939A003850F6 /* CRenderTargetDepthVulkan.cpp */; };
+		CC14018C20078CA900748ABD /* CRenderTargetStencilVulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCF701B91FB0939A003850F6 /* CRenderTargetStencilVulkan.cpp */; };
+		CC14018D20078CA900748ABD /* CRenderTargetTextureVulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCF701BB1FB0939A003850F6 /* CRenderTargetTextureVulkan.cpp */; };
+		CC14018E20078CA900748ABD /* CShaderProgramVulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCF701B71FB0939A003850F6 /* CShaderProgramVulkan.cpp */; };
+		CC14018F20078CA900748ABD /* CShaderVulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCF701B11FB09399003850F6 /* CShaderVulkan.cpp */; };
+		CC14019020078CA900748ABD /* CTextureVulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCF701B41FB0939A003850F6 /* CTextureVulkan.cpp */; };
+		CC14019120078CA900748ABD /* CVertexBufferVulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCF701A91FB09399003850F6 /* CVertexBufferVulkan.cpp */; };
+		CC14019220078CA900748ABD /* CRenderInstanceVulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCF701E31FB3572B003850F6 /* CRenderInstanceVulkan.cpp */; };
+		CC14019320078CBB00748ABD /* CFrameBufferOGL1_3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A601EF800AC001F41B3 /* CFrameBufferOGL1_3.cpp */; };
+		CC14019420078CBB00748ABD /* CIndexBufferOGL1_3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A621EF800AC001F41B3 /* CIndexBufferOGL1_3.cpp */; };
+		CC14019520078CBB00748ABD /* CMaterialOGL1_3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A641EF800AC001F41B3 /* CMaterialOGL1_3.cpp */; };
+		CC14019620078CBB00748ABD /* CMeshOGL1_3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A661EF800AC001F41B3 /* CMeshOGL1_3.cpp */; };
+		CC14019720078CBB00748ABD /* CRendererOGL1_3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A681EF800AC001F41B3 /* CRendererOGL1_3.cpp */; };
+		CC14019820078CBB00748ABD /* CRenderTargetColorOGL1_3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A6A1EF800AC001F41B3 /* CRenderTargetColorOGL1_3.cpp */; };
+		CC14019920078CBB00748ABD /* CRenderTargetDepthOGL1_3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A6C1EF800AC001F41B3 /* CRenderTargetDepthOGL1_3.cpp */; };
+		CC14019A20078CBB00748ABD /* CRenderTargetStencilOGL1_3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A6E1EF800AC001F41B3 /* CRenderTargetStencilOGL1_3.cpp */; };
+		CC14019B20078CBB00748ABD /* CRenderTargetTextureOGL1_3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A701EF800AC001F41B3 /* CRenderTargetTextureOGL1_3.cpp */; };
+		CC14019C20078CBB00748ABD /* CShaderOGL1_3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A721EF800AC001F41B3 /* CShaderOGL1_3.cpp */; };
+		CC14019D20078CBB00748ABD /* CShaderProgramOGL1_3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A741EF800AC001F41B3 /* CShaderProgramOGL1_3.cpp */; };
+		CC14019E20078CBB00748ABD /* CTextureOGL1_3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A761EF800AC001F41B3 /* CTextureOGL1_3.cpp */; };
+		CC14019F20078CBB00748ABD /* CVertexBufferOGL1_3.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A781EF800AC001F41B3 /* CVertexBufferOGL1_3.cpp */; };
+		CC1401A020078CCA00748ABD /* CFrameBufferOGL1_5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A7B1EF800AC001F41B3 /* CFrameBufferOGL1_5.cpp */; };
+		CC1401A120078CCA00748ABD /* CIndexBufferOGL1_5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A7D1EF800AC001F41B3 /* CIndexBufferOGL1_5.cpp */; };
+		CC1401A220078CCA00748ABD /* CMaterialOGL1_5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A7F1EF800AC001F41B3 /* CMaterialOGL1_5.cpp */; };
+		CC1401A320078CCA00748ABD /* CMeshOGL1_5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A811EF800AC001F41B3 /* CMeshOGL1_5.cpp */; };
+		CC1401A420078CCA00748ABD /* CRendererOGL1_5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A831EF800AC001F41B3 /* CRendererOGL1_5.cpp */; };
+		CC1401A520078CCA00748ABD /* CRenderTargetColorOGL1_5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A851EF800AC001F41B3 /* CRenderTargetColorOGL1_5.cpp */; };
+		CC1401A620078CCA00748ABD /* CRenderTargetDepthOGL1_5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A871EF800AC001F41B3 /* CRenderTargetDepthOGL1_5.cpp */; };
+		CC1401A720078CCA00748ABD /* CRenderTargetStencilOGL1_5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A891EF800AC001F41B3 /* CRenderTargetStencilOGL1_5.cpp */; };
+		CC1401A820078CCA00748ABD /* CRenderTargetTextureOGL1_5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A8B1EF800AC001F41B3 /* CRenderTargetTextureOGL1_5.cpp */; };
+		CC1401A920078CCA00748ABD /* CShaderOGL1_5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A8D1EF800AC001F41B3 /* CShaderOGL1_5.cpp */; };
+		CC1401AA20078CCA00748ABD /* CShaderProgramOGL1_5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A8F1EF800AC001F41B3 /* CShaderProgramOGL1_5.cpp */; };
+		CC1401AB20078CCA00748ABD /* CTextureOGL1_5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A911EF800AC001F41B3 /* CTextureOGL1_5.cpp */; };
+		CC1401AC20078CCA00748ABD /* CVertexBufferOGL1_5.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A931EF800AC001F41B3 /* CVertexBufferOGL1_5.cpp */; };
+		CC1401AD20078CD900748ABD /* CFrameBufferOGL2_0.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A961EF800AC001F41B3 /* CFrameBufferOGL2_0.cpp */; };
+		CC1401AE20078CD900748ABD /* CIndexBufferOGL2_0.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A981EF800AC001F41B3 /* CIndexBufferOGL2_0.cpp */; };
+		CC1401AF20078CD900748ABD /* CMaterialOGL2_0.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A9A1EF800AC001F41B3 /* CMaterialOGL2_0.cpp */; };
+		CC1401B020078CD900748ABD /* CMeshOGL2_0.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A9C1EF800AC001F41B3 /* CMeshOGL2_0.cpp */; };
+		CC1401B120078CD900748ABD /* CRendererOGL2_0.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A9E1EF800AC001F41B3 /* CRendererOGL2_0.cpp */; };
+		CC1401B220078CD900748ABD /* CRenderTargetColorOGL2_0.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7AA01EF800AC001F41B3 /* CRenderTargetColorOGL2_0.cpp */; };
+		CC1401B320078CD900748ABD /* CRenderTargetDepthOGL2_0.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7AA21EF800AC001F41B3 /* CRenderTargetDepthOGL2_0.cpp */; };
+		CC1401B420078CD900748ABD /* CRenderTargetStencilOGL2_0.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7AA41EF800AC001F41B3 /* CRenderTargetStencilOGL2_0.cpp */; };
+		CC1401B520078CD900748ABD /* CRenderTargetTextureOGL2_0.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7AA61EF800AC001F41B3 /* CRenderTargetTextureOGL2_0.cpp */; };
+		CC1401B620078CD900748ABD /* CShaderOGL2_0.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7AA81EF800AC001F41B3 /* CShaderOGL2_0.cpp */; };
+		CC1401B720078CD900748ABD /* CShaderProgramOGL2_0.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7AAA1EF800AC001F41B3 /* CShaderProgramOGL2_0.cpp */; };
+		CC1401B820078CD900748ABD /* CTextureOGL2_0.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7AAC1EF800AC001F41B3 /* CTextureOGL2_0.cpp */; };
+		CC1401B920078CD900748ABD /* CVertexBufferOGL2_0.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7AAE1EF800AC001F41B3 /* CVertexBufferOGL2_0.cpp */; };
+		CC1401BA20078CE500748ABD /* CStringUtilsVFS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CC5DB1561F8919F00080C0E1 /* CStringUtilsVFS.cpp */; };
+		CC1401BB20078CE500748ABD /* CFileInfo.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7BEE1EF80128001F41B3 /* CFileInfo.cpp */; };
+		CC1401BC20078CE500748ABD /* CMemoryFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7BEF1EF80128001F41B3 /* CMemoryFile.cpp */; };
+		CC1401BD20078CE500748ABD /* CMemoryFileSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7BF01EF80128001F41B3 /* CMemoryFileSystem.cpp */; };
+		CC1401BE20078CE500748ABD /* CNativeFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7BF11EF80128001F41B3 /* CNativeFile.cpp */; };
+		CC1401BF20078CE500748ABD /* CNativeFileSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7BF21EF80128001F41B3 /* CNativeFileSystem.cpp */; };
+		CC1401C020078CE500748ABD /* CVirtualFileSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7BF51EF80128001F41B3 /* CVirtualFileSystem.cpp */; };
+		CC1401C120078CE500748ABD /* CZipFile.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7BF61EF80128001F41B3 /* CZipFile.cpp */; };
+		CC1401C220078CE500748ABD /* CZipFileSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7BF71EF80128001F41B3 /* CZipFileSystem.cpp */; };
+		CC1401C320078CE800748ABD /* glm.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7C291EF80156001F41B3 /* glm.cpp */; };
+		CC1401C420078CEB00748ABD /* tinystr.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7BE41EF80105001F41B3 /* tinystr.cpp */; };
+		CC1401C520078CEB00748ABD /* tinyxml.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7BE51EF80105001F41B3 /* tinyxml.cpp */; };
+		CC1401C620078CEB00748ABD /* tinyxmlerror.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7BE61EF80105001F41B3 /* tinyxmlerror.cpp */; };
+		CC1401C720078CEB00748ABD /* tinyxmlparser.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7BE71EF80105001F41B3 /* tinyxmlparser.cpp */; };
+		CC1401C820078CF800748ABD /* IResource.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A3A1EF800AC001F41B3 /* IResource.cpp */; };
+		CC1401C920078CF800748ABD /* IScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7A3C1EF800AC001F41B3 /* IScene.cpp */; };
+		CC1401CA20078D1300748ABD /* CFrameBufferOGLBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7AB11EF800AC001F41B3 /* CFrameBufferOGLBase.cpp */; };
+		CC1401CB20078D1300748ABD /* CIndexBufferOGLBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7AB31EF800AC001F41B3 /* CIndexBufferOGLBase.cpp */; };
+		CC1401CC20078D1300748ABD /* CMaterialOGLBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7AB51EF800AC001F41B3 /* CMaterialOGLBase.cpp */; };
+		CC1401CD20078D1300748ABD /* CMeshOGLBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7AB71EF800AC001F41B3 /* CMeshOGLBase.cpp */; };
+		CC1401CE20078D1300748ABD /* CRendererOGLBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7AB91EF800AC001F41B3 /* CRendererOGLBase.cpp */; };
+		CC1401CF20078D1300748ABD /* CRenderTargetColorOGLBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7ABB1EF800AC001F41B3 /* CRenderTargetColorOGLBase.cpp */; };
+		CC1401D020078D1300748ABD /* CRenderTargetDepthOGLBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7ABD1EF800AC001F41B3 /* CRenderTargetDepthOGLBase.cpp */; };
+		CC1401D120078D1300748ABD /* CRenderTargetStencilOGLBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7ABF1EF800AC001F41B3 /* CRenderTargetStencilOGLBase.cpp */; };
+		CC1401D220078D1300748ABD /* CRenderTargetTextureOGLBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7AC11EF800AC001F41B3 /* CRenderTargetTextureOGLBase.cpp */; };
+		CC1401D320078D1300748ABD /* CShaderOGLBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7AC31EF800AC001F41B3 /* CShaderOGLBase.cpp */; };
+		CC1401D420078D1300748ABD /* CShaderProgramOGLBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7AC51EF800AC001F41B3 /* CShaderProgramOGLBase.cpp */; };
+		CC1401D520078D1300748ABD /* CTextureOGLBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7AC71EF800AC001F41B3 /* CTextureOGLBase.cpp */; };
+		CC1401D620078D1300748ABD /* CVertexBufferOGLBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7AC91EF800AC001F41B3 /* CVertexBufferOGLBase.cpp */; };
+		CC1401D720078D1300748ABD /* CRenderInstanceOGLBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCF701E71FB4B5A2003850F6 /* CRenderInstanceOGLBase.cpp */; };
+		CC1401D820078D1700748ABD /* CFrameBufferOGLES1_0.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7ACC1EF800AC001F41B3 /* CFrameBufferOGLES1_0.cpp */; };
+		CC1401D920078D1700748ABD /* CIndexBufferOGLES1_0.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7ACE1EF800AC001F41B3 /* CIndexBufferOGLES1_0.cpp */; };
+		CC1401DA20078D1700748ABD /* CMaterialOGLES1_0.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7AD01EF800AC001F41B3 /* CMaterialOGLES1_0.cpp */; };
+		CC1401DB20078D1700748ABD /* CMeshOGLES1_0.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7AD21EF800AC001F41B3 /* CMeshOGLES1_0.cpp */; };
+		CC1401DC20078D1700748ABD /* CRendererOGLES1_0.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7AD41EF800AC001F41B3 /* CRendererOGLES1_0.cpp */; };
+		CC1401DD20078D1700748ABD /* CRenderTargetColorOGLES1_0.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7AD61EF800AC001F41B3 /* CRenderTargetColorOGLES1_0.cpp */; };
+		CC1401DE20078D1700748ABD /* CRenderTargetDepthOGLES1_0.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7AD81EF800AC001F41B3 /* CRenderTargetDepthOGLES1_0.cpp */; };
+		CC1401DF20078D1700748ABD /* CRenderTargetStencilOGLES1_0.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7ADA1EF800AC001F41B3 /* CRenderTargetStencilOGLES1_0.cpp */; };
+		CC1401E020078D1700748ABD /* CRenderTargetTextureOGLES1_0.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7ADC1EF800AC001F41B3 /* CRenderTargetTextureOGLES1_0.cpp */; };
+		CC1401E120078D1700748ABD /* CShaderOGLES1_0.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7ADE1EF800AC001F41B3 /* CShaderOGLES1_0.cpp */; };
+		CC1401E220078D1700748ABD /* CShaderProgramOGLES1_0.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7AE01EF800AC001F41B3 /* CShaderProgramOGLES1_0.cpp */; };
+		CC1401E320078D1700748ABD /* CTextureOGLES1_0.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7AE21EF800AC001F41B3 /* CTextureOGLES1_0.cpp */; };
+		CC1401E420078D1700748ABD /* CVertexBufferOGLES1_0.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7AE41EF800AC001F41B3 /* CVertexBufferOGLES1_0.cpp */; };
+		CC1401E520078D1B00748ABD /* CFrameBufferOGLES1_1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7AE71EF800AC001F41B3 /* CFrameBufferOGLES1_1.cpp */; };
+		CC1401E620078D1B00748ABD /* CIndexBufferOGLES1_1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7AE91EF800AC001F41B3 /* CIndexBufferOGLES1_1.cpp */; };
+		CC1401E720078D1B00748ABD /* CMaterialOGLES1_1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7AEB1EF800AC001F41B3 /* CMaterialOGLES1_1.cpp */; };
+		CC1401E820078D1B00748ABD /* CMeshOGLES1_1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7AED1EF800AC001F41B3 /* CMeshOGLES1_1.cpp */; };
+		CC1401E920078D1B00748ABD /* CRendererOGLES1_1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7AEF1EF800AC001F41B3 /* CRendererOGLES1_1.cpp */; };
+		CC1401EA20078D1B00748ABD /* CRenderTargetColorOGLES1_1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7AF11EF800AC001F41B3 /* CRenderTargetColorOGLES1_1.cpp */; };
+		CC1401EB20078D1B00748ABD /* CRenderTargetDepthOGLES1_1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7AF31EF800AC001F41B3 /* CRenderTargetDepthOGLES1_1.cpp */; };
+		CC1401EC20078D1B00748ABD /* CRenderTargetStencilOGLES1_1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7AF51EF800AC001F41B3 /* CRenderTargetStencilOGLES1_1.cpp */; };
+		CC1401ED20078D1B00748ABD /* CRenderTargetTextureOGLES1_1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7AF71EF800AC001F41B3 /* CRenderTargetTextureOGLES1_1.cpp */; };
+		CC1401EE20078D1B00748ABD /* CShaderOGLES1_1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7AF91EF800AC001F41B3 /* CShaderOGLES1_1.cpp */; };
+		CC1401EF20078D1B00748ABD /* CShaderProgramOGLES1_1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7AFB1EF800AC001F41B3 /* CShaderProgramOGLES1_1.cpp */; };
+		CC1401F020078D1B00748ABD /* CTextureOGLES1_1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7AFD1EF800AC001F41B3 /* CTextureOGLES1_1.cpp */; };
+		CC1401F120078D1B00748ABD /* CVertexBufferOGLES1_1.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7AFF1EF800AC001F41B3 /* CVertexBufferOGLES1_1.cpp */; };
+		CC1401F220078D2000748ABD /* CFrameBufferOGLES2_0.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7B021EF800AC001F41B3 /* CFrameBufferOGLES2_0.cpp */; };
+		CC1401F320078D2000748ABD /* CIndexBufferOGLES2_0.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7B041EF800AC001F41B3 /* CIndexBufferOGLES2_0.cpp */; };
+		CC1401F420078D2000748ABD /* CMaterialOGLES2_0.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7B061EF800AC001F41B3 /* CMaterialOGLES2_0.cpp */; };
+		CC1401F520078D2000748ABD /* CMeshOGLES2_0.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7B081EF800AC001F41B3 /* CMeshOGLES2_0.cpp */; };
+		CC1401F620078D2000748ABD /* CRendererOGLES2_0.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7B0A1EF800AC001F41B3 /* CRendererOGLES2_0.cpp */; };
+		CC1401F720078D2000748ABD /* CRenderTargetColorOGLES2_0.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7B0C1EF800AC001F41B3 /* CRenderTargetColorOGLES2_0.cpp */; };
+		CC1401F820078D2000748ABD /* CRenderTargetDepthOGLES2_0.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7B0E1EF800AC001F41B3 /* CRenderTargetDepthOGLES2_0.cpp */; };
+		CC1401F920078D2000748ABD /* CRenderTargetStencilOGLES2_0.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7B101EF800AC001F41B3 /* CRenderTargetStencilOGLES2_0.cpp */; };
+		CC1401FA20078D2000748ABD /* CRenderTargetTextureOGLES2_0.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7B121EF800AC001F41B3 /* CRenderTargetTextureOGLES2_0.cpp */; };
+		CC1401FB20078D2000748ABD /* CShaderOGLES2_0.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7B141EF800AC001F41B3 /* CShaderOGLES2_0.cpp */; };
+		CC1401FC20078D2000748ABD /* CShaderProgramOGLES2_0.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7B161EF800AC001F41B3 /* CShaderProgramOGLES2_0.cpp */; };
+		CC1401FD20078D2000748ABD /* CTextureOGLES2_0.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7B181EF800AC001F41B3 /* CTextureOGLES2_0.cpp */; };
+		CC1401FE20078D2000748ABD /* CVertexBufferOGLES2_0.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7B1A1EF800AC001F41B3 /* CVertexBufferOGLES2_0.cpp */; };
+		CC1401FF20078D2600748ABD /* CTextureCache.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7B1E1EF800AC001F41B3 /* CTextureCache.cpp */; };
+		CC14020020078D2600748ABD /* CImagePVR.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7B211EF800AC001F41B3 /* CImagePVR.cpp */; };
+		CC14020120078D2600748ABD /* CImageRaw.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7B231EF800AC001F41B3 /* CImageRaw.cpp */; };
+		CC14020220078D2600748ABD /* CImageSegaPVR.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7B251EF800AC001F41B3 /* CImageSegaPVR.cpp */; };
+		CC14020320078D2C00748ABD /* CModelObj.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7B281EF800AC001F41B3 /* CModelObj.cpp */; };
+		CC14020420078D2C00748ABD /* CSpriteXML.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7B2B1EF800AC001F41B3 /* CSpriteXML.cpp */; };
+		CC14020520078D2C00748ABD /* CShaderSourceCommonFragment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7B2F1EF800AC001F41B3 /* CShaderSourceCommonFragment.cpp */; };
+		CC14020620078D2C00748ABD /* CShaderSourceCommonVertex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7B301EF800AC001F41B3 /* CShaderSourceCommonVertex.cpp */; };
+		CC14020720078D2C00748ABD /* CShaderSourceInsertFragment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7B321EF800AC001F41B3 /* CShaderSourceInsertFragment.cpp */; };
+		CC14020820078D2C00748ABD /* CShaderSourceInsertVertex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7B331EF800AC001F41B3 /* CShaderSourceInsertVertex.cpp */; };
+		CC14020920078D2C00748ABD /* CShaderSourceSpriteFragment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7B351EF800AC001F41B3 /* CShaderSourceSpriteFragment.cpp */; };
+		CC14020A20078D2C00748ABD /* CShaderSourceSpriteVertex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7B361EF800AC001F41B3 /* CShaderSourceSpriteVertex.cpp */; };
+		CC14020B20078D3300748ABD /* CBlockOperation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7B381EF800AC001F41B3 /* CBlockOperation.cpp */; };
+		CC14020C20078D3300748ABD /* COperationQueue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7B3A1EF800AC001F41B3 /* COperationQueue.cpp */; };
+		CC14020D20078D3300748ABD /* CSemaphore.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7B3C1EF800AC001F41B3 /* CSemaphore.cpp */; };
+		CC14020E20078D3300748ABD /* CTask.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7B3E1EF800AC001F41B3 /* CTask.cpp */; };
+		CC14020F20078D3300748ABD /* CThreadExecutor.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7B401EF800AC001F41B3 /* CThreadExecutor.cpp */; };
+		CC14021020078D3300748ABD /* CThreadPool.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7B421EF800AC001F41B3 /* CThreadPool.cpp */; };
+		CC14021120078D3300748ABD /* CNonCopyable.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7B461EF800AC001F41B3 /* CNonCopyable.cpp */; };
+		CC14021220078D3300748ABD /* CStringUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7B481EF800AC001F41B3 /* CStringUtils.cpp */; };
+		CC14021320078D3300748ABD /* CSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7B4A1EF800AC001F41B3 /* CSystem.cpp */; };
+		CC14021420078D3900748ABD /* CGameScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A795E1EF7FF4C001F41B3 /* CGameScene.cpp */; };
+		CC14021520078E5F00748ABD /* MoltenVK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CCF701D21FB0B02A003850F6 /* MoltenVK.framework */; };
+		CC14021920078E7A00748ABD /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = CC14021820078E7A00748ABD /* libc++.tbd */; };
+		CC14021B20078E8400748ABD /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC14021A20078E8400748ABD /* Metal.framework */; };
+		CC14021D20078E8F00748ABD /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC14021C20078E8F00748ABD /* MetalKit.framework */; };
+		CC14021F20078EA500748ABD /* OpenGL.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC14021E20078EA500748ABD /* OpenGL.framework */; };
+		CC1402202007913E00748ABD /* CSystem.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7B4C1EF800AC001F41B3 /* CSystem.mm */; };
+		CC1402212007919600748ABD /* miniz.c in Sources */ = {isa = PBXBuildFile; fileRef = CC3C9FE41F897C3A009E5B69 /* miniz.c */; };
+		CC140222200791BD00748ABD /* media in Resources */ = {isa = PBXBuildFile; fileRef = 6E5A7F761EF814EA001F41B3 /* media */; };
 		CC3C9FE51F897C3A009E5B69 /* miniz.c in Sources */ = {isa = PBXBuildFile; fileRef = CC3C9FE41F897C3A009E5B69 /* miniz.c */; };
 		CC3FCB8D1FDAE3DA00261F7F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CC3FCB8C1FDAE3DA00261F7F /* Main.storyboard */; };
 		CC3FCB8F1FDAE4BC00261F7F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CC3FCB8E1FDAE4BC00261F7F /* LaunchScreen.storyboard */; };
@@ -219,9 +394,6 @@
 		6E5A79691EF7FF4C001F41B3 /* VulkanViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VulkanViewController.h; sourceTree = "<group>"; };
 		6E5A796A1EF7FF4C001F41B3 /* VulkanViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = VulkanViewController.mm; sourceTree = "<group>"; };
 		6E5A796C1EF7FF4C001F41B3 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		6E5A796E1EF7FF4C001F41B3 /* AppDelegateOSX.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = AppDelegateOSX.h; sourceTree = "<group>"; };
-		6E5A796F1EF7FF4C001F41B3 /* AppDelegateOSX.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = AppDelegateOSX.mm; sourceTree = "<group>"; };
-		6E5A79701EF7FF4C001F41B3 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		6E5A79721EF7FF4C001F41B3 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		6E5A79F71EF7FF81001F41B3 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
 		6E5A79F81EF7FF81001F41B3 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -824,6 +996,21 @@
 		6E5A7F721EF8133A001F41B3 /* OpenGLES.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGLES.framework; path = System/Library/Frameworks/OpenGLES.framework; sourceTree = SDKROOT; };
 		6E5A7F761EF814EA001F41B3 /* media */ = {isa = PBXFileReference; lastKnownFileType = folder; name = media; path = ../../examples/media; sourceTree = "<group>"; };
 		CC140120200673F100748ABD /* IObject.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = IObject.h; sourceTree = "<group>"; };
+		CC1401502007878600748ABD /* macOSTestApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = macOSTestApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		CC1401522007878700748ABD /* AppDelegate.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = AppDelegate.h; sourceTree = "<group>"; };
+		CC1401532007878700748ABD /* AppDelegate.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = AppDelegate.m; sourceTree = "<group>"; };
+		CC1401582007878700748ABD /* OpenGLViewController.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = OpenGLViewController.h; sourceTree = "<group>"; };
+		CC1401592007878700748ABD /* OpenGLViewController.mm */ = {isa = PBXFileReference; explicitFileType = sourcecode.cpp.objcpp; path = OpenGLViewController.mm; sourceTree = "<group>"; };
+		CC14015E2007878700748ABD /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
+		CC1401612007878700748ABD /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
+		CC1401632007878700748ABD /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		CC1401642007878700748ABD /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		CC1401662007878700748ABD /* macOSTestApp.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = macOSTestApp.entitlements; sourceTree = "<group>"; };
+		CC14021620078E7000748ABD /* libc++.1.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.1.tbd"; path = "Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/usr/lib/libc++.1.tbd"; sourceTree = DEVELOPER_DIR; };
+		CC14021820078E7A00748ABD /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/usr/lib/libc++.tbd"; sourceTree = DEVELOPER_DIR; };
+		CC14021A20078E8400748ABD /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/System/Library/Frameworks/Metal.framework; sourceTree = DEVELOPER_DIR; };
+		CC14021C20078E8F00748ABD /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/System/Library/Frameworks/MetalKit.framework; sourceTree = DEVELOPER_DIR; };
+		CC14021E20078EA500748ABD /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/System/Library/Frameworks/OpenGL.framework; sourceTree = DEVELOPER_DIR; };
 		CC3C9FE41F897C3A009E5B69 /* miniz.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = miniz.c; sourceTree = "<group>"; };
 		CC3C9FE61F897D59009E5B69 /* miniz.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = miniz.h; sourceTree = "<group>"; };
 		CC3FCB8C1FDAE3DA00261F7F /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
@@ -889,6 +1076,18 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CC14014D2007878600748ABD /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CC14021F20078EA500748ABD /* OpenGL.framework in Frameworks */,
+				CC14021520078E5F00748ABD /* MoltenVK.framework in Frameworks */,
+				CC14021920078E7A00748ABD /* libc++.tbd in Frameworks */,
+				CC14021B20078E8400748ABD /* Metal.framework in Frameworks */,
+				CC14021D20078E8F00748ABD /* MetalKit.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
@@ -908,6 +1107,7 @@
 			isa = PBXGroup;
 			children = (
 				6E5A79431EF7FEEC001F41B3 /* TestApp.app */,
+				CC1401502007878600748ABD /* macOSTestApp.app */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -979,11 +1179,18 @@
 		6E5A796D1EF7FF4C001F41B3 /* osx */ = {
 			isa = PBXGroup;
 			children = (
-				6E5A796E1EF7FF4C001F41B3 /* AppDelegateOSX.h */,
-				6E5A796F1EF7FF4C001F41B3 /* AppDelegateOSX.mm */,
-				6E5A79701EF7FF4C001F41B3 /* main.m */,
+				CC1401522007878700748ABD /* AppDelegate.h */,
+				CC1401532007878700748ABD /* AppDelegate.m */,
+				CC1401582007878700748ABD /* OpenGLViewController.h */,
+				CC1401592007878700748ABD /* OpenGLViewController.mm */,
+				CC14015E2007878700748ABD /* Assets.xcassets */,
+				CC1401602007878700748ABD /* Main.storyboard */,
+				CC1401632007878700748ABD /* Info.plist */,
+				CC1401642007878700748ABD /* main.m */,
+				CC1401662007878700748ABD /* macOSTestApp.entitlements */,
 			);
-			path = osx;
+			name = osx;
+			path = macOS;
 			sourceTree = "<group>";
 		};
 		6E5A79711EF7FF4C001F41B3 /* windows */ = {
@@ -1922,6 +2129,11 @@
 		6E5A7F691EF8131F001F41B3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				CC14021E20078EA500748ABD /* OpenGL.framework */,
+				CC14021C20078E8F00748ABD /* MetalKit.framework */,
+				CC14021A20078E8400748ABD /* Metal.framework */,
+				CC14021820078E7A00748ABD /* libc++.tbd */,
+				CC14021620078E7000748ABD /* libc++.1.tbd */,
 				CCF701E01FB0B081003850F6 /* libc++.tbd */,
 				CCF701DC1FB0B060003850F6 /* Metal.framework */,
 				CCF701DD1FB0B060003850F6 /* MetalKit.framework */,
@@ -2053,6 +2265,23 @@
 			productReference = 6E5A79431EF7FEEC001F41B3 /* TestApp.app */;
 			productType = "com.apple.product-type.application";
 		};
+		CC14014F2007878600748ABD /* macOSTestApp */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = CC1401672007878700748ABD /* Build configuration list for PBXNativeTarget "macOSTestApp" */;
+			buildPhases = (
+				CC14014C2007878600748ABD /* Sources */,
+				CC14014D2007878600748ABD /* Frameworks */,
+				CC14014E2007878600748ABD /* Resources */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+			);
+			name = macOSTestApp;
+			productName = macOSTestApp;
+			productReference = CC1401502007878600748ABD /* macOSTestApp.app */;
+			productType = "com.apple.product-type.application";
+		};
 /* End PBXNativeTarget section */
 
 /* Begin PBXProject section */
@@ -2064,6 +2293,11 @@
 				TargetAttributes = {
 					6E5A79421EF7FEEC001F41B3 = {
 						CreatedOnToolsVersion = 8.3.1;
+						DevelopmentTeam = EXUUE8Z83Q;
+						ProvisioningStyle = Automatic;
+					};
+					CC14014F2007878600748ABD = {
+						CreatedOnToolsVersion = 9.2;
 						DevelopmentTeam = EXUUE8Z83Q;
 						ProvisioningStyle = Automatic;
 					};
@@ -2083,6 +2317,7 @@
 			projectRoot = "";
 			targets = (
 				6E5A79421EF7FEEC001F41B3 /* TestApp */,
+				CC14014F2007878600748ABD /* macOSTestApp */,
 			);
 		};
 /* End PBXProject section */
@@ -2095,6 +2330,16 @@
 				6E5A7F771EF814EA001F41B3 /* media in Resources */,
 				CC3FCB8D1FDAE3DA00261F7F /* Main.storyboard in Resources */,
 				CC3FCB8F1FDAE4BC00261F7F /* LaunchScreen.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+		CC14014E2007878600748ABD /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CC140222200791BD00748ABD /* media in Resources */,
+				CC14015F2007878700748ABD /* Assets.xcassets in Resources */,
+				CC1401622007878700748ABD /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2119,7 +2364,6 @@
 				6E5A7BB91EF800AD001F41B3 /* CShaderProgramOGLES1_1.cpp in Sources */,
 				6E5A7BAC1EF800AD001F41B3 /* CShaderProgramOGLES1_0.cpp in Sources */,
 				6E5A7BAB1EF800AD001F41B3 /* CShaderOGLES1_0.cpp in Sources */,
-				6E5A7B691EF800AD001F41B3 /* CRenderViewDreamcast.cpp in Sources */,
 				6E5A7BB31EF800AD001F41B3 /* CRendererOGLES1_1.cpp in Sources */,
 				6E5A7B811EF800AD001F41B3 /* CRenderTargetDepthOGL1_5.cpp in Sources */,
 				6E5A7BEB1EF80105001F41B3 /* tinyxmlparser.cpp in Sources */,
@@ -2207,7 +2451,6 @@
 				6E5A7B871EF800AD001F41B3 /* CVertexBufferOGL1_5.cpp in Sources */,
 				6E5A7C0B1EF80128001F41B3 /* CZipFile.cpp in Sources */,
 				6E5A7B8A1EF800AD001F41B3 /* CMaterialOGL2_0.cpp in Sources */,
-				6E5A7B6D1EF800AD001F41B3 /* CRenderViewX11.cpp in Sources */,
 				6E5A7B7B1EF800AD001F41B3 /* CFrameBufferOGL1_5.cpp in Sources */,
 				6E5A79B81EF7FF4D001F41B3 /* CGameScene.cpp in Sources */,
 				6E5A7C071EF80128001F41B3 /* CNativeFile.cpp in Sources */,
@@ -2231,7 +2474,6 @@
 				6E5A79BA1EF7FF4D001F41B3 /* main.cpp in Sources */,
 				6E5A7B621EF800AC001F41B3 /* CUpdateSystem.cpp in Sources */,
 				6E5A7BBD1EF800AD001F41B3 /* CIndexBufferOGLES2_0.cpp in Sources */,
-				6E5A7B681EF800AD001F41B3 /* CRenderViewAndroid.cpp in Sources */,
 				6E5A7B5B1EF800AC001F41B3 /* ISystem.cpp in Sources */,
 				6E5A7C041EF80128001F41B3 /* CFileInfo.cpp in Sources */,
 				6E5A7B821EF800AD001F41B3 /* CRenderTargetStencilOGL1_5.cpp in Sources */,
@@ -2239,7 +2481,6 @@
 				6E5A7B841EF800AD001F41B3 /* CShaderOGL1_5.cpp in Sources */,
 				6E5A7BDD1EF800AD001F41B3 /* CSystem.cpp in Sources */,
 				6E5A7B631EF800AD001F41B3 /* CGame.cpp in Sources */,
-				6E5A7B6C1EF800AD001F41B3 /* CRenderViewWindows.cpp in Sources */,
 				6E5A7B5D1EF800AC001F41B3 /* CBatchingSystem.cpp in Sources */,
 				6E5A7B5F1EF800AC001F41B3 /* CRenderSystem.cpp in Sources */,
 				6E5A7BBA1EF800AD001F41B3 /* CTextureOGLES1_1.cpp in Sources */,
@@ -2251,7 +2492,6 @@
 				6E5A7BC61EF800AD001F41B3 /* CShaderProgramOGLES2_0.cpp in Sources */,
 				6E5A7BDC1EF800AD001F41B3 /* CStringUtils.cpp in Sources */,
 				6E5A7B961EF800AD001F41B3 /* CIndexBufferOGLBase.cpp in Sources */,
-				6E5A79C01EF7FF4D001F41B3 /* main.m in Sources */,
 				6E5A7BAE1EF800AD001F41B3 /* CVertexBufferOGLES1_0.cpp in Sources */,
 				6E5A7BCD1EF800AD001F41B3 /* CModelObj.cpp in Sources */,
 				CC3C9FE51F897C3A009E5B69 /* miniz.c in Sources */,
@@ -2274,7 +2514,6 @@
 				6E5A7B801EF800AD001F41B3 /* CRenderTargetColorOGL1_5.cpp in Sources */,
 				CCF701C71FB0939B003850F6 /* CRendererVulkan.cpp in Sources */,
 				6E5A7B701EF800AD001F41B3 /* CMaterialOGL1_3.cpp in Sources */,
-				6E5A7B6B1EF800AD001F41B3 /* CRenderViewOSX.mm in Sources */,
 				6E5A7BDE1EF800AD001F41B3 /* CSystem.mm in Sources */,
 				6E5A7B6A1EF800AD001F41B3 /* CRenderViewIOS.mm in Sources */,
 				6E5A7BB41EF800AD001F41B3 /* CRenderTargetColorOGLES1_1.cpp in Sources */,
@@ -2285,7 +2524,6 @@
 				6E5A7B731EF800AD001F41B3 /* CRenderTargetColorOGL1_3.cpp in Sources */,
 				6E5A7B9F1EF800AD001F41B3 /* CShaderProgramOGLBase.cpp in Sources */,
 				6E5A7B931EF800AD001F41B3 /* CTextureOGL2_0.cpp in Sources */,
-				6E5A79BF1EF7FF4D001F41B3 /* AppDelegateOSX.mm in Sources */,
 				6E5A7B521EF800AC001F41B3 /* CTouchComponent.cpp in Sources */,
 				6E5A7B591EF800AC001F41B3 /* IComponent.cpp in Sources */,
 				6E5A7C051EF80128001F41B3 /* CMemoryFile.cpp in Sources */,
@@ -2294,7 +2532,199 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
+		CC14014C2007878600748ABD /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				CC1401AA20078CCA00748ABD /* CShaderProgramOGL1_5.cpp in Sources */,
+				CC1401D420078D1300748ABD /* CShaderProgramOGLBase.cpp in Sources */,
+				CC14018C20078CA900748ABD /* CRenderTargetStencilVulkan.cpp in Sources */,
+				CC1401EE20078D1B00748ABD /* CShaderOGLES1_1.cpp in Sources */,
+				CC1401F320078D2000748ABD /* CIndexBufferOGLES2_0.cpp in Sources */,
+				CC1401D120078D1300748ABD /* CRenderTargetStencilOGLBase.cpp in Sources */,
+				CC1401DA20078D1700748ABD /* CMaterialOGLES1_0.cpp in Sources */,
+				CC1401B920078CD900748ABD /* CVertexBufferOGL2_0.cpp in Sources */,
+				CC1401CA20078D1300748ABD /* CFrameBufferOGLBase.cpp in Sources */,
+				CC14021120078D3300748ABD /* CNonCopyable.cpp in Sources */,
+				CC1401CF20078D1300748ABD /* CRenderTargetColorOGLBase.cpp in Sources */,
+				CC14019B20078CBB00748ABD /* CRenderTargetTextureOGL1_3.cpp in Sources */,
+				CC14017520078C5700748ABD /* IComponent.cpp in Sources */,
+				CC1401A620078CCA00748ABD /* CRenderTargetDepthOGL1_5.cpp in Sources */,
+				CC1401BE20078CE500748ABD /* CNativeFile.cpp in Sources */,
+				CC1401D820078D1700748ABD /* CFrameBufferOGLES1_0.cpp in Sources */,
+				CC1401E920078D1B00748ABD /* CRendererOGLES1_1.cpp in Sources */,
+				CC1401E820078D1B00748ABD /* CMeshOGLES1_1.cpp in Sources */,
+				CC1401FF20078D2600748ABD /* CTextureCache.cpp in Sources */,
+				CC14018820078CA900748ABD /* CMeshVulkan.cpp in Sources */,
+				CC14018520078CA900748ABD /* CFrameBufferVulkan.cpp in Sources */,
+				CC1401B220078CD900748ABD /* CRenderTargetColorOGL2_0.cpp in Sources */,
+				CC1401C520078CEB00748ABD /* tinyxml.cpp in Sources */,
+				CC1401ED20078D1B00748ABD /* CRenderTargetTextureOGLES1_1.cpp in Sources */,
+				CC1401CC20078D1300748ABD /* CMaterialOGLBase.cpp in Sources */,
+				CC1401AE20078CD900748ABD /* CIndexBufferOGL2_0.cpp in Sources */,
+				CC1401B620078CD900748ABD /* CShaderOGL2_0.cpp in Sources */,
+				CC14020420078D2C00748ABD /* CSpriteXML.cpp in Sources */,
+				CC1401E020078D1700748ABD /* CRenderTargetTextureOGLES1_0.cpp in Sources */,
+				CC14017B20078C5F00748ABD /* CRenderSystem.cpp in Sources */,
+				CC14019220078CA900748ABD /* CRenderInstanceVulkan.cpp in Sources */,
+				CC1401D020078D1300748ABD /* CRenderTargetDepthOGLBase.cpp in Sources */,
+				CC1401A220078CCA00748ABD /* CMaterialOGL1_5.cpp in Sources */,
+				CC14017320078C5100748ABD /* CObject3D.cpp in Sources */,
+				CC1401D520078D1300748ABD /* CTextureOGLBase.cpp in Sources */,
+				CC1401FB20078D2000748ABD /* CShaderOGLES2_0.cpp in Sources */,
+				CC14020220078D2600748ABD /* CImageSegaPVR.cpp in Sources */,
+				CC14020920078D2C00748ABD /* CShaderSourceSpriteFragment.cpp in Sources */,
+				CC1401F920078D2000748ABD /* CRenderTargetStencilOGLES2_0.cpp in Sources */,
+				CC1401F520078D2000748ABD /* CMeshOGLES2_0.cpp in Sources */,
+				CC1401B320078CD900748ABD /* CRenderTargetDepthOGL2_0.cpp in Sources */,
+				CC1401A420078CCA00748ABD /* CRendererOGL1_5.cpp in Sources */,
+				CC14018420078C8000748ABD /* CRenderViewOSX.mm in Sources */,
+				CC14017620078C5700748ABD /* IEntity.cpp in Sources */,
+				CC14019F20078CBB00748ABD /* CVertexBufferOGL1_3.cpp in Sources */,
+				CC1401F220078D2000748ABD /* CFrameBufferOGLES2_0.cpp in Sources */,
+				CC14020820078D2C00748ABD /* CShaderSourceInsertVertex.cpp in Sources */,
+				CC1401F120078D1B00748ABD /* CVertexBufferOGLES1_1.cpp in Sources */,
+				CC14019720078CBB00748ABD /* CRendererOGL1_3.cpp in Sources */,
+				CC14019020078CA900748ABD /* CTextureVulkan.cpp in Sources */,
+				CC1401C620078CEB00748ABD /* tinyxmlerror.cpp in Sources */,
+				CC1402212007919600748ABD /* miniz.c in Sources */,
+				CC14020D20078D3300748ABD /* CSemaphore.cpp in Sources */,
+				CC1401E420078D1700748ABD /* CVertexBufferOGLES1_0.cpp in Sources */,
+				CC1401652007878700748ABD /* main.m in Sources */,
+				CC14021020078D3300748ABD /* CThreadPool.cpp in Sources */,
+				CC1401B020078CD900748ABD /* CMeshOGL2_0.cpp in Sources */,
+				CC14019620078CBB00748ABD /* CMeshOGL1_3.cpp in Sources */,
+				CC1401FA20078D2000748ABD /* CRenderTargetTextureOGLES2_0.cpp in Sources */,
+				CC1401D620078D1300748ABD /* CVertexBufferOGLBase.cpp in Sources */,
+				CC14017420078C5100748ABD /* CSprite2D.cpp in Sources */,
+				CC14017820078C5F00748ABD /* CAnimation2DSystem.cpp in Sources */,
+				CC14018B20078CA900748ABD /* CRenderTargetDepthVulkan.cpp in Sources */,
+				CC14020120078D2600748ABD /* CImageRaw.cpp in Sources */,
+				CC14017220078C5100748ABD /* CCamera3D.cpp in Sources */,
+				CC14018020078C6900748ABD /* RenderGlobal.cpp in Sources */,
+				CC1401C920078CF800748ABD /* IScene.cpp in Sources */,
+				CC14017120078C5100748ABD /* CCamera2D.cpp in Sources */,
+				CC1401C120078CE500748ABD /* CZipFile.cpp in Sources */,
+				CC1401F420078D2000748ABD /* CMaterialOGLES2_0.cpp in Sources */,
+				CC1401F020078D1B00748ABD /* CTextureOGLES1_1.cpp in Sources */,
+				CC1401B520078CD900748ABD /* CRenderTargetTextureOGL2_0.cpp in Sources */,
+				CC1401BC20078CE500748ABD /* CMemoryFile.cpp in Sources */,
+				CC1401A120078CCA00748ABD /* CIndexBufferOGL1_5.cpp in Sources */,
+				CC14020A20078D2C00748ABD /* CShaderSourceSpriteVertex.cpp in Sources */,
+				CC1401AD20078CD900748ABD /* CFrameBufferOGL2_0.cpp in Sources */,
+				CC1401AC20078CCA00748ABD /* CVertexBufferOGL1_5.cpp in Sources */,
+				CC1401AF20078CD900748ABD /* CMaterialOGL2_0.cpp in Sources */,
+				CC14020F20078D3300748ABD /* CThreadExecutor.cpp in Sources */,
+				CC1401D320078D1300748ABD /* CShaderOGLBase.cpp in Sources */,
+				CC14020620078D2C00748ABD /* CShaderSourceCommonVertex.cpp in Sources */,
+				CC14016F20078C4B00748ABD /* CTransformationComponent.cpp in Sources */,
+				CC1401A020078CCA00748ABD /* CFrameBufferOGL1_5.cpp in Sources */,
+				CC14020320078D2C00748ABD /* CModelObj.cpp in Sources */,
+				CC14017020078C4B00748ABD /* CUpdateComponent.cpp in Sources */,
+				CC14020B20078D3300748ABD /* CBlockOperation.cpp in Sources */,
+				CC14016B20078C4B00748ABD /* CBatchComponent.cpp in Sources */,
+				CC14016C20078C4B00748ABD /* CEventComponent.cpp in Sources */,
+				CC14020520078D2C00748ABD /* CShaderSourceCommonFragment.cpp in Sources */,
+				CC14019420078CBB00748ABD /* CIndexBufferOGL1_3.cpp in Sources */,
+				CC1401E720078D1B00748ABD /* CMaterialOGLES1_1.cpp in Sources */,
+				CC1401E520078D1B00748ABD /* CFrameBufferOGLES1_1.cpp in Sources */,
+				CC1401F820078D2000748ABD /* CRenderTargetDepthOGLES2_0.cpp in Sources */,
+				CC1401C820078CF800748ABD /* IResource.cpp in Sources */,
+				CC1401BA20078CE500748ABD /* CStringUtilsVFS.cpp in Sources */,
+				CC14018F20078CA900748ABD /* CShaderVulkan.cpp in Sources */,
+				CC1401B120078CD900748ABD /* CRendererOGL2_0.cpp in Sources */,
+				CC14020720078D2C00748ABD /* CShaderSourceInsertFragment.cpp in Sources */,
+				CC14015A2007878700748ABD /* OpenGLViewController.mm in Sources */,
+				CC1401C420078CEB00748ABD /* tinystr.cpp in Sources */,
+				CC1401F620078D2000748ABD /* CRendererOGLES2_0.cpp in Sources */,
+				CC1401FC20078D2000748ABD /* CShaderProgramOGLES2_0.cpp in Sources */,
+				CC14018920078CA900748ABD /* CRendererVulkan.cpp in Sources */,
+				CC14018720078CA900748ABD /* CMaterialVulkan.cpp in Sources */,
+				CC14017C20078C5F00748ABD /* CTouchSystem.cpp in Sources */,
+				CC14016A20078C4B00748ABD /* CAnimation2DComponent.cpp in Sources */,
+				CC14021320078D3300748ABD /* CSystem.cpp in Sources */,
+				CC1401CB20078D1300748ABD /* CIndexBufferOGLBase.cpp in Sources */,
+				CC14018D20078CA900748ABD /* CRenderTargetTextureVulkan.cpp in Sources */,
+				CC1401D720078D1300748ABD /* CRenderInstanceOGLBase.cpp in Sources */,
+				CC14017720078C5700748ABD /* ISystem.cpp in Sources */,
+				CC1401A720078CCA00748ABD /* CRenderTargetStencilOGL1_5.cpp in Sources */,
+				CC1401E220078D1700748ABD /* CShaderProgramOGLES1_0.cpp in Sources */,
+				CC1401CE20078D1300748ABD /* CRendererOGLBase.cpp in Sources */,
+				CC1401AB20078CCA00748ABD /* CTextureOGL1_5.cpp in Sources */,
+				CC1401A920078CCA00748ABD /* CShaderOGL1_5.cpp in Sources */,
+				CC14017A20078C5F00748ABD /* CEventSystem.cpp in Sources */,
+				CC14017D20078C5F00748ABD /* CTransformationSystem.cpp in Sources */,
+				CC1401FE20078D2000748ABD /* CVertexBufferOGLES2_0.cpp in Sources */,
+				CC1401EF20078D1B00748ABD /* CShaderProgramOGLES1_1.cpp in Sources */,
+				CC14021220078D3300748ABD /* CStringUtils.cpp in Sources */,
+				CC14016E20078C4B00748ABD /* CTouchComponent.cpp in Sources */,
+				CC14018620078CA900748ABD /* CIndexBufferVulkan.cpp in Sources */,
+				CC14019C20078CBB00748ABD /* CShaderOGL1_3.cpp in Sources */,
+				CC1401E120078D1700748ABD /* CShaderOGLES1_0.cpp in Sources */,
+				CC1401C020078CE500748ABD /* CVirtualFileSystem.cpp in Sources */,
+				CC14020E20078D3300748ABD /* CTask.cpp in Sources */,
+				CC1401DF20078D1700748ABD /* CRenderTargetStencilOGLES1_0.cpp in Sources */,
+				CC14019A20078CBB00748ABD /* CRenderTargetStencilOGL1_3.cpp in Sources */,
+				CC1401D920078D1700748ABD /* CIndexBufferOGLES1_0.cpp in Sources */,
+				CC1401C720078CEB00748ABD /* tinyxmlparser.cpp in Sources */,
+				CC1401DB20078D1700748ABD /* CMeshOGLES1_0.cpp in Sources */,
+				CC14018120078C7000748ABD /* CTouchEvent.cpp in Sources */,
+				CC1401DD20078D1700748ABD /* CRenderTargetColorOGLES1_0.cpp in Sources */,
+				CC1401EB20078D1B00748ABD /* CRenderTargetDepthOGLES1_1.cpp in Sources */,
+				CC1401BD20078CE500748ABD /* CMemoryFileSystem.cpp in Sources */,
+				CC1401B420078CD900748ABD /* CRenderTargetStencilOGL2_0.cpp in Sources */,
+				CC1401BB20078CE500748ABD /* CFileInfo.cpp in Sources */,
+				CC14019D20078CBB00748ABD /* CShaderProgramOGL1_3.cpp in Sources */,
+				CC14019320078CBB00748ABD /* CFrameBufferOGL1_3.cpp in Sources */,
+				CC1401EC20078D1B00748ABD /* CRenderTargetStencilOGLES1_1.cpp in Sources */,
+				CC1401A820078CCA00748ABD /* CRenderTargetTextureOGL1_5.cpp in Sources */,
+				CC14019920078CBB00748ABD /* CRenderTargetDepthOGL1_3.cpp in Sources */,
+				CC1401F720078D2000748ABD /* CRenderTargetColorOGLES2_0.cpp in Sources */,
+				CC1401A320078CCA00748ABD /* CMeshOGL1_5.cpp in Sources */,
+				CC1401BF20078CE500748ABD /* CNativeFileSystem.cpp in Sources */,
+				CC1401FD20078D2000748ABD /* CTextureOGLES2_0.cpp in Sources */,
+				CC1401E320078D1700748ABD /* CTextureOGLES1_0.cpp in Sources */,
+				CC1402202007913E00748ABD /* CSystem.mm in Sources */,
+				CC1401D220078D1300748ABD /* CRenderTargetTextureOGLBase.cpp in Sources */,
+				CC14019120078CA900748ABD /* CVertexBufferVulkan.cpp in Sources */,
+				CC1401A520078CCA00748ABD /* CRenderTargetColorOGL1_5.cpp in Sources */,
+				CC14021420078D3900748ABD /* CGameScene.cpp in Sources */,
+				CC14019520078CBB00748ABD /* CMaterialOGL1_3.cpp in Sources */,
+				CC14016D20078C4B00748ABD /* CRenderComponent.cpp in Sources */,
+				CC14017E20078C5F00748ABD /* CUpdateSystem.cpp in Sources */,
+				CC14017920078C5F00748ABD /* CBatchingSystem.cpp in Sources */,
+				CC14019E20078CBB00748ABD /* CTextureOGL1_3.cpp in Sources */,
+				CC1401E620078D1B00748ABD /* CIndexBufferOGLES1_1.cpp in Sources */,
+				CC14020C20078D3300748ABD /* COperationQueue.cpp in Sources */,
+				CC1401DE20078D1700748ABD /* CRenderTargetDepthOGLES1_0.cpp in Sources */,
+				CC14019820078CBB00748ABD /* CRenderTargetColorOGL1_3.cpp in Sources */,
+				CC1401B820078CD900748ABD /* CTextureOGL2_0.cpp in Sources */,
+				CC1401CD20078D1300748ABD /* CMeshOGLBase.cpp in Sources */,
+				CC14018E20078CA900748ABD /* CShaderProgramVulkan.cpp in Sources */,
+				CC14018A20078CA900748ABD /* CRenderTargetColorVulkan.cpp in Sources */,
+				CC1401C220078CE500748ABD /* CZipFileSystem.cpp in Sources */,
+				CC1401C320078CE800748ABD /* glm.cpp in Sources */,
+				CC1401542007878700748ABD /* AppDelegate.m in Sources */,
+				CC14017F20078C6900748ABD /* CGame.cpp in Sources */,
+				CC14020020078D2600748ABD /* CImagePVR.cpp in Sources */,
+				CC1401EA20078D1B00748ABD /* CRenderTargetColorOGLES1_1.cpp in Sources */,
+				CC1401DC20078D1700748ABD /* CRendererOGLES1_0.cpp in Sources */,
+				CC1401B720078CD900748ABD /* CShaderProgramOGL2_0.cpp in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
 /* End PBXSourcesBuildPhase section */
+
+/* Begin PBXVariantGroup section */
+		CC1401602007878700748ABD /* Main.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				CC1401612007878700748ABD /* Base */,
+			);
+			name = Main.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
 
 /* Begin XCBuildConfiguration section */
 		6E5A79581EF7FEED001F41B3 /* Debug */ = {
@@ -2458,6 +2888,77 @@
 			};
 			name = Release;
 		};
+		CC1401682007878700748ABD /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = "$(PROJECT_DIR)/../../examples/src/platform/macOS/macOSTestApp.entitlements";
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = EXUUE8Z83Q;
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../../libs/Molten/macOS";
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					OS_MAC,
+					RENDER_OGL1_3,
+					RENDER_OGL1_5,
+					RENDER_OGL2_0,
+					GL_DO_NOT_WARN_IF_MULTI_GL_VERSION_HEADERS_INCLUDED,
+					"$(inherited)",
+					VK_USE_PLATFORM_MACOS_MVK,
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/../../libs/glm",
+					"$(PROJECT_DIR)/../../libs/Molten/include",
+				);
+				INFOPLIST_FILE = "$(SRCROOT)/../../examples/src/platform/macOS/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dreamdev.macOSTestApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Debug;
+		};
+		CC1401692007878700748ABD /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CODE_SIGN_ENTITLEMENTS = "$(PROJECT_DIR)/../../examples/src/platform/macOS/macOSTestApp.entitlements";
+				CODE_SIGN_IDENTITY = "Mac Developer";
+				CODE_SIGN_STYLE = Automatic;
+				COMBINE_HIDPI_IMAGES = YES;
+				DEVELOPMENT_TEAM = EXUUE8Z83Q;
+				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../../libs/Molten/macOS";
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					OS_MAC,
+					RENDER_OGL1_3,
+					RENDER_OGL1_5,
+					RENDER_OGL2_0,
+					GL_DO_NOT_WARN_IF_MULTI_GL_VERSION_HEADERS_INCLUDED,
+					"$(inherited)",
+					VK_USE_PLATFORM_MACOS_MVK,
+				);
+				HEADER_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/../../libs/glm",
+					"$(PROJECT_DIR)/../../libs/Molten/include",
+				);
+				INFOPLIST_FILE = "$(SRCROOT)/../../examples/src/platform/macOS/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/../Frameworks";
+				MACOSX_DEPLOYMENT_TARGET = 10.13;
+				PRODUCT_BUNDLE_IDENTIFIER = com.dreamdev.macOSTestApp;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SDKROOT = macosx;
+			};
+			name = Release;
+		};
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
@@ -2475,6 +2976,15 @@
 			buildConfigurations = (
 				6E5A795B1EF7FEED001F41B3 /* Debug */,
 				6E5A795C1EF7FEED001F41B3 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		CC1401672007878700748ABD /* Build configuration list for PBXNativeTarget "macOSTestApp" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				CC1401682007878700748ABD /* Debug */,
+				CC1401692007878700748ABD /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

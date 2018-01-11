@@ -19,8 +19,14 @@ class CRenderInstanceOGLBase : public IRenderInstance
 {
     JAM_OBJECT
 public:
+#if defined(OS_IPHONE)
     CRenderInstanceOGLBase(UIView* glkView,
                            EAGLContext* glContext);
+#endif
+#if defined(OS_MAC)
+    CRenderInstanceOGLBase(NSView* glView,
+                           NSOpenGLContext* glContext);
+#endif
 
 #if defined(EGLAPI)
     CRenderInstanceOGLBase(EGLNativeWindowType eglWindow,
@@ -45,7 +51,7 @@ public:
      */
     virtual bool IsInitialized() const override;
     
-#if defined(__OBJC__)
+#if defined(OS_IPHONE)
     /*
      * Apple specific
      * Get OpenGL view
@@ -56,6 +62,18 @@ public:
      * Get OpenGL context
      */
     EAGLContext* Context() const;
+#endif
+#if defined(OS_MAC)
+    /*
+     * Apple specific
+     * Get OpenGL view
+     */
+    NSView* View() const;
+    
+    /*
+     * Get OpenGL context
+     */
+    NSOpenGLContext* Context() const;
 #endif
 
 #if defined(EGLAPI)
@@ -84,9 +102,13 @@ public:
 private:
     bool m_IsInitialized;
     
-#if defined(__OBJC__)
+#if defined(OS_IPHONE)
     UIView* m_GLKView;
     EAGLContext* m_GLContext;
+#endif
+#if defined(OS_MAC)
+    NSView* m_GLView;
+    NSOpenGLContext* m_GLContext;
 #endif
     
 #if defined(EGLAPI)

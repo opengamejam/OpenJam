@@ -356,6 +356,8 @@
 		CC1402202007913E00748ABD /* CSystem.mm in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7B4C1EF800AC001F41B3 /* CSystem.mm */; };
 		CC1402212007919600748ABD /* miniz.c in Sources */ = {isa = PBXBuildFile; fileRef = CC3C9FE41F897C3A009E5B69 /* miniz.c */; };
 		CC140222200791BD00748ABD /* media in Resources */ = {isa = PBXBuildFile; fileRef = 6E5A7F761EF814EA001F41B3 /* media */; };
+		CC1402252007947700748ABD /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CC1402232007947700748ABD /* Images.xcassets */; };
+		CC1402262007947700748ABD /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CC1402242007947700748ABD /* Info.plist */; };
 		CC3C9FE51F897C3A009E5B69 /* miniz.c in Sources */ = {isa = PBXBuildFile; fileRef = CC3C9FE41F897C3A009E5B69 /* miniz.c */; };
 		CC3FCB8D1FDAE3DA00261F7F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CC3FCB8C1FDAE3DA00261F7F /* Main.storyboard */; };
 		CC3FCB8F1FDAE4BC00261F7F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CC3FCB8E1FDAE4BC00261F7F /* LaunchScreen.storyboard */; };
@@ -395,8 +397,6 @@
 		6E5A796A1EF7FF4C001F41B3 /* VulkanViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = VulkanViewController.mm; sourceTree = "<group>"; };
 		6E5A796C1EF7FF4C001F41B3 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 		6E5A79721EF7FF4C001F41B3 /* main.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
-		6E5A79F71EF7FF81001F41B3 /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
-		6E5A79F81EF7FF81001F41B3 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6E5A79FF1EF800AC001F41B3 /* CAnimation2DComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CAnimation2DComponent.cpp; sourceTree = "<group>"; };
 		6E5A7A001EF800AC001F41B3 /* CAnimation2DComponent.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CAnimation2DComponent.h; sourceTree = "<group>"; };
 		6E5A7A011EF800AC001F41B3 /* CBatchComponent.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CBatchComponent.cpp; sourceTree = "<group>"; };
@@ -1011,6 +1011,8 @@
 		CC14021A20078E8400748ABD /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/System/Library/Frameworks/Metal.framework; sourceTree = DEVELOPER_DIR; };
 		CC14021C20078E8F00748ABD /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/System/Library/Frameworks/MetalKit.framework; sourceTree = DEVELOPER_DIR; };
 		CC14021E20078EA500748ABD /* OpenGL.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = OpenGL.framework; path = Platforms/MacOSX.platform/Developer/SDKs/MacOSX10.13.sdk/System/Library/Frameworks/OpenGL.framework; sourceTree = DEVELOPER_DIR; };
+		CC1402232007947700748ABD /* Images.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Images.xcassets; sourceTree = "<group>"; };
+		CC1402242007947700748ABD /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CC3C9FE41F897C3A009E5B69 /* miniz.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = miniz.c; sourceTree = "<group>"; };
 		CC3C9FE61F897D59009E5B69 /* miniz.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = miniz.h; sourceTree = "<group>"; };
 		CC3FCB8C1FDAE3DA00261F7F /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
@@ -1128,9 +1130,9 @@
 			children = (
 				6E5A79611EF7FF4C001F41B3 /* android */,
 				6E5A79631EF7FF4C001F41B3 /* dreamcast */,
-				6E5A79651EF7FF4C001F41B3 /* ios */,
+				6E5A79651EF7FF4C001F41B3 /* iOS */,
 				6E5A796B1EF7FF4C001F41B3 /* linux */,
-				6E5A796D1EF7FF4C001F41B3 /* osx */,
+				6E5A796D1EF7FF4C001F41B3 /* macOS */,
 				6E5A79711EF7FF4C001F41B3 /* windows */,
 			);
 			path = platform;
@@ -1152,9 +1154,11 @@
 			path = dreamcast;
 			sourceTree = "<group>";
 		};
-		6E5A79651EF7FF4C001F41B3 /* ios */ = {
+		6E5A79651EF7FF4C001F41B3 /* iOS */ = {
 			isa = PBXGroup;
 			children = (
+				CC1402232007947700748ABD /* Images.xcassets */,
+				CC1402242007947700748ABD /* Info.plist */,
 				6E5A79691EF7FF4C001F41B3 /* VulkanViewController.h */,
 				6E5A796A1EF7FF4C001F41B3 /* VulkanViewController.mm */,
 				CC40BA6920062C00005DE4F9 /* OpenGLESViewController.h */,
@@ -1165,7 +1169,7 @@
 				CC3FCB8C1FDAE3DA00261F7F /* Main.storyboard */,
 				CC3FCB8E1FDAE4BC00261F7F /* LaunchScreen.storyboard */,
 			);
-			path = ios;
+			path = iOS;
 			sourceTree = "<group>";
 		};
 		6E5A796B1EF7FF4C001F41B3 /* linux */ = {
@@ -1176,7 +1180,7 @@
 			path = linux;
 			sourceTree = "<group>";
 		};
-		6E5A796D1EF7FF4C001F41B3 /* osx */ = {
+		6E5A796D1EF7FF4C001F41B3 /* macOS */ = {
 			isa = PBXGroup;
 			children = (
 				CC1401522007878700748ABD /* AppDelegate.h */,
@@ -1189,7 +1193,6 @@
 				CC1401642007878700748ABD /* main.m */,
 				CC1401662007878700748ABD /* macOSTestApp.entitlements */,
 			);
-			name = osx;
 			path = macOS;
 			sourceTree = "<group>";
 		};
@@ -1204,19 +1207,9 @@
 		6E5A79F51EF7FF81001F41B3 /* platform */ = {
 			isa = PBXGroup;
 			children = (
-				6E5A79F61EF7FF81001F41B3 /* ios */,
 			);
 			name = platform;
 			path = ../../examples/platform;
-			sourceTree = "<group>";
-		};
-		6E5A79F61EF7FF81001F41B3 /* ios */ = {
-			isa = PBXGroup;
-			children = (
-				6E5A79F71EF7FF81001F41B3 /* Images.xcassets */,
-				6E5A79F81EF7FF81001F41B3 /* Info.plist */,
-			);
-			path = ios;
 			sourceTree = "<group>";
 		};
 		6E5A79FB1EF80096001F41B3 /* OpenJam */ = {
@@ -2328,7 +2321,9 @@
 			buildActionMask = 2147483647;
 			files = (
 				6E5A7F771EF814EA001F41B3 /* media in Resources */,
+				CC1402252007947700748ABD /* Images.xcassets in Resources */,
 				CC3FCB8D1FDAE3DA00261F7F /* Main.storyboard in Resources */,
+				CC1402262007947700748ABD /* Info.plist in Resources */,
 				CC3FCB8F1FDAE4BC00261F7F /* LaunchScreen.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -2851,7 +2846,7 @@
 					"$(PROJECT_DIR)/../../libs/glm",
 					"$(PROJECT_DIR)/../../libs/Molten/include",
 				);
-				INFOPLIST_FILE = "$(SRCROOT)/../../examples/platform/ios/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/../../examples/src/platform/iOS/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dreamdev.TestApp;
@@ -2879,7 +2874,7 @@
 					"$(PROJECT_DIR)/../../libs/glm",
 					"$(PROJECT_DIR)/../../libs/Molten/include",
 				);
-				INFOPLIST_FILE = "$(SRCROOT)/../../examples/platform/ios/Info.plist";
+				INFOPLIST_FILE = "$(SRCROOT)/../../examples/src/platform/iOS/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.dreamdev.TestApp;

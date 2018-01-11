@@ -23,8 +23,8 @@ public:
     /*
          * OpenGL specific
          */
-    virtual GLenum ConvertTestFunc(IMaterial::TestFuncs func);
-    virtual GLenum ConvertOperation(IMaterial::Operations op);
+    virtual GLenum ConvertTestFunc(IMaterial::TestFuncs func) override;
+    virtual GLenum ConvertOperation(IMaterial::Operations op) override;
 };
 
 }; // namespace jam

@@ -72,3 +72,4 @@ const std::vector<VkSurfaceFormatKHR>& CRenderInstanceVulkan::SurfaceFormats() c
 {
     return m_SurfaceFormats;
 }
+

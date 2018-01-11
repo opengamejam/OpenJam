@@ -24,9 +24,19 @@ public:
     virtual ~CRendererVulkan();
 
     /*
-     *
+     * Construct command buffers
      */
-    virtual void Initialize();
+    virtual void CreateCommandBuffers();
+    
+    /*
+     * Call before rendering. Switch to next swapchain
+     */
+    void Begin();
+    
+    /*
+     * Call after rendering. Submit command buffer to queue
+     */
+    void End();
     
     /*
      * Returns render view
@@ -108,12 +118,11 @@ public:
      */
     virtual void Draw(IVertexBufferPtr vertexBuffer, IIndexBufferPtr indexBuffer, IMaterialPtr material) override;
     
-    /*
-     * Vulkan specific
-     */
     const VkDevice& LogicalDevice() const;
     const VkQueue& Queue() const;
     const std::vector<VkCommandBuffer>& CommandBuffers() const;
+    const VkCommandBuffer& CommandBuffer(uint32_t swapchainIndex) const;
+    const std::vector<VkImage>& SwapchainImages() const;
     
 private:
     /*
@@ -132,6 +141,11 @@ private:
     VkCommandPool m_CommandPool;
     std::vector<VkCommandBuffer> m_CommandBuffers;
     VkQueue m_Queue;
+    
+    std::vector<VkImage> m_SwapchainImages;
+    VkSwapchainKHR m_Swapchain;
+    VkFence m_SwapchainFence;
+    uint32_t m_SwapchainIndex;
 };
 
 }; // namespace jam

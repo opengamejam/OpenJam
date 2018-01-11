@@ -40,29 +40,30 @@ public:
     /*
      * Vulkan specific
      */
-    const VkSwapchainKHR& Swapchain() const;
-    
     std::tuple<VkResult, VkInstance> CreateInstance(const std::string& appName, const std::string& engineName);
     std::tuple<VkResult, std::vector<VkPhysicalDevice> > GetPhysicalDevices(const VkInstance& instance);
     std::tuple<VkResult, VkSurfaceKHR, std::vector<VkSurfaceFormatKHR> > CreateSurface(const VkInstance& instance,
                                                                                        const VkPhysicalDevice& physicalDevice,
                                                                                        void* view);
 private:
-    void InitOGLES(RenderApi oglesVersion);
-    void InitVulkan();
+    void InitOGLES(UIView* view, RenderApi oglesVersion);
+    void InitVulkan(UIView* view);
+    
+    void BeginOGLES();
+    void BeginVulkan();
+    
+    void EndOGLES();
+    void EndVulkan();
     
 private:
-#if defined(__OBJC__)
-    UIView* m_GLKView;
-    EAGLContext* m_GLContext;
-#endif
     RenderApi m_RenderApi;
     IRenderInstancePtr m_RenderInstance;
     IRendererPtr m_Renderer;
     IFrameBufferPtr m_DefaultFrameBuffer;
-    VkSwapchainKHR m_Swapchain;
-    uint32_t m_SwapchainIndex;
-    VkFence m_Fence;
+    
+    std::function<void()> m_InitFunc;
+    std::function<void()> m_BeginFunc;
+    std::function<void()> m_EndFunc;
 };
 
 }; // namespace jam

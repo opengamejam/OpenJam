@@ -37,6 +37,7 @@ using namespace jam;
 
 CRendererVulkan::CRendererVulkan(IRenderViewPtr renderView)
     : m_RenderView(renderView)
+    , m_SwapchainIndex(0)
 {
     CRenderInstanceVulkanPtr instance = RenderView()->RenderInstance()->Ptr<CRenderInstanceVulkan>();
     // GPU Props
@@ -99,13 +100,128 @@ CRendererVulkan::CRendererVulkan(IRenderViewPtr renderView)
         JAM_LOG("Invalid command pool");
         return;
     }
+    
+    // Swapchain
+    VkSurfaceCapabilitiesKHR surfCapabilities;
+    result = vkGetPhysicalDeviceSurfaceCapabilitiesKHR(instance->PhysicalDevice(),
+                                                       instance->Surface(),
+                                                       &surfCapabilities);
+    
+    uint32_t presentModeCount;
+    result = vkGetPhysicalDeviceSurfacePresentModesKHR(instance->PhysicalDevice(),
+                                                       instance->Surface(),
+                                                       &presentModeCount, nullptr);
+    
+    std::vector<VkPresentModeKHR> presentModes(presentModeCount);
+    result = vkGetPhysicalDeviceSurfacePresentModesKHR(instance->PhysicalDevice(),
+                                                       instance->Surface(),
+                                                       &presentModeCount,
+                                                       &presentModes[0]);
+    
+    VkExtent2D swapchainExtent;
+    // width and height are either both -1, or both not -1.
+    if (surfCapabilities.currentExtent.width == (uint32_t)-1) {
+        // If the surface size is undefined, the size is set to
+        // the size of the images requested.
+        swapchainExtent.width = RenderView()->Width(); // TODO
+        swapchainExtent.height = RenderView()->Height();
+    } else {
+        swapchainExtent = surfCapabilities.currentExtent;
+    }
+    
+    // If mailbox mode is available, use it, as is the lowest-latency non-
+    // tearing mode.  If not, try IMMEDIATE which will usually be available,
+    // and is fastest (though it tears).  If not, fall back to FIFO which is
+    // always available.
+    VkPresentModeKHR swapchainPresentMode = VK_PRESENT_MODE_FIFO_KHR;
+    for (size_t i = 0; i < presentModeCount; i++) {
+        if (presentModes[i] == VK_PRESENT_MODE_MAILBOX_KHR) {
+            swapchainPresentMode = VK_PRESENT_MODE_MAILBOX_KHR;
+            break;
+        }
+        if ((swapchainPresentMode != VK_PRESENT_MODE_MAILBOX_KHR) && (presentModes[i] == VK_PRESENT_MODE_IMMEDIATE_KHR)) {
+            swapchainPresentMode = VK_PRESENT_MODE_IMMEDIATE_KHR;
+        }
+    }
+    
+    // Determine the number of VkImage's to use in the swap chain (we desire to
+    // own only 1 image at a time, besides the images being displayed and
+    // queued for display):
+    uint32_t desiredNumberOfSwapchainImages = surfCapabilities.minImageCount + 1;
+    if ((surfCapabilities.maxImageCount > 0) && (desiredNumberOfSwapchainImages > surfCapabilities.maxImageCount)) {
+        // Application must settle for fewer images than desired:
+        desiredNumberOfSwapchainImages = surfCapabilities.maxImageCount;
+    }
+    
+    VkSurfaceTransformFlagBitsKHR preTransform;
+    if (surfCapabilities.supportedTransforms & VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR) {
+        preTransform = VK_SURFACE_TRANSFORM_IDENTITY_BIT_KHR;
+    } else {
+        preTransform = surfCapabilities.currentTransform;
+    }
+    
+    const VkSwapchainCreateInfoKHR swapchainInfo = {
+        .sType = VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR,
+        .pNext = nullptr,
+        .surface = instance->Surface(),
+        .minImageCount = desiredNumberOfSwapchainImages,
+        .imageFormat = instance->SurfaceFormats()[0].format,
+        .imageColorSpace = instance->SurfaceFormats()[0].colorSpace,
+        .imageExtent = {
+            .width = swapchainExtent.width,
+            .height = swapchainExtent.height,
+        },
+        .imageUsage = VK_IMAGE_USAGE_COLOR_ATTACHMENT_BIT,
+        .preTransform = preTransform,
+        .compositeAlpha = VK_COMPOSITE_ALPHA_OPAQUE_BIT_KHR,
+        .imageArrayLayers = 1,
+        .imageSharingMode = VK_SHARING_MODE_EXCLUSIVE,
+        .queueFamilyIndexCount = 0,
+        .pQueueFamilyIndices = nullptr,
+        .presentMode = swapchainPresentMode,
+        .oldSwapchain = VK_NULL_HANDLE,
+        .clipped = true,
+    };
+    
+    result = vkCreateSwapchainKHR(m_LogicalDevice, &swapchainInfo, nullptr, &m_Swapchain);
+    if (result != VK_SUCCESS) {
+        JAM_LOG("Can't create swapchain object");
+        return;
+    }
+    
+    uint32_t swapchainImageCount;
+    result = vkGetSwapchainImagesKHR(m_LogicalDevice, m_Swapchain, &swapchainImageCount, nullptr);
+    if (result != VK_SUCCESS) {
+        JAM_LOG("Can't create swapchain images");
+        return;
+    }
+    
+    m_SwapchainImages.resize(swapchainImageCount);
+    if (result != VK_SUCCESS) {
+        JAM_LOG("Can't create swapchain images");
+        return;
+    }
+    result = vkGetSwapchainImagesKHR(m_LogicalDevice, m_Swapchain, &swapchainImageCount, &m_SwapchainImages[0]);
+    
+    // Swapchain fence
+    VkFenceCreateInfo fenceCreateInfo = {
+        .sType = VkStructureType::VK_STRUCTURE_TYPE_FENCE_CREATE_INFO,
+        .pNext = nullptr,
+        .flags = 0
+    };
+    
+    result = vkCreateFence(m_LogicalDevice, &fenceCreateInfo, nullptr, &m_SwapchainFence);
+    if (result != VK_SUCCESS) {
+        JAM_LOG("Can't create swapchain fence");
+        return;
+    }
 }
 
 CRendererVulkan::~CRendererVulkan()
 {
 }
 
-void CRendererVulkan::Initialize()
+void CRendererVulkan::CreateCommandBuffers()
 {
     IFrameBufferPtr defaultFrameBuffer = RenderView()->DefaultFrameBuffer();
     CFrameBufferVulkanPtr frameBuffer = defaultFrameBuffer->Ptr<CFrameBufferVulkan>();
@@ -201,6 +317,60 @@ void CRendererVulkan::Initialize()
         }
         vkEndCommandBuffer(commandBuffer);
     }
+}
+
+void CRendererVulkan::Begin()
+{
+    VkResult result = vkAcquireNextImageKHR(m_LogicalDevice, m_Swapchain,
+                                            UINT64_MAX, VK_NULL_HANDLE,
+                                            m_SwapchainFence, &m_SwapchainIndex);
+    assert(result == VK_SUCCESS);
+    
+    result = vkWaitForFences(m_LogicalDevice, 1, &m_SwapchainFence, VK_TRUE, UINT64_MAX);
+    assert(result == VK_SUCCESS);
+    
+    result = vkResetFences(m_LogicalDevice, 1, &m_SwapchainFence);
+    assert(result == VK_SUCCESS);
+}
+
+void CRendererVulkan::End()
+{
+    const VkQueue& queue = Queue();
+    const VkCommandBuffer& commandBuffer = CommandBuffer(m_SwapchainIndex);
+    
+    VkResult result = VK_SUCCESS;
+    VkPresentInfoKHR presentInfoKHR = {
+        .sType = VK_STRUCTURE_TYPE_PRESENT_INFO_KHR,
+        .pNext = nullptr,
+        .waitSemaphoreCount = 0,
+        .pWaitSemaphores = nullptr,
+        .swapchainCount = 1,
+        .pSwapchains = &m_Swapchain,
+        .pImageIndices = &m_SwapchainIndex,
+        .pResults = &result
+    };
+    
+    VkPipelineStageFlags waitMask = VkPipelineStageFlagBits::VK_PIPELINE_STAGE_BOTTOM_OF_PIPE_BIT;
+    VkSubmitInfo submitInfo = {
+        .sType = VK_STRUCTURE_TYPE_SUBMIT_INFO,
+        .pNext = nullptr,
+        .waitSemaphoreCount = 0,
+        .pWaitSemaphores = nullptr,
+        .pWaitDstStageMask = &waitMask,
+        .commandBufferCount = 1,
+        .pCommandBuffers = &commandBuffer,
+        .signalSemaphoreCount = 0,
+        .pSignalSemaphores = nullptr
+    };
+    
+    result = vkQueueSubmit(queue, 1, &submitInfo, VK_NULL_HANDLE);
+    assert(result == VK_SUCCESS);
+    
+    result = vkQueueWaitIdle(queue);
+    assert(result == VK_SUCCESS);
+    
+    result = vkQueuePresentKHR(queue, &presentInfoKHR);
+    assert(result == VK_SUCCESS);
 }
 
 IRenderViewPtr CRendererVulkan::RenderView() const
@@ -331,6 +501,17 @@ const std::vector<VkCommandBuffer>& CRendererVulkan::CommandBuffers() const
     return m_CommandBuffers;
 }
 
+const VkCommandBuffer& CRendererVulkan::CommandBuffer(uint32_t swapchainIndex) const
+{
+    assert(swapchainIndex < m_CommandBuffers.size() && "Incorrect swapchain index");
+    return m_CommandBuffers[swapchainIndex];
+}
+
+const std::vector<VkImage>& CRendererVulkan::SwapchainImages() const
+{
+    return m_SwapchainImages;
+}
+
 // *****************************************************************************
 // Protected Methods
 // *****************************************************************************
@@ -338,7 +519,6 @@ const std::vector<VkCommandBuffer>& CRendererVulkan::CommandBuffers() const
 // *****************************************************************************
 // Private Methods
 // *****************************************************************************
-
 
 std::vector<VkQueueFamilyProperties> CRendererVulkan::GetPhysicalDeviceQueueProps(const VkInstance& instance,
                                                                                   const VkPhysicalDevice physicalDevice)

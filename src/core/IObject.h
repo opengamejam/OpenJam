@@ -36,7 +36,7 @@ public:
      * Cast shared pointer to specific type 'T'
      */
     template<class U, class = typename std::enable_if<std::is_base_of<T, U>::value, U>::type>
-    std::shared_ptr<U> Ptr()
+    INL std::shared_ptr<U> Ptr()
     {
         std::shared_ptr<T> thisPtr = this->shared_from_this();
         return std::static_pointer_cast<U>(thisPtr);

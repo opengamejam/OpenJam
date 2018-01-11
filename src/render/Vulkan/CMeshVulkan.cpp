@@ -5,7 +5,7 @@
 //  Created by Yevgeniy Logachev
 //  Copyright (c) 2014 Yevgeniy Logachev. All rights reserved.
 //
-#if defined(RENDER_VULKAN)
+//#if defined(RENDER_VULKAN)
 
 #include "CMeshVulkan.h"
 #include "IVertexBuffer.h"
@@ -22,55 +22,44 @@ using namespace jam;
 // *****************************************************************************
 
 CMeshVulkan::CMeshVulkan()
-    : m_VAO(0)
 {
-#ifdef GL_GLEXT_PROTOTYPES // TODO:
-    glGenVertexArraysOES(1, &m_VAO);
-#endif
 }
 
 CMeshVulkan::~CMeshVulkan()
 {
-#ifdef GL_GLEXT_PROTOTYPES
-    glDeleteVertexArraysOES(1, &m_VAO);
-#endif
 }
 
 void CMeshVulkan::Bind()
 {
-#ifdef GL_GLEXT_PROTOTYPES
-    glBindVertexArrayOES(m_VAO);
-#else
-    if (VertexBuffer()) {
-        VertexBuffer()->Bind();
-    }
-    if (IndexBuffer()) {
-        IndexBuffer()->Bind();
-    }
-#endif
 }
 
 void CMeshVulkan::Unbind()
 {
-#ifdef GL_GLEXT_PROTOTYPES
-    glBindVertexArrayOES(0);
-#else
-    if (VertexBuffer()) {
-        VertexBuffer()->Unbind();
-    }
-    if (IndexBuffer()) {
-        IndexBuffer()->Unbind();
-    }
-#endif
 }
 
 bool CMeshVulkan::IsValid() const
 {
-#ifdef GL_GLEXT_PROTOTYPES
-    return (m_VAO != 0);
-#else
     return true;
-#endif
+}
+
+IVertexBufferPtr CMeshVulkan::VertexBuffer() const
+{
+    return m_VertexBuffer;
+}
+
+void CMeshVulkan::VertexBuffer(IVertexBufferPtr vertexBuffer)
+{
+    m_VertexBuffer = vertexBuffer;
+}
+
+IIndexBufferPtr CMeshVulkan::IndexBuffer() const
+{
+    return m_IndexBuffer;
+}
+
+void CMeshVulkan::IndexBuffer(IIndexBufferPtr indexBuffer)
+{
+    m_IndexBuffer = indexBuffer;
 }
 
 // *****************************************************************************
@@ -81,4 +70,4 @@ bool CMeshVulkan::IsValid() const
 // Private Methods
 // *****************************************************************************
 
-#endif // RENDER_VULKAN
+//#endif // RENDER_VULKAN

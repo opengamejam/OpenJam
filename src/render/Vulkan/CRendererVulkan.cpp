@@ -413,13 +413,13 @@ CRenderTargetTexturePtr CRendererVulkan::CreateTextureRenderTarget()
 
 IVertexBufferPtr CRendererVulkan::CreateVertexBuffer()
 {
-    IVertexBufferPtr vertexBuffer;//(new CVertexBufferVulkan());
+    IVertexBufferPtr vertexBuffer(new CVertexBufferVulkan(m_LogicalDevice));
     return vertexBuffer;
 }
 
 IIndexBufferPtr CRendererVulkan::CreateIndexBuffer()
 {
-    IIndexBufferPtr indexBuffer;//(new CIndexBufferVulkan());
+    IIndexBufferPtr indexBuffer(new CIndexBufferVulkan(m_LogicalDevice));
     return indexBuffer;
 }
 
@@ -437,7 +437,7 @@ IMaterialPtr CRendererVulkan::CreateMaterial()
 
 IMeshPtr CRendererVulkan::CreateMesh()
 {
-    IMeshPtr mesh;//(new CMeshVulkan());
+    IMeshPtr mesh(new CMeshVulkan());
     return mesh;
 }
 

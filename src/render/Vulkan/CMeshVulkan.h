@@ -5,16 +5,16 @@
 //  Created by Yevgeniy Logachev
 //  Copyright (c) 2014 Yevgeniy Logachev. All rights reserved.
 //
-#if defined(RENDER_VULKAN)
+//#if defined(RENDER_VULKAN)
 
 #ifndef CMESHVULKAN_H
 #define CMESHVULKAN_H
 
-#include "CMeshOGLBase.h"
+#include "IMesh.h"
 
 namespace jam {
 
-class CMeshVulkan : public CMeshOGLBase
+class CMeshVulkan : public IMesh
 {
     JAM_OBJECT
 public:
@@ -24,13 +24,20 @@ public:
     virtual void Bind() override;
     virtual void Unbind() override;
     virtual bool IsValid() const override;
+    
+    virtual IVertexBufferPtr VertexBuffer() const override;
+    virtual void VertexBuffer(IVertexBufferPtr vertexBuffer) override;
+    
+    virtual IIndexBufferPtr IndexBuffer() const override;
+    virtual void IndexBuffer(IIndexBufferPtr indexBuffer) override;
 
 private:
-    uint32_t m_VAO;
+    IVertexBufferPtr m_VertexBuffer;
+    IIndexBufferPtr m_IndexBuffer;
 };
 
 }; // namespace jam
 
 #endif /* CMESHVULKAN_H */
 
-#endif /* defined(RENDER_VULKAN) */
+//#endif /* defined(RENDER_VULKAN) */

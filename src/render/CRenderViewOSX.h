@@ -22,11 +22,12 @@ public:
     {
         OGLLegacy,
         OGL3_2,
-        OGL4_1
+        OGL4_1,
+        Vulkan
     };
     
 public:
-	CRenderViewOSX(uint32_t width, uint32_t height, void* glkView, RenderApi renderApi);
+	CRenderViewOSX(NSView* view, float scaleFactor, RenderApi renderApi);
 	virtual ~CRenderViewOSX();
 
 	virtual void CreateView() override;
@@ -38,15 +39,33 @@ public:
     virtual IRendererPtr Renderer() const override;
     virtual IFrameBufferPtr DefaultFrameBuffer() const override;
 
+    /*
+     * Vulkan specific
+     */
+    std::tuple<VkResult, VkInstance> CreateInstance(const std::string& appName, const std::string& engineName);
+    std::tuple<VkResult, std::vector<VkPhysicalDevice> > GetPhysicalDevices(const VkInstance& instance);
+    std::tuple<VkResult, VkSurfaceKHR, std::vector<VkSurfaceFormatKHR> > CreateSurface(const VkInstance& instance,
+                                                                                       const VkPhysicalDevice& physicalDevice,
+                                                                                       NSView* view);
 private:
-#if defined(__OBJC__)
-  	NSOpenGLView* m_GLView;
-    NSOpenGLContext* m_GLContext;
-#endif
+    void InitOGL(NSOpenGLView* view, RenderApi oglVersion);
+    void InitVulkan(NSView* view);
+    
+    void BeginOGL();
+    void BeginVulkan();
+    
+    void EndOGL();
+    void EndVulkan();
+    
+private:
     RenderApi m_RenderApi;
     IRenderInstancePtr m_RenderInstance;
     IRendererPtr m_Renderer;
     IFrameBufferPtr m_DefaultFrameBuffer;
+    
+    std::function<void()> m_InitFunc;
+    std::function<void()> m_BeginFunc;
+    std::function<void()> m_EndFunc;
 };
 
 }; // namespace jam

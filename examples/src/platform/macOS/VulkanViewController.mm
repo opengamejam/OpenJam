@@ -1,12 +1,14 @@
 //
-//  OpenGLViewController.m
+//  VulkanViewController.m
 //  macOSTestApp
 //
 //  Created by Yevgeniy Logachev on 1/11/18.
 //  Copyright © 2018 Yevgeniy Logachev. All rights reserved.
 //
 
-#import "OpenGLViewController.h"
+#import "VulkanViewController.h"
+#import <Metal/Metal.h>
+#import <MetalKit/MTKView.h>
 #include "CRenderViewOSX.h"
 #include "CGame.h"
 #include "CSystem.h"
@@ -19,9 +21,9 @@ CLASS_PTR(CTouchEvent)
 CLASS_PTR(CGame)
 CLASS_PTR(IScene)
 
-@implementation OpenGLViewController
+@implementation VulkanViewController
 {
-    NSOpenGLView *_view;
+    MTKView *_view;
     
     IRenderViewPtr m_RenderView;
     CGamePtr m_Game;
@@ -44,7 +46,7 @@ CLASS_PTR(IScene)
 {
     [super viewDidLoad];
 
-    _view = (NSOpenGLView *)self.view;
+    _view = (MTKView *)self.view;
     
     float displayScale = 1;
     if ([[NSScreen mainScreen] respondsToSelector:@selector(backingScaleFactor)]) {
@@ -58,7 +60,7 @@ CLASS_PTR(IScene)
     
     m_RenderView.reset(new CRenderViewOSX(self.view,
                                           displayScale,
-                                          CRenderViewOSX::OGLLegacy));
+                                          CRenderViewOSX::Vulkan));
     m_Game.reset(new CGame(m_RenderView));
     m_Game->Initialize();
     

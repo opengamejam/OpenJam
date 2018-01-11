@@ -33,20 +33,20 @@ using namespace jam;
 // Public Methods
 // *****************************************************************************
 
-CRenderViewIOS::CRenderViewIOS(void* view, RenderApi renderApi)
-    : IRenderView(((__bridge UIView*)view).frame.size.width,
-                  ((__bridge UIView*)view).frame.size.height,
-                  ((__bridge UIView*)view).contentScaleFactor)
+CRenderViewIOS::CRenderViewIOS(UIView* view, RenderApi renderApi)
+    : IRenderView(view.frame.size.width,
+                  view.frame.size.height,
+                  view.contentScaleFactor)
     , m_RenderApi(renderApi)
     , m_Renderer(nullptr)
     , m_DefaultFrameBuffer(nullptr)
 {
     if (m_RenderApi == Vulkan) {
-        m_InitFunc = std::bind(&CRenderViewIOS::InitVulkan, this, (__bridge UIView*)view);
+        m_InitFunc = std::bind(&CRenderViewIOS::InitVulkan, this, view);
         m_BeginFunc = std::bind(&CRenderViewIOS::BeginVulkan, this);
         m_EndFunc = std::bind(&CRenderViewIOS::EndVulkan, this);
     } else {
-        m_InitFunc = std::bind(&CRenderViewIOS::InitOGLES, this, (__bridge UIView*)view, m_RenderApi);
+        m_InitFunc = std::bind(&CRenderViewIOS::InitOGLES, this, view, m_RenderApi);
         m_BeginFunc = std::bind(&CRenderViewIOS::BeginOGLES, this);
         m_EndFunc = std::bind(&CRenderViewIOS::EndOGLES, this);
     }
@@ -105,7 +105,7 @@ IFrameBufferPtr CRenderViewIOS::DefaultFrameBuffer() const
 void CRenderViewIOS::InitOGLES(UIView* view, RenderApi oglesVersion)
 {
     EAGLContext* glContext = nil;
-    switch (m_RenderApi) {
+    switch (oglesVersion) {
         case OGLES1_1: {
             glContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1];
             [EAGLContext setCurrentContext:glContext];

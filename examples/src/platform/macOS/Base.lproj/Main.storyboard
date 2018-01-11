@@ -680,10 +680,10 @@
             </objects>
             <point key="canvasLocation" x="75" y="0.0"/>
         </scene>
-        <!--Window Controller-->
+        <!--OpenGL Window Controller-->
         <scene sceneID="R2V-B0-nI4">
             <objects>
-                <windowController id="B8D-0N-5wS" sceneMemberID="viewController">
+                <windowController id="B8D-0N-5wS" userLabel="OpenGL Window Controller" sceneMemberID="viewController">
                     <window key="window" title="macOSTestApp" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" releasedWhenClosed="NO" animationBehavior="default" id="IQv-IB-iLA">
                         <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
                         <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
@@ -712,7 +712,41 @@
                 </viewController>
                 <customObject id="rPt-NT-nkU" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="75" y="817"/>
+            <point key="canvasLocation" x="75" y="867"/>
+        </scene>
+        <!--Vulkan Window Controller-->
+        <scene sceneID="Lx3-T5-8wj">
+            <objects>
+                <windowController id="Hy3-jR-19H" userLabel="Vulkan Window Controller" sceneMemberID="viewController">
+                    <window key="window" title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" showsToolbarButton="NO" visibleAtLaunch="NO" frameAutosaveName="" animationBehavior="default" id="ltu-SB-kwW">
+                        <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+                        <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+                        <rect key="contentRect" x="425" y="461" width="480" height="270"/>
+                        <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
+                        <connections>
+                            <outlet property="delegate" destination="Hy3-jR-19H" id="JMk-I4-ZPO"/>
+                        </connections>
+                    </window>
+                    <connections>
+                        <segue destination="dxi-if-ecp" kind="relationship" relationship="window.shadowedContentViewController" id="prr-Ju-rWy"/>
+                    </connections>
+                </windowController>
+                <customObject id="xte-28-H3j" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="878" y="250"/>
+        </scene>
+        <!--Vulkan View Controller-->
+        <scene sceneID="YpY-Tb-Hh4">
+            <objects>
+                <viewController id="dxi-if-ecp" customClass="VulkanViewController" sceneMemberID="viewController">
+                    <view key="view" id="x10-hp-Ik4" customClass="MTKView">
+                        <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
+                        <autoresizingMask key="autoresizingMask"/>
+                    </view>
+                </viewController>
+                <customObject id="c7Q-88-C88" userLabel="First Responder" customClass="NSResponder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="878" y="717"/>
         </scene>
     </scenes>
 </document>

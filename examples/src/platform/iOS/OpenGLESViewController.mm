@@ -56,7 +56,7 @@ CLASS_PTR(IScene)
 {
     [super viewDidLoad];
 
-    m_RenderView.reset(new CRenderViewIOS((__bridge void*)(self.view), CRenderViewIOS::OGLES2_0));
+    m_RenderView.reset(new CRenderViewIOS(self.view, CRenderViewIOS::OGLES2_0));
     m_Game.reset(new CGame(m_RenderView));
     m_Game->Initialize();
 

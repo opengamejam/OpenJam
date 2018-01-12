@@ -16,14 +16,13 @@ namespace jam {
 
 CLASS_PTR(CFrameBufferVulkan)
 CLASS_PTR(CRenderInstanceVulkan)
+CLASS_PTR(CRendererVulkan)
     
 class CFrameBufferVulkan : public IFrameBuffer
 {
     JAM_OBJECT
 public:
-    CFrameBufferVulkan(uint32_t width, uint32_t height,
-                       const VkDevice& logicalDevice,
-                       CRenderInstanceVulkanPtr renderInstance);
+    CFrameBufferVulkan(uint32_t width, uint32_t height, CRendererVulkanPtr renderer);
     virtual ~CFrameBufferVulkan();
     
     /*
@@ -165,8 +164,7 @@ private:
     
     CColor4f m_ClearColor;
     
-    VkDevice m_LogicalDevice;
-    CRenderInstanceVulkanWeak m_RenderInstance;
+    CRendererVulkanWeak m_Renderer;
     VkRenderPass m_RenderPass;
     std::vector<VkFramebuffer> m_Framebuffers;
 };

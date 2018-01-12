@@ -380,22 +380,19 @@ IRenderViewPtr CRendererVulkan::RenderView() const
 
 IFrameBufferPtr CRendererVulkan::CreateFrameBuffer(uint32_t width, uint32_t height)
 {
-    CRenderInstanceVulkanPtr instance = RenderView()->RenderInstance()->Ptr<CRenderInstanceVulkan>();
-    IFrameBufferPtr frameBuffer(new CFrameBufferVulkan(width, height,
-                                                       m_LogicalDevice,
-                                                       instance));
+    IFrameBufferPtr frameBuffer(new CFrameBufferVulkan(width, height, Ptr<CRendererVulkan>()));
     return frameBuffer;
 }
 
 CRenderTargetColorPtr CRendererVulkan::CreateColorRenderTarget()
 {
-    CRenderTargetColorPtr colorTarget(new CRenderTargetColorVulkan(m_LogicalDevice));
+    CRenderTargetColorPtr colorTarget(new CRenderTargetColorVulkan(Ptr<CRendererVulkan>()));
     return colorTarget;
 }
 
 CRenderTargetDepthPtr CRendererVulkan::CreateDepthRenderTarget()
 {
-    CRenderTargetDepthPtr depthTarget;//(new CRenderTargetDepthVulkan());
+    CRenderTargetDepthPtr depthTarget(new CRenderTargetDepthVulkan(Ptr<CRendererVulkan>()));
     return depthTarget;
 }
 

@@ -15,12 +15,13 @@
 namespace jam {
     
 CLASS_PTR(CRenderTargetColorVulkan)
+CLASS_PTR(CRendererVulkan)
 
 class CRenderTargetColorVulkan : public CRenderTargetColor
 {
     JAM_OBJECT
 public:
-    CRenderTargetColorVulkan(VkDevice logicalDevice);
+    CRenderTargetColorVulkan(CRendererVulkanPtr renderer);
     virtual ~CRenderTargetColorVulkan();
     
     /*
@@ -57,15 +58,15 @@ public:
      * Vulkan specific
      */
     virtual void InitializeWithImages(const std::vector<VkImage>& images,
-                                      const VkFormat& format,
                                       uint64_t width, uint64_t height);
     const std::vector<VkImage>& Images() const;
     const std::vector<VkImageView>& ImageViews() const;
-    VkFormat ConvertInternalFormat(InternalFormats internalFormat);
+    static VkFormat ConvertInternalFormat(InternalFormats internalFormat);
+    static InternalFormats ConvertInternalFormat(VkFormat vkFormat);
     
 private:
     bool m_IsInitialized;
-    VkDevice m_LogicalDevice;
+    CRendererVulkanWeak m_Renderer;
     VkFormat m_Format;
     std::vector<VkImage> m_Images;
     std::vector<VkImageView> m_ImageViews;

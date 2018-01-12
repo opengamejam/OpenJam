@@ -231,8 +231,8 @@ void CRenderViewOSX::InitVulkan(NSView* view)
     
     // Render targets
     CRenderTargetColorVulkanPtr colorTarget = Renderer()->CreateColorRenderTarget()->Ptr<CRenderTargetColorVulkan>();
+    colorTarget->Initialize(CRenderTargetColorVulkan::ConvertInternalFormat(surfaceFormats[0].format));
     colorTarget->InitializeWithImages(Renderer()->Ptr<CRendererVulkan>()->SwapchainImages(),
-                                      surfaceFormats[0].format,
                                       Width(), Height());
     
     //CRenderTargetDepthPtr depthTarget = Renderer()->CreateDepthRenderTarget();

@@ -264,17 +264,20 @@ void CRenderViewIOS::InitVulkan(MTKView* view)
     
     // Render targets
     CRenderTargetColorVulkanPtr colorTarget = Renderer()->CreateColorRenderTarget()->Ptr<CRenderTargetColorVulkan>();
+    colorTarget->Initialize(CRenderTargetColorVulkan::ConvertInternalFormat(surfaceFormats[0].format));
     colorTarget->InitializeWithImages(Renderer()->Ptr<CRendererVulkan>()->SwapchainImages(),
-                                      surfaceFormats[0].format,
                                       Width(), Height());
     
-    //CRenderTargetDepthPtr depthTarget = Renderer()->CreateDepthRenderTarget();
-    //depthTarget->Initialize(IRenderTarget::Depth24_Stencil8);
+    CRenderTargetDepthPtr depthTarget = nullptr;
+    if (0) { // TODO
+        depthTarget = Renderer()->CreateDepthRenderTarget();
+        depthTarget->Initialize(IRenderTarget::Depth32);
+    }
     
     m_DefaultFrameBuffer = Renderer()->CreateFrameBuffer(Width(), Height());
     m_DefaultFrameBuffer->Initialize();
     m_DefaultFrameBuffer->AttachColor(colorTarget, 0);
-    //m_DefaultFrameBuffer->AttachDepth(depthTarget);
+    m_DefaultFrameBuffer->AttachDepth(depthTarget);
     assert(m_DefaultFrameBuffer->IsValid());
     
     Renderer()->Ptr<CRendererVulkan>()->CreateCommandBuffers();

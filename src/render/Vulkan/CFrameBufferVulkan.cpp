@@ -12,6 +12,8 @@
 #include "CRenderTargetDepthVulkan.h"
 #include "CRenderTargetStencilVulkan.h"
 #include "CRenderInstanceVulkan.h"
+#include "CRendererVulkan.h"
+#include "IRenderView.h"
 
 using namespace jam;
 
@@ -23,14 +25,11 @@ using namespace jam;
 // Public Methods
 // *****************************************************************************
 
-CFrameBufferVulkan::CFrameBufferVulkan(uint32_t width, uint32_t height,
-                                       const VkDevice& logicalDevice,
-                                       CRenderInstanceVulkanPtr renderInstance)
+CFrameBufferVulkan::CFrameBufferVulkan(uint32_t width, uint32_t height, CRendererVulkanPtr renderer)
 : m_IsInitialized(false)
 , m_Width(width)
 , m_Height(height)
-, m_LogicalDevice(logicalDevice)
-, m_RenderInstance(renderInstance)
+, m_Renderer(renderer)
 , m_NumColorAtachments(1)
 , m_RenderPass(nullptr)
 {
@@ -224,7 +223,9 @@ const VkRenderPass& CFrameBufferVulkan::RenderPass() const
 
 void CFrameBufferVulkan::Rebuild()
 {
-    CRenderInstanceVulkanPtr renderInstance = m_RenderInstance.lock();
+    CRendererVulkanPtr renderer = m_Renderer.lock();
+    IRenderViewPtr renderView = renderer->RenderView();
+    CRenderInstanceVulkanPtr renderInstance = renderView->RenderInstance()->Ptr<CRenderInstanceVulkan>();
     if (!renderInstance) {
         JAM_LOG("CFrameBufferVulkan::Rebuild - Cannot rebuild framebuffer without render instance");
         return;
@@ -232,10 +233,10 @@ void CFrameBufferVulkan::Rebuild()
     const std::vector<VkSurfaceFormatKHR>& surfaceFormats = renderInstance->SurfaceFormats();
     
     if (m_RenderPass) {
-        vkDestroyRenderPass(m_LogicalDevice, m_RenderPass, nullptr);
+        vkDestroyRenderPass(renderer->LogicalDevice(), m_RenderPass, nullptr);
     }
     std::for_each(m_Framebuffers.begin(), m_Framebuffers.end(), [&](const VkFramebuffer& framebuffer) {
-        vkDestroyFramebuffer(m_LogicalDevice, framebuffer, nullptr);
+        vkDestroyFramebuffer(renderer->LogicalDevice(), framebuffer, nullptr);
     });
     m_Framebuffers.clear();
     
@@ -309,7 +310,7 @@ void CFrameBufferVulkan::Rebuild()
     };
     
     // TODO: Logical device
-    VkResult result = vkCreateRenderPass(m_LogicalDevice, &renderpassInfo, nullptr, &m_RenderPass);
+    VkResult result = vkCreateRenderPass(renderer->LogicalDevice(), &renderpassInfo, nullptr, &m_RenderPass);
     if (result != VK_SUCCESS) {
         m_RenderPass = nullptr;
     }
@@ -328,7 +329,7 @@ void CFrameBufferVulkan::Rebuild()
         };
         
         VkFramebuffer framebuffer;
-        result = vkCreateFramebuffer(m_LogicalDevice, &framebufferInfo, nullptr, &framebuffer);
+        result = vkCreateFramebuffer(renderer->LogicalDevice(), &framebufferInfo, nullptr, &framebuffer);
         if (result == VK_SUCCESS) {
             m_Framebuffers.push_back(framebuffer);
         } else {

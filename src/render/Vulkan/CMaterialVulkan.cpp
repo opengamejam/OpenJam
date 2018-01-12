@@ -5,7 +5,7 @@
 //  Created by Yevgeniy Logachev
 //  Copyright (c) 2014 yev. All rights reserved.
 //
-#if defined(RENDER_VULKAN)
+//#if defined(RENDER_VULKAN)
 
 #include "CMaterialVulkan.h"
 
@@ -20,6 +20,8 @@ using namespace jam;
 // *****************************************************************************
 
 CMaterialVulkan::CMaterialVulkan()
+: m_IsDirty(true)
+, m_IsBound(false)
 {
 }
 
@@ -27,80 +29,154 @@ CMaterialVulkan::~CMaterialVulkan()
 {
 }
 
-GLenum CMaterialVulkan::ConvertTestFunc(IMaterial::TestFuncs func)
+void CMaterialVulkan::Bind()
 {
-    unsigned int stencilFunc = GL_NEVER;
-    switch (func) {
-    case IMaterial::Never:
-        stencilFunc = GL_NEVER;
-        break;
-
-    case IMaterial::Less:
-        stencilFunc = GL_LESS;
-        break;
-
-    case IMaterial::Equal:
-        stencilFunc = GL_EQUAL;
-        break;
-
-    case IMaterial::LEqual:
-        stencilFunc = GL_LEQUAL;
-        break;
-
-    case IMaterial::Greater:
-        stencilFunc = GL_GREATER;
-        break;
-
-    case IMaterial::NotEqual:
-        stencilFunc = GL_NOTEQUAL;
-        break;
-
-    case IMaterial::GEqual:
-        stencilFunc = GL_GEQUAL;
-        break;
-
-    case IMaterial::Always:
-        stencilFunc = GL_ALWAYS;
-        break;
-    };
-
-    return stencilFunc;
+    if (m_IsBound) {
+        return;
+    }
+    
+    m_IsBound = true;
 }
 
-GLenum CMaterialVulkan::ConvertOperation(IMaterial::Operations op)
+void CMaterialVulkan::Unbind()
 {
-    unsigned int operation = GL_KEEP;
-    switch (op) {
-    case IMaterial::Keep:
-        operation = GL_KEEP;
-        break;
+    if (!m_IsBound) {
+        return;
+    }
+    
+    m_IsBound = false;
+}
 
-    case IMaterial::Replace:
-        operation = GL_REPLACE;
-        break;
+const CColor4f& CMaterialVulkan::Color() const
+{
+    return m_State.color;
+}
 
-    case IMaterial::Incr:
-        operation = GL_INCR;
-        break;
+void CMaterialVulkan::Color(const CColor4f& color)
+{
+    m_State.color = color;
+    m_IsDirty = true;
+}
 
-    case IMaterial::Decr:
-        operation = GL_DECR;
-        break;
+float CMaterialVulkan::LineWidth() const
+{
+    return m_State.lineWidth;
+}
 
-    case IMaterial::Invert:
-        // TODO:
-        break;
+void CMaterialVulkan::LineWidth(float lineWidth)
+{
+    m_State.lineWidth = lineWidth;
+    m_IsDirty = true;
+}
 
-    case IMaterial::IncrWrap:
-        // TODO:
-        break;
+IMaterial::PrimitiveTypes CMaterialVulkan::PrimitiveType() const
+{
+    return m_State.primitiveType;
+}
 
-    case IMaterial::DecrWrap:
-        // TODO:
-        break;
-    };
+void CMaterialVulkan::PrimitiveType(IMaterial::PrimitiveTypes primitiveType)
+{
+    m_State.primitiveType = primitiveType;
+    m_IsDirty = true;
+}
 
-    return operation;
+bool CMaterialVulkan::CullFace() const
+{
+    return m_State.cullFace;
+}
+
+void CMaterialVulkan::CullFace(bool isEnabled)
+{
+    m_State.cullFace = isEnabled;
+    m_IsDirty = true;
+}
+
+bool CMaterialVulkan::DepthEnable() const
+{
+    return m_State.depthTest.isEnabled;
+}
+
+void CMaterialVulkan::DepthEnable(bool value)
+{
+    m_State.depthTest.isEnabled = value;
+    m_IsDirty = true;
+}
+
+bool CMaterialVulkan::DepthWriteEnable() const
+{
+    return m_State.depthTest.isWriteEnabled;
+}
+
+void CMaterialVulkan::DepthWriteEnable(bool value)
+{
+    m_State.depthTest.isWriteEnabled = value;
+    m_IsDirty = true;
+}
+
+void CMaterialVulkan::DepthRange(double _near, double _far)
+{
+    m_State.depthTest.rangeNear = _near;
+    m_State.depthTest.rangeFar = _far;
+    m_IsDirty = true;
+}
+
+IMaterial::TestFuncs CMaterialVulkan::DepthFunc()
+{
+    return m_State.depthTest.func;
+}
+
+void CMaterialVulkan::DepthFunc(TestFuncs func)
+{
+    m_State.depthTest.func = func;
+    m_IsDirty = true;
+}
+
+bool CMaterialVulkan::StencilEnable() const
+{
+    return m_State.stencilTest.isEnabled;
+}
+
+void CMaterialVulkan::StencilEnable(bool value)
+{
+    m_State.stencilTest.isEnabled = value;
+    m_IsDirty = true;
+}
+
+void CMaterialVulkan::StencilFunc(TestFuncs func, uint32_t ref, uint32_t mask)
+{
+    m_State.stencilTest.func = func;
+    m_State.stencilTest.ref = ref;
+    m_State.stencilTest.mask = mask;
+    m_IsDirty = true;
+}
+
+void CMaterialVulkan::StencilOperations(Operations failOp, Operations zFailOp, Operations zPassOp)
+{
+    m_State.stencilTest.failOp = failOp;
+    m_State.stencilTest.zFailOp = zFailOp;
+    m_State.stencilTest.zPassOp = zPassOp;
+    m_IsDirty = true;
+}
+
+bool CMaterialVulkan::Opacity() const
+{
+    return m_State.opacity;
+}
+
+void CMaterialVulkan::Opacity(bool value)
+{
+    m_State.opacity = value;
+    m_IsDirty = true;
+}
+
+const std::string& CMaterialVulkan::Hash()
+{
+    if (m_IsDirty) {
+        HashMe();
+        m_IsDirty = false;
+    }
+    
+    return m_Hash;
 }
 
 // *****************************************************************************
@@ -111,6 +187,16 @@ GLenum CMaterialVulkan::ConvertOperation(IMaterial::Operations op)
 // Private Methods
 // *****************************************************************************
 
-#endif /* defined(RENDER_VULKAN) */
+void CMaterialVulkan::HashMe()
+{
+    std::stringstream ss;
+    ss << PrimitiveType();
+    ss << LineWidth();
+    //ss << (Stencil() != nullptr);
+    ss << DepthEnable();
+    m_Hash = ss.str();
+}
+
+//#endif /* defined(RENDER_VULKAN) */
 
 

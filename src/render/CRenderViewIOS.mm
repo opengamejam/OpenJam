@@ -42,11 +42,13 @@ CRenderViewIOS::CRenderViewIOS(UIView* view, RenderApi renderApi)
     , m_DefaultFrameBuffer(nullptr)
 {
     if (m_RenderApi == Vulkan) {
-        m_InitFunc = std::bind(&CRenderViewIOS::InitVulkan, this, view);
+        assert([view isKindOfClass:[MTKView class]]);
+        m_InitFunc = std::bind(&CRenderViewIOS::InitVulkan, this, (MTKView*)view);
         m_BeginFunc = std::bind(&CRenderViewIOS::BeginVulkan, this);
         m_EndFunc = std::bind(&CRenderViewIOS::EndVulkan, this);
     } else {
-        m_InitFunc = std::bind(&CRenderViewIOS::InitOGLES, this, view, m_RenderApi);
+        assert([view isKindOfClass:[GLKView class]]);
+        m_InitFunc = std::bind(&CRenderViewIOS::InitOGLES, this, (GLKView*)view, m_RenderApi);
         m_BeginFunc = std::bind(&CRenderViewIOS::BeginOGLES, this);
         m_EndFunc = std::bind(&CRenderViewIOS::EndOGLES, this);
     }
@@ -102,30 +104,24 @@ IFrameBufferPtr CRenderViewIOS::DefaultFrameBuffer() const
 // OGLES
 // *****************************************************************************
 
-void CRenderViewIOS::InitOGLES(UIView* view, RenderApi oglesVersion)
+void CRenderViewIOS::InitOGLES(GLKView* view, RenderApi oglesVersion)
 {
     EAGLContext* glContext = nil;
     switch (oglesVersion) {
         case OGLES1_1: {
             glContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1];
-            [EAGLContext setCurrentContext:glContext];
-            
             m_Renderer.reset(new CRendererOGLES1_1(Ptr<IRenderView>()));
         }
         break;
             
         case OGLES2_0: {
             glContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES2];
-            [EAGLContext setCurrentContext:glContext];
-            
             m_Renderer.reset(new CRendererOGLES2_0(Ptr<IRenderView>()));
         }
         break;
             
         case OGLES3_0: { // TODO: OGLES3
-            glContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES1];
-            [EAGLContext setCurrentContext:glContext];
-            
+            glContext = [[EAGLContext alloc] initWithAPI:kEAGLRenderingAPIOpenGLES3];
             //m_Renderer.reset(new CRendererOGLES3_0(Ptr<IRenderView>()));
         }
         break;
@@ -135,15 +131,20 @@ void CRenderViewIOS::InitOGLES(UIView* view, RenderApi oglesVersion)
         break;
     }
     
+    [EAGLContext setCurrentContext:glContext];
     m_RenderInstance.reset(new CRenderInstanceOGLBase(view, glContext));
     
     CRenderTargetColorPtr colorTarget = m_Renderer->CreateColorRenderTarget();
-    colorTarget->Initialize(IRenderTarget::ColorRGBA8888);
+    colorTarget->Initialize(ConvertColorFormat(view.drawableColorFormat));
     colorTarget->Bind();
     [glContext renderbufferStorage:GL_RENDERBUFFER fromDrawable:(CAEAGLLayer*)(view.layer)];
     
-    CRenderTargetDepthPtr depthTarget = m_Renderer->CreateDepthRenderTarget();
-    depthTarget->Initialize(IRenderTarget::Depth24_Stencil8);
+    CRenderTargetDepthPtr depthTarget = nullptr;
+    if (view.drawableDepthFormat != GLKViewDrawableDepthFormatNone) {
+        depthTarget = m_Renderer->CreateDepthRenderTarget();
+        depthTarget->Initialize(ConvertDepthStencilFormat(view.drawableDepthFormat,
+                                                          view.drawableStencilFormat));
+    }
     
     m_DefaultFrameBuffer = m_Renderer->CreateFrameBuffer(RealWidth(), RealHeight());
     m_DefaultFrameBuffer->Initialize();
@@ -168,11 +169,54 @@ void CRenderViewIOS::EndOGLES()
     [context presentRenderbuffer:GL_RENDERBUFFER];
 }
 
+IRenderTarget::InternalFormats CRenderViewIOS::ConvertColorFormat(GLKViewDrawableColorFormat colorFormat)
+{
+    IRenderTarget::InternalFormats internalFormat = IRenderTarget::ColorRGBA8888;
+    switch (colorFormat) {
+        case GLKViewDrawableColorFormatRGBA8888:
+            internalFormat = IRenderTarget::ColorRGBA8888;
+            break;
+        case GLKViewDrawableColorFormatRGB565:
+            internalFormat = IRenderTarget::ColorRGB565;
+            break;
+        case GLKViewDrawableColorFormatSRGBA8888:
+            internalFormat = IRenderTarget::ColorRGBA8888;
+            break;
+            
+        default:
+            JAM_LOG("Unknown OGLES color format");
+            break;
+    };
+    return internalFormat;
+}
+
+IRenderTarget::InternalFormats CRenderViewIOS::ConvertDepthStencilFormat(GLKViewDrawableDepthFormat depthFormat,
+                                                                         GLKViewDrawableStencilFormat stencilFormat)
+{
+    IRenderTarget::InternalFormats internalFormat = IRenderTarget::Depth24_Stencil8;
+    switch (depthFormat) {
+        case GLKViewDrawableDepthFormat16:
+            internalFormat = IRenderTarget::Depth16;
+            break;
+        case GLKViewDrawableDepthFormat24:
+            internalFormat = IRenderTarget::Depth24;
+            if (stencilFormat == GLKViewDrawableStencilFormat8) {
+                internalFormat = IRenderTarget::Depth24_Stencil8;
+            }
+            break;
+            
+        default:
+            JAM_LOG("Unknown OGLES depth/stencil format");
+            break;
+    };
+    return internalFormat;
+}
+
 // *****************************************************************************
 // Vulkan
 // *****************************************************************************
 
-void CRenderViewIOS::InitVulkan(UIView* view)
+void CRenderViewIOS::InitVulkan(MTKView* view)
 {
     // Instance
     VkInstance instance = nullptr;
@@ -205,7 +249,7 @@ void CRenderViewIOS::InitVulkan(UIView* view)
     std::vector<VkSurfaceFormatKHR> surfaceFormats;
     {
         typedef std::tuple<VkResult, VkSurfaceKHR, std::vector<VkSurfaceFormatKHR> > TSurfaceData;
-        TSurfaceData surfaceData = CreateSurface(instance, physicalDevices[0], (__bridge void*)view);
+        TSurfaceData surfaceData = CreateSurface(instance, physicalDevices[0], view);
         VkResult result = std::get<0>(surfaceData);
         if (result != VK_SUCCESS) {
             JAM_LOG("Can't create Vulksn surface\n");
@@ -287,7 +331,7 @@ std::tuple<VkResult, std::vector<VkPhysicalDevice> > CRenderViewIOS::GetPhysical
 
 std::tuple<VkResult, VkSurfaceKHR, std::vector<VkSurfaceFormatKHR> > CRenderViewIOS::CreateSurface(const VkInstance& instance,
                                                                                                    const VkPhysicalDevice& physicalDevice,
-                                                                                                   void* view)
+                                                                                                   MTKView* view)
 {
     VkResult result;
     VkSurfaceKHR surface;
@@ -296,7 +340,7 @@ std::tuple<VkResult, VkSurfaceKHR, std::vector<VkSurfaceFormatKHR> > CRenderView
         .sType = VK_STRUCTURE_TYPE_IOS_SURFACE_CREATE_INFO_MVK,
         .pNext = nullptr,
         .flags = 0,
-        .pView = view
+        .pView = (__bridge const void*)view
     };
     result = vkCreateIOSSurfaceMVK(instance, &createInfo, nullptr, &surface);
     assert(result == VK_SUCCESS);

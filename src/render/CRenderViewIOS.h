@@ -11,6 +11,10 @@
 #define CRENDERVIEWIOS_H
 
 #include "IRenderView.h"
+#if defined(__OBJC__)
+#import <GLKit/GLKit.h>
+#import <MetalKit/MetalKit.h>
+#endif
 
 namespace jam {
 class CRenderViewIOS : public IRenderView
@@ -44,15 +48,17 @@ public:
     std::tuple<VkResult, std::vector<VkPhysicalDevice> > GetPhysicalDevices(const VkInstance& instance);
     std::tuple<VkResult, VkSurfaceKHR, std::vector<VkSurfaceFormatKHR> > CreateSurface(const VkInstance& instance,
                                                                                        const VkPhysicalDevice& physicalDevice,
-                                                                                       void* view);
+                                                                                       MTKView* view);
 private:
-    void InitOGLES(UIView* view, RenderApi oglesVersion);
-    void InitVulkan(UIView* view);
-    
+    void InitOGLES(GLKView* view, RenderApi oglesVersion);
     void BeginOGLES();
-    void BeginVulkan();
-    
     void EndOGLES();
+    IRenderTarget::InternalFormats ConvertColorFormat(GLKViewDrawableColorFormat colorFormat);
+    IRenderTarget::InternalFormats ConvertDepthStencilFormat(GLKViewDrawableDepthFormat depthFormat,
+                                                             GLKViewDrawableStencilFormat stencilFormat);
+    
+    void InitVulkan(MTKView* view);
+    void BeginVulkan();
     void EndVulkan();
     
 private:

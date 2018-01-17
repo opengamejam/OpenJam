@@ -53,6 +53,11 @@ public:
      * Unbind current render target
      */
     virtual void Unbind() const override;
+    
+    /*
+     * Get internal format
+     */
+    virtual InternalFormats InternalFormat() const override;
 
     /*
      * Vulkan specific
@@ -63,6 +68,7 @@ public:
     const std::vector<VkImageView>& ImageViews() const;
     static VkFormat ConvertInternalFormat(InternalFormats internalFormat);
     static InternalFormats ConvertInternalFormat(VkFormat vkFormat);
+    VkFormat Format() const;
     
 private:
     bool m_IsInitialized;

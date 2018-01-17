@@ -93,6 +93,11 @@ void CRenderTargetStencilOGLBase::Unbind() const
     JAM_LOG("CRenderTargetStencilOGLBase::Unbind() - id: %d\n", m_Id);
 }
 
+IRenderTarget::InternalFormats CRenderTargetStencilOGLBase::InternalFormat() const
+{
+    return m_InternalFormat;
+}
+
 void CRenderTargetStencilOGLBase::BindToFrameBuffer()
 {
 #if GL_ARB_framebuffer_object

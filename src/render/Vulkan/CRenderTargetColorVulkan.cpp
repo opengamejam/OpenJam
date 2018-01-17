@@ -9,6 +9,8 @@
 
 #include "CRenderTargetColorVulkan.h"
 #include "CRendererVulkan.h"
+#include "IRenderView.h"
+#include "CRenderInstanceVulkan.h"
 
 using namespace jam;
 
@@ -82,6 +84,44 @@ void CRenderTargetColorVulkan::Allocate(uint64_t width, uint64_t height)
             m_Images.clear();
             return;
         }
+        
+        for (size_t i = 0; i < m_Images.size(); ++i) {
+            VkMemoryRequirements vk_memoryRequirements;
+            vkGetImageMemoryRequirements(renderer->LogicalDevice(), m_Images[i], &vk_memoryRequirements);
+            CRenderInstanceVulkanPtr instance = renderer->RenderView()->RenderInstance()->Ptr<CRenderInstanceVulkan>();
+            
+            VkPhysicalDeviceMemoryProperties vk_physicalDeviceMemoryProperties;
+            vkGetPhysicalDeviceMemoryProperties(instance->PhysicalDevice(), &vk_physicalDeviceMemoryProperties);
+            
+            uint32_t memoryDeviceIndex = UINT32_MAX;
+            for(uint32_t i = 0; i < vk_physicalDeviceMemoryProperties.memoryTypeCount; ++i)
+            {
+                auto bit = ((uint32_t)1 << i);
+                if((vk_memoryRequirements.memoryTypeBits & bit) != 0)
+                {
+                    if((vk_physicalDeviceMemoryProperties.memoryTypes[i].propertyFlags & VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT) != 0)
+                    {
+                        memoryDeviceIndex = i;
+                        break;
+                    }
+                }
+            }
+            
+            VkMemoryAllocateInfo allocInfo = {};
+            allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+            allocInfo.allocationSize = vk_memoryRequirements.size;
+            allocInfo.memoryTypeIndex = memoryDeviceIndex;
+            
+            VkDeviceMemory imageMemory;
+            result = vkAllocateMemory(renderer->LogicalDevice(), &allocInfo, nullptr, &imageMemory);
+            if (result != VK_SUCCESS) {
+                JAM_LOG("failed to allocate color image memory!");
+                m_Images.clear();
+                return;
+            }
+            
+            vkBindImageMemory(renderer->LogicalDevice(), m_Images[i], imageMemory, 0);
+        }
     }
     
     std::for_each(m_ImageViews.begin(), m_ImageViews.end(), [&](const VkImageView& imageView) {
@@ -128,6 +168,11 @@ void CRenderTargetColorVulkan::Bind() const
 
 void CRenderTargetColorVulkan::Unbind() const
 {
+}
+
+IRenderTarget::InternalFormats CRenderTargetColorVulkan::InternalFormat() const
+{
+    return ConvertInternalFormat(m_Format);
 }
 
 void CRenderTargetColorVulkan::InitializeWithImages(const std::vector<VkImage>& images,
@@ -215,6 +260,11 @@ IRenderTarget::InternalFormats CRenderTargetColorVulkan::ConvertInternalFormat(V
             break;
     }
     return internalFormat;
+}
+
+VkFormat CRenderTargetColorVulkan::Format() const
+{
+    return m_Format;
 }
 
 // *****************************************************************************

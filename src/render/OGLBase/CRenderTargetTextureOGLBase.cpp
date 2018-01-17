@@ -75,6 +75,11 @@ void CRenderTargetTextureOGLBase::Unbind() const
     JAM_LOG("CRenderTargetTextureOGLBase::Unbind()\n"); // TODO: Log system
 }
 
+IRenderTarget::InternalFormats CRenderTargetTextureOGLBase::InternalFormat() const
+{
+    return ColorRGBA8888;//m_InternalFormat;  // TODO
+}
+
 ITexturePtr CRenderTargetTextureOGLBase::Texture() const
 {
     return m_Texture;

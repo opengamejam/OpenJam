@@ -1,7 +1,7 @@
 /*
  * vk_mvk_moltenvk.h
  *
- * Copyright (c) 2014-2016 The Brenwill Workshop Ltd. All rights reserved.
+ * Copyright (c) 2014-2017 The Brenwill Workshop Ltd. All rights reserved.
  * http://www.brenwill.com
  *
  * Use of this document is governed by the Molten License Agreement, as included
@@ -22,34 +22,43 @@
 extern "C" {
 #endif	//  __cplusplus
 	
-#include <MoltenVK/mln_env.h>
 #include <MoltenVK/vulkan/vulkan.h>
 
+#ifdef __OBJC__
+#import <Metal/Metal.h>
+#import <IOSurface/IOSurfaceRef.h>
+#endif
 
-#define VK_MVK_MOLTENVK_REVISION				1
-#define VK_MVK_MOLTENVK_EXTENSION_NUMBER		54
+
+#define VK_MVK_MOLTENVK_SPEC_VERSION            3
 #define VK_MVK_MOLTENVK_EXTENSION_NAME			"VK_MVK_moltenvk"
 
 /** MoltenVK configuration settings. */
 typedef struct {
-    VkBool32 supportDisplayContentsScale;   /**< If enabled, display surfaces that support contents scaling (such as Retina) will automatically use it when creating a color attachment. When used, it is the responsibility of the app to ensure depth, stencil, and resolve attachments are sized to match. Default is false. */
-    VkBool32 imageFlipY;                    /**< If enabled, images will be flipped on the Y-axis, as Vulkan coordinate system is inverse of OpenGL. Default is false. */
-    VkBool32 shaderConversionFlipFragmentY; /**< If enabled, MSL fragment shader code created during Runtime Shader Conversion will flip the Y-axis of each texture coordinate, as Vulkan texture coordinate system is inverse of OpenGL. Default is false. */
+    VkBool32 debugMode;                     /**< If enabled, several debugging capabilities will be enabled. Shader code will be logged during Runtime Shader Conversion. Improves support for Xcode GPU Frame Capture. Default is false. */
     VkBool32 shaderConversionFlipVertexY;   /**< If enabled, MSL vertex shader code created during Runtime Shader Conversion will flip the Y-axis of each vertex, as Vulkan coordinate system is inverse of OpenGL. Default is true. */
-    VkBool32 shaderConversionLogging;       /**< If enabled, both SPIR-V and MSL code will be logged during Runtime Shader Conversion. Default is false. */
-    VkBool32 performanceTracking;           /**< If enabled, per-frame performance statistics are tracked, and can be retrieved via the API. Default is false. */
+    VkBool32 supportLargeQueryPools;        /**< Metal allows only 8192 occlusion queries per MTLBuffer. If enabled, MoltenVK allocates a MTLBuffer for each query pool, allowing each query pool to support 8192 queries, which may slow performance or cause unexpected behaviour if the query pool is not established prior to a Metal renderpass, or if the query pool is changed within a Metal renderpass. If disabled, one MTLBuffer will be shared by all query pools, which improves performance, but limits the total device queries to 8192. Default is false. */
+    VkBool32 performanceTracking;           /**< If enabled, per-frame performance statistics are tracked, optionally logged, and can be retrieved via the vkGetSwapchainPerformanceMVK() function, and various shader compilation performance statistics are tracked, logged, and can be retrieved via the vkGetShaderCompilationPerformanceMVK() function. Default is false. */
     uint32_t performanceLoggingFrameCount;  /**< If non-zero, performance statistics will be periodically logged to the console, on a repeating cycle of this many frames per swapchain. The performanceTracking capability must also be enabled. Default is zero, indicating no logging. */
 } MVKDeviceConfiguration;
 
 /** Features provided by the current implementation of Metal on the current device. */
 typedef struct {
-	VkBool32 depthClipMode;					/**< Depth clip mode. */
-	VkBool32 indirectDrawing;				/**< Draw call parameters held in a GPU buffer. */
-	VkBool32 baseVertexInstanceDrawing;		/**< Draw calls support specifiying the base vertex and instance. */
-	uint32_t maxVertexBufferCount;			/**< The total number of vertex buffers available for vertex shader uniform content and vertex attributes. */
-	uint32_t maxFragmentBufferCount;		/**< The total number of fragment buffers available for fragment shader uniform content. */
-    VkDeviceSize bufferAlignment;           /**< The alignment used when allocating memory for MTLBuffers. */
-    VkDeviceSize pushConstantsAlignment;    /**< The alignment used when allocating memory for push constant structures. */
+    float mslVersion;                           /**< The version of the Metal Shading Language available on this device. */
+	VkBool32 indirectDrawing;                   /**< If true, draw calls support parameters held in a GPU buffer. */
+	VkBool32 baseVertexInstanceDrawing;         /**< If true, draw calls support specifiying the base vertex and instance. */
+    VkBool32 dynamicMTLBuffers;                 /**< If true, dynamic MTLBuffers for setting vertex, fragment, and compute bytes are supported. */
+    VkBool32 shaderSpecialization;              /**< If true, shader specialization (aka Metal function constants) is supported. */
+    VkBool32 ioSurfaces;                        /**< If true, VkImages can be underlaid by IOSurfaces via the vkUseIOSurfaceMVK() function, to support inter-process image transfers. */
+    VkBool32 texelBuffers;                      /**< If true, texel buffers are supported, allowing the contents of a buffer to be interpreted as an image via a VkBufferView. */
+    VkBool32 depthClipMode;                     /**< If true, the device supports both depth clipping and depth clamping per the depthClampEnable flag of VkPipelineRasterizationStateCreateInfo in VkGraphicsPipelineCreateInfo. */
+	uint32_t maxPerStageBufferCount;            /**< The total number of per-stage Metal buffers available for shader uniform content and attributes. */
+    uint32_t maxPerStageTextureCount;           /**< The total number of per-stage Metal textures available for shader uniform content. */
+    uint32_t maxPerStageSamplerCount;           /**< The total number of per-stage Metal samplers available for shader uniform content. */
+    VkDeviceSize maxMTLBufferSize;              /**< The max size of a MTLBuffer (in bytes). */
+    VkDeviceSize mtlBufferAlignment;            /**< The alignment used when allocating memory for MTLBuffers. Must be PoT. */
+    VkDeviceSize maxQueryBufferSize;            /**< The maximum size of an occlusion query buffer (in bytes). */
+    VkSampleCountFlags supportedSampleCounts;   /**< A bitmask identifying the sample counts supported by the device. */
 } MVKPhysicalDeviceMetalFeatures;
 
 /** MoltenVK swapchain performance statistics. */
@@ -59,16 +68,44 @@ typedef struct {
     double averageFramesPerSecond;      /**< The rolling average number of frames per second. This is simply the inverse of the averageFrameInterval value. */
 } MVKSwapchainPerformance;
 
+/** MoltenVK performance of a particular type of shader compilation event. */
+typedef struct {
+    uint32_t count;             /**< The number of compilation events of this type. */
+    double averageInterval;     /**< The average time interval consumed by the compilation event, in seconds. */
+    double minimumInterval;     /**< The minimum time interval consumed by the compilation event, in seconds. */
+    double maximumInterval;     /**< The maximum time interval consumed by the compilation event, in seconds. */
+} MVKShaderCompilationEventPerformance;
+
+/** MoltenVK performance of shader compilation events for a VkDevice. */
+typedef struct {
+    MVKShaderCompilationEventPerformance spirvToMSL;                /** Convert SPIR-V to MSL source code. */
+    MVKShaderCompilationEventPerformance mslCompile;                /** Compile MSL source code into a MTLLibrary. */
+    MVKShaderCompilationEventPerformance mslLoad;                   /** Load pre-compiled MSL code into a MTLLibrary. */
+    MVKShaderCompilationEventPerformance functionRetrieval;         /** Retrieve a MTLFunction from a MTLLibrary. */
+    MVKShaderCompilationEventPerformance functionSpecialization;    /** Specialize a retrieved MTLFunction. */
+    MVKShaderCompilationEventPerformance pipelineCompile;           /** Compile MTLFunctions into a pipeline. */
+} MVKShaderCompilationPerformance;
+
 
 #pragma mark -
 #pragma mark Function types
 
 typedef VkResult (VKAPI_PTR *PFN_vkActivateMoltenVKLicenseMVK)(const char* licenseID, const char* licenseKey, VkBool32 acceptLicenseTermsAndConditions);
 typedef VkResult (VKAPI_PTR *PFN_vkActivateMoltenVKLicensesMVK)();
-typedef VkResult (VKAPI_PTR *PFN_vkGetMoltenVKDeviceConfigurationMVK)(VkDevice device, MVKDeviceConfiguration* pConfiguration);
+typedef void (VKAPI_PTR *PFN_vkGetMoltenVKDeviceConfigurationMVK)(VkDevice device, MVKDeviceConfiguration* pConfiguration);
 typedef VkResult (VKAPI_PTR *PFN_vkSetMoltenVKDeviceConfigurationMVK)(VkDevice device, MVKDeviceConfiguration* pConfiguration);
-typedef VkResult (VKAPI_PTR *PFN_vkGetPhysicalDeviceMetalFeaturesMVK)(VkPhysicalDevice physicalDevice, MVKPhysicalDeviceMetalFeatures* pMetalFeatures);
-typedef VkResult (VKAPI_PTR *PFN_vkGetSwapchainPerformanceMVK)(VkDevice device, VkSwapchainKHR swapchain, MVKSwapchainPerformance* pSwapchainPerf);
+typedef void (VKAPI_PTR *PFN_vkGetPhysicalDeviceMetalFeaturesMVK)(VkPhysicalDevice physicalDevice, MVKPhysicalDeviceMetalFeatures* pMetalFeatures);
+typedef void (VKAPI_PTR *PFN_vkGetSwapchainPerformanceMVK)(VkDevice device, VkSwapchainKHR swapchain, MVKSwapchainPerformance* pSwapchainPerf);
+typedef void (VKAPI_PTR *PFN_vkGetShaderCompilationPerformanceMVK)(VkDevice device, MVKShaderCompilationPerformance* pShaderCompPerf);
+typedef void (VKAPI_PTR *PFN_vkGetVersionStringsMVK)(char* pMoltenVersionStringBuffer, uint32_t moltenVersionStringBufferLength, char* pVulkanVersionStringBuffer, uint32_t vulkanVersionStringBufferLength);
+
+#ifdef __OBJC__
+typedef void (VKAPI_PTR *PFN_vkGetMTLDeviceMVK)(VkPhysicalDevice physicalDevice, id<MTLDevice>* pMTLDevice);
+typedef VkResult (VKAPI_PTR *PFN_vkSetMTLTextureMVK)(VkImage image, id<MTLTexture> mtlTexture);
+typedef void (VKAPI_PTR *PFN_vkGetMTLTextureMVK)(VkImage image, id<MTLTexture>* pMTLTexture);
+typedef VkResult (VKAPI_PTR *PFN_vkUseIOSurfaceMVK)(VkImage image, IOSurfaceRef ioSurface);
+typedef void (VKAPI_PTR *PFN_vkGetIOSurfaceMVK)(VkImage image, IOSurfaceRef* pIOSurface);
+#endif // __OBJC__
 
 
 #pragma mark -
@@ -172,12 +209,26 @@ static inline void vkActivateMoltenVKLicensesMVK() {
 #	endif
 }
 
-/** Populates the pConfiguration structure with the current MoltenVK configuration settings of the specified device. */
-VKAPI_ATTR VkResult VKAPI_CALL vkGetMoltenVKDeviceConfigurationMVK(
+/** 
+ * Populates the pConfiguration structure with the current MoltenVK configuration settings 
+ * of the specified device. 
+ *
+ * To change a specific configuration value, call vkGetMoltenVKDeviceConfigurationMVK()
+ * to retrieve the current configuration, make changes, and call 
+ * vkSetMoltenVKDeviceConfigurationMVK() to update all of the values.
+ */
+VKAPI_ATTR void VKAPI_CALL vkGetMoltenVKDeviceConfigurationMVK(
     VkDevice                                    device,
     MVKDeviceConfiguration*                     pConfiguration);
 
-/** Sets the MoltenVK configuration settings of the specified device to those found in the pConfiguration structure. */
+/** 
+ * Sets the MoltenVK configuration settings of the specified device to those found in the 
+ * pConfiguration structure.
+ *
+ * To change a specific configuration value, call vkGetMoltenVKDeviceConfigurationMVK()
+ * to retrieve the current configuration, make changes, and call
+ * vkSetMoltenVKDeviceConfigurationMVK() to update all of the values.
+ */
 VKAPI_ATTR VkResult VKAPI_CALL vkSetMoltenVKDeviceConfigurationMVK(
     VkDevice                                    device,
     MVKDeviceConfiguration*                     pConfiguration);
@@ -186,7 +237,7 @@ VKAPI_ATTR VkResult VKAPI_CALL vkSetMoltenVKDeviceConfigurationMVK(
  * Populates the pMetalFeatures structure with the Metal-specific features
  * supported by the specified physical device. 
  */
-VKAPI_ATTR VkResult VKAPI_CALL vkGetPhysicalDeviceMetalFeaturesMVK(
+VKAPI_ATTR void VKAPI_CALL vkGetPhysicalDeviceMetalFeaturesMVK(
 	VkPhysicalDevice                            physicalDevice,
 	MVKPhysicalDeviceMetalFeatures*             pMetalFeatures);
 
@@ -194,11 +245,91 @@ VKAPI_ATTR VkResult VKAPI_CALL vkGetPhysicalDeviceMetalFeaturesMVK(
  * Populates the specified MVKSwapchainPerformance structure with
  * the current performance statistics for the specified swapchain.
  */
-VKAPI_ATTR VkResult VKAPI_CALL vkGetSwapchainPerformanceMVK(
+VKAPI_ATTR void VKAPI_CALL vkGetSwapchainPerformanceMVK(
     VkDevice                                    device,
     VkSwapchainKHR                              swapchain,
     MVKSwapchainPerformance*                    pSwapchainPerf);
 
+/**
+ * Populates the specified MVKShaderCompilationPerformance structure with the
+ * current shader compilation performance statistics for the specified device.
+ */
+VKAPI_ATTR void VKAPI_CALL vkGetShaderCompilationPerformanceMVK(
+    VkDevice                                    device,
+    MVKShaderCompilationPerformance*            pShaderCompPerf);
+
+/**
+ * Returns a human readable version of the MoltenVK and Vulkan versions.
+ *
+ * This function is provided as a convenience for reporting. Use the MLN_VERSION, 
+ * VK_API_VERSION_1_0, and VK_HEADER_VERSION macros for programmatically accessing
+ * the corresponding version numbers.
+ */
+VKAPI_ATTR void VKAPI_CALL vkGetVersionStringsMVK(
+    char*                                       pMoltenVersionStringBuffer,
+    uint32_t                                    moltenVersionStringBufferLength,
+    char*                                       pVulkanVersionStringBuffer,
+    uint32_t                                    vulkanVersionStringBufferLength);
+
+
+#ifdef __OBJC__
+
+/** Returns, in the pMTLDevice pointer, the MTLDevice used by the VkPhysicalDevice. */
+VKAPI_ATTR void VKAPI_CALL vkGetMTLDeviceMVK(
+    VkPhysicalDevice                           physicalDevice,
+    id<MTLDevice>*                             pMTLDevice);
+
+/**
+ * Sets the VkImage to use the specified MTLTexture.
+ *
+ * Any differences in the properties of mtlTexture and this image will modify the
+ * properties of this image.
+ *
+ * If a MTLTexture has already been created for this image, it will be destroyed.
+ *
+ * Returns VK_SUCCESS.
+ */
+VKAPI_ATTR VkResult VKAPI_CALL vkSetMTLTextureMVK(
+    VkImage                                     image,
+    id<MTLTexture>                              mtlTexture);
+
+/** Returns, in the pMTLTexture pointer, the MTLTexture currently underlaying the VkImage. */
+VKAPI_ATTR void VKAPI_CALL vkGetMTLTextureMVK(
+    VkImage                                     image,
+    id<MTLTexture>*                             pMTLTexture);
+
+/**
+ * Indicates that a VkImage should use an IOSurface to underlay the Metal texture.
+ *
+ * If ioSurface is not null, it will be used as the IOSurface, and any differences
+ * in the properties of that IOSurface will modify the properties of this image.
+ *
+ * If ioSurface is null, this image will create and use an IOSurface
+ * whose properties are compatible with the properties of this image.
+ *
+ * If a MTLTexture has already been created for this image, it will be destroyed.
+ *
+ * Returns:
+ *   - VK_SUCCESS.
+ *   - VK_ERROR_FEATURE_NOT_PRESENT if IOSurfaces are not supported on the platform.
+ *   - VK_ERROR_INITIALIZATION_FAILED if ioSurface is specified and is not compatible with this VkImage.
+ */
+VKAPI_ATTR VkResult VKAPI_CALL vkUseIOSurfaceMVK(
+    VkImage                                     image,
+    IOSurfaceRef                                ioSurface);
+
+
+/**
+ * Returns, in the pIOSurface pointer, the IOSurface currently underlaying the VkImage,
+ * as set by the useIOSurfaceMVK() function, or returns null if the VkImage is not using
+ * an IOSurface, or if the platform does not support IOSurfaces.
+ */
+VKAPI_ATTR void VKAPI_CALL vkGetIOSurfaceMVK(
+    VkImage                                     image,
+    IOSurfaceRef*                               pIOSurface);
+
+
+#endif // __OBJC__
 
 #endif // VK_NO_PROTOTYPES
 

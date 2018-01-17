@@ -21,7 +21,10 @@
 #include "CRenderInstanceVulkan.h"
 #include "CRenderInstanceOGLBase.h"
 #include "CRenderTargetColorVulkan.h"
-#include <MoltenVK/vk_mvk_ios_surface.h>
+#include "CRenderTargetDepthVulkan.h"
+#include "CFrameBufferVulkan.h"
+#include <MoltenVK/mvk_vulkan.h>
+#include <MoltenVK/mvk_datatypes.h>
 
 using namespace jam;
 
@@ -266,12 +269,15 @@ void CRenderViewIOS::InitVulkan(MTKView* view)
     CRenderTargetColorVulkanPtr colorTarget = Renderer()->CreateColorRenderTarget()->Ptr<CRenderTargetColorVulkan>();
     colorTarget->Initialize(CRenderTargetColorVulkan::ConvertInternalFormat(surfaceFormats[0].format));
     colorTarget->InitializeWithImages(Renderer()->Ptr<CRendererVulkan>()->SwapchainImages(),
-                                      Width(), Height());
+                                      RealWidth(), RealHeight());
     
     CRenderTargetDepthPtr depthTarget = nullptr;
-    if (0) { // TODO
+    if (view.depthStencilPixelFormat != MTLPixelFormatInvalid) {
         depthTarget = Renderer()->CreateDepthRenderTarget();
-        depthTarget->Initialize(IRenderTarget::Depth32);
+        VkFormat vkFormat = mvkVkFormatFromMTLPixelFormat(view.depthStencilPixelFormat);
+        IRenderTarget::InternalFormats internalFormat = CRenderTargetDepthVulkan::ConvertInternalFormat(vkFormat);
+        depthTarget->Initialize(internalFormat);
+        depthTarget->Allocate(RealWidth(), RealHeight());
     }
     
     m_DefaultFrameBuffer = Renderer()->CreateFrameBuffer(Width(), Height());

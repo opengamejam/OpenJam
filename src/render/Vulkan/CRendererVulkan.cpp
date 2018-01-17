@@ -263,11 +263,14 @@ void CRendererVulkan::CreateCommandBuffers()
         
         vkBeginCommandBuffer(commandBuffer, &commandBufferBeginInfo);
         {
+            
             VkClearValue clearValue = {
                 .color.float32[0] = 1.0f,
                 .color.float32[1] = 0.0f,
                 .color.float32[2] = 0.0f,
-                .color.float32[3] = 1.0f
+                .color.float32[3] = 1.0f,
+                .depthStencil.depth = 1.0f,
+                .depthStencil.stencil = 0,
             };
             
             VkRenderPassBeginInfo renderPassBeginInfo = {
@@ -292,28 +295,53 @@ void CRendererVulkan::CreateCommandBuffers()
             //vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, m_Pip);
             vkCmdEndRenderPass(commandBuffer);
             
-            CRenderTargetColorVulkanPtr colorTarget = frameBuffer->ColorAttachement(0)->Ptr<CRenderTargetColorVulkan>();
+            if (frameBuffer->ColorAttachement(0)) {
+                CRenderTargetColorVulkanPtr colorTarget = frameBuffer->ColorAttachement(0)->Ptr<CRenderTargetColorVulkan>();
+                VkImageMemoryBarrier imageMemoryBarrier = {
+                    .sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER,
+                    .pNext = nullptr,
+                    .srcAccessMask = 0,
+                    .dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_MEMORY_READ_BIT,
+                    .oldLayout = VK_IMAGE_LAYOUT_UNDEFINED,
+                    .newLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
+                    .srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
+                    .dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
+                    .image = colorTarget->Images()[i],
+                    .subresourceRange = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1 }
+                };
             
-            VkImageMemoryBarrier imageMemoryBarrier = {
-                .sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER,
-                .pNext = nullptr,
-                .srcAccessMask = 0,
-                .dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_READ_BIT | VK_ACCESS_MEMORY_READ_BIT,
-                .oldLayout = VK_IMAGE_LAYOUT_UNDEFINED,
-                .newLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
-                .srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
-                .dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
-                .image = colorTarget->Images()[i],
-                .subresourceRange = { VK_IMAGE_ASPECT_COLOR_BIT, 0, 1, 0, 1 }
-            };
+                vkCmdPipelineBarrier(commandBuffer,
+                                     VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+                                     VK_PIPELINE_STAGE_TRANSFER_BIT,
+                                     0,
+                                     0, nullptr,
+                                     0, nullptr,
+                                     1, &imageMemoryBarrier);
+            }
             
-            vkCmdPipelineBarrier(commandBuffer,
-                                 VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-                                 VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
-                                 0,
-                                 0, nullptr,
-                                 0, nullptr,
-                                 1, &imageMemoryBarrier);
+            if (frameBuffer->DepthAttachement()) {
+                CRenderTargetColorVulkanPtr depthTarget = frameBuffer->DepthAttachement()->Ptr<CRenderTargetColorVulkan>();
+                VkImageMemoryBarrier imageMemoryBarrier = {
+                    .sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER,
+                    .pNext = nullptr,
+                    .srcAccessMask = 0,
+                    .dstAccessMask = VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_READ_BIT | VK_ACCESS_DEPTH_STENCIL_ATTACHMENT_WRITE_BIT,
+                    .oldLayout = VK_IMAGE_LAYOUT_UNDEFINED,
+                    .newLayout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR,
+                    .srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
+                    .dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED,
+                    .image = depthTarget->Images()[0],
+                    .subresourceRange = { VK_IMAGE_ASPECT_DEPTH_BIT, 0, 1, 0, 1 }
+                };
+                
+                vkCmdPipelineBarrier(commandBuffer,
+                                     VK_PIPELINE_STAGE_TOP_OF_PIPE_BIT,
+                                     VK_PIPELINE_STAGE_EARLY_FRAGMENT_TESTS_BIT,
+                                     0,
+                                     0, nullptr,
+                                     0, nullptr,
+                                     1, &imageMemoryBarrier);
+            }
         }
         vkEndCommandBuffer(commandBuffer);
     }

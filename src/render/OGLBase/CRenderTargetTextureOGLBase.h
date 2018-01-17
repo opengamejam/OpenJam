@@ -52,6 +52,11 @@ public:
      * Unbind current render target
      */
     virtual void Unbind() const override;
+    
+    /*
+     * Get internal format
+     */
+    virtual InternalFormats InternalFormat() const override;
 
     /*
      * Get render texture

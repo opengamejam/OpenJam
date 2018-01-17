@@ -99,6 +99,11 @@ void CRenderTargetDepthOGLBase::Unbind() const
     JAM_LOG("CRenderTargetDepthOGLBase::Unbind() - id: %d\n", m_Id);
 }
 
+IRenderTarget::InternalFormats CRenderTargetDepthOGLBase::InternalFormat() const
+{
+    return m_InternalFormat;
+}
+
 CRenderTargetStencilPtr CRenderTargetDepthOGLBase::StencilTarget()
 {
     return m_Stencil;

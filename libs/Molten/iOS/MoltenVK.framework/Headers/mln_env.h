@@ -1,7 +1,7 @@
 /*
  * mln_env.h
  *
- * Copyright (c) 2014-2016 The Brenwill Workshop Ltd. All rights reserved.
+ * Copyright (c) 2014-2017 The Brenwill Workshop Ltd. All rights reserved.
  * http://www.brenwill.com
  *
  * Use of this document is governed by the Molten License Agreement, as included
@@ -40,7 +40,11 @@ extern "C" {
  * to differentate between several possible alpha, beta, release candidate, and final release 
  * builds for the same nominal version.
  */
-#define MLN_VERSION		MLN_MAKE_VERSION(0, 13, 0, 1)
+#define MLN_VERSION_MAJOR   0
+#define MLN_VERSION_MINOR   19
+#define MLN_VERSION_PATCH   0
+#define MLN_VERSION_BUILD   1
+#define MLN_VERSION         MLN_MAKE_VERSION(MLN_VERSION_MAJOR, MLN_VERSION_MINOR, MLN_VERSION_PATCH, MLN_VERSION_BUILD)
 
 /** Building for iOS. Use ifdef instead of defined() operator to allow MLN_IOS to be used in expansions */
 #ifndef MLN_IOS

@@ -230,7 +230,6 @@ void CFrameBufferVulkan::Rebuild()
         JAM_LOG("CFrameBufferVulkan::Rebuild - Cannot rebuild framebuffer without render instance");
         return;
     }
-    const std::vector<VkSurfaceFormatKHR>& surfaceFormats = renderInstance->SurfaceFormats();
     
     if (m_RenderPass) {
         vkDestroyRenderPass(renderer->LogicalDevice(), m_RenderPass, nullptr);
@@ -243,29 +242,44 @@ void CFrameBufferVulkan::Rebuild()
     std::vector<IRenderTargetPtr> renderTargets(m_ColorBuffers);
     renderTargets.push_back(m_DepthBuffer);
     
-    std::vector<VkImageView> imageViews;
+    std::vector<VkImageView> colorImageViews;
+    std::vector<VkImageView> depthImageViews;
     std::vector<VkAttachmentDescription> attachementDescription;
     std::for_each(renderTargets.begin(), renderTargets.end(), [&](IRenderTargetPtr renderTarget) {
         if (renderTarget) {
+            VkFormat format = VK_FORMAT_UNDEFINED;
+            VkImageLayout layout = VK_IMAGE_LAYOUT_UNDEFINED;
+            if (renderTarget->ColorTarget()) {
+                format = renderTarget->Ptr<CRenderTargetColorVulkan>()->Format();
+                layout = VK_IMAGE_LAYOUT_PRESENT_SRC_KHR;
+                
+                const std::vector<VkImageView>& views = renderTarget->Ptr<CRenderTargetColorVulkan>()->ImageViews();
+                std::copy (views.begin(), views.end(), std::back_inserter(colorImageViews));
+            } else if (renderTarget->DepthTarget()) {
+                format = renderTarget->Ptr<CRenderTargetDepthVulkan>()->Format();
+                layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+                
+                const std::vector<VkImageView>& views = renderTarget->Ptr<CRenderTargetDepthVulkan>()->ImageViews();
+                std::copy (views.begin(), views.end(), std::back_inserter(depthImageViews));
+            }/* else if (renderTarget->StencilTarget()) {
+                format = renderTarget->Ptr<CRenderTargetStencilVulkan>()->Format();
+            } else if (renderTarget->TextureTarget()) {
+                format = renderTarget->Ptr<CRenderTargetTextureVulkan>()->Format();
+            }*/
+            assert(format != VK_FORMAT_UNDEFINED);
+            
             VkAttachmentDescription desc = {
                 .flags = 0,
-                .format = surfaceFormats[0].format,
+                .format = format,
                 .samples = VK_SAMPLE_COUNT_1_BIT,
                 .loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR,
                 .storeOp = VK_ATTACHMENT_STORE_OP_STORE,
                 .stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE,
                 .stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE,
                 .initialLayout = VK_IMAGE_LAYOUT_UNDEFINED,
-                .finalLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL,
+                .finalLayout = layout,
             };
             attachementDescription.push_back(desc);
-            
-            if (renderTarget->ColorTarget()) {
-                const std::vector<VkImageView>& views = renderTarget->Ptr<CRenderTargetColorVulkan>()->ImageViews();
-                std::copy (views.begin(), views.end(), std::back_inserter(imageViews));
-            } else if (renderTarget->DepthTarget()) {
-                // TODO:
-            }
         }
     });
     
@@ -281,7 +295,7 @@ void CFrameBufferVulkan::Rebuild()
     });
     
     VkAttachmentReference depthReference = {
-        .attachment = (uint32_t)m_ColorBuffers.size(),
+        .attachment = (uint32_t)colorReferences.size(),
         .layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL,
     };
     
@@ -316,13 +330,18 @@ void CFrameBufferVulkan::Rebuild()
     }
     
     // Framebuffers
-    std::for_each(imageViews.begin(), imageViews.end(), [&](const VkImageView& imageView) {
+    std::for_each(colorImageViews.begin(), colorImageViews.end(), [&](const VkImageView& imageView) {
+        std::vector<VkImageView> attachments = {imageView};
+        if (depthImageViews.size() > 0) {
+            attachments.push_back(depthImageViews[0]);
+        }
+        
         const VkFramebufferCreateInfo framebufferInfo = {
             .sType = VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO,
             .pNext = NULL,
             .renderPass = m_RenderPass,
-            .attachmentCount = 1,
-            .pAttachments = &imageView,
+            .attachmentCount = static_cast<uint32_t>(attachments.size()),
+            .pAttachments = attachments.data(),
             .width = (uint32_t)Width(),
             .height = (uint32_t)Height(),
             .layers = 1,

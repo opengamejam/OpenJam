@@ -147,9 +147,10 @@ public:
      */
     const std::vector<VkFramebuffer>& FrameBuffers() const;
     const VkRenderPass& RenderPass() const;
+    void Rebuild();
     
 protected:
-    void Rebuild();
+    
     
 private:
     bool m_IsInitialized;

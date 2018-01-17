@@ -16,6 +16,7 @@
 
 namespace jam {
     
+CLASS_PTR(CRenderTargetDepthVulkan)
 CLASS_PTR(CRendererVulkan)
 
 class CRenderTargetDepthVulkan : public CRenderTargetDepth
@@ -56,12 +57,18 @@ public:
     virtual void Unbind() const override;
     
     /*
+     * Get internal format
+     */
+    virtual InternalFormats InternalFormat() const override;
+    
+    /*
      * Vulkan specific
      */
     const std::vector<VkImage>& Images() const;
     const std::vector<VkImageView>& ImageViews() const;
     static VkFormat ConvertInternalFormat(InternalFormats internalFormat);
     static InternalFormats ConvertInternalFormat(VkFormat vkFormat);
+    VkFormat Format() const;
     
 private:
     bool m_IsInitialized;

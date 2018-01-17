@@ -95,6 +95,11 @@ public:
      * Unbind current render target
      */
     virtual void Unbind() const = 0;
+    
+    /*
+     * Get internal format
+     */
+    virtual InternalFormats InternalFormat() const = 0;
 };
 
 class CRenderTargetColor : public IRenderTarget {

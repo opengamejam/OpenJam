@@ -348,7 +348,6 @@
 		CC14021220078D3300748ABD /* CStringUtils.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7B481EF800AC001F41B3 /* CStringUtils.cpp */; };
 		CC14021320078D3300748ABD /* CSystem.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7B4A1EF800AC001F41B3 /* CSystem.cpp */; };
 		CC14021420078D3900748ABD /* CGameScene.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A795E1EF7FF4C001F41B3 /* CGameScene.cpp */; };
-		CC14021520078E5F00748ABD /* MoltenVK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CCF701D21FB0B02A003850F6 /* MoltenVK.framework */; };
 		CC14021920078E7A00748ABD /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = CC14021820078E7A00748ABD /* libc++.tbd */; };
 		CC14021B20078E8400748ABD /* Metal.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC14021A20078E8400748ABD /* Metal.framework */; };
 		CC14021D20078E8F00748ABD /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC14021C20078E8F00748ABD /* MetalKit.framework */; };
@@ -359,6 +358,10 @@
 		CC1402252007947700748ABD /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = CC1402232007947700748ABD /* Images.xcassets */; };
 		CC1402262007947700748ABD /* Info.plist in Resources */ = {isa = PBXBuildFile; fileRef = CC1402242007947700748ABD /* Info.plist */; };
 		CC14022B2007997300748ABD /* VulkanViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC1402272007974700748ABD /* VulkanViewController.mm */; };
+		CC14023F200E465800748ABD /* MoltenVK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC14022E200E465700748ABD /* MoltenVK.framework */; };
+		CC140241200E465800748ABD /* libMoltenVK.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = CC14022F200E465700748ABD /* libMoltenVK.dylib */; };
+		CC140244200E465800748ABD /* MoltenVK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC14023C200E465700748ABD /* MoltenVK.framework */; };
+		CC140249200E47B100748ABD /* IOSurface.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CC140248200E47B000748ABD /* IOSurface.framework */; };
 		CC3C9FE51F897C3A009E5B69 /* miniz.c in Sources */ = {isa = PBXBuildFile; fileRef = CC3C9FE41F897C3A009E5B69 /* miniz.c */; };
 		CC3FCB8D1FDAE3DA00261F7F /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CC3FCB8C1FDAE3DA00261F7F /* Main.storyboard */; };
 		CC3FCB8F1FDAE4BC00261F7F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CC3FCB8E1FDAE4BC00261F7F /* LaunchScreen.storyboard */; };
@@ -381,7 +384,6 @@
 		CCF701DF1FB0B071003850F6 /* MetalKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CCF701DD1FB0B060003850F6 /* MetalKit.framework */; };
 		CCF701E11FB0B081003850F6 /* libc++.tbd in Frameworks */ = {isa = PBXBuildFile; fileRef = CCF701E01FB0B081003850F6 /* libc++.tbd */; };
 		CCF701E51FB3572B003850F6 /* CRenderInstanceVulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCF701E31FB3572B003850F6 /* CRenderInstanceVulkan.cpp */; };
-		CCF701E61FB4AE12003850F6 /* MoltenVK.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CCF701D81FB0B02A003850F6 /* MoltenVK.framework */; };
 		CCF701E91FB4B5A2003850F6 /* CRenderInstanceOGLBase.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCF701E71FB4B5A2003850F6 /* CRenderInstanceOGLBase.cpp */; };
 /* End PBXBuildFile section */
 
@@ -1016,6 +1018,18 @@
 		CC1402242007947700748ABD /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		CC1402272007974700748ABD /* VulkanViewController.mm */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.objcpp; path = VulkanViewController.mm; sourceTree = "<group>"; };
 		CC1402282007974700748ABD /* VulkanViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = VulkanViewController.h; sourceTree = "<group>"; };
+		CC14022E200E465700748ABD /* MoltenVK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MoltenVK.framework; sourceTree = "<group>"; };
+		CC14022F200E465700748ABD /* libMoltenVK.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libMoltenVK.dylib; sourceTree = "<group>"; };
+		CC140232200E465700748ABD /* mvk_datatypes.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mvk_datatypes.h; sourceTree = "<group>"; };
+		CC140233200E465700748ABD /* mln_env.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mln_env.h; sourceTree = "<group>"; };
+		CC140234200E465700748ABD /* vk_mvk_moltenvk.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vk_mvk_moltenvk.h; sourceTree = "<group>"; };
+		CC140235200E465700748ABD /* mvk_vulkan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = mvk_vulkan.h; sourceTree = "<group>"; };
+		CC140238200E465700748ABD /* vulkan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vulkan.h; sourceTree = "<group>"; };
+		CC140239200E465700748ABD /* vk_platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vk_platform.h; sourceTree = "<group>"; };
+		CC14023A200E465700748ABD /* vulkan.hpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.h; path = vulkan.hpp; sourceTree = "<group>"; };
+		CC14023C200E465700748ABD /* MoltenVK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MoltenVK.framework; sourceTree = "<group>"; };
+		CC14023D200E465700748ABD /* libMoltenVK.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libMoltenVK.dylib; sourceTree = "<group>"; };
+		CC140248200E47B000748ABD /* IOSurface.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = IOSurface.framework; path = System/Library/Frameworks/IOSurface.framework; sourceTree = SDKROOT; };
 		CC3C9FE41F897C3A009E5B69 /* miniz.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = miniz.c; sourceTree = "<group>"; };
 		CC3C9FE61F897D59009E5B69 /* miniz.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = miniz.h; sourceTree = "<group>"; };
 		CC3FCB8C1FDAE3DA00261F7F /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
@@ -1050,10 +1064,6 @@
 		CCF701C01FB0939B003850F6 /* CFrameBufferVulkan.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CFrameBufferVulkan.cpp; sourceTree = "<group>"; };
 		CCF701C11FB0939B003850F6 /* CShaderProgramVulkan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CShaderProgramVulkan.h; sourceTree = "<group>"; };
 		CCF701C21FB0939B003850F6 /* CRenderTargetTextureVulkan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CRenderTargetTextureVulkan.h; sourceTree = "<group>"; };
-		CCF701D21FB0B02A003850F6 /* MoltenVK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MoltenVK.framework; sourceTree = "<group>"; };
-		CCF701D51FB0B02A003850F6 /* vulkan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vulkan.h; sourceTree = "<group>"; };
-		CCF701D61FB0B02A003850F6 /* vk_platform.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = vk_platform.h; sourceTree = "<group>"; };
-		CCF701D81FB0B02A003850F6 /* MoltenVK.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MoltenVK.framework; sourceTree = "<group>"; };
 		CCF701DC1FB0B060003850F6 /* Metal.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Metal.framework; path = System/Library/Frameworks/Metal.framework; sourceTree = SDKROOT; };
 		CCF701DD1FB0B060003850F6 /* MetalKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MetalKit.framework; path = System/Library/Frameworks/MetalKit.framework; sourceTree = SDKROOT; };
 		CCF701E01FB0B081003850F6 /* libc++.tbd */ = {isa = PBXFileReference; lastKnownFileType = "sourcecode.text-based-dylib-definition"; name = "libc++.tbd"; path = "usr/lib/libc++.tbd"; sourceTree = SDKROOT; };
@@ -1069,12 +1079,13 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				CC140249200E47B100748ABD /* IOSurface.framework in Frameworks */,
+				CC140244200E465800748ABD /* MoltenVK.framework in Frameworks */,
 				6E5A7F731EF8133A001F41B3 /* OpenGLES.framework in Frameworks */,
 				6E5A7F711EF81333001F41B3 /* GLKit.framework in Frameworks */,
 				6E5A7F6F1EF8132D001F41B3 /* CoreGraphics.framework in Frameworks */,
 				6E5A7F6D1EF81324001F41B3 /* UIKit.framework in Frameworks */,
 				6E5A7F6B1EF8131F001F41B3 /* Foundation.framework in Frameworks */,
-				CCF701E61FB4AE12003850F6 /* MoltenVK.framework in Frameworks */,
 				CCF701E11FB0B081003850F6 /* libc++.tbd in Frameworks */,
 				CCF701DE1FB0B069003850F6 /* Metal.framework in Frameworks */,
 				CCF701DF1FB0B071003850F6 /* MetalKit.framework in Frameworks */,
@@ -1086,10 +1097,11 @@
 			buildActionMask = 2147483647;
 			files = (
 				CC14021F20078EA500748ABD /* OpenGL.framework in Frameworks */,
-				CC14021520078E5F00748ABD /* MoltenVK.framework in Frameworks */,
 				CC14021920078E7A00748ABD /* libc++.tbd in Frameworks */,
+				CC140241200E465800748ABD /* libMoltenVK.dylib in Frameworks */,
 				CC14021B20078E8400748ABD /* Metal.framework in Frameworks */,
 				CC14021D20078E8F00748ABD /* MetalKit.framework in Frameworks */,
+				CC14023F200E465800748ABD /* MoltenVK.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -2118,6 +2130,7 @@
 		6E5A7F691EF8131F001F41B3 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				CC140248200E47B000748ABD /* IOSurface.framework */,
 				CC14021E20078EA500748ABD /* OpenGL.framework */,
 				CC14021C20078E8F00748ABD /* MetalKit.framework */,
 				CC14021A20078E8400748ABD /* Metal.framework */,
@@ -2138,7 +2151,7 @@
 		6E5A7F741EF814B7001F41B3 /* externals */ = {
 			isa = PBXGroup;
 			children = (
-				CCF701D01FB0B02A003850F6 /* Molten */,
+				CC14022C200E465700748ABD /* Molten */,
 				6E5A7C0D1EF8013F001F41B3 /* glm */,
 				6E5A7BEC1EF80113001F41B3 /* vfspp */,
 				6E5A7BDF1EF800B6001F41B3 /* tinyxml */,
@@ -2153,6 +2166,65 @@
 				6E5A7F761EF814EA001F41B3 /* media */,
 			);
 			name = resources;
+			sourceTree = "<group>";
+		};
+		CC14022C200E465700748ABD /* Molten */ = {
+			isa = PBXGroup;
+			children = (
+				CC14022D200E465700748ABD /* macOS */,
+				CC140230200E465700748ABD /* include */,
+				CC14023B200E465700748ABD /* iOS */,
+			);
+			name = Molten;
+			path = ../../libs/Molten;
+			sourceTree = "<group>";
+		};
+		CC14022D200E465700748ABD /* macOS */ = {
+			isa = PBXGroup;
+			children = (
+				CC14022E200E465700748ABD /* MoltenVK.framework */,
+				CC14022F200E465700748ABD /* libMoltenVK.dylib */,
+			);
+			path = macOS;
+			sourceTree = "<group>";
+		};
+		CC140230200E465700748ABD /* include */ = {
+			isa = PBXGroup;
+			children = (
+				CC140231200E465700748ABD /* MoltenVK */,
+				CC140237200E465700748ABD /* vulkan */,
+			);
+			path = include;
+			sourceTree = "<group>";
+		};
+		CC140231200E465700748ABD /* MoltenVK */ = {
+			isa = PBXGroup;
+			children = (
+				CC140232200E465700748ABD /* mvk_datatypes.h */,
+				CC140233200E465700748ABD /* mln_env.h */,
+				CC140234200E465700748ABD /* vk_mvk_moltenvk.h */,
+				CC140235200E465700748ABD /* mvk_vulkan.h */,
+			);
+			path = MoltenVK;
+			sourceTree = "<group>";
+		};
+		CC140237200E465700748ABD /* vulkan */ = {
+			isa = PBXGroup;
+			children = (
+				CC140238200E465700748ABD /* vulkan.h */,
+				CC140239200E465700748ABD /* vk_platform.h */,
+				CC14023A200E465700748ABD /* vulkan.hpp */,
+			);
+			path = vulkan;
+			sourceTree = "<group>";
+		};
+		CC14023B200E465700748ABD /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				CC14023C200E465700748ABD /* MoltenVK.framework */,
+				CC14023D200E465700748ABD /* libMoltenVK.dylib */,
+			);
+			path = iOS;
 			sourceTree = "<group>";
 		};
 		CCF701A81FB09283003850F6 /* Vulkan */ = {
@@ -2188,50 +2260,6 @@
 				CCF701E41FB3572B003850F6 /* CRenderInstanceVulkan.h */,
 			);
 			path = Vulkan;
-			sourceTree = "<group>";
-		};
-		CCF701D01FB0B02A003850F6 /* Molten */ = {
-			isa = PBXGroup;
-			children = (
-				CCF701D11FB0B02A003850F6 /* macOS */,
-				CCF701D31FB0B02A003850F6 /* include */,
-				CCF701D71FB0B02A003850F6 /* iOS */,
-			);
-			name = Molten;
-			path = ../../libs/Molten;
-			sourceTree = "<group>";
-		};
-		CCF701D11FB0B02A003850F6 /* macOS */ = {
-			isa = PBXGroup;
-			children = (
-				CCF701D21FB0B02A003850F6 /* MoltenVK.framework */,
-			);
-			path = macOS;
-			sourceTree = "<group>";
-		};
-		CCF701D31FB0B02A003850F6 /* include */ = {
-			isa = PBXGroup;
-			children = (
-				CCF701D41FB0B02A003850F6 /* vulkan */,
-			);
-			path = include;
-			sourceTree = "<group>";
-		};
-		CCF701D41FB0B02A003850F6 /* vulkan */ = {
-			isa = PBXGroup;
-			children = (
-				CCF701D51FB0B02A003850F6 /* vulkan.h */,
-				CCF701D61FB0B02A003850F6 /* vk_platform.h */,
-			);
-			path = vulkan;
-			sourceTree = "<group>";
-		};
-		CCF701D71FB0B02A003850F6 /* iOS */ = {
-			isa = PBXGroup;
-			children = (
-				CCF701D81FB0B02A003850F6 /* MoltenVK.framework */,
-			);
-			path = iOS;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -2282,7 +2310,7 @@
 				TargetAttributes = {
 					6E5A79421EF7FEEC001F41B3 = {
 						CreatedOnToolsVersion = 8.3.1;
-						DevelopmentTeam = EXUUE8Z83Q;
+						DevelopmentTeam = 9BB8ZPHCM9;
 						ProvisioningStyle = Automatic;
 					};
 					CC14014F2007878600748ABD = {
@@ -2828,7 +2856,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
-				DEVELOPMENT_TEAM = EXUUE8Z83Q;
+				DEVELOPMENT_TEAM = 9BB8ZPHCM9;
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../../libs/Molten/iOS";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -2846,7 +2874,7 @@
 				INFOPLIST_FILE = "$(SRCROOT)/../../examples/src/platform/iOS/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.dreamdev.TestApp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.catalystapps.Test;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = arm64;
 			};
@@ -2857,7 +2885,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
-				DEVELOPMENT_TEAM = EXUUE8Z83Q;
+				DEVELOPMENT_TEAM = 9BB8ZPHCM9;
 				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../../libs/Molten/iOS";
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					OS_IPHONE,
@@ -2874,7 +2902,7 @@
 				INFOPLIST_FILE = "$(SRCROOT)/../../examples/src/platform/iOS/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-				PRODUCT_BUNDLE_IDENTIFIER = com.dreamdev.TestApp;
+				PRODUCT_BUNDLE_IDENTIFIER = com.catalystapps.Test;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				VALID_ARCHS = arm64;
 			};

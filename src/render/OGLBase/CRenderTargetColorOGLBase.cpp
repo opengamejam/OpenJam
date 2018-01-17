@@ -86,6 +86,11 @@ void CRenderTargetColorOGLBase::Unbind() const
     JAM_LOG("CRenderTargetColorOGLBase::Unbind() - id: %d\n", m_Id);
 }
 
+IRenderTarget::InternalFormats CRenderTargetColorOGLBase::InternalFormat() const
+{
+    return m_InternalFormat;
+}
+
 void CRenderTargetColorOGLBase::BindToFrameBuffer(uint64_t colorAttachementIdx)
 {
 #if GL_ARB_framebuffer_object

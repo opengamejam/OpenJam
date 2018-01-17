@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="B8D-0N-5wS">
+<document type="com.apple.InterfaceBuilder3.Cocoa.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" useAutolayout="YES" initialViewController="dxi-if-ecp">
     <dependencies>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="13771"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
@@ -738,9 +738,9 @@
         <!--Vulkan View Controller-->
         <scene sceneID="YpY-Tb-Hh4">
             <objects>
-                <viewController id="dxi-if-ecp" customClass="VulkanViewController" sceneMemberID="viewController">
+                <viewController id="dxi-if-ecp" customClass="CVulkanViewController" sceneMemberID="viewController">
                     <view key="view" id="x10-hp-Ik4" customClass="MTKView">
-                        <rect key="frame" x="0.0" y="0.0" width="450" height="300"/>
+                        <rect key="frame" x="0.0" y="0.0" width="800" height="600"/>
                         <autoresizingMask key="autoresizingMask"/>
                     </view>
                 </viewController>

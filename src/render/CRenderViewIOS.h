@@ -13,7 +13,7 @@
 #include "IRenderView.h"
 #if defined(__OBJC__)
 #import <GLKit/GLKit.h>
-#import <MetalKit/MetalKit.h>
+@class MTKView;
 #endif
 
 namespace jam {

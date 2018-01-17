@@ -20,7 +20,10 @@
 #include "CRenderInstanceVulkan.h"
 #include "CRenderInstanceOGLBase.h"
 #include "CRenderTargetColorVulkan.h"
-#include <MoltenVK/vk_mvk_macos_surface.h>
+#include "CRenderTargetDepthVulkan.h"
+#include <MoltenVK/mvk_vulkan.h>
+#include <MoltenVK/mvk_datatypes.h>
+#import <MetalKit/MetalKit.h>
 
 using namespace jam;
 
@@ -41,7 +44,7 @@ CRenderViewOSX::CRenderViewOSX(NSView* view, float scaleFactor, RenderApi render
     , m_DefaultFrameBuffer(nullptr)
 {
     if (m_RenderApi == Vulkan) {
-        m_InitFunc = std::bind(&CRenderViewOSX::InitVulkan, this, view);
+        m_InitFunc = std::bind(&CRenderViewOSX::InitVulkan, this, (MTKView *)view);
         m_BeginFunc = std::bind(&CRenderViewOSX::BeginVulkan, this);
         m_EndFunc = std::bind(&CRenderViewOSX::EndVulkan, this);
     } else {
@@ -183,7 +186,7 @@ void CRenderViewOSX::EndOGL()
 // Vulkan
 // *****************************************************************************
 
-void CRenderViewOSX::InitVulkan(NSView* view)
+void CRenderViewOSX::InitVulkan(MTKView* view)
 {
     // Instance
     VkInstance instance = nullptr;
@@ -233,15 +236,21 @@ void CRenderViewOSX::InitVulkan(NSView* view)
     CRenderTargetColorVulkanPtr colorTarget = Renderer()->CreateColorRenderTarget()->Ptr<CRenderTargetColorVulkan>();
     colorTarget->Initialize(CRenderTargetColorVulkan::ConvertInternalFormat(surfaceFormats[0].format));
     colorTarget->InitializeWithImages(Renderer()->Ptr<CRendererVulkan>()->SwapchainImages(),
-                                      Width(), Height());
+                                      RealWidth(), RealHeight());
     
-    //CRenderTargetDepthPtr depthTarget = Renderer()->CreateDepthRenderTarget();
-    //depthTarget->Initialize(IRenderTarget::Depth24_Stencil8);
+    CRenderTargetDepthPtr depthTarget = nullptr;
+    if (view.depthStencilPixelFormat != MTLPixelFormatInvalid) {
+        depthTarget = Renderer()->CreateDepthRenderTarget();
+        VkFormat vkFormat = mvkVkFormatFromMTLPixelFormat(view.depthStencilPixelFormat);
+        IRenderTarget::InternalFormats internalFormat = CRenderTargetDepthVulkan::ConvertInternalFormat(vkFormat);
+        depthTarget->Initialize(internalFormat);
+        depthTarget->Allocate(RealWidth(), RealHeight());
+    }
     
     m_DefaultFrameBuffer = Renderer()->CreateFrameBuffer(Width(), Height());
     m_DefaultFrameBuffer->Initialize();
     m_DefaultFrameBuffer->AttachColor(colorTarget, 0);
-    //m_DefaultFrameBuffer->AttachDepth(depthTarget);
+    m_DefaultFrameBuffer->AttachDepth(depthTarget);
     assert(m_DefaultFrameBuffer->IsValid());
     
     Renderer()->Ptr<CRendererVulkan>()->CreateCommandBuffers();

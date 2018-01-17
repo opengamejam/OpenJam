@@ -11,6 +11,9 @@
 #define	CRENDERVIEWOSX_H
 
 #include "IRenderView.h"
+#if defined(__OBJC__)
+@class MTKView;
+#endif
 
 namespace jam
 {
@@ -49,7 +52,7 @@ public:
                                                                                        NSView* view);
 private:
     void InitOGL(NSOpenGLView* view, RenderApi oglVersion);
-    void InitVulkan(NSView* view);
+    void InitVulkan(MTKView* view);
     
     void BeginOGL();
     void BeginVulkan();

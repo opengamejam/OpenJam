@@ -8,8 +8,6 @@
 #if defined(OS_IPHONE)
 
 #include "CRenderViewIOS.h"
-#import <OpenGLES/EAGL.h>
-#import "GLKit/GLKit.h"
 #include "RenderGlobal.h"
 #include "IFrameBuffer.h"
 #include "IRenderTarget.h"
@@ -25,6 +23,8 @@
 #include "CFrameBufferVulkan.h"
 #include <MoltenVK/mvk_vulkan.h>
 #include <MoltenVK/mvk_datatypes.h>
+#import <OpenGLES/EAGL.h>
+#import <MetalKit/MetalKit.h>
 
 using namespace jam;
 

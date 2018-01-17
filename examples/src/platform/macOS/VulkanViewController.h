@@ -9,6 +9,6 @@
 #import <Cocoa/Cocoa.h>
 
 // Our macOS view controller.
-@interface VulkanViewController : NSViewController
+@interface CVulkanViewController : NSViewController
 
 @end

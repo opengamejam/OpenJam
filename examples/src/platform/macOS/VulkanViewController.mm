@@ -21,7 +21,7 @@ CLASS_PTR(CTouchEvent)
 CLASS_PTR(CGame)
 CLASS_PTR(IScene)
 
-@implementation VulkanViewController
+@implementation CVulkanViewController
 {
     MTKView *_view;
     
@@ -47,6 +47,17 @@ CLASS_PTR(IScene)
     [super viewDidLoad];
 
     _view = (MTKView *)self.view;
+    _view.device = MTLCreateSystemDefaultDevice();
+    if(!_view.device)
+    {
+        NSLog(@"Metal is not supported on this device");
+        self.view = [[NSView alloc] initWithFrame:self.view.frame];
+        return;
+    }
+    
+    _view.depthStencilPixelFormat = MTLPixelFormatDepth32Float_Stencil8;
+    _view.colorPixelFormat = MTLPixelFormatBGRA8Unorm_sRGB;
+    _view.sampleCount = 1;
     
     float displayScale = 1;
     if ([[NSScreen mainScreen] respondsToSelector:@selector(backingScaleFactor)]) {

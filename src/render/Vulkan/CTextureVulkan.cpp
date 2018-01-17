@@ -123,7 +123,7 @@ bool CTextureVulkan::AssignImage(IImagePtr image)
         m_ImageView = nullptr;
     }
     
-    VkFormat vkFormat = VK_FORMAT_R8G8B8A8_UNORM, // TODO: image->TexelFormat();
+    VkFormat vkFormat = VK_FORMAT_R8G8B8A8_UNORM; // TODO: image->TexelFormat();
     const VkImageCreateInfo imageCreateInfo = {
         .sType = VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO,
         .pNext = nullptr,

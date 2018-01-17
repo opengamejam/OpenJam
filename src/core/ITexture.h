@@ -36,7 +36,7 @@ public:
     /*
      * Allocate render buffer with 'width' and 'height'
      */
-    virtual void Allocate(uint64_t width, uint64_t height) = 0;
+    virtual void Allocate(uint64_t width, uint64_t height) = 0; // TODO: internal format
     
     /*
      * Assign image to texture

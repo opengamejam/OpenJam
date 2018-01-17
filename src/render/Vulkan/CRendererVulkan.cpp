@@ -450,7 +450,7 @@ IIndexBufferPtr CRendererVulkan::CreateIndexBuffer()
 
 ITexturePtr CRendererVulkan::CreateTexture()
 {
-    ITexturePtr texture;//(new CTextureVulkan());
+    ITexturePtr texture(new CTextureVulkan(Ptr<CRendererVulkan>()));
     return texture;
 }
 

@@ -5,35 +5,60 @@
 //  Created by Yevgeniy Logachev
 //  Copyright (c) 2014 Yevgeniy Logachev. All rights reserved.
 //
-#if defined(RENDER_VULKAN)
+//#if defined(RENDER_VULKAN)
 
 #ifndef CTEXTUREVULKAN_H
 #define CTEXTUREVULKAN_H
 
-#include "CTextureOGLBase.h"
+#include "ITexture.h"
 
 namespace jam {
+    
+CLASS_PTR(CRendererVulkan)
 
-class CTextureVulkan : public CTextureOGLBase
+class CTextureVulkan : public ITexture
 {
     JAM_OBJECT
 public:
-    CTextureVulkan();
+    CTextureVulkan(CRendererVulkanPtr renderer);
     virtual ~CTextureVulkan();
 
     /*
-     * OpenGL specific
+     * Allocate render buffer with 'width' and 'height'
      */
-    virtual GLfloat TextureFilterToGlFilter(ITexture::TextureFilters filter) override;
-    virtual GLenum TexelFormatsToGlInternalFormat(TexelFormats texelFormat) override;
-    virtual GLenum TexelFormatsToGlFormat(TexelFormats texelFormat) override;
-    virtual GLenum TexelTypeToGlType(TexelTypes texelType, TexelFormats texelFormat) override;
+    virtual void Allocate(uint64_t width, uint64_t height) override;
+    
+    /*
+     * Assign image to texture
+     */
+    virtual bool AssignImage(IImagePtr image) override;
+    
+    virtual void Filter(TextureFilters filter) override;
+    virtual TextureFilters Filter() const override;
+    
+    virtual void Bind() override;
+    virtual void Unbind() override;
+    virtual const std::string& Hash() override;
+    
+private:
+    void HashMe();
+    
+private:
+    TextureFilters m_Filter;
+    std::string m_Hash;
+    bool m_IsDirty;
+    
+    CRendererVulkanWeak m_Renderer;
+    VkImage m_Image;
+    VkDeviceMemory m_DeviceMemory;
+    VkImageView m_ImageView;
+    VkSampler m_Sampler;
 };
 
 }; // namespace jam
 
 #endif /* CTEXTUREVULKAN_H */
 
-#endif /* defined(RENDER_VULKAN) */
+//#endif /* defined(RENDER_VULKAN) */
 
 

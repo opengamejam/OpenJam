@@ -367,6 +367,8 @@
 		CC3FCB8F1FDAE4BC00261F7F /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = CC3FCB8E1FDAE4BC00261F7F /* LaunchScreen.storyboard */; };
 		CC40BA6A20062C00005DE4F9 /* OpenGLESViewController.mm in Sources */ = {isa = PBXBuildFile; fileRef = CC40BA6820062C00005DE4F9 /* OpenGLESViewController.mm */; };
 		CC5DB1571F8919F00080C0E1 /* CStringUtilsVFS.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CC5DB1561F8919F00080C0E1 /* CStringUtilsVFS.cpp */; };
+		CCEC3138200FB95900896176 /* MoltenGLSLToSPIRVConverter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CCEC3136200FB95900896176 /* MoltenGLSLToSPIRVConverter.framework */; };
+		CCEC3139200FB95E00896176 /* MoltenGLSLToSPIRVConverter.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = CCEC3134200FB95900896176 /* MoltenGLSLToSPIRVConverter.framework */; };
 		CCF701C31FB0939B003850F6 /* CVertexBufferVulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCF701A91FB09399003850F6 /* CVertexBufferVulkan.cpp */; };
 		CCF701C41FB0939B003850F6 /* CMaterialVulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCF701AB1FB09399003850F6 /* CMaterialVulkan.cpp */; };
 		CCF701C51FB0939B003850F6 /* CIndexBufferVulkan.cpp in Sources */ = {isa = PBXBuildFile; fileRef = CCF701AD1FB09399003850F6 /* CIndexBufferVulkan.cpp */; };
@@ -1038,6 +1040,8 @@
 		CC40BA6920062C00005DE4F9 /* OpenGLESViewController.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = OpenGLESViewController.h; sourceTree = "<group>"; };
 		CC5DB1561F8919F00080C0E1 /* CStringUtilsVFS.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CStringUtilsVFS.cpp; sourceTree = "<group>"; };
 		CC5DB1581F891A090080C0E1 /* CStringUtilsVFS.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CStringUtilsVFS.h; sourceTree = "<group>"; };
+		CCEC3134200FB95900896176 /* MoltenGLSLToSPIRVConverter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MoltenGLSLToSPIRVConverter.framework; sourceTree = "<group>"; };
+		CCEC3136200FB95900896176 /* MoltenGLSLToSPIRVConverter.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = MoltenGLSLToSPIRVConverter.framework; sourceTree = "<group>"; };
 		CCF701A91FB09399003850F6 /* CVertexBufferVulkan.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CVertexBufferVulkan.cpp; sourceTree = "<group>"; };
 		CCF701AA1FB09399003850F6 /* CShaderVulkan.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CShaderVulkan.h; sourceTree = "<group>"; };
 		CCF701AB1FB09399003850F6 /* CMaterialVulkan.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CMaterialVulkan.cpp; sourceTree = "<group>"; };
@@ -1083,6 +1087,7 @@
 				CC140244200E465800748ABD /* MoltenVK.framework in Frameworks */,
 				6E5A7F731EF8133A001F41B3 /* OpenGLES.framework in Frameworks */,
 				6E5A7F711EF81333001F41B3 /* GLKit.framework in Frameworks */,
+				CCEC3138200FB95900896176 /* MoltenGLSLToSPIRVConverter.framework in Frameworks */,
 				6E5A7F6F1EF8132D001F41B3 /* CoreGraphics.framework in Frameworks */,
 				6E5A7F6D1EF81324001F41B3 /* UIKit.framework in Frameworks */,
 				6E5A7F6B1EF8131F001F41B3 /* Foundation.framework in Frameworks */,
@@ -1097,6 +1102,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				CC14021F20078EA500748ABD /* OpenGL.framework in Frameworks */,
+				CCEC3139200FB95E00896176 /* MoltenGLSLToSPIRVConverter.framework in Frameworks */,
 				CC14021920078E7A00748ABD /* libc++.tbd in Frameworks */,
 				CC140241200E465800748ABD /* libMoltenVK.dylib in Frameworks */,
 				CC14021B20078E8400748ABD /* Metal.framework in Frameworks */,
@@ -2151,6 +2157,7 @@
 		6E5A7F741EF814B7001F41B3 /* externals */ = {
 			isa = PBXGroup;
 			children = (
+				CCEC3132200FB95900896176 /* MoltenGLSLToSPIRVConverter */,
 				CC14022C200E465700748ABD /* Molten */,
 				6E5A7C0D1EF8013F001F41B3 /* glm */,
 				6E5A7BEC1EF80113001F41B3 /* vfspp */,
@@ -2223,6 +2230,32 @@
 			children = (
 				CC14023C200E465700748ABD /* MoltenVK.framework */,
 				CC14023D200E465700748ABD /* libMoltenVK.dylib */,
+			);
+			path = iOS;
+			sourceTree = "<group>";
+		};
+		CCEC3132200FB95900896176 /* MoltenGLSLToSPIRVConverter */ = {
+			isa = PBXGroup;
+			children = (
+				CCEC3133200FB95900896176 /* macOS */,
+				CCEC3135200FB95900896176 /* iOS */,
+			);
+			name = MoltenGLSLToSPIRVConverter;
+			path = ../../libs/MoltenGLSLToSPIRVConverter;
+			sourceTree = "<group>";
+		};
+		CCEC3133200FB95900896176 /* macOS */ = {
+			isa = PBXGroup;
+			children = (
+				CCEC3134200FB95900896176 /* MoltenGLSLToSPIRVConverter.framework */,
+			);
+			path = macOS;
+			sourceTree = "<group>";
+		};
+		CCEC3135200FB95900896176 /* iOS */ = {
+			isa = PBXGroup;
+			children = (
+				CCEC3136200FB95900896176 /* MoltenGLSLToSPIRVConverter.framework */,
 			);
 			path = iOS;
 			sourceTree = "<group>";
@@ -2857,7 +2890,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
 				DEVELOPMENT_TEAM = 9BB8ZPHCM9;
-				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../../libs/Molten/iOS";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/../../libs/Molten/iOS",
+					"$(PROJECT_DIR)/../../libs/MoltenGLSLToSPIRVConverter/iOS",
+				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
 					OS_IPHONE,
@@ -2886,7 +2922,10 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_LAUNCHIMAGE_NAME = "Brand Assets";
 				DEVELOPMENT_TEAM = 9BB8ZPHCM9;
-				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../../libs/Molten/iOS";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/../../libs/Molten/iOS",
+					"$(PROJECT_DIR)/../../libs/MoltenGLSLToSPIRVConverter/iOS",
+				);
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					OS_IPHONE,
 					RENDER_OGLES1_1,
@@ -2919,7 +2958,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = EXUUE8Z83Q;
-				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../../libs/Molten/macOS";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/../../libs/Molten/macOS",
+					"$(PROJECT_DIR)/../../libs/MoltenGLSLToSPIRVConverter/macOS",
+				);
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					"DEBUG=1",
@@ -2955,7 +2997,10 @@
 				CODE_SIGN_STYLE = Automatic;
 				COMBINE_HIDPI_IMAGES = YES;
 				DEVELOPMENT_TEAM = EXUUE8Z83Q;
-				FRAMEWORK_SEARCH_PATHS = "$(PROJECT_DIR)/../../libs/Molten/macOS";
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(PROJECT_DIR)/../../libs/Molten/macOS",
+					"$(PROJECT_DIR)/../../libs/MoltenGLSLToSPIRVConverter/macOS",
+				);
 				GCC_C_LANGUAGE_STANDARD = gnu11;
 				GCC_PREPROCESSOR_DEFINITIONS = (
 					OS_MAC,

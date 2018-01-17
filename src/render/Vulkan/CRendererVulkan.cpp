@@ -468,7 +468,7 @@ IMeshPtr CRendererVulkan::CreateMesh()
 
 IShaderPtr CRendererVulkan::CreateShader()
 {
-    IShaderPtr shader;//(new CShaderVulkan());
+    IShaderPtr shader(new CShaderVulkan(Ptr<CRendererVulkan>()));
     return shader;
 }
 

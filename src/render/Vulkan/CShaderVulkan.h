@@ -5,20 +5,26 @@
 //  Created by Yevgeniy Logachev
 //  Copyright (c) 2014 Yevgeniy Logachev. All rights reserved.
 //
-#if defined(RENDER_VULKAN)
+//#if defined(RENDER_VULKAN)
 
 #ifndef CSHADERVULKAN_H
 #define CSHADERVULKAN_H
 
-#include "CShaderOGLBase.h"
+#include "IShader.h"
+
+namespace molten {
+    class GLSLToSPIRVConverter;
+};
 
 namespace jam {
+    
+CLASS_PTR(CRendererVulkan)
 
-class CShaderVulkan : public CShaderOGLBase
+class CShaderVulkan : public IShader
 {
     JAM_OBJECT
 public:
-    CShaderVulkan();
+    CShaderVulkan(CRendererVulkanPtr renderer);
     virtual ~CShaderVulkan();
 
     virtual uint32_t Id() override;
@@ -29,15 +35,15 @@ public:
     virtual void AddDefinition(const std::string& identifier) override;
 
 private:
-    uint32_t m_Id;
-    bool m_IsCompiled;
+    molten::GLSLToSPIRVConverter *m_Converter;
     ShaderType m_Type;
-    std::string m_Source;
-    std::list<std::string> m_Preproccessor;
+    
+    CRendererVulkanWeak m_Renderer;
+    VkShaderModule m_ShaderModule;
 };
 
 }; // namespace jam
 
 #endif /* CSHADERVULKAN_H */
 
-#endif /* defined(RENDER_VULKAN) */
+//#endif /* defined(RENDER_VULKAN) */

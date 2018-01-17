@@ -5,10 +5,12 @@
 //  Created by Yevgeniy Logachev
 //  Copyright (c) 2014 Yevgeniy Logachev. All rights reserved.
 //
-#if defined(RENDER_VULKAN)
+//#if defined(RENDER_VULKAN)
 
 #include "CShaderVulkan.h"
 #include "CShaderSourceInsert.h"
+#include <MoltenGLSLToSPIRVConverter/GLSLToSPIRVConverter.h>
+#include "CRendererVulkan.h"
 
 using namespace jam;
 
@@ -20,80 +22,69 @@ using namespace jam;
 // Public Methods
 // *****************************************************************************
 
-CShaderVulkan::CShaderVulkan()
-    : m_Id(0)
-    , m_IsCompiled(false)
-    , m_Type(ShaderType::Vertex)
+CShaderVulkan::CShaderVulkan(CRendererVulkanPtr renderer)
+    : m_Converter(new molten::GLSLToSPIRVConverter())
+    , m_Type(Vertex)
+    , m_Renderer(renderer)
+    , m_ShaderModule(nullptr)
 {
-    AddDefinition("OGL2_0");
+    AddDefinition("Vulkan");
 }
 
 CShaderVulkan::~CShaderVulkan()
 {
+    delete m_Converter;
 }
 
 uint32_t CShaderVulkan::Id()
 {
-    return m_Id;
+    return 0;
 }
 
 bool CShaderVulkan::Compile(const std::string& source, ShaderType shaderType)
 {
-    m_IsCompiled = false;
+    m_Converter->setGLSL(source);
 
-    uint32_t glType = ShaderTypeToGlType(shaderType);
-
-    CShaderSourceInsert insertSource;
-
-    // Add preproccessor's definitions
-    m_Source = "";
-    std::for_each(m_Preproccessor.begin(), m_Preproccessor.end(), [&](const std::string& identifier) {
-        std::string definition;
-        definition = std::string("\n#define ") + identifier + std::string("\n");
-
-        m_Source.append(definition);
-    });
-
-    // Insert common uniforms and attributes
-    if (shaderType == IShader::Vertex) {
-        m_Source.append(insertSource.Vertex());
-    } else if (shaderType == IShader::Fragment) {
-        m_Source.append(insertSource.Fragment());
-    } else if (shaderType == IShader::Geometry) {
-        m_Source.append(insertSource.Geometry());
+    m_Type = shaderType;
+    MLNShaderStage shaderStage = kMLNShaderStageAuto;
+    switch (shaderType) {
+        case Vertex:
+            shaderStage = kMLNShaderStageVertex;
+            break;
+        case Fragment:
+            shaderStage = kMLNShaderStageFragment;
+            break;
+        case Geometry:
+            shaderStage = kMLNShaderStageGeometry;
+            break;
+            
+        default:
+            break;
     }
-    m_Source.append(source);
-
-    m_Id = glCreateShader(glType);
-    const GLchar* glData = reinterpret_cast<const GLchar*>(m_Source.data());
-    const GLint size = (GLint)m_Source.size();
-    glShaderSource(m_Id, 1, &glData, &size);
-    glCompileShader(m_Id);
-
-    GLint status;
-    glGetShaderiv(m_Id, GL_COMPILE_STATUS, &status);
-
-    if (status == GL_FALSE) {
-        GLint maxLength = 0;
-        glGetShaderiv(m_Id, GL_INFO_LOG_LENGTH, &maxLength);
-
-        std::vector<char> errorLog(maxLength);
-        glGetShaderInfoLog(m_Id, maxLength, &maxLength, &errorLog[0]);
-
-        printf("Shader compilation error: %s\n", &errorLog[0]);
-    } else {
-        m_IsCompiled = true;
-        m_Type = shaderType;
+    
+    bool compiled = m_Converter->convert(shaderStage, true, true);
+    if (compiled) {
+        VkShaderModuleCreateInfo createInfo = {
+            .sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO,
+            .codeSize = m_Converter->getSPIRV().size(),
+            .pCode = reinterpret_cast<const uint32_t*>(m_Converter->getSPIRV().data())
+        };
+        
+        CRendererVulkanPtr renderer = m_Renderer.lock();
+        
+        VkResult result = vkCreateShaderModule(renderer->LogicalDevice(), &createInfo, nullptr, &m_ShaderModule);
+        if (result != VK_SUCCESS) {
+            JAM_LOG("failed to create shader module!");
+            compiled = false;
+        }
     }
-
-    //assert(glGetError() == GL_NO_ERROR);
-
-    return m_IsCompiled;
+    
+    return compiled;
 }
 
 bool CShaderVulkan::IsCompiled() const
 {
-    return m_IsCompiled;
+    return m_Converter->getWasConverted();
 }
 
 IShader::ShaderType CShaderVulkan::Type() const
@@ -103,12 +94,12 @@ IShader::ShaderType CShaderVulkan::Type() const
 
 const std::string& CShaderVulkan::Source() const
 {
-    return m_Source;
+    return m_Converter->getGLSL();
 }
 
 void CShaderVulkan::AddDefinition(const std::string& identifier)
 {
-    m_Preproccessor.push_back(identifier);
+    
 }
 
 // *****************************************************************************
@@ -119,5 +110,5 @@ void CShaderVulkan::AddDefinition(const std::string& identifier)
 // Private Methods
 // *****************************************************************************
 
-#endif /* defined(RENDER_VULKAN) */
+//#endif /* defined(RENDER_VULKAN) */
  

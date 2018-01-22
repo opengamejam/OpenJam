@@ -63,6 +63,13 @@ public:
     virtual bool BindUniformfv(const std::string& uniform, const std::vector<float>& value) = 0;
     virtual bool BindUniformMatrix4x4f(const std::string& uniform, const glm::mat4x4& value) = 0;
 
+    virtual bool BindUniform1i(uint32_t location, int value) = 0;
+    virtual bool BindUniform1f(uint32_t location, float value) = 0;
+    virtual bool BindUniform2i(uint32_t location, int value1, int value2) = 0;
+    virtual bool BindUniform2f(uint32_t location, float value1, float value2) = 0;
+    virtual bool BindUniformfv(uint32_t location, const std::vector<float>& value) = 0;
+    virtual bool BindUniformMatrix4x4f(uint32_t location, const glm::mat4x4& value) = 0;
+    
     virtual const TUniInt& Uniformsi() const = 0;
     virtual const TUniFloat& Uniformsf() const = 0;
     virtual const TUniFloat& Uniformsfv() const = 0;

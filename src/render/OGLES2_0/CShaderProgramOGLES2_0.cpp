@@ -71,35 +71,20 @@ bool CShaderProgramOGLES2_0::IsShaderAttached(IShader::ShaderType shaderType)
     return (it != m_AttachedShaders.end());
 }
 
-bool CShaderProgramOGLES2_0::IsValid()
-{
-    return (IsShaderAttached(IShader::Vertex) && IsShaderAttached(IShader::Fragment));
-}
-
 bool CShaderProgramOGLES2_0::Link()
 {
+    if (IsLinked()) {
+        JAM_LOG("Attempting to link already linked shader program");
+        return true;
+    }
+    
     glLinkProgram(m_ProgramObject);
 
     GLint isLinked;
     glGetProgramiv(m_ProgramObject, GL_LINK_STATUS, &isLinked);
     m_IsLinked = (isLinked != 0);
 
-    if (m_IsLinked) {
-        m_CachedAttributes["MainVertexPosition"] = Attribute("MainVertexPosition");
-        m_CachedAttributes["MainVertexNormal"] = Attribute("MainVertexNormal");
-        m_CachedAttributes["MainVertexUV"] = Attribute("MainVertexUV");
-        m_CachedAttributes["MainVertexColor"] = Attribute("MainVertexColor");
-
-        m_CachedUniforms["MainTexture0"] = Uniform("MainTexture0");
-        m_CachedUniforms["MainTexture1"] = Uniform("MainTexture1");
-        m_CachedUniforms["MainTexture2"] = Uniform("MainTexture2");
-        m_CachedUniforms["MainTexture3"] = Uniform("MainTexture3");
-        m_CachedUniforms["MainTexture4"] = Uniform("MainTexture4");
-        m_CachedUniforms["MainTexture5"] = Uniform("MainTexture5");
-        m_CachedUniforms["MainColor"] = Uniform("MainColor");
-        m_CachedUniforms["MainProjectionMatrix"] = Uniform("MainProjectionMatrix");
-        m_CachedUniforms["MainModelMatrix"] = Uniform("MainModelMatrix");
-    } else {
+    if (!m_IsLinked) {
         GLint maxLength = 255;
         std::vector<GLchar> infoLog(maxLength);
         glGetProgramInfoLog(m_ProgramObject, maxLength, &maxLength, &infoLog[0]);
@@ -119,194 +104,24 @@ bool CShaderProgramOGLES2_0::IsLinked() const
 
 uint32_t CShaderProgramOGLES2_0::Attribute(const std::string& name)
 {
-    uint32_t location = std::numeric_limits<uint32_t>::max();
-    std::unordered_map<std::string, uint32_t>::const_iterator it = m_CachedAttributes.find(name);
-    if (it == m_CachedAttributes.end()) {
+    uint32_t location = CachedAttribute(name);
+    if (location == std::numeric_limits<uint32_t>::max()) {
         location = glGetAttribLocation(m_ProgramObject, name.c_str());
-        m_CachedAttributes[name] = location;
-    } else {
-        location = it->second;
+        CacheAttribute(name, location);
     }
-
+    
     return location;
 }
 
 uint32_t CShaderProgramOGLES2_0::Uniform(const std::string& name)
 {
-    uint32_t location = std::numeric_limits<uint32_t>::max();
-    std::unordered_map<std::string, uint32_t>::const_iterator it = m_CachedUniforms.find(name);
-    if (it == m_CachedUniforms.end()) {
+    uint32_t location = CachedUniform(name);
+    if (location == std::numeric_limits<uint32_t>::max()) {
         location = glGetUniformLocation(m_ProgramObject, name.c_str());
-        m_CachedUniforms[name] = location;
-    } else {
-        location = it->second;
+        CacheUniform(name, location);
     }
 
     return location;
-}
-
-uint32_t CShaderProgramOGLES2_0::VertexPosition()
-{
-    return m_CachedAttributes["MainVertexPosition"];
-}
-
-uint32_t CShaderProgramOGLES2_0::VertexNormal()
-{
-    return m_CachedAttributes["MainVertexNormal"];
-}
-
-uint32_t CShaderProgramOGLES2_0::VertexUV()
-{
-    return m_CachedAttributes["MainVertexUV"];
-}
-
-uint32_t CShaderProgramOGLES2_0::VertexColor()
-{
-    return m_CachedAttributes["MainVertexColor"];
-}
-
-uint32_t CShaderProgramOGLES2_0::MainTexture()
-{
-    return m_CachedUniforms["MainTexture0"];
-}
-
-uint32_t CShaderProgramOGLES2_0::MainColor()
-{
-    return m_CachedUniforms["MainColor"];
-}
-
-uint32_t CShaderProgramOGLES2_0::ProjectionMatrix()
-{
-    return m_CachedUniforms["MainProjectionMatrix"];
-}
-
-uint32_t CShaderProgramOGLES2_0::ModelMatrix()
-{
-    return m_CachedUniforms["MainModelMatrix"];
-}
-
-uint32_t CShaderProgramOGLES2_0::Texture(uint32_t index)
-{
-    std::stringstream ss;
-    ss << "MainTexture" << index;
-
-    std::unordered_map<std::string, uint32_t>::const_iterator it = m_CachedUniforms.find(ss.str());
-    if (it == m_CachedUniforms.end()) {
-        return it->second;
-    }
-    return std::numeric_limits<uint32_t>::max();
-}
-
-uint32_t CShaderProgramOGLES2_0::DiffuseTexture()
-{
-    return m_CachedUniforms["MainTexture0"];
-}
-
-uint32_t CShaderProgramOGLES2_0::NormalTexture()
-{
-    return m_CachedUniforms["MainTexture1"];
-}
-
-uint32_t CShaderProgramOGLES2_0::SpecularTexture()
-{
-    return m_CachedUniforms["MainTexture2"];
-}
-
-uint32_t CShaderProgramOGLES2_0::EnvironmentTexture()
-{
-    return m_CachedUniforms["MainTexture3"];
-}
-
-bool CShaderProgramOGLES2_0::BindUniform1i(const std::string& uniform, int value)
-{
-    uint32_t location = Uniform(uniform);
-    if (location != std::numeric_limits<uint32_t>::max()) {
-        m_UniInt[location] = { value };
-
-        return true;
-    }
-
-    return false;
-}
-
-bool CShaderProgramOGLES2_0::BindUniform1f(const std::string& uniform, float value)
-{
-    uint32_t location = Uniform(uniform);
-    if (location != std::numeric_limits<uint32_t>::max()) {
-        m_UniFloat[location] = { value };
-
-        return true;
-    }
-
-    return false;
-}
-
-bool CShaderProgramOGLES2_0::BindUniform2i(const std::string& uniform, int value1, int value2)
-{
-    uint32_t location = Uniform(uniform);
-    if (location != std::numeric_limits<uint32_t>::max()) {
-        m_UniInt[location] = { value1, value2 };
-
-        return true;
-    }
-
-    return false;
-}
-
-bool CShaderProgramOGLES2_0::BindUniform2f(const std::string& uniform, float value1, float value2)
-{
-    uint32_t location = Uniform(uniform);
-    if (location != std::numeric_limits<uint32_t>::max()) {
-        m_UniFloat[location] = { value1, value2 };
-
-        return true;
-    }
-
-    return false;
-}
-
-bool CShaderProgramOGLES2_0::BindUniformfv(const std::string& uniform, const std::vector<float>& value)
-{
-    uint32_t location = Uniform(uniform);
-    if (location != std::numeric_limits<uint32_t>::max()) {
-        m_UniFloatVec[location] = value;
-
-        return true;
-    }
-
-    return false;
-}
-
-bool CShaderProgramOGLES2_0::BindUniformMatrix4x4f(const std::string& uniform, const glm::mat4x4& value)
-{
-    uint32_t location = Uniform(uniform);
-    if (location != std::numeric_limits<uint32_t>::max()) {
-        m_UniMatrixFloat[location] = value;
-
-        return true;
-    }
-
-    return false;
-}
-
-const IShaderProgram::TUniInt& CShaderProgramOGLES2_0::Uniformsi() const
-{
-    return m_UniInt;
-}
-
-const IShaderProgram::TUniFloat& CShaderProgramOGLES2_0::Uniformsf() const
-{
-    return m_UniFloat;
-}
-
-const IShaderProgram::TUniFloat& CShaderProgramOGLES2_0::Uniformsfv() const
-{
-    return m_UniFloatVec;
-}
-
-const IShaderProgram::TUniMatrix4Float& CShaderProgramOGLES2_0::UniformsMatrix4x4f() const
-{
-    return m_UniMatrixFloat;
 }
 
 INL void AddUniformMatrix4f(unsigned int location, const glm::mat4x4& value)
@@ -318,39 +133,39 @@ INL void AddUniformf(unsigned int location, const std::vector<float>& value, boo
 {
     if (isVector) {
         switch (value.size()) {
-        case 1:
-            glUniform1fv(location, 1, value.data());
-            break;
-
-        case 2:
-            glUniform2fv(location, 1, value.data());
-            break;
-
-        case 3:
-            glUniform3fv(location, 1, value.data());
-            break;
-
-        case 4:
-            glUniform4fv(location, 1, value.data());
-            break;
+            case 1:
+                glUniform1fv(location, 1, value.data());
+                break;
+                
+            case 2:
+                glUniform2fv(location, 1, value.data());
+                break;
+                
+            case 3:
+                glUniform3fv(location, 1, value.data());
+                break;
+                
+            case 4:
+                glUniform4fv(location, 1, value.data());
+                break;
         };
     } else {
         switch (value.size()) {
-        case 1:
-            glUniform1f(location, value[0]);
-            break;
-
-        case 2:
-            glUniform2f(location, value[0], value[1]);
-            break;
-
-        case 3:
-            glUniform3f(location, value[0], value[1], value[2]);
-            break;
-
-        case 4:
-            glUniform4f(location, value[0], value[1], value[2], value[3]);
-            break;
+            case 1:
+                glUniform1f(location, value[0]);
+                break;
+                
+            case 2:
+                glUniform2f(location, value[0], value[1]);
+                break;
+                
+            case 3:
+                glUniform3f(location, value[0], value[1], value[2]);
+                break;
+                
+            case 4:
+                glUniform4f(location, value[0], value[1], value[2], value[3]);
+                break;
         };
     }
 }
@@ -359,38 +174,38 @@ INL void AddUniformi(unsigned int location, const std::vector<int>& value, bool 
 {
     if (isVector) {
         switch (value.size()) {
-        case 1:
-            glUniform1iv(location, 1, value.data());
-            break;
-
-        case 2:
-            glUniform2iv(location, 1, value.data());
-            break;
-
-        case 3:
-            glUniform3iv(location, 1, value.data());
-            break;
-
-        case 4:
-            glUniform4iv(location, 1, value.data());
-            break;
+            case 1:
+                glUniform1iv(location, 1, value.data());
+                break;
+                
+            case 2:
+                glUniform2iv(location, 1, value.data());
+                break;
+                
+            case 3:
+                glUniform3iv(location, 1, value.data());
+                break;
+                
+            case 4:
+                glUniform4iv(location, 1, value.data());
+                break;
         };
     } else {
         switch (value.size()) {
-        case 1:
-            glUniform1i(location, value[0]);
-            break;
-
-        case 2:
-            glUniform2i(location, value[0], value[1]);
-            break;
-
-        case 3:
-            glUniform3i(location, value[0], value[1], value[2]);
-            break;
-        case 4:
-            glUniform4i(location, value[0], value[1], value[2], value[3]);
-            break;
+            case 1:
+                glUniform1i(location, value[0]);
+                break;
+                
+            case 2:
+                glUniform2i(location, value[0], value[1]);
+                break;
+                
+            case 3:
+                glUniform3i(location, value[0], value[1], value[2]);
+                break;
+            case 4:
+                glUniform4i(location, value[0], value[1], value[2], value[3]);
+                break;
         };
     }
 }
@@ -422,7 +237,7 @@ void CShaderProgramOGLES2_0::UpdateUniforms() const
     const IShaderProgram::TUniInt& uniInt = Uniformsi();
     const IShaderProgram::TUniFloat& uniFloatVec = Uniformsfv();
     const IShaderProgram::TUniMatrix4Float& uniMatrix4x4f = UniformsMatrix4x4f();
-
+    
     AddUniformi(uniInt, false);
     AddUniformf(uniFloat, false);
     AddUniformf(uniFloatVec, true);

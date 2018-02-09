@@ -14,6 +14,8 @@
 
 namespace jam {
 
+CLASS_PTR(CMaterialVulkan)
+    
 class CMaterialVulkan : public IMaterial
 {
     JAM_OBJECT
@@ -54,6 +56,11 @@ public:
     
     virtual const std::string& Hash() override;
     
+    /*
+     * Vulkan specific
+     */
+    const VkPipelineInputAssemblyStateCreateInfo& InputAssembly();
+    
 private:
     void HashMe();
     
@@ -63,6 +70,8 @@ private:
     bool m_IsDirty;
     std::string m_Hash;
     bool m_IsBound;
+    
+    VkPipelineInputAssemblyStateCreateInfo m_InputAssembly;
 };
 
 }; // namespace jam

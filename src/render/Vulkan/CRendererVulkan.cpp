@@ -474,21 +474,56 @@ IShaderPtr CRendererVulkan::CreateShader()
 
 IShaderProgramPtr CRendererVulkan::CreateShaderProgram()
 {
-    IShaderProgramPtr shaderProgram;//(new CShaderProgramVulkan());
+    IShaderProgramPtr shaderProgram(new CShaderProgramVulkan(Ptr<CRendererVulkan>()));
     return shaderProgram;
 }
 
 void CRendererVulkan::Draw(IMeshPtr mesh, IMaterialPtr material, IShaderProgramPtr shader)
 {
-    /*assert(mesh && material);
+    assert(mesh && material);
     IVertexBufferPtr vertexBuffer = mesh->VertexBuffer();
     IIndexBufferPtr indexBuffer = mesh->IndexBuffer();
 
+    CShaderProgramVulkanPtr shaderVulkan = shader->Ptr<CShaderProgramVulkan>();
+    CMaterialVulkanPtr materialVulkan = material->Ptr<CMaterialVulkan>();
+    
+    std::vector<VkPipelineShaderStageCreateInfo> piplineShaderStageInfos = shaderVulkan->PiplineShaderStageInfos();
+    
+    VkVertexInputBindingDescription bindingDescription = {
+        .binding = 0,
+        .stride = sizeof(mesh->VertexBuffer()->ElementSize()),
+        .inputRate = VK_VERTEX_INPUT_RATE_VERTEX,
+    };
+    
+    std::vector<VkVertexInputAttributeDescription> attributeDescriptions;
+    const IVertexBuffer::TVertexStreamMap& vertexStreams = mesh->VertexBuffer()->VertexStreams();
+    std::for_each(vertexStreams.begin(), vertexStreams.end(),
+                  [&](const std::pair<IVertexBuffer::VertexTypes, IVertexBuffer::SVertexStream> value) {
+        const IVertexBuffer::SVertexStream &stream = value.second;
+        VkVertexInputAttributeDescription attributeDescription = {
+            .binding = 0,
+            .location = static_cast<uint32_t>(stream.attributeIndex),
+            .format = VK_FORMAT_R32G32B32_SFLOAT,
+            .offset = stream.offset
+        };
+        attributeDescriptions.push_back(attributeDescription);
+    });
+    
+    VkPipelineVertexInputStateCreateInfo vertexInputInfo = {
+        .sType = VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO,
+        .vertexBindingDescriptionCount = 1,
+        .vertexAttributeDescriptionCount = static_cast<uint32_t>(attributeDescriptions.size()),
+        .pVertexBindingDescriptions = &bindingDescription,
+        .pVertexAttributeDescriptions = attributeDescriptions.data()
+    };
+    
+    VkPipelineInputAssemblyStateCreateInfo inputAssembly = materialVulkan->InputAssembly();
+    
     if (indexBuffer) {
         Draw(vertexBuffer, indexBuffer, material);
     } else {
         Draw(vertexBuffer, material);
-    }*/
+    }
 }
 
 void CRendererVulkan::Draw(IVertexBufferPtr vertexBuffer, IMaterialPtr material)

@@ -141,8 +141,6 @@
 		6E5A7BCE1EF800AD001F41B3 /* CSpriteXML.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7B2B1EF800AC001F41B3 /* CSpriteXML.cpp */; };
 		6E5A7BCF1EF800AD001F41B3 /* CShaderSourceCommonFragment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7B2F1EF800AC001F41B3 /* CShaderSourceCommonFragment.cpp */; };
 		6E5A7BD01EF800AD001F41B3 /* CShaderSourceCommonVertex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7B301EF800AC001F41B3 /* CShaderSourceCommonVertex.cpp */; };
-		6E5A7BD11EF800AD001F41B3 /* CShaderSourceInsertFragment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7B321EF800AC001F41B3 /* CShaderSourceInsertFragment.cpp */; };
-		6E5A7BD21EF800AD001F41B3 /* CShaderSourceInsertVertex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7B331EF800AC001F41B3 /* CShaderSourceInsertVertex.cpp */; };
 		6E5A7BD31EF800AD001F41B3 /* CShaderSourceSpriteFragment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7B351EF800AC001F41B3 /* CShaderSourceSpriteFragment.cpp */; };
 		6E5A7BD41EF800AD001F41B3 /* CShaderSourceSpriteVertex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7B361EF800AC001F41B3 /* CShaderSourceSpriteVertex.cpp */; };
 		6E5A7BD51EF800AD001F41B3 /* CBlockOperation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7B381EF800AC001F41B3 /* CBlockOperation.cpp */; };
@@ -334,8 +332,6 @@
 		CC14020420078D2C00748ABD /* CSpriteXML.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7B2B1EF800AC001F41B3 /* CSpriteXML.cpp */; };
 		CC14020520078D2C00748ABD /* CShaderSourceCommonFragment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7B2F1EF800AC001F41B3 /* CShaderSourceCommonFragment.cpp */; };
 		CC14020620078D2C00748ABD /* CShaderSourceCommonVertex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7B301EF800AC001F41B3 /* CShaderSourceCommonVertex.cpp */; };
-		CC14020720078D2C00748ABD /* CShaderSourceInsertFragment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7B321EF800AC001F41B3 /* CShaderSourceInsertFragment.cpp */; };
-		CC14020820078D2C00748ABD /* CShaderSourceInsertVertex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7B331EF800AC001F41B3 /* CShaderSourceInsertVertex.cpp */; };
 		CC14020920078D2C00748ABD /* CShaderSourceSpriteFragment.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7B351EF800AC001F41B3 /* CShaderSourceSpriteFragment.cpp */; };
 		CC14020A20078D2C00748ABD /* CShaderSourceSpriteVertex.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7B361EF800AC001F41B3 /* CShaderSourceSpriteVertex.cpp */; };
 		CC14020B20078D3300748ABD /* CBlockOperation.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 6E5A7B381EF800AC001F41B3 /* CBlockOperation.cpp */; };
@@ -687,9 +683,6 @@
 		6E5A7B2E1EF800AC001F41B3 /* CShaderSourceCommon.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CShaderSourceCommon.h; sourceTree = "<group>"; };
 		6E5A7B2F1EF800AC001F41B3 /* CShaderSourceCommonFragment.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CShaderSourceCommonFragment.cpp; sourceTree = "<group>"; };
 		6E5A7B301EF800AC001F41B3 /* CShaderSourceCommonVertex.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CShaderSourceCommonVertex.cpp; sourceTree = "<group>"; };
-		6E5A7B311EF800AC001F41B3 /* CShaderSourceInsert.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CShaderSourceInsert.h; sourceTree = "<group>"; };
-		6E5A7B321EF800AC001F41B3 /* CShaderSourceInsertFragment.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CShaderSourceInsertFragment.cpp; sourceTree = "<group>"; };
-		6E5A7B331EF800AC001F41B3 /* CShaderSourceInsertVertex.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CShaderSourceInsertVertex.cpp; sourceTree = "<group>"; };
 		6E5A7B341EF800AC001F41B3 /* CShaderSourceSprite.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CShaderSourceSprite.h; sourceTree = "<group>"; };
 		6E5A7B351EF800AC001F41B3 /* CShaderSourceSpriteFragment.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CShaderSourceSpriteFragment.cpp; sourceTree = "<group>"; };
 		6E5A7B361EF800AC001F41B3 /* CShaderSourceSpriteVertex.cpp */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.cpp.cpp; path = CShaderSourceSpriteVertex.cpp; sourceTree = "<group>"; };
@@ -1703,9 +1696,6 @@
 				6E5A7B2E1EF800AC001F41B3 /* CShaderSourceCommon.h */,
 				6E5A7B2F1EF800AC001F41B3 /* CShaderSourceCommonFragment.cpp */,
 				6E5A7B301EF800AC001F41B3 /* CShaderSourceCommonVertex.cpp */,
-				6E5A7B311EF800AC001F41B3 /* CShaderSourceInsert.h */,
-				6E5A7B321EF800AC001F41B3 /* CShaderSourceInsertFragment.cpp */,
-				6E5A7B331EF800AC001F41B3 /* CShaderSourceInsertVertex.cpp */,
 				6E5A7B341EF800AC001F41B3 /* CShaderSourceSprite.h */,
 				6E5A7B351EF800AC001F41B3 /* CShaderSourceSpriteFragment.cpp */,
 				6E5A7B361EF800AC001F41B3 /* CShaderSourceSpriteVertex.cpp */,
@@ -2428,7 +2418,6 @@
 				6E5A7BA11EF800AD001F41B3 /* CVertexBufferOGLBase.cpp in Sources */,
 				6E5A7B911EF800AD001F41B3 /* CShaderOGL2_0.cpp in Sources */,
 				6E5A7BC21EF800AD001F41B3 /* CRenderTargetDepthOGLES2_0.cpp in Sources */,
-				6E5A7BD21EF800AD001F41B3 /* CShaderSourceInsertVertex.cpp in Sources */,
 				6E5A7BB61EF800AD001F41B3 /* CRenderTargetStencilOGLES1_1.cpp in Sources */,
 				6E5A7B661EF800AD001F41B3 /* RenderGlobal.cpp in Sources */,
 				6E5A7BD01EF800AD001F41B3 /* CShaderSourceCommonVertex.cpp in Sources */,
@@ -2447,7 +2436,6 @@
 				6E5A7BCB1EF800AD001F41B3 /* CImageRaw.cpp in Sources */,
 				CCF701C61FB0939B003850F6 /* CShaderVulkan.cpp in Sources */,
 				CC40BA6A20062C00005DE4F9 /* OpenGLESViewController.mm in Sources */,
-				6E5A7BD11EF800AD001F41B3 /* CShaderSourceInsertFragment.cpp in Sources */,
 				6E5A7BEA1EF80105001F41B3 /* tinyxmlerror.cpp in Sources */,
 				6E5A79BD1EF7FF4D001F41B3 /* VulkanViewController.mm in Sources */,
 				6E5A7BCF1EF800AD001F41B3 /* CShaderSourceCommonFragment.cpp in Sources */,
@@ -2629,7 +2617,6 @@
 				CC14017620078C5700748ABD /* IEntity.cpp in Sources */,
 				CC14019F20078CBB00748ABD /* CVertexBufferOGL1_3.cpp in Sources */,
 				CC1401F220078D2000748ABD /* CFrameBufferOGLES2_0.cpp in Sources */,
-				CC14020820078D2C00748ABD /* CShaderSourceInsertVertex.cpp in Sources */,
 				CC1401F120078D1B00748ABD /* CVertexBufferOGLES1_1.cpp in Sources */,
 				CC14019720078CBB00748ABD /* CRendererOGL1_3.cpp in Sources */,
 				CC14019020078CA900748ABD /* CTextureVulkan.cpp in Sources */,
@@ -2680,7 +2667,6 @@
 				CC1401BA20078CE500748ABD /* CStringUtilsVFS.cpp in Sources */,
 				CC14018F20078CA900748ABD /* CShaderVulkan.cpp in Sources */,
 				CC1401B120078CD900748ABD /* CRendererOGL2_0.cpp in Sources */,
-				CC14020720078D2C00748ABD /* CShaderSourceInsertFragment.cpp in Sources */,
 				CC14015A2007878700748ABD /* OpenGLViewController.mm in Sources */,
 				CC1401C420078CEB00748ABD /* tinystr.cpp in Sources */,
 				CC1401F620078D2000748ABD /* CRendererOGLES2_0.cpp in Sources */,

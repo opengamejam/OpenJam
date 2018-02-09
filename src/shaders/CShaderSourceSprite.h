@@ -22,6 +22,16 @@ public:
     virtual const std::string& Geometry() const override;
 
     virtual bool Load(const std::string& filename) override;
+    
+    const std::string& VertexAttributeName() const;
+    const std::string& UVAttributeName() const;
+    const std::string& NormalAttributeName() const;
+    const std::string& ColorAttributeName() const;
+    
+    const std::string& ProjectionMatrixUniformName() const;
+    const std::string& ViewMatrixUniformName() const;
+    const std::string& ModelMatrixUniformName() const;
+    const std::string& NormalMatrixUniformName() const;
 
 private:
     static const std::string s_VertexShader;

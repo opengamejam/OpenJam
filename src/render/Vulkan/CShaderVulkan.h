@@ -19,6 +19,7 @@ namespace molten {
 namespace jam {
     
 CLASS_PTR(CRendererVulkan)
+CLASS_PTR(CShaderVulkan)
 
 class CShaderVulkan : public IShader
 {
@@ -33,6 +34,12 @@ public:
     virtual ShaderType Type() const override;
     virtual const std::string& Source() const override;
     virtual void AddDefinition(const std::string& identifier) override;
+    
+    /*
+     * Vulkan specific
+     */
+    const VkShaderModule& ShaderModule() const;
+    const VkPipelineShaderStageCreateInfo& PipelineShaderStageCreateInfo() const;
 
 private:
     molten::GLSLToSPIRVConverter *m_Converter;
@@ -40,6 +47,7 @@ private:
     
     CRendererVulkanWeak m_Renderer;
     VkShaderModule m_ShaderModule;
+    VkPipelineShaderStageCreateInfo m_PiplineShaderStageInfo;
 };
 
 }; // namespace jam

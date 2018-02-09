@@ -74,7 +74,7 @@ CSprite2DPtr CSprite2D::Create(const std::string& filename, IRendererPtr rendere
 
     vertexBuffer->Resize(4);
     IVertexBuffer::SVertexStream& position = vertexBuffer->Lock(IVertexBuffer::Position);
-    position.attributeIndex = shaderProgram->VertexPosition();
+    position.attributeIndex = shaderProgram->Attribute(shaderSource.VertexAttributeName());
     position.dataType = IVertexBuffer::Float;
     position.stride = 3;
     position.offset = 0;
@@ -85,7 +85,7 @@ CSprite2DPtr CSprite2D::Create(const std::string& filename, IRendererPtr rendere
             glm::vec3(1.0f, 1.0f, 0.0f) });
 
     IVertexBuffer::SVertexStream& color = vertexBuffer->Lock(IVertexBuffer::Color);
-    color.attributeIndex = shaderProgram->VertexColor();
+    color.attributeIndex = shaderProgram->Attribute(shaderSource.ColorAttributeName());
     color.dataType = IVertexBuffer::Float;
     color.stride = 4;
     color.offset = sizeof(glm::vec3);
@@ -96,7 +96,7 @@ CSprite2DPtr CSprite2D::Create(const std::string& filename, IRendererPtr rendere
             CColor4f(1.0f, 1.0f, 1.0f, 1.0f) });
 
     IVertexBuffer::SVertexStream& textureCoord = vertexBuffer->Lock(IVertexBuffer::TextureCoords);
-    textureCoord.attributeIndex = shaderProgram->VertexUV();
+    textureCoord.attributeIndex = shaderProgram->Attribute(shaderSource.UVAttributeName());
     textureCoord.dataType = IVertexBuffer::Float;
     textureCoord.stride = 2;
     textureCoord.offset = sizeof(glm::vec3) + sizeof(CColor4f);

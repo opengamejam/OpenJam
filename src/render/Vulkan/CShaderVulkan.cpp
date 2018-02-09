@@ -8,7 +8,6 @@
 //#if defined(RENDER_VULKAN)
 
 #include "CShaderVulkan.h"
-#include "CShaderSourceInsert.h"
 #include <MoltenGLSLToSPIRVConverter/GLSLToSPIRVConverter.h>
 #include "CRendererVulkan.h"
 
@@ -46,16 +45,20 @@ bool CShaderVulkan::Compile(const std::string& source, ShaderType shaderType)
     m_Converter->setGLSL(source);
 
     m_Type = shaderType;
+    VkShaderStageFlagBits stageFlag = VK_SHADER_STAGE_VERTEX_BIT;
     MLNShaderStage shaderStage = kMLNShaderStageAuto;
     switch (shaderType) {
         case Vertex:
             shaderStage = kMLNShaderStageVertex;
+            stageFlag = VK_SHADER_STAGE_VERTEX_BIT;
             break;
         case Fragment:
             shaderStage = kMLNShaderStageFragment;
+            stageFlag = VK_SHADER_STAGE_FRAGMENT_BIT;
             break;
         case Geometry:
             shaderStage = kMLNShaderStageGeometry;
+            stageFlag = VK_SHADER_STAGE_GEOMETRY_BIT;
             break;
             
         default:
@@ -77,6 +80,11 @@ bool CShaderVulkan::Compile(const std::string& source, ShaderType shaderType)
             JAM_LOG("failed to create shader module!");
             compiled = false;
         }
+        
+        m_PiplineShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
+        m_PiplineShaderStageInfo.stage = stageFlag;
+        m_PiplineShaderStageInfo.module = m_ShaderModule;
+        m_PiplineShaderStageInfo.pName = "name";
     }
     
     return compiled;
@@ -100,6 +108,16 @@ const std::string& CShaderVulkan::Source() const
 void CShaderVulkan::AddDefinition(const std::string& identifier)
 {
     
+}
+
+const VkShaderModule& CShaderVulkan::ShaderModule() const
+{
+    return m_ShaderModule;
+}
+
+const VkPipelineShaderStageCreateInfo& CShaderVulkan::PipelineShaderStageCreateInfo() const
+{
+    return m_PiplineShaderStageInfo;
 }
 
 // *****************************************************************************

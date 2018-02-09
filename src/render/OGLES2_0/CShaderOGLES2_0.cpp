@@ -8,7 +8,6 @@
 #if defined(RENDER_OGLES2_0)
 
 #include "CShaderOGLES2_0.h"
-#include "CShaderSourceInsert.h"
 
 using namespace jam;
 
@@ -43,8 +42,6 @@ bool CShaderOGLES2_0::Compile(const std::string& source, ShaderType shaderType)
 
     uint32_t glType = ShaderTypeToGlType(shaderType);
 
-    CShaderSourceInsert insertSource;
-
     // Add preproccessor's definitions
     m_Source = "";
     std::for_each(m_Preproccessor.begin(), m_Preproccessor.end(), [&](const std::string& identifier) {
@@ -53,15 +50,6 @@ bool CShaderOGLES2_0::Compile(const std::string& source, ShaderType shaderType)
 
         m_Source.append(definition);
     });
-
-    // Insert common uniforms and attributes
-    if (shaderType == IShader::Vertex) {
-        m_Source.append(insertSource.Vertex());
-    } else if (shaderType == IShader::Fragment) {
-        m_Source.append(insertSource.Fragment());
-    } else if (shaderType == IShader::Geometry) {
-        m_Source.append(insertSource.Geometry());
-    }
     m_Source.append(source);
 
     m_Id = glCreateShader(glType);

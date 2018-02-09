@@ -34,36 +34,6 @@ bool CShaderProgramOGLBase::IsValid()
     return (IsShaderAttached(IShader::Vertex) && IsShaderAttached(IShader::Fragment));
 }
 
-uint32_t CShaderProgramOGLBase::VertexPosition()
-{
-    return Attribute("MainVertexPosition");
-}
-
-uint32_t CShaderProgramOGLBase::VertexNormal()
-{
-    return Attribute("MainVertexNormal");
-}
-
-uint32_t CShaderProgramOGLBase::VertexUV()
-{
-    return Attribute("MainVertexUV");
-}
-
-uint32_t CShaderProgramOGLBase::VertexColor()
-{
-    return Attribute("MainVertexColor");
-}
-
-uint32_t CShaderProgramOGLBase::MainTexture()
-{
-    return Uniform("MainTexture0");
-}
-
-uint32_t CShaderProgramOGLBase::MainColor()
-{
-    return Uniform("MainColor");
-}
-
 uint32_t CShaderProgramOGLBase::ProjectionMatrix()
 {
     return Uniform("MainProjectionMatrix");
@@ -72,34 +42,6 @@ uint32_t CShaderProgramOGLBase::ProjectionMatrix()
 uint32_t CShaderProgramOGLBase::ModelMatrix()
 {
     return Uniform("MainModelMatrix");
-}
-
-uint32_t CShaderProgramOGLBase::Texture(uint32_t index)
-{
-    std::stringstream ss;
-    ss << "MainTexture" << index;
-    
-    return Uniform(ss.str());
-}
-
-uint32_t CShaderProgramOGLBase::DiffuseTexture()
-{
-    return Uniform("MainTexture0");
-}
-
-uint32_t CShaderProgramOGLBase::NormalTexture()
-{
-    return Uniform("MainTexture1");
-}
-
-uint32_t CShaderProgramOGLBase::SpecularTexture()
-{
-    return Uniform("MainTexture2");
-}
-
-uint32_t CShaderProgramOGLBase::EnvironmentTexture()
-{
-    return Uniform("MainTexture3");
 }
 
 bool CShaderProgramOGLBase::BindUniform1i(const std::string& uniform, int value)

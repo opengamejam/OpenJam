@@ -23,6 +23,9 @@ CMaterialVulkan::CMaterialVulkan()
 : m_IsDirty(true)
 , m_IsBound(false)
 {
+    m_InputAssembly.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
+    m_InputAssembly.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+    m_InputAssembly.primitiveRestartEnable = VK_FALSE;
 }
 
 CMaterialVulkan::~CMaterialVulkan()
@@ -71,13 +74,71 @@ void CMaterialVulkan::LineWidth(float lineWidth)
 
 IMaterial::PrimitiveTypes CMaterialVulkan::PrimitiveType() const
 {
-    return m_State.primitiveType;
+    IMaterial::PrimitiveTypes primitiveType = IMaterial::Points;
+    switch (m_InputAssembly.topology) {
+        case VK_PRIMITIVE_TOPOLOGY_POINT_LIST:
+            primitiveType = Points;
+            break;
+        case VK_PRIMITIVE_TOPOLOGY_LINE_LIST:
+            primitiveType = Lines;
+            break;
+        case VK_PRIMITIVE_TOPOLOGY_LINE_LIST_WITH_ADJACENCY:
+            primitiveType = LinesLoop;
+            break;
+        case VK_PRIMITIVE_TOPOLOGY_LINE_STRIP:
+            primitiveType = LinesStrip;
+            break;
+        case VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST:
+            primitiveType = Triangles;
+            break;
+        case VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP:
+            primitiveType = TrianglesStrip;
+            break;
+        case VK_PRIMITIVE_TOPOLOGY_TRIANGLE_FAN:
+            primitiveType = TrianglesFan;
+            break;
+            
+        default:
+            JAM_LOG("Unknown Vulkan primitive topology");
+            break;
+    }
+    
+    return primitiveType;
 }
 
 void CMaterialVulkan::PrimitiveType(IMaterial::PrimitiveTypes primitiveType)
 {
-    m_State.primitiveType = primitiveType;
-    m_IsDirty = true;
+    VkPrimitiveTopology topology = VK_PRIMITIVE_TOPOLOGY_POINT_LIST;
+    switch (primitiveType) {
+        case Points:
+            topology = VK_PRIMITIVE_TOPOLOGY_POINT_LIST;
+            break;
+        case Lines:
+            topology = VK_PRIMITIVE_TOPOLOGY_LINE_LIST;
+            break;
+        case LinesLoop:
+            topology = VK_PRIMITIVE_TOPOLOGY_LINE_LIST_WITH_ADJACENCY; // TODO
+            break;
+        case LinesStrip:
+            topology = VK_PRIMITIVE_TOPOLOGY_LINE_STRIP;
+            break;
+        case Triangles:
+            topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
+            break;
+        case TrianglesFan:
+            topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP;
+            break;
+        case TrianglesStrip:
+            topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_FAN;
+            break;
+            
+        default:
+            JAM_LOG("Unknown primitive type");
+            break;
+    }
+    
+    m_InputAssembly.topology = topology;
+    m_IsDirty = true; // TODO: remove
 }
 
 bool CMaterialVulkan::CullFace() const
@@ -177,6 +238,11 @@ const std::string& CMaterialVulkan::Hash()
     }
     
     return m_Hash;
+}
+
+VkPipelineInputAssemblyStateCreateInfo CMaterialVulkan::InputAssembly()
+{
+    return m_InputAssembly;
 }
 
 // *****************************************************************************

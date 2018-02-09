@@ -121,7 +121,7 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, IRendererPtr rend
             if (hasPosition) {
                 vertexBuffer->Resize(model3D->Vertices(group).size());
                 IVertexBuffer::SVertexStream& position = vertexBuffer->Lock(IVertexBuffer::Position);
-                position.attributeIndex = shaderProgram->VertexPosition();
+                position.attributeIndex = shaderProgram->Attribute(shaderSource.VertexAttributeName());
                 position.dataType = IVertexBuffer::Float;
                 position.stride = 3;
                 position.offset = offset;
@@ -132,7 +132,7 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, IRendererPtr rend
 
             if (hasUVs) {
                 IVertexBuffer::SVertexStream& textureCoord = vertexBuffer->Lock(IVertexBuffer::TextureCoords);
-                textureCoord.attributeIndex = shaderProgram->VertexUV();
+                textureCoord.attributeIndex = shaderProgram->Attribute(shaderSource.UVAttributeName());
                 textureCoord.dataType = IVertexBuffer::Float;
                 textureCoord.stride = 2;
                 textureCoord.offset = offset;
@@ -143,7 +143,7 @@ CObject3DPtr CObject3D::CreateObj(const std::string& filename, IRendererPtr rend
 
             if (hasNormals) {
                 IVertexBuffer::SVertexStream& normals = vertexBuffer->Lock(IVertexBuffer::Normal);
-                normals.attributeIndex = shaderProgram->VertexNormal();
+                normals.attributeIndex = shaderProgram->Attribute(shaderSource.NormalAttributeName());
                 normals.dataType = IVertexBuffer::Float;
                 normals.stride = 3;
                 normals.offset = offset;

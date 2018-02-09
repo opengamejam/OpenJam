@@ -25,20 +25,8 @@ public:
     virtual bool IsValid() override;
     
     // Default locations
-    virtual uint32_t VertexPosition() override;
-    virtual uint32_t VertexNormal() override;
-    virtual uint32_t VertexUV() override;
-    virtual uint32_t VertexColor() override;
-    virtual uint32_t MainTexture() override;
-    virtual uint32_t MainColor() override;
     virtual uint32_t ProjectionMatrix() override;
     virtual uint32_t ModelMatrix() override;
-    
-    virtual uint32_t Texture(uint32_t index) override;
-    virtual uint32_t DiffuseTexture() override;
-    virtual uint32_t NormalTexture() override;
-    virtual uint32_t SpecularTexture() override;
-    virtual uint32_t EnvironmentTexture() override;
     
     virtual bool BindUniform1i(const std::string& uniform, int value) override;
     virtual bool BindUniform1f(const std::string& uniform, float value) override;

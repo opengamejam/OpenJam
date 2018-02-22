@@ -65,6 +65,8 @@ void CTextureVulkan::Filter(ITexture::TextureFilters filter)
     
     VkSamplerCreateInfo samplerInfo = {
         .sType = VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO,
+        .pNext = nullptr,
+        .flags = 0,
         .magFilter = vkFilter,
         .minFilter = vkFilter,
         .addressModeU = VK_SAMPLER_ADDRESS_MODE_REPEAT,
@@ -169,7 +171,8 @@ bool CTextureVulkan::AssignImage(IImagePtr image)
     
     VkMemoryAllocateInfo allocInfo = {
         .sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO,
-        .allocationSize = vk_memoryRequirements.size,
+        .pNext = nullptr,
+        .allocationSize = vk_memoryRequirements.size + 1, // TODO: incorrect size
         .memoryTypeIndex = memoryDeviceIndex
     };
     
@@ -181,13 +184,15 @@ bool CTextureVulkan::AssignImage(IImagePtr image)
     
     vkBindImageMemory(renderer->LogicalDevice(), m_Image, m_DeviceMemory, 0);
     
-    void* data;
+    void* data = nullptr;
     vkMapMemory(renderer->LogicalDevice(), m_DeviceMemory, 0, image->RawData().size(), 0, &data);
     memcpy(data, image->RawData().data(), image->RawData().size());
     vkUnmapMemory(renderer->LogicalDevice(), m_DeviceMemory);
     
     VkImageViewCreateInfo viewInfo = {
         .sType = VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO,
+        .pNext = nullptr,
+        .flags = 0,
         .image = m_Image,
         .viewType = VK_IMAGE_VIEW_TYPE_2D,
         .format = vkFormat,

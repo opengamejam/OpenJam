@@ -26,6 +26,8 @@ CMaterialVulkan::CMaterialVulkan()
     m_InputAssembly.sType = VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO;
     m_InputAssembly.topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
     m_InputAssembly.primitiveRestartEnable = VK_FALSE;
+    m_InputAssembly.flags = 0;
+    m_InputAssembly.pNext = nullptr;
 }
 
 CMaterialVulkan::~CMaterialVulkan()
@@ -126,10 +128,10 @@ void CMaterialVulkan::PrimitiveType(IMaterial::PrimitiveTypes primitiveType)
             topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_LIST;
             break;
         case TrianglesFan:
-            topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP;
+            topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_FAN;
             break;
         case TrianglesStrip:
-            topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_FAN;
+            topology = VK_PRIMITIVE_TOPOLOGY_TRIANGLE_STRIP;
             break;
             
         default:
@@ -240,7 +242,7 @@ const std::string& CMaterialVulkan::Hash()
     return m_Hash;
 }
 
-VkPipelineInputAssemblyStateCreateInfo CMaterialVulkan::InputAssembly()
+const VkPipelineInputAssemblyStateCreateInfo& CMaterialVulkan::InputAssembly()
 {
     return m_InputAssembly;
 }

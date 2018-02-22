@@ -87,7 +87,7 @@ void CGameScene::Update(unsigned long dt)
     CSceneBase::Update(dt);
 
     if (Game()->RenderView()->Renderer()->GetId() == CTypeId<CRendererVulkan>::Id()) {
-        return;
+        //return;
     }
     
     const float speed = 10.0f;
@@ -152,7 +152,7 @@ void CGameScene::CreateMainCamera()
     AddCamera(m_UICamera);
 
     if (Game()->RenderView()->Renderer()->GetId() == CTypeId<CRendererVulkan>::Id()) {
-        return;
+       // return;
     }
     
     CSprite2DPtr ball = CSprite2D::Create("/ball_glitch/sprite.mpf", renderer);
@@ -163,7 +163,7 @@ void CGameScene::CreateMainCamera()
     sprite->Rotation(glm::vec3(0, 0, 45.0f * 3.14f / 180.0f));
     //sprite->Scale(glm::vec3(3.0f, 3.0f, 3.0f));
 
-    sprite->AddChild(ball);
+    //sprite->AddChild(ball);
     Root()->AddChild(sprite);
 
     CEventComponentPtr eventComponent(new CEventComponent());
@@ -171,28 +171,28 @@ void CGameScene::CreateMainCamera()
                                     std::bind(&CGameScene::OnBallMoved, this, std::placeholders::_1));
     sprite->AddComponent(eventComponent);
 
-    // Render texture
-    CRenderTargetTexturePtr renderTextureTarget = renderer->CreateTextureRenderTarget();
-    renderTextureTarget->Initialize(IRenderTarget::ColorRGBA8888);
-
-    CRenderTargetDepthPtr depthTarget = renderer->CreateDepthRenderTarget();
-    depthTarget->Initialize(IRenderTarget::Depth24_Stencil8);
-
-    // Render texture framebuffer
-    IFrameBufferPtr renderTextureFBO = renderer->CreateFrameBuffer(512, 512);
-    renderTextureFBO->Initialize();
-    renderTextureFBO->Bind();
-    renderTextureFBO->AttachColor(renderTextureTarget, 0);
-    renderTextureFBO->AttachDepth(depthTarget);
-    renderTextureFBO->ClearColor(CColor4f(0.0f, 0.0f, 1.0f, 0.0f));
-    assert(renderTextureFBO->IsValid());
-
-    // Cam
-    m_MainCamera->FrameBuffer(renderTextureFBO, 1);
+//    // Render texture
+//    CRenderTargetTexturePtr renderTextureTarget = renderer->CreateTextureRenderTarget();
+//    renderTextureTarget->Initialize(IRenderTarget::ColorRGBA8888);
+//
+//    CRenderTargetDepthPtr depthTarget = renderer->CreateDepthRenderTarget();
+//    depthTarget->Initialize(IRenderTarget::Depth24_Stencil8);
+//
+//    // Render texture framebuffer
+//    IFrameBufferPtr renderTextureFBO = renderer->CreateFrameBuffer(512, 512);
+//    renderTextureFBO->Initialize();
+//    renderTextureFBO->Bind();
+//    renderTextureFBO->AttachColor(renderTextureTarget, 0);
+//    renderTextureFBO->AttachDepth(depthTarget);
+//    renderTextureFBO->ClearColor(CColor4f(0.0f, 0.0f, 1.0f, 0.0f));
+//    assert(renderTextureFBO->IsValid());
+//
+//    // Cam
+//    m_MainCamera->FrameBuffer(renderTextureFBO, 1);
 
     // TV object
     tv = CObject3D::CreateObj("/tv/tv.obj", renderer);
-    Root()->AddChild(tv);
+    //Root()->AddChild(tv);
     tv->Position(glm::vec3(7.0f, 3.0f, 0.0f));
     tv->Rotation(glm::vec3(10.0f * 3.14f / 180.0f, 0, 0));
     tv->Scale(glm::vec3(3.0f, 3.0f, 3.0f));
@@ -223,14 +223,14 @@ void CGameScene::CreateMainCamera()
         shaderProgram->Link();
 
         component->Batchable(false);
-        component->Texture(renderTextureTarget->Texture());
+        //component->Texture(renderTextureTarget->Texture());
         component->Shader(shaderProgram);
     });
 
     std::string filename = "/cube/cube.obj";
     std::shared_ptr<CGameScene> scene = std::static_pointer_cast<CGameScene>(shared_from_this());
     
-    CBlockOperationPtr makeSceneOp(new CBlockOperation());
+    /*CBlockOperationPtr makeSceneOp(new CBlockOperation());
     makeSceneOp->AddExecutionBlock([scene, renderer, filename]() {
         IModel3DPtr model3D(new CModelObj(filename));
         model3D->Load();
@@ -268,7 +268,7 @@ void CGameScene::CreateMainCamera()
     
     m_BackgroundQueue = COperationQueue::CreateOperationQueue();
     m_BackgroundQueue->MaxConcurrentOperationCount(1);
-    m_BackgroundQueue->AddOperation(makeSceneOp);
+    m_BackgroundQueue->AddOperation(makeSceneOp);*/
 }
 
 bool CGameScene::OnBallMoved(IEventPtr event)

@@ -13,43 +13,20 @@ using namespace jam;
 // Constants
 // *****************************************************************************
 
-const std::string CShaderSourceCommon::s_FragmentShader = MULTI_LINE_STRING(
-\n #ifdef OGL2_0\n
-                                                                        
-    precision mediump float;
-
+const std::string CShaderSourceCommon::s_FragmentShader = MULTI_LINE_STRING(#version 310 es\n
     // Uniforms
-    uniform sampler2D MainTexture0;
-    uniform sampler2D MainTexture1;
-    uniform sampler2D MainTexture2;
-    uniform sampler2D MainTexture3;
-    uniform sampler2D MainTexture4;
-    uniform sampler2D MainTexture5;
-
-    // Varyings
-    varying mediump vec3 VaryingNormal;
-    varying mediump vec2 VaryingTextureCoord;
-    varying mediump vec4 VaryingMainColor;
-                                                                            
-    varying mediump vec3 VaryingLightDir;
-
-    void main() {
-        vec3 n = normalize(VaryingNormal);
-        vec3 l = normalize(VaryingLightDir);
-
-        float diffuse = max(dot(n, l), 0.0);
-
-        vec4 color = texture2D(MainTexture0, VaryingTextureCoord);
-        vec4 colorOut = clamp((diffuse * color), 0.0, 1.0);
-
-        gl_FragColor = vec4(colorOut.rgb, color.a);
-    }
-                                                                            
-\n #endif \n
-
-\n #ifdef OGLES3\n
-
-\n #endif \n);
+    precision lowp float;\n
+    //layout(binding = 0) uniform sampler2D MainTexture0;\n
+    \n
+    //layout(location = 1) in vec2 VaryingTextureCoord;\n
+    //layout(location = 2) in vec4 VaryingMainColor;\n
+    \n
+    layout(location = 0) out vec4 outColor;\n
+    \n
+    void main() {\n
+        outColor = vec4(0.0, 1.0, 1.0, 1.0);//texture(MainTexture0, VaryingTextureCoord);\n
+    }\n
+);
 
 // *****************************************************************************
 // Public Methods

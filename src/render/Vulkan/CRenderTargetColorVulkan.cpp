@@ -109,6 +109,7 @@ void CRenderTargetColorVulkan::Allocate(uint64_t width, uint64_t height)
             
             VkMemoryAllocateInfo allocInfo = {};
             allocInfo.sType = VK_STRUCTURE_TYPE_MEMORY_ALLOCATE_INFO;
+            allocInfo.pNext = nullptr;
             allocInfo.allocationSize = vk_memoryRequirements.size;
             allocInfo.memoryTypeIndex = memoryDeviceIndex;
             

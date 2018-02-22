@@ -13,34 +13,20 @@ using namespace jam;
 // Constants
 // *****************************************************************************
 
-const std::string CShaderSourceSprite::s_FragmentShader = MULTI_LINE_STRING(
-\n #ifdef OGL2_0\n
-    precision mediump float;
-
-    // Uniforms
-    uniform sampler2D MainTexture0;
-    uniform sampler2D MainTexture1;
-    uniform sampler2D MainTexture2;
-    uniform sampler2D MainTexture3;
-    uniform sampler2D MainTexture4;
-    uniform sampler2D MainTexture5;
-
-    // Varyings
-    varying mediump vec3 VaryingNormal;
-    varying mediump vec2 VaryingTextureCoord;
-    varying mediump vec4 VaryingMainColor;
-                                                                            
-    varying mediump vec3 VaryingLightDir;
-                                                                            
-    void main() {
-        vec4 color = texture2D(MainTexture0, VaryingTextureCoord);
-        gl_FragColor = color;
-    }
-\n #endif \n
-
-\n #ifdef OGLES3\n
-
-\n #endif \n);
+const std::string CShaderSourceSprite::s_FragmentShader = MULTI_LINE_STRING(#version 310 es\n
+    precision lowp float;\n
+    //layout(binding = 0) uniform sampler2D MainTexture0;\n
+    \n
+    //layout(location = 1) in vec2 VaryingTextureCoord;\n
+    //layout(location = 2) in vec4 VaryingMainColor;\n
+    \n
+    layout(location = 0) out vec4 outColor;\n
+    \n
+    void main() {\n
+        vec4 color = vec4(1.0, 0.0, 0.0, 1.0);//texture(MainTexture0, VaryingTextureCoord);\n
+        outColor = color;\n
+    }\n
+);
 
 // *****************************************************************************
 // Public Methods

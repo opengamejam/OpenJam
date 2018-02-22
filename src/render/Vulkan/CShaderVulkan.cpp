@@ -69,6 +69,8 @@ bool CShaderVulkan::Compile(const std::string& source, ShaderType shaderType)
     if (compiled) {
         VkShaderModuleCreateInfo createInfo = {
             .sType = VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO,
+            .pNext = nullptr,
+            .flags = 0,
             .codeSize = m_Converter->getSPIRV().size(),
             .pCode = reinterpret_cast<const uint32_t*>(m_Converter->getSPIRV().data())
         };
@@ -77,14 +79,19 @@ bool CShaderVulkan::Compile(const std::string& source, ShaderType shaderType)
         
         VkResult result = vkCreateShaderModule(renderer->LogicalDevice(), &createInfo, nullptr, &m_ShaderModule);
         if (result != VK_SUCCESS) {
-            JAM_LOG("failed to create shader module!");
+            JAM_LOG("Failed to create shader module!");
             compiled = false;
         }
         
         m_PiplineShaderStageInfo.sType = VK_STRUCTURE_TYPE_PIPELINE_SHADER_STAGE_CREATE_INFO;
         m_PiplineShaderStageInfo.stage = stageFlag;
+        m_PiplineShaderStageInfo.pNext = nullptr;
+        m_PiplineShaderStageInfo.flags = 0;
         m_PiplineShaderStageInfo.module = m_ShaderModule;
         m_PiplineShaderStageInfo.pName = "name";
+        m_PiplineShaderStageInfo.pSpecializationInfo = nullptr;
+    } else {
+        printf("Failed to compile shader: %s", m_Converter->getResultLog().c_str());
     }
     
     return compiled;

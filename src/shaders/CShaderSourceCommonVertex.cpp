@@ -14,48 +14,21 @@ using namespace jam;
 // *****************************************************************************
 
 const std::string CShaderSourceCommon::s_GeomentryShader;
-const std::string CShaderSourceCommon::s_VertexShader = MULTI_LINE_STRING(
-\n #ifdef OGL2_0\n
-    // Attributes\n
-    attribute mediump vec4   MainVertexPosition;\n
-    attribute mediump vec3   MainVertexNormal;\n
-    attribute mediump vec2   MainVertexUV;\n
-    attribute mediump vec4   MainVertexColor;\n
+const std::string CShaderSourceCommon::s_VertexShader = MULTI_LINE_STRING(#version 310 es\n
+    layout(location = 0) in vec4   MainVertexPosition;\n
+    //layout(location = 1) in vec3   MainVertexNormal;\n
+    //layout(location = 2) in vec2   MainVertexUV;\n
+    //layout(location = 3) in vec4   MainVertexColor;\n
     \n
-    // Uniforms\n
-    uniform mediump mat4     MainProjectionMatrix;\n
-    uniform mediump mat4     MainViewMatrix;\n
-    uniform mediump mat4     MainModelMatrix;\n
-    uniform mediump mat4     MainNormalMatrix;\n
-    \n
-    // Varyings\n
-    varying mediump vec3     VaryingNormal;\n
-    varying mediump vec2     VaryingTextureCoord;\n
-    varying mediump vec4     VaryingMainColor;\n
-    \n
-    uniform mediump vec3 LightDir;
-    varying mediump vec3 VaryingLightDir;
-
-    void main(void) {
-        mat4 MVMatrix = MainViewMatrix * MainModelMatrix;
-        mat4 MVPMatrix = MainProjectionMatrix * MainModelMatrix;
-        gl_Position = MVPMatrix * MainVertexPosition;
-
-        VaryingNormal = vec3(MainNormalMatrix * vec4(MainVertexNormal, 0.0));
-        VaryingTextureCoord = MainVertexUV;
-        VaryingMainColor = MainVertexColor;
-
-        vec4 vertexPos = MVMatrix * MainVertexPosition;
-        vec4 lightPos = MVMatrix * vec4(LightDir, 0.0);
-
-        VaryingLightDir = vec3(lightPos - vertexPos);
-    }
-                                                                          
-\n #endif \n
-
-\n #ifdef OGLES3\n
-
-\n #endif \n);
+    //layout(location = 1) out vec2     VaryingTextureCoord;\n
+    //layout(location = 2) out vec4     VaryingMainColor;\n
+    void main(void) {\n
+        gl_Position = MainVertexPosition;\n
+        \n
+        //VaryingTextureCoord = MainVertexUV;\n
+        //VaryingMainColor = MainVertexColor;\n
+    }\n
+);
 
 // *****************************************************************************
 // Public Methods

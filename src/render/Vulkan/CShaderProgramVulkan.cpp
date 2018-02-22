@@ -94,7 +94,20 @@ uint32_t CShaderProgramVulkan::Attribute(const std::string& name)
     uint32_t location = std::numeric_limits<uint32_t>::max();
     std::unordered_map<std::string, uint32_t>::const_iterator it = m_CachedAttributes.find(name);
     if (it == m_CachedAttributes.end()) {
-        // TODO
+        
+        if (name == "MainVertexPosition") {
+            location = 0;
+        }
+        if (name == "MainVertexNormal") {
+            location = 1;
+        }
+        if (name == "MainVertexUV") {
+            location = 2;
+        }
+        if (name == "MainVertexColor") {
+            location = 3;
+        }
+        
         m_CachedAttributes[name] = location;
     } else {
         location = it->second;
